@@ -41,7 +41,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
           </svg>
-          <p>이미 회원이신가요?&nbsp;&nbsp;<a class="red" href="#">회원가입</a></p>
+          <p>이미 회원이신가요?&nbsp;&nbsp;<a class="red" href="#">로그인</a></p>
         </div>
         <form class="register-form" method="POST" action="{% url 'users:signup' %}" enctype="multipart/form-data">
           {% csrf_token %}
