@@ -1,0 +1,86 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block header_content %}
+<a id="myPage" href="#">My Page</a>
+{% endblock %}
+
+
+{% block content %}
+<section class="main_companion">
+    <div>
+        <h1 class="main_companion_text">새로운 만남,<br>끝없는 이야기,<br>지금 <em>동행</em>을 찾아보세요</em></h1>
+        <div class="main_companion_btn_container">
+            <a href="#" id="main_find_companion">장기 동행 찾기 ></a>
+        </div>
+    </div>
+</section>
+<section class="main_flash">
+    <div class="main_flash_text">
+        <h1>여행 속 반짝이는 만남, <em>번개 모임</em><br></h1>
+        <h3>지금 바로 참여하거나 나만의 번개를 등록해, 특별한 하루를 만들어 보세요!</h3>
+    </div>
+    <div class="main_flash_body">
+        <div class="main_flash_btn_container">
+            <div class="main_find_flash">
+                <p>지금, 내 주변</p>
+                <a class="main_find_flash_btn" href="#">번개 찾기</a>
+            </div>
+            <div class="main_enroll_flash">
+                <p>나만의 번개</p>
+                <a class="main_enroll_flash_btn" href="#">등록하기</a>
+            </div>
+        </div>
+        <img src="{% static 'img/main_flash2.svg' %}" alt="Flash Icon">
+    </div>
+</section>
+<section class="main_accommodation">
+    <h1 class="main_accommodation_title">다음 여행자를 위한 작은 안내서, <em>숙소 후기</em></h1>
+    <div class="main_accommodation_container">
+        <div class="main_accommodation_left">
+            <h2>방문했던 숙소의 솔직한 후기를 공유해주세요!</h2>
+            <img src="{% static 'img/main_hotel_review.svg' %}" alt="accommodation reivew">
+            <a><button class="main_review_btn">후기 보기 ></button></a>
+        </div>
+        <div class="main_accommodation_right">
+            <span class="main_tag">#치안</span>
+            <span class="main_tag">#친절</span>
+            <span class="main_tag">#와이파이</span>
+            <span class="main_tag">#에어컨</span>
+            <span class="main_tag">#접근성</span>
+            <span class="main_tag">#청결도</span>
+            <span class="main_tag">#소음</span>
+            <span class="main_tag">#가격</span>
+        </div>
+    </div>
+</section>
+<section class="main_market">
+    <div class="main_market_title">
+        <h1>필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
+        <a href="#">전체 보기 ></a>
+    </div>
+    <div class="main_market_body">
+        <p class="main_market_body_title">대표 카테고리</p>
+        <ul class="main_market_category">
+            <li>
+                <img src="{%static 'img/main_medicine.png' %}">
+                <p>의약품</p>
+            </li>
+            <li>
+                <img src="{%static 'img/main_ticket.png' %}">
+                <p>티켓</p>
+            </li>
+            <li>
+                <img src="{%static 'img/main_dailyitems.png' %}">
+                <p>생활용품</p>
+            </li>
+            <li>
+                <img src="{%static 'img/main_souvenir.png' %}">
+                <p>기념품</p>
+            </li>
+        </ul>
+    </div>
+</section>
+
+{% endblock %}
