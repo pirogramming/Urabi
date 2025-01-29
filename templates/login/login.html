@@ -42,16 +42,17 @@
               <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
             </svg>
           </div>
-          <form class="login-form">
+          <form class="login-form" method="POST" action="{% url 'users:login' %}">
+            {% csrf_token %}
             <label><span class="labelName">이메일</span>
-              <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." required>
+                <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." required>
             </label>
             <label><span class="labelName">비밀번호</span>
                 <input type="password" id="password" placeholder="비밀번호를 입력하세요." name="password" required>
             </label>
             <button type="submit">로그인</button>
           </form>
-          <p>아직 회원이 아니신가요?&nbsp;&nbsp;<a class="blue" href="#">회원가입</a></p>
+          <p>아직 회원이 아니신가요?&nbsp;&nbsp;<a class="blue" href="{% url 'users:signup' %}">회원가입</a></p>
           <div class="social-login">
             <p>소셜 로그인</p>
             <a href="{% url 'users:kakao-login' %}">
