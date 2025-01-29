@@ -1,0 +1,169 @@
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/aperlogy-6SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root{
+  --blue: #1E88E5;
+  --red: #EF4141;
+  --light-red: #f69f9f;
+  --gray: #F5F5F5;
+  --strong-gray: #EBEBEB;
+}
+
+body {
+  font-family: 'Paperlogy', sans-serif;
+}
+
+body {
+  background-color: #f9f9f9;
+  font-family: 'Paperlogy';
+}
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.header-container{
+  margin: 0 auto;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav a {
+  margin-left: 30px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+}
+.nav a:hover {
+  color: var(--blue);
+}
+
+#myPage{
+  background-color: var(--red);
+  border-radius: 16px;
+  color: white;
+}
+
+.main {
+  margin: 0 auto;
+  background-color: aqua;
+  padding: 20px;
+  min-height: 100vh; /* 최소 높이 설정 */
+}
+
+.footer {
+  background-color: var(--gray);
+  padding: 30px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+}
+.footer-menu{
+  padding: 10px 0;
+}
+
+.footer-menu a {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0 5px;
+}
+
+.footer-menu a:hover {
+  color: #007BFF;
+}
+
+.copyright {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.chat-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.chat-btn:hover {
+  background-color: #0056b3;
+}

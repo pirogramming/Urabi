@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urabi</title>
+  {% load static %}
+    <link rel="stylesheet" href="{% static 'reset.css' %}">
+    <link rel="stylesheet" href="{% static 'base_css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'login/login.css' %}">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+      <div class="logo">
+        <img width="150" src="{% static 'img/logo.png' %}">
+        <p>여행을 함께하는 동행 서비스</p>
+      </div>
+      <nav class="nav">
+      </nav>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+      <section class="banner-container">
+        <div class="banner">
+          <div class="banner-text">
+            <p>당신의 여행,</p>
+            <p><span class="red">U</span><span class="black">ra</span><span class="blue">bi</span>와 함께</p>
+            <p>더 특별한 추억으로</p>
+          </div>
+        </div>
+      </section>
+      <section class="login-section">
+        <div class="login-container">
+          <div class="loginForm-name">
+            <h2>로그인</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            </svg>
+          </div>
+          <form class="login-form">
+            <label><span class="labelName">이메일</span>
+              <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." required>
+            </label>
+            <label><span class="labelName">비밀번호</span>
+                <input type="password" id="password" placeholder="비밀번호를 입력하세요." name="password" required>
+            </label>
+            <button type="submit">로그인</button>
+          </form>
+          <p>아직 회원이 아니신가요?&nbsp;&nbsp;<a class="blue" href="#">회원가입</a></p>
+          <div class="social-login">
+            <p>소셜 로그인</p>
+            <a href="{% url 'users:kakao-login' %}">
+                <img width="40" src="{% static 'img/kakao.png' %}" alt="카카오">
+            </a>
+            <a href="{% url 'users:naver-login' %}">
+                <img width="40" src="{% static 'img/naver.png' %}" alt="네이버">
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-menu">
+        <a href="#">장기동행</a> | 
+        <a href="#">번개모임</a> | 
+        <a href="#">숙소후기</a> | 
+        <a href="#">나눔마켓</a> | 
+        <a href="#">MyPage</a>
+      </div>
+      <div class="copyright">
+        © 2025 Urabi. All rights reserved.
+      </div>
+    </footer>
+
+    <button class="chat-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4C9.373 4 4 9.373 4 16c0 2.165.572 4.193 1.573 5.945a1 1 0 0 1 .094.77l-1.439 5.059l5.061-1.44a1 1 0 0 1 .77.094A11.94 11.94 0 0 0 16 28c6.628 0 12-5.373 12-12S22.628 4 16 4M2 16C2 8.268 8.268 2 16 2s14 6.268 14 14s-6.268 14-14 14c-2.368 0-4.602-.589-6.56-1.629l-5.528 1.572A1.5 1.5 0 0 1 2.06 28.09l1.572-5.527A13.94 13.94 0 0 1 2 16m8-3a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H11a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    const chatButton = document.querySelector('.chat-btn');
+    const footer = document.querySelector('.footer');
+
+    window.addEventListener('scroll', () => {
+      const footerTop = footer.getBoundingClientRect().top;
+      const windowHeight = window.innerHeight;
+      
+      if (footerTop < windowHeight) {
+        chatButton.style.bottom = `${windowHeight - footerTop + 20}px`;
+      } else {
+        chatButton.style.position = 'fixed';
+        chatButton.style.bottom = '20px';
+      }
+    });
+  </script>
+</body>
+</html>
