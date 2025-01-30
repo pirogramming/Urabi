@@ -112,10 +112,15 @@ body {
   border-radius: 16px;
   color: white;
 }
+#myPage:hover{
+  background-color: white;
+  color : var(--red);
+  border: 1.5px solid var(--red);
+}
 
 .main {
   margin: 0 auto; 
-  background-color: aqua; 
+  /* background-color: aqua;  */
   padding: 20px;
   min-height: 100vh;  
   /* 최소 높이 설정 */

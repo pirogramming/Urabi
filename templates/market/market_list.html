@@ -1,0 +1,115 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head%} 
+<link rel="stylesheet" href="{% static 'market/market_list.css' %}">
+{% endblock %}
+
+
+{% block content%}
+<section id="market_search">
+    <h1 class="market_title">필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
+    <div id="market_search_bar">
+        <div class="market_search_content">
+            <div class="market_search_title">
+                <h1>거래 현황</h1>
+                <select name="market_trade" id="market_trade">
+                    <option>거래 중</option>
+                    <option>거래 완료</option>
+                </select>
+            </div>
+            <div class="market_search_title">
+                <h1>장소</h1>
+                <input type="text" name="market_location" id="market_location" placeholder="국가, 도시">
+            </div>
+            <div class="market_search_title">
+                <h1>카테고리</h1>
+                <select name="market_category" id="market_category">
+                    <option>의약품</option>
+                    <option>티켓</option>
+                    <option>음식</option>
+                    <option>생활용품</option>
+                    <option>기념품</option>
+                    <option>기타</option>
+                </select>
+            </div>
+            <div class="market_search_title">
+                <h1>검색</h1>
+                <input type="text" name="market_search_text" id="market_search_text" placeholder="검색어를 입력하세요">
+            </div>
+        </div>
+        <button class="market_search_btn">
+            <img src="/static/img/search_icon.svg" width="60">
+        </button>
+    </div>
+</section>
+
+<section id="market_body">
+    <div class="market_list_container">
+        <div class="market_list_total_title">
+            <h1>전체 글 목록</h1>
+            <div class="market_list_info">
+                <h3>"거래 중"인 <p>#태그</p> 관련 게시글입니다</h3>
+                <select name="market_list_count" id="market_list_count">
+                    <option>10개씩</option>
+                    <option>15개씩</option>
+                </select>
+                <div class="market_add">
+                    <button><img src="/static/img/market_add_icon.svg" ></button>
+                    <butoon class="market_add_text">등록하기</butoon>
+                </div>
+            </div>
+        </div>
+        <table class="market_list">
+            <thead class="market_list_title">
+                <tr>
+                    <th>거래 유형</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>작성자</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr class="market_list_post">
+                    <td class="market_icon_table"><img src="/static/img/selling_icon.svg">판매해요</td>
+                    <td class="market_list_item">드라이기 새거 판매해요</td>
+                    <td class="market_list_item">25.01.29</td>
+                    <td class="market_list_item">냠냠</td>
+                </tr>
+                <tr class="market_list_post">
+                    <td class="market_icon_table"><img src="/static/img/sharing_icon.svg">나눔해요</td>
+                    <td class="market_list_item">드라이기 새거 판매해요</td>
+                    <td class="market_list_item">25.01.29</td>
+                    <td class="market_list_item">냠냠</td>
+                </tr>
+                <tr class="market_list_post">
+                    <td class="market_icon_table"><img src="/static/img/buying_icon.svg">구매해요</td>
+                    <td class="market_list_item">드라이기 새거 판매해요</td>
+                    <td class="market_list_item">25.01.29</td>
+                    <td class="market_list_item">냠냠</td>
+                </tr>
+                <tr class="market_list_post">
+                    <td class="market_icon_table"><img src="/static/img/selling_icon.svg">판매해요</td>
+                    <td class="market_list_item">드라이기 새거 판매해요</td>
+                    <td class="market_list_item">25.01.29</td>
+                    <td class="market_list_item">냠냠</td>
+                </tr>
+                <tr class="market_list_post">
+                    <td class="market_icon_table"><img src="/static/img/selling_icon.svg">판매해요</td>
+                    <td class="market_list_item">드라이기 새거 판매해요</td>
+                    <td class="market_list_item">25.01.29</td>
+                    <td class="market_list_item">냠냠</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="page_number"> 
+        <a>1</a>
+        <a>2</a>
+        <a>3</a>
+        <a>4</a>
+        <a>5</a>
+        <a>></a>
+    </div>
+</section>
+{% endblock %}

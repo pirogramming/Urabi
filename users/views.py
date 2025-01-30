@@ -238,3 +238,5 @@ def main_view(request):
     if request.user.is_authenticated:
         return render(request, 'main/main.html')
     return redirect('users:login')
+
+
