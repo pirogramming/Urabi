@@ -1,4 +1,4 @@
-.red{
+.red, .red:visited{
   color: var(--red);
 }
 .black{

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,5 +16,7 @@ urlpatterns = [
     path('login/naver/callback/', views.naver_login_callback, name='naver-callback'),
     path('logout/', views.user_logout, name='logout'),
 
+
+    path('accompany/', include('accompany.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
