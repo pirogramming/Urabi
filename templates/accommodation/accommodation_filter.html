@@ -1,0 +1,114 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'accommodation/accommodation_filter.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="accommodation-container">
+    <h1 class="title">다음 여행자를 위한 작은 안내서, <span class="highlight">숙소 후기</span></h1>
+    
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" placeholder="여행지 검색" class="location-input">
+            <div class="divider"></div>
+            <input type="text" placeholder="이용자 평점" class="facility-input">
+            <button class="search-btn">
+                <img src="{% static 'img/search-icon.svg' %}" alt="검색">
+            </button>
+        </div>
+    </div>
+
+    
+    <section class="main_accommodation">
+        <div class="main_accommodation_container">
+            <div class="main_accommodation_left">
+                <h2>방문했던 숙소의 솔직한 후기를 공유해주세요!</h2>
+                <img src="{% static 'img/main_hotel_review.svg' %}" alt="accommodation review">
+                <button class="main_review_btn">직접 후기 추가하기</button>
+            </div>
+            <div class="main_accommodation_right">
+                <span class="main_tag">#치안</span>
+                <span class="main_tag">#친절</span>
+                <span class="main_tag">#와이파이</span>
+                <span class="main_tag">#에어컨</span>
+                <span class="main_tag">#접근성</span>
+                <span class="main_tag">#청결도</span>
+                <span class="main_tag">#소음</span>
+                <span class="main_tag">#가격</span>
+            </div>
+        </div>
+    </section>
+
+    
+    <div class="room-list">
+      <div class="room-card">
+          <div class="card-content">
+              <span class="guest-tag">게스트 선호</span>
+              <div class="image-wrapper">
+                  <div class="room-image">
+                      <img src="{% static 'img/room_ex1.png' %}" alt="Lancashire" class="room-img">
+                      <div class="star-rating">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/empty_star.png' %}" alt="별점">
+                      </div>
+                  </div>
+                  <div class="map-container">
+                      <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
+                      <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
+                      <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
+                      <button class="review-view-btn">후기 보기 </button>
+                  </div>
+              </div>
+              <div class="card-info">
+                  <div class="info-left">
+                      <h3>영국 Lancashire</h3>
+                      <span class="rating-text">평점 4.0</span>
+                      <span class="rating-text">최신리뷰: 너무 깨끗하고 무난하면서 좋았습니다~</span>
+                  </div>
+                  <img src="{% static 'img/fill_star.png' %}" alt="즐겨찾기" class="favorite-star">
+              </div>
+          </div>
+      </div>
+  
+      
+      <div class="room-card">
+          <div class="card-content">
+              <span class="guest-tag">인기 숙소</span>
+              <div class="image-wrapper">
+                  <div class="room-image">
+                      <img src="{% static 'img/room_ex2.png' %}" alt="Silecroft" class="room-img">
+                      <div class="star-rating">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                      </div>
+                  </div>
+                  <div class="map-container">
+                      <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
+                      <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
+                      <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
+                      <button class="review-view-btn">후기 보기 </button>
+                  </div>
+              </div>
+              <div class="card-info">
+                  <div class="info-left">
+                      <h3>영국 Silecroft</h3>
+                      <span class="rating-text">평점 5.0</span>
+                      <span class="rating-text">최신리뷰: 정말 좋은 숙소였습니다!</span>
+                  </div>
+                  <img src="{% static 'img/fill_star.png' %}" alt="즐겨찾기" class="favorite-star">
+              </div>
+          </div>
+      </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}
