@@ -25,5 +25,6 @@ def main_before_login(request):
 urlpatterns = [
     path('', main_before_login, name='home'),
     path('admin/', admin.site.urls), 
-    path('users/', include('users.urls')), 
+    path('users/', include('users.urls')),
+    path('flash/', include('flash.urls')),
 ]

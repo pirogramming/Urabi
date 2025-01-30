@@ -115,9 +115,8 @@ body {
 
 .main {
   margin: 0 auto; 
-  background-color: aqua; 
   padding: 20px;
-  min-height: 100vh;  
+  min-height: 80vh;  
   /* 최소 높이 설정 */
 }
 

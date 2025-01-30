@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %} 
+<link rel="stylesheet" href="{% static 'flash/flash_list.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<a id="myPage" href="#">My Page</a>
+{% endblock %}
+
+{% block content %}
+<!-- 지도 위 문구 -->
+<section class="flash_title">
+    <h2>여행 속 반짝이는 만남, <span class="highlight">번개 모임</span> > 번개 찾기</h2>
+</section>
+
+<!-- 지도 -->
+<section class="flash_map">
+    <img src="{% static 'img/flash_map_sample.png' %}" alt="번개 모임 지도">
+</section>
+
+<!-- 모집 중인 번개 및 버튼 -->
+<section class="flash_list_header">
+    <h2 class="flash_list_title">12개의 모집중인 번개</h2>
+    <div class="flash_list_controls">
+        <h2>나만의 번개</h2>
+        <button class="flash_register_btn">등록하기</button>
+    </div>
+</section>
+
+<!-- 구분선 -->
+<hr class="flash_list_divider">
+
+<!-- 모집 중인 번개 리스트 -->        
+<section class="flash_list">
+    <div class="flash_list_body">
+        <!-- 번개 모임 카드 -->
+        <div class="flash_card">
+            <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
+            <div class="flash_card_info">
+                <h3>토트넘 경기보면서 맥주 드실 분~</h3>
+                <p>2025년 01월 10일 18:00</p>
+                <div class="flash_card_tags">
+                    <span class="flash_tag">#남녀무관</span>
+                    <span class="flash_tag">#타팬환영</span>
+                    <span class="flash_capacity">1/4</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flash_card">
+            <img src="{% static 'img/flash_meeting2.png' %}" alt="모임 이미지">
+            <div class="flash_card_info">
+                <h3>저녁먹기 전까지만 대화하실 분?</h3>
+                <p>2025년 01월 12일 14:30</p>
+                <div class="flash_card_tags">
+                    <span class="flash_tag">#여자분만</span>
+                    <span class="flash_tag">#빵 나눠먹어요</span>
+                    <span class="flash_capacity">2/6</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
