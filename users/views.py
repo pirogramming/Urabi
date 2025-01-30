@@ -240,3 +240,6 @@ def main_view(request):
     return redirect('users:login')
 
 
+#테스트용
+def market(request):
+    return render(request, 'market/market_detail_guest.html')
