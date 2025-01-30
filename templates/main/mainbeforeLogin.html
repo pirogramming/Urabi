@@ -1,0 +1,8 @@
+{% extends "main/main.html" %}
+{%load static%}
+
+{% block header_content %}
+<a id="main_join" href="{% url 'users:signup' %}">회원가입</a>
+<a id="main_LogIn" href="{% url 'users:login' %}">LogIn</a>
+{% endblock %}
+
