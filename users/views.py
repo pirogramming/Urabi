@@ -2,8 +2,9 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.shortcuts import render
 from .models import User
-from .serializers import SignupSerializer, UserSerializer
+from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 
 class SignupView(generics.CreateAPIView):
     serializer_class = SignupSerializer
@@ -22,6 +23,8 @@ class SignupView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 class LoginView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -38,3 +41,9 @@ class LoginView(generics.GenericAPIView):
                 }
             }, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+def signup_page(request):
+    return render(request, 'login/signup.html')
+
+def login_page(request):
+    return render(request, 'login/login.html')
