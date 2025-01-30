@@ -1,0 +1,118 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{%static 'mypage/myPage.css'%}">
+{%endblock%}
+
+ {%block content%}
+ <main class="mypage-wrap">
+
+    <nav class="mypage-nav">
+      <ul>
+        <li class="active">프로필</li>
+        <li><a href="#">찜 목록</a></li>
+        <li><a href="#">나의 여행 일정</a></li>
+        <li><a href="#">내 활동 관리</a></li>
+      </ul>
+    </nav>
+  
+    <section class="mypage-content">
+      <h1 class="main-title">마이 페이지</h1>
+      
+      <section class="profile-section">
+        <div class="profile-header">
+            <div class="section-title">프로필</div>
+            <button class="edit-btn">수정</button>
+        </div>
+
+        <div class="passport-card">
+          <div class="passport-card-top">
+            <span class="passport-label">여권 PASSPORT</span>
+            <div class="passport-country">
+                <div>대한민국 REPUBLIC OF KOREA</div>
+              </div>
+          </div>
+          <div class="passport-card-body">
+            <div>
+                <img
+              src="{% static 'img/default-profile.png' %}" 
+              alt="프로필 사진"
+              class="profile-photo"
+            />
+            <div class="travel-score">
+                <span>여행지수</span>
+                <span class="score">36.5°C</span>
+            </div>
+            </div>
+            
+            <div class="info-area">
+                <div class="info-row row-1">
+                    <div class="info-item">
+                        <span class="label">국가 코드 / Country code</span>
+                        <span class="value">KOR</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">국적 / Nationality</span>
+                        <span class="value">REPUBLIC OF KOREA</span>
+                    </div>
+               </div>
+                <div class="info-row row-2">
+                    <div class="info-item">
+                        <span class="label">한글성명</span>
+                        <span class="value">{{ user.user_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">선호하는 이름 / Nickname</span>
+                        <span class="value">{{ user.nickname }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row row-3">
+                    <div class="info-item">
+                        <span class="label">생년월일 / Date of Birth</span>
+                        <span class="value">{{ user.birth }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">성별 / Sex</span>
+                        <span class="value">{{ user.user_gender }}</span>
+                    </div>
+                </div>
+
+              <div class="info-row row-4">
+                    <div class="info-item">
+                        <span class="label">이메일 / Email</span>
+                        <span class="value">{{ user.email}}</span>
+                    </div>
+              </div>
+            </div>
+
+        
+          </div>
+        </div>
+      </section>
+  
+      <section class="account-section">
+        <h2 class="account-section-title">계정 정보</h2>
+        <div class="account-info">
+          <div class="account-row">
+            <span class="label">이메일</span>
+            <span class="value">{{ user.email}}</span>
+          </div>
+          <div class="account-row">
+            <span class="label">휴대폰 번호</span>
+            <span class="value">{{ user.user_phone }}</span>
+          </div>
+          <div class="account-row account-verification">
+            <span class="label" id="verification-label">본인 인증</span>
+            <span class="value" id="verification-istrue">완료</span>
+          </div>
+        </div>
+      </section>
+  
+      <div class="logout-area">
+        <button class="logout-btn">로그아웃</button>
+      </div>
+    </section>
+  </main>
+  {%endblock%}
+
