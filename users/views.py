@@ -233,3 +233,8 @@ def user_logout(request):
 
 def login_view(request):
     return render(request, 'login/login.html', {'user': request.user})
+
+def main_view(request):
+    if request.user.is_authenticated:
+        return render(request, 'main/main.html')
+    return redirect('users:login')

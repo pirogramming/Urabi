@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import json
 from pathlib import Path
 import os
+from django.core.exceptions import ImproperlyConfigured
+
 
 
 with open('secrets.json') as f:
