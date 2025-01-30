@@ -1,32 +1,42 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Urabi</title>
-  <link rel="stylesheet" href="../base_css/reset.css">
-  <link rel="stylesheet" href="../base_css/base.css">
+  <link rel="icon" type="image/x-icon" href="{% static 'img/Urabi_logo.svg' %}">
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{% static 'base_css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'main/main.css' %}">
+  <link rel="stylesheet" href="{% static 'main/mainbeforeLogin.css' %}">
 </head>
 <body>
   <div class="container">
     <!-- Header -->
     <header class="header">
       <div class="header-container">
-      <div class="logo"><img width="150" src="../base_css/logo.png"></div>
+      <div class="logo"><img width="150" src="{% static 'img/logo.png' %}"></div>
       <nav class="nav">
         <a href="#">장기 동행</a>
         <a href="#">번개 모임</a>
         <a href="#">숙소 후기</a>
         <a href="#">나눔 마켓</a>
+        {% block header_content %}
         <a id="myPage"href="#">My Page</a>
+        {% endblock %}
       </nav>
       </div>
     </header>
 
     <!-- Main -->
     <main class="main">
-      <section></section>
-      <section></section>
+      {% comment %} <section></section> {% endcomment %}
+      {% block content %}
+      {% endblock %}
+            
+      {% comment %} <section></section> {% endcomment %}
     </main>
 
     <!-- Footer -->
