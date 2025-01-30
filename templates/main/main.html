@@ -2,6 +2,11 @@
 {% load static %}
 
 
+{% block head%} 
+<link rel="stylesheet" href="{% static 'main/main.css' %}">
+<link rel="stylesheet" href="{% static 'main/mainbeforeLogin.css' %}">
+{% endblock %}
+
 {% block header_content %}
 <a id="myPage" href="#">My Page</a>
 {% endblock %}

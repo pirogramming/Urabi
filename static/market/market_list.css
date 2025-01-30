@@ -1,0 +1,187 @@
+#market_nav{
+    color:var(--blue);
+}
+/*검색 바*/
+#market_search{
+    height: 30vh;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:40px;
+    padding-top : 20px;
+    border-bottom: 1.5px solid var(--strong-gray);
+}
+.market_title{
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.market_title em{
+    color:var(--red);
+    font-weight: 700;
+    font-size: 45px;
+}
+
+#market_search_bar{
+    width: 100%;
+    height: 12vh;
+    border-radius: 50px;
+    border: 2px solid black;
+    background-color: #FFFBFB;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+}
+
+.market_search_content{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr;
+    justify-content: space-between;
+    padding-left: 47px;
+    height: 100%;
+    align-items: center;
+}
+.market_search_btn {
+    background:none;
+    width: 60px;
+    height: 60px;
+    margin: 19px 16px;
+    padding: 5px;
+}
+
+.market_search_title{
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    border-right: 2px solid black;
+    margin-left: 15px;
+}
+
+.market_search_btn{
+    margin-bottom: 10px;
+}
+.market_search_title h1{
+    margin-bottom: 15px;
+}
+#market_trade, #market_location, #market_category, #market_search_text {
+    width: 80%;
+    border:2px solid black;
+    border-radius: 10px;
+}
+
+/*목록 list*/
+#market_body{
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+    display: flex;
+    flex-direction: column;
+    gap:40px;
+    height: 90vh;
+    justify-content: space-between;
+}
+.market_list_container{
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+.market_list_total_title h1{
+    font-size: 30px;
+    font-weight: 400;
+    margin: 40px 0 20px 0;
+}
+
+.market_list_info{
+    display: grid;
+    grid-template-columns: 1.3fr 2fr 1fr;
+}
+
+.market_list_info h3, #market_list_count, .market_add_text{
+    border:2px solid black;
+    border-radius: 10px;  
+    line-height: 2rem;
+}
+
+.market_list_info h3{
+    padding: 7px 6px;  
+    text-align: center;
+    margin-right: 15px;
+}
+.market_list_info p {
+    display: inline-block;
+    background-color: var(--red);
+    color : white;
+    border-radius: 10px;
+    margin: 0 5px;
+    padding: 0px 10px;
+}
+#market_list_count{
+    margin-left: 15px;
+    width: 15%;
+}
+
+.market_add{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: end;
+}
+.market_add_text{
+    padding: 7px 25px;
+    font-size: 18px;
+    color:var(--blue); 
+}
+.market_add_text:hover{
+    color:white;
+    background-color: var(--blue);
+}
+.market_add img{
+    width: 40px;
+    margin:0;
+}
+.market_add img:hover{
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+    border-radius: 10px; 
+}
+
+.market_list_title{
+    border-top : 2px solid black;
+    border-bottom : 2px solid black;
+    font-size: 22px;
+    line-height: 55px;
+}
+
+.market_list_post{
+    border-bottom : 2px solid var(--strong-gray);
+    text-align: center;
+    line-height: 60px;
+    font-size: 15px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.market_icon_table{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    justify-content: center;
+}
+
+.market_icon_table img{
+    width: 40px;
+}
+.market_list_item{
+    align-content: center;
+}
+
+/*페이지 넘김*/
+.page_number{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    cursor: pointer;
+}
