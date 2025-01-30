@@ -1,0 +1,305 @@
+/*장기 동행 css*/
+.main_companion{
+    background-image: url('/static/img/main_background.png');
+    padding: 20px;
+    min-height: 80vh;
+    background-size: cover;
+    background-position: center;  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.main_companion div{
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+
+.main_companion_text{
+    font-size: 80px;
+    color: white;
+    font-weight: 900;
+    line-height: 1.5;
+}
+.main_companion_text >em{
+    color:var(--red);
+}
+
+.main_companion_btn_container{
+    display:flex;
+    justify-content: flex-end;
+}
+#main_find_companion{
+    color: white;
+    font-size: 35px;
+    font-weight: 700;
+    margin-top: 40px;
+    transition: transform 0.3s ease-in-out;
+}
+#main_find_companion:hover{
+    transform: scale(1.1);
+    border-bottom: 1.5px solid white;
+}
+/*번개 모임 css*/
+.main_flash{
+    padding: 30px;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:20px;
+}
+.main_flash_text{
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+}
+.main_flash_text h1 {
+    font-size: 40px;
+    font-weight: 300;
+}
+.main_flash_text em{
+    color:var(--red);
+    font-weight: 700;
+}
+.main_flash_text h3{
+    font-size: 25px;
+    font-weight: 300;
+}
+.main_flash_body{
+    width:100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+    display: flex;
+    justify-items: start;
+    align-items: center;
+    gap: 125px;
+}
+.main_flash_btn_container{
+    display: flex;
+    gap: 80px;
+    justify-content: space-around;
+    margin-top:20px;
+}
+.main_find_flash,.main_enroll_flash{
+    border: 2px solid var(--red);
+    width: 250px;
+    height: 200px;
+    border-radius: 30px;
+    box-shadow: 5px 7px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+.main_enroll_flash{
+    border: 2px solid var(--blue);
+}
+.main_find_flash>p,.main_enroll_flash>p{
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.main_find_flash>a,.main_enroll_flash>a{
+    border: 1.5px solid black;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 500;
+    font-size: 22px;
+    box-shadow: 5px 5px 8px rgba(0, 0,0, 0.3);
+}
+.main_find_flash>a{
+    color:var(--red);
+}
+.main_enroll_flash>a{
+    color:var(--blue);
+}
+.main_find_flash:hover,.main_enroll_flash:hover{
+    transform:scale(1.1);
+}
+.main_find_flash>a:hover{
+    background-color: var(--red);
+    color: white;
+}
+.main_enroll_flash>a:hover{
+    background-color: var(--blue);
+    color: white;
+}
+.main_flash_body img {
+    width: 550px; 
+    height: 350px;
+    object-fit: contain;
+}
+
+/*숙소 후기*/
+.main_accommodation{
+    padding: 30px;
+    min-height: 70vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:20px;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+.main_accommodation_title{
+    font-size: 40px;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+.main_accommodation_title em{
+    color: var(--red);
+    font-weight: 700;
+}
+
+.main_accommodation_container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 350px;
+    max-width: 1200px;
+    border-radius: 20px;
+    position: relative;
+    border: 1.5px solid #191970;
+    background-image: url('/static/img/main_box_final.svg');
+    background-size: cover; 
+    background-position: left center;
+}
+.main_accommodation_left{
+    width: 50%;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+
+}
+.main_accommodation_left h2{
+    text-align: center;
+    font-size: 20px;
+    margin :0;
+}
+.main_accommodation_left img{
+    margin :0 auto;
+    width: 56%;
+    max-width: 250px;
+    display: block;
+}
+.main_accommodation_left button{
+    font-weight: 500;
+    height: 40px;
+    color: white;
+    border: 2px solid white;
+    border-radius: 15px;
+    width: 104px;
+    margin-left: auto;
+    cursor: pointer;
+    position: absolute;
+    bottom: -23px;
+    right: 10px;
+    font-size: 15px;
+}
+.main_accommodation_left button:hover{
+    background: white;
+    color: #191970;
+}
+.main_accommodation_right{
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    gap:20px;
+    position: relative;
+    padding: 30px;
+}
+
+.main_tag{
+    font-size: 20px;
+    font-weight: 400;
+    position : absolute;
+}
+
+.main_tag:nth-child(1) { top: -117px; left: 121px; }
+.main_tag:nth-child(3) { top: 48px; left: 75px; }
+.main_tag:nth-child(2) { top: -37px; right: 246px; }
+.main_tag:nth-child(4) { top: 98px; right: 158px; }
+.main_tag:nth-child(5) { top: 14px; left: 402px; }
+.main_tag:nth-child(6) { top: 162px; right: 31px; }
+.main_tag:nth-child(7) { top: 174px; left: 154px; }
+.main_tag:nth-child(8) { bottom: 114px; right: 30px; }
+/*나눔 마켓*/
+.main_market{
+    padding: 30px;
+    min-height: 70vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:20px;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+.main_market_title{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.main_market_title h1{
+    font-size: 40px;
+    font-weight: 300;
+}
+.main_market_title em{
+    color: var(--red);
+    font-weight: 700;
+}
+.main_market_title a{
+    margin-top: 30px;
+    font-size: 19px;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+.main_market_title a:hover{
+    transform: scale(1.2);
+    border-bottom: 1.5px solid black;
+}
+.main_market_body_title{
+    font-size: 20px;
+    display: inline-block;
+    padding-bottom: 3px;
+    border-bottom: 1.5px solid black;
+    margin-bottom: 40px;
+}
+.main_market_category{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.main_market_category li{
+    position: relative;
+}
+.main_market_category p{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    color: white;
+    font-weight: 500;
+    font-size: 35px;
+    text-wrap: nowrap;
+}
+.main_market_category img{
+    border-radius: 50%;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5)
+}

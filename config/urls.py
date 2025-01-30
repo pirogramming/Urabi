@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.shortcuts import render
+
+def main_before_login(request):
+    return render(request, 'main/mainbeforelogin.html')
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("users/", include("users.urls")),
+    path('', main_before_login, name='home'),
+    path('admin/', admin.site.urls), 
+    path('users/', include('users.urls')), 
 ]
