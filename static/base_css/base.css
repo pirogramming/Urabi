@@ -64,7 +64,10 @@
 :root{
   --blue: #1E88E5;
   --red: #EF4141;
+  --red-hover:#b71c1c;
   --light-red: #f69f9f;
+  --yellow : #ffaf38;
+  --darkgray:#F3F3F3;
   --gray: #F5F5F5;
   --strong-gray: #EBEBEB;
 }

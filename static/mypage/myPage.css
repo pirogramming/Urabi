@@ -1,0 +1,228 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+
+*{
+  font-family: 'Paperlogy' !important; 
+}
+
+.mypage-wrap {
+    display: flex; 
+    max-width: 1200px;
+    font-family: 'Paperlogy';
+    margin-top: 50px;
+  }
+  
+  .mypage-nav {
+    width: 180px;
+    margin: 50px 40px 0 0;
+  }
+  
+  .mypage-nav ul {
+    list-style: none;
+  }
+
+  .mypage-nav li {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .mypage-nav li.active {
+    color: var(--red); 
+    font-weight: bold;
+  }
+
+  .mypage-nav li a {
+    text-decoration: none;
+    color: black;
+  }
+  
+  .mypage-content {
+    flex: 1;
+  }
+  
+  .main-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  .section-title, .account-section-title {
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 1.5rem;
+  }
+  
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .edit-btn {
+    width: 60px;
+    height: 36px;
+    background-color: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .edit-btn:hover {
+    background-color: var(--red-hover);
+    transition: all 0.3s ease;
+  }
+  
+  /********************************
+    여권(프로필) 카드
+  ********************************/
+  .passport-card {
+    min-width: 70%;
+    min-height: 60%;
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      #c9f1f1 0%,
+      #ffe2e2 100%
+    );
+    border-radius: 20px;
+    padding: 30px;
+    margin: 0 auto 40px auto;
+    box-sizing: border-box;
+    font-family: 'Paperlogy';
+  }
+  
+
+  .passport-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: var(--blue);
+  }
+  .passport-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .passport-country {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  
+  .passport-card-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: nowrap;
+  }
+
+  .profile-photo {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .travel-score {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .score {
+    background-color: var(--yellow);
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 20px;
+  }
+  
+  /********************************
+    오른쪽: 정보영역
+  ********************************/
+  .info-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    white-space: normal;  
+  }
+  .info-row {
+    display: grid;
+    grid-template-columns: 200px auto; 
+    margin-bottom: 8px;
+    align-items: center; 
+  }
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0px;
+  }
+  
+  .label {
+    font-size: 0.9rem;
+    color: var(--blue);
+    margin-bottom: 2px;
+    font-weight: 500;
+  }
+  .value {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  /********************************
+    계정 정보
+  ********************************/
+
+  .account-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  .account-row .label {
+    color: #000000;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  .account-row .value {
+    font-size: 1.0rem;
+    color: darkgray;
+    font-weight: 400;
+  }
+
+  .account-verification{
+    display: flex;
+    flex-direction: row;
+  }
+
+  #verification-istrue{
+    color: var(--blue);
+    margin-left: 5px;
+  }
+
+  
+  /********************************
+    로그아웃 버튼
+  ********************************/
+  .logout-area {
+    text-align: center; 
+    margin-top: 24px;
+  }
+  .logout-btn {
+    background-color: var(--red);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Paperlogy';
+  }
+  .logout-btn:hover {
+    background-color: var(--red-hover);
+    transition: all 0.3s ease;
+  }
+  
