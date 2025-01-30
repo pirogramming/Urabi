@@ -65,11 +65,11 @@
   --blue: #1E88E5;
   --red: #EF4141;
   --red-hover:#b71c1c;
-  --darkgray:#F3F3F3;
   --light-red: #f69f9f;
+  --yellow : #ffaf38;
+  --darkgray:#F3F3F3;
   --gray: #F5F5F5;
   --strong-gray: #EBEBEB;
-  --yellow : #ffaf38;
 }
 
 body {
@@ -115,9 +115,13 @@ body {
   border-radius: 16px;
   color: white;
 }
+#myPage:hover{
+  background-color: white;
+  color : var(--red);
+  border: 1.5px solid var(--red);
+}
 
 .main {
-  margin: 0 auto;
   padding: 20px;
   min-height: 80vh; /* 최소 높이 설정 */
 }
