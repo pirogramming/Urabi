@@ -10,6 +10,9 @@
 .blue{
   color: var(--blue);
 }
+.main{
+  margin: 0 auto;
+}
 .logo{
   display: flex;
   justify-content: center;
@@ -24,6 +27,8 @@
   align-items: center;
   gap: 5px;
   margin-bottom: 10px;
+  position: relative;
+  right: 150px;
 }
 .registerForm-name h2{
   font-size: 26px;
@@ -84,9 +89,7 @@
 .register-form {
   display: flex;
   flex-direction: column;
-  margin-left: 150px;
   margin-top: 50px;
-  
 }
 
 .register-form label {
