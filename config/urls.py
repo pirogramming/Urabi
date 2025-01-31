@@ -26,5 +26,4 @@ urlpatterns = [
     path('', main_before_login, name='home'),
     path('admin/', admin.site.urls), 
     path('users/', include('users.urls')), 
-    path('accommodation/', include('accommodation.urls')),
 ]
