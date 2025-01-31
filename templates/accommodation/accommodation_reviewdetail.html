@@ -1,0 +1,100 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'accommodation/accommodation_reviewdetail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="accommodation-detail-container">
+    <div class="detail-header">
+        <h2>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></h2>
+        <p> > 상세 정보</p>
+    </div>
+    <div class="image-map">
+            <img src="{% static 'img/room_ex1.png' %}" alt="Accommodation Image" class="accommodation-image">
+            <img src="{% static 'img/Map_ex.png' %}" alt="" class="map-image">
+        </div>
+    <div class="detail-info">
+        <div class="detail-info-header">
+             <div class="detail-info-title">영국 Lancashire </div>
+            <span class="rating">⭐ 4.0</span> 
+            <button>
+                <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
+            </button>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="리뷰 검색하기" class="review-search">
+            <button>
+                <img src="{% static 'img/search-icon.svg' %}" alt="찾기" class="search-icon">
+            </button>
+        </div>
+        <p class="review-count">15개의 리뷰</p>
+
+        <div class="reviews">
+            <div class="review">
+                <div class="review-header">
+                    <span class="review-profileimg">
+                        <img src="{% static 'img/default-profile.png' %}" alt="">
+                    </span>
+                    <span class="review-author">유승인</span>
+                    <span class="review-rating">⭐ 4.0</span>
+                    <button class="review-heart">
+                        <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
+                    </button>
+                </div>
+                <div class="review-content">
+                    <p class="review-text">적당히 깔끔하고 조용해서 편하게 잘 쉬다 가요~</p>
+                    <div class="review-image">
+                        <img src="{% static 'img/room_ex1.png' %}" alt="Review Image">
+                    </div>
+                </div>
+                <button class="reply-button">댓글 달기 ></button>
+            </div>
+
+            <div class="review">
+                <div class="review-header">
+                    <span class="review-profileimg">
+                        <img src="{% static 'img/default-profile.png' %}" alt="">
+                    </span>
+                    <span class="review-author">민설아</span>
+                    <span class="review-rating">⭐ 4.0</span>
+                    <button class="review-heart">
+                        <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
+                    </button>
+                </div>
+                <p class="review-text">숙소 디자인이 너무 제 스타일이었어요! 감사합니다</p>
+                <button class="reply-button">댓글 달기 ></button>
+            </div>
+
+            <div class="review">
+                <div class="review-header">
+                    <span class="review-profileimg">
+                        <img src="{% static 'img/default-profile.png' %}" alt="">
+                    </span>
+                    <span class="review-author">이시은</span>
+                    <span class="review-rating">⭐ 4.0</span>
+                    <button class="review-heart">
+                        <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
+                    </button>
+                </div>
+                <p class="review-text">숙소나 청결상태는 좋았으나 교통이 약간 불편했어요! 그래도 전체적으로 만족했습니다.</p>
+                <div class="review-image">
+                    <img src="{% static 'img/room_ex2.png' %}" alt="Review Image">
+                </div>
+                <button class="reply-button">댓글 달기 ></button>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <span class="pagination-control">&lt;&gt;</span>
+        </div>
+
+        <div class="action-buttons">
+            <button class="navigate-button">숙소 페이지로 ></button>
+            <button class="write-review-button">후기 작성하기 ></button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
