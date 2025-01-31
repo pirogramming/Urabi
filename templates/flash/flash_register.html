@@ -12,7 +12,7 @@
 {% block content %}
 <section class="flash_register">
     <section class="flash_title">
-        <h2>여행 속 반짝이는 만남, <span class="highlight">번개 모임</span> > 번개 찾기</h2>
+        <h2>여행 속 반짝이는 만남, <span class="highlight">번개 모임</span> > 번개 등록</h2>
     </section>
     
     <section class="flash_map">
@@ -38,28 +38,30 @@
         </div>
 
         <div class="input_group">
-            <label for="capacity">인원</label>
-            <select id="capacity" name="capacity">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5+</option>
-            </select>
+            <div class="capacity_select_container">
+                <span for="capacity">인원</span>
+                <select id="capacity" name="capacity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5+</option>
+                </select>
+            </div>
         </div>
 
         <div class="input_group">
-            <label for="tag">태그 등록</label>
-            <div class="tag_input">
+            <div class="tag_input_container">
+                <span for="tag">태그 등록</span>
                 <input type="text" id="tag" name="tag" placeholder="#태그 입력">
                 <button type="button" id="add_tag_btn">+</button>
             </div>
-            <div class="tag_list"></div>
+            <div class="tag_list"></div> <!-- 태그가 추가되는 영역 -->
         </div>
 
         <div class="input_group">
             <label for="description">내용 입력</label>
-            <textarea id="description" name="description" rows="4" placeholder="내 내용을 입력하세요"></textarea>
+            <textarea id="description" name="description" rows="4" placeholder="내용을 입력하세요"></textarea>
         </div>
 
         <button type="submit" class="flash_submit_btn">등록</button>
@@ -73,14 +75,33 @@
         const tagList = document.querySelector(".tag_list");
 
         addTagBtn.addEventListener("click", function() {
-            if (tagInput.value.trim() !== "") {
+            let tagValue = tagInput.value.trim();
+            if (tagValue !== "") {
+                let tagText = `#${tagValue}`;
+
                 const tag = document.createElement("span");
                 tag.classList.add("tag_item");
-                tag.textContent = tagInput.value;
+
+                const tagLabel = document.createElement("span");
+                tagLabel.textContent = tagText;
+
+
+                const removeBtn = document.createElement("button");
+                removeBtn.classList.add("tag_remove_btn");
+                removeBtn.textContent = "x";
+                
+                removeBtn.addEventListener("click", function() {
+                    tag.remove();
+                });
+
+                tag.appendChild(tagLabel);
+                tag.appendChild(removeBtn);
                 tagList.appendChild(tag);
+
                 tagInput.value = "";
             }
         });
     });
 </script>
+
 {% endblock %}
