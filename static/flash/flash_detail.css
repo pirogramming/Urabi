@@ -1,0 +1,250 @@
+/* 번개 상세 페이지 컨테이너 */
+.flash_detail {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 및 경로 */
+.flash_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.header_comment {
+    font-size: 14px;
+    color: #666;
+}
+
+.flash_title {
+    font-size: 24px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+/* 관심 번개(하트) 아이콘 */
+.flash_star img {
+    width: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+}
+
+.flash_star img:hover {
+    transform: scale(1.2);
+}
+
+.flash_star img:active {
+    filter: brightness(0) saturate(100%) invert(26%) sepia(99%) saturate(745%) hue-rotate(332deg) brightness(94%) contrast(96%);
+}
+
+/* 구분선 */
+.flash_divider {
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+    margin: 15px 0;
+}
+
+/* 번개 정보 */
+.flash_info {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.flash_image {
+    width: 50%;
+    border-radius: 10px;
+}
+
+.flash_description {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/*제목 & 찜*/
+.flash_title_star {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 태그 & 인원 */
+.flash_tags_capacity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flash_tags {
+    display: flex;
+    gap: 8px;
+}
+
+.flash_tag {
+    background: #007bff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.flash_capacity {
+    font-weight: bold;
+    color: #d32f2f;
+}
+
+/* 날짜 & 위치 */
+.flash_details {
+    display: flex;
+    flex-direction: column;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    gap: 8px;
+}
+
+.flash_location,
+.flash_date {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* 내용 */
+.flash_content {
+    font-size: 14px;
+    color: #333;
+}
+
+/* 버튼 */
+.flash_apply_btn {
+    width: 25%;
+    padding: 10px 15px;
+    border: 2px solid var(--blue);
+    border-radius: 5px;
+    cursor: pointer;
+    background: #ffffff;
+    font-weight: bold;
+    color: var(--blue);
+    align-self: flex-end;
+}
+
+.flash_apply_btn:hover {
+    background: var(--blue);
+    color: white;
+}
+
+/* 호스트 정보 */
+.flash_host {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.host_image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.host_info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 8px;
+}
+
+.host_name {
+    font-weight: bold;
+}
+
+.host_rating {
+    color: #ffa500;
+}
+
+.host_chat_btn {
+    padding: 8px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.host_chat_btn:hover {
+    background: #0056b3;
+}
+
+/* 다른 번개 */
+.other_flash {
+    margin-top: 30px;
+}
+
+
+.other_flash h3{
+    padding-left: 60px;
+}
+
+.other_flash_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.flash_list_btn {
+    padding: 5px 10px;
+    border: 1px solid var(--blue);
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.other_flash_list {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+}
+
+.other_flash_card {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+}
+
+.other_flash_card p{
+    margin-top: 10px;
+}
+
+.other_flash_card img {
+    width: 80%;
+    border-radius: 10px;
+}
+
+/* 반응형 */
+@media screen and (max-width: 768px) {
+    .flash_detail {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .flash_info {
+        flex-direction: column;
+    }
+
+    .flash_image {
+        width: 100%;
+    }
+}

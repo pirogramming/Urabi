@@ -34,17 +34,19 @@
             <div class="flash_list_body">
                 <!-- 번개 모임 카드 -->
                 <div class="flash_card">
-                    <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
-                    <div class="flash_card_info">
-                        <h3>토트넘 경기보면서 맥주 드실 분~</h3>
-                        <p class="flash_place">123 High Street,London, SW1A 1AA United Kingdom</p>
-                        <p class="flash_date">2025년 01월 11일 12:00</p>
-                        <div class="flash_card_tags">
-                            <span class="flash_tag">#남녀무관</span>
-                            <span class="flash_tag">#타팬환영</span>
-                            <span class="flash_capacity">1/4</span>
+                    <a href="{% url 'flash_detail' pk=1 %}" class="flash_card_link">
+                        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
+                        <div class="flash_card_info">
+                            <h3>토트넘 경기보면서 맥주 드실 분~</h3>
+                            <p class="flash_place">123 High Street,London, SW1A 1AA United Kingdom</p>
+                            <p class="flash_date">2025년 01월 11일 12:00</p>
+                            <div class="flash_card_tags">
+                                <span class="flash_tag">#남녀무관</span>
+                                <span class="flash_tag">#타팬환영</span>
+                                <span class="flash_capacity">1/4</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
         
                 <div class="flash_card">
