@@ -10,3 +10,6 @@ def accompany_list(request):
 
 def accompany_detail(request):
     return render(request, 'accompany/accompany_detail.html')
+
+def accompany_create(request):
+    return render(request, 'accompany/accompany_create.html')
