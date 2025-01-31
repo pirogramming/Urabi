@@ -8,8 +8,9 @@
   .mypage-wrap {
     display: flex; 
     max-width: 1200px;
-    font-family: 'Paperlogy';
     margin-top: 50px;
+    justify-content: center;
+    margin: 50px auto
   }
   
   .mypage-nav {
@@ -33,11 +34,13 @@
 
   .mypage-nav li a {
     text-decoration: none;
-    color: black;
   }
 
   .mypage-content {
     flex: 1;
+    max-width: 800px; 
+    margin: 0 auto;
+    padding: 0 20px; 
   }
   
   .main-title {

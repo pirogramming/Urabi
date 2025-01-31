@@ -7,8 +7,8 @@
   .mypage-wrap {
     display: flex; 
     max-width: 1200px;
-    font-family: 'Paperlogy';
-    margin-top: 50px;
+    justify-content: center;
+    margin: 50px auto
   }
   
   .mypage-nav {
@@ -33,11 +33,13 @@
   }
   .mypage-nav li a {
     text-decoration: none;
-    color: black;
   }
   
   .mypage-content {
     flex: 1;
+    max-width: 800px; 
+    margin: 0 auto;
+    padding: 0 20px; 
   }
   
   /********************************
@@ -91,8 +93,8 @@
     여권(프로필) 카드
   ********************************/
   .passport-card {
-    min-width: 70%;
-    min-height: 60%;
+    width: 90%;
+    height: 60%;
     position: relative;
     background: linear-gradient(90deg, #c9f1f1 0%, #ffe2e2 100%);
     border-radius: 20px;
