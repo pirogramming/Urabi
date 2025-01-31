@@ -1,0 +1,102 @@
+/*제목 부분*/
+#market_register_head, #market_register_body, #market_register_bottom{
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+
+#market_register_head{
+    height: 7vh;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+
+#market_register_head h3{
+    font-size: 30px;
+    margin: auto 0;
+}
+
+#market_register_head em{
+    color: var(--red);
+    font-size: 45px;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+/*form*/
+#market_register_body{
+    display: flex;    
+    flex-direction: column;
+    height: 83vh;
+}
+.market_register_form{
+    border-top: 1.5px solid var(--blue);
+    display: flex;
+    gap: 20px;
+    height: 80px;
+    align-items: center;
+    padding: 0 10px;
+    font-weight: 500;
+}
+.market_register_form h3{
+    width: 90px;
+    border-right: 1.5px solid var(--blue);
+}
+
+.market_register_form input{
+    border: none;
+    background-color: var(--strong-gray);
+    border-radius: 10px;
+    height: 35px;
+    width: 450px;
+}
+.market_register_form select{
+    border: none;
+    background-color: var(--strong-gray);
+    border-radius: 10px;
+    height: 35px;
+}
+#market_register_description_container{
+    height: 500px;
+    display: flex;
+    align-items: start;
+    padding: 20px 10px;
+    border-bottom: 1.5px solid var(--blue);
+}
+.market_register_description{
+    height: 90%;
+    width: 70%;
+    border: none;
+    background-color: var(--strong-gray);
+    border-radius: 10px;
+}
+.market_register_bottom{
+    display: flex;
+    justify-content: center;
+    gap:20px;
+    height: 10vh;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.market_register_enroll_btn, .market_register_list_btn {
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    color: white;
+}
+
+.market_register_enroll_btn{
+    background-color: var(--red);
+}
+
+.market_register_list_btn{
+    background-color: var(--blue);
+}
+
+.market_register_enroll_btn:hover, .market_register_list_btn:hover{
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
