@@ -126,6 +126,13 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
+.flash_card_link {
+    display: flex;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
 .flash_card img {
     width: 120px;
     height: 120px;

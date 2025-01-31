@@ -5,3 +5,7 @@ def flash_list(request):
 
 def flash_register(request):
     return render(request, "flash/flash_register.html")
+
+
+def flash_detail(request, pk):
+    return render(request, 'flash/flash_detail.html', {'pk': pk})

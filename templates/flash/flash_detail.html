@@ -1,0 +1,94 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'flash/flash_detail.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<a id="myPage" href="#">My Page</a>
+{% endblock %}
+
+{% block content %}
+<section class="flash_detail">
+    <div class="flash_header">
+        <p class="header_comment">번개 모임 > 번개 상세</p>
+    </div>
+
+    <!-- 구분선 -->
+    <hr class="flash_divider">
+
+    <div class="flash_info">
+        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지" class="flash_image">
+        <div class="flash_description">
+            <div class="flash_title_star">
+                <h2 class="flash_title">토트넘 경기보면서 맥주 드실 분~</h2>
+                <div class="flash_star">
+                    <img id="star_icon" src="{% static 'img/empty_star.png' %}" alt="관심 번개">
+                </div>
+            </div>
+            <div class="flash_details">
+                <p class="flash_location">📍 802dong 101ho, 30-20, Deongneung-ro 10-gil, Nowon-gu, Seoul</p>
+                <p class="flash_date">📅 2025년 01월 01일 18:00</p>
+            </div>
+            <p class="flash_content">
+                안녕하세요! 경기를 보면서 맥주 한 잔 하실 분을 찾습니다.  
+                편하게 오셔서 즐거운 시간 보내요!  
+                장소는 홍대 근처 펍입니다.  
+            </p>
+            <div class="flash_tags_capacity">
+                <div class="flash_tags">
+                    <span class="flash_tag">#남녀무관</span>
+                    <span class="flash_tag">#타팬환영</span>
+                </div>
+                <span class="flash_capacity"><strong>1/4</strong></span>
+            </div>
+            <button class="flash_apply_btn">신청하기</button>
+        </div>
+    </div>
+
+    <hr class="flash_divider">
+
+    <div class="flash_host">
+        <img src="{% static 'img/profile_sample.jpg' %}" alt="호스트 이미지" class="host_image">
+        <div class="host_info">
+            <p class="host_name">주최자: 곽두팔</p>
+            <p class="host_rating">⭐ 34.5</p>
+        </div>
+        <button class="host_chat_btn">💬 메시지 보내기</button>
+    </div>
+
+    <hr class="flash_divider">
+
+    <section class="other_flash">
+        <div class="other_flash_header">
+            <h3>다른 번개 보기</h3>
+            <a href="{% url 'flash_list' %}" class="flash_list_btn">목록으로</a>
+        </div>
+        <div class="other_flash_list">
+            <div class="other_flash_card">
+                <img src="{% static 'img/flash_meeting2.png' %}" alt="다른 번개 이미지">
+                <p>저녁먹기 전까지만 대화하실 분?</p>
+            </div>
+            <div class="other_flash_card">
+                <img src="{% static 'img/flash_meeting1.png' %}" alt="다른 번개 이미지">
+                <p>바닷가로 당일치기 가실 분?</p>
+            </div>
+        </div>
+    </section>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const starIcon = document.getElementById("star_icon");
+
+        starIcon.addEventListener("click", function() {
+            if (starIcon.src.includes("empty_star.png")) {
+                starIcon.src = "{% static 'img/fill_star.png' %}";
+            } else {
+                starIcon.src = "{% static 'img/empty_star.png' %}";
+            }
+        });
+    });
+</script>
+{% endblock %}
