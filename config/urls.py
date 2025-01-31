@@ -28,4 +28,5 @@ urlpatterns = [
     path('users/', include('users.urls')), 
     path('accommodation/', include('accommodation.urls')),
     path('flash/', include('flash.urls')),
+    path('market/', include('market.urls')),
 ]
