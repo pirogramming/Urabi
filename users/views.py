@@ -19,7 +19,7 @@ def social_login(request):
 
 def kakao_login(request):
     client_id = settings.KAKAO_API_KEY
-    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback/"
     return redirect(
         f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
     )
@@ -27,9 +27,8 @@ def kakao_login(request):
 def kakao_login_callback(request):
     code = request.GET.get("code")
     client_id = settings.KAKAO_API_KEY
-    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback/"  
 
-    # 토큰 요청
     token_request = requests.post(
         "https://kauth.kakao.com/oauth/token",
         data={
@@ -40,30 +39,27 @@ def kakao_login_callback(request):
         },
     )
     token_json = token_request.json()
-
+    
     if "error" in token_json:
-        return redirect("/")
+        return redirect('users:login')
 
     access_token = token_json.get("access_token")
     
-    # 프로필 정보 요청
     profile_request = requests.get(
         "https://kapi.kakao.com/v2/user/me",
         headers={"Authorization": f"Bearer {access_token}"},
     )
     profile_json = profile_request.json()
     
-    # 카카오 계정 정보 확인
     kakao_account = profile_json.get("kakao_account", {})
     email = kakao_account.get("email")
     
     if not email:
-        return redirect("/")
+        kakao_id = profile_json.get("id")
+        email = f"kakao_{kakao_id}@example.com"  # 카카오 ID를 활용한 임시 이메일 생성
+        properties = profile_json.get("properties", {})
+        nickname = properties.get("nickname")
     
-    properties = profile_json.get("properties", {})
-    nickname = properties.get("nickname", "Unknown")
-    profile_image = properties.get("profile_image")
-
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
@@ -71,17 +67,15 @@ def kakao_login_callback(request):
             email=email,
             social_id=f"kakao_{profile_json.get('id')}",
             first_name=nickname,
+            nickname=nickname,
         )
-        if profile_image:
-            user.profile_image = profile_image
-            user.save()
 
     login(request, user)
-    return redirect('users:main')
+    return redirect('users:main')  
 
 def naver_login(request):
     client_id = settings.NAVER_CLIENT_ID
-    redirect_uri = "http://127.0.0.1:8000/users/login/naver/callback"
+    redirect_uri = "http://127.0.0.1:8000/users/login/naver/callback/"
     state = "RANDOM_STATE"
     
     return redirect(
@@ -94,6 +88,7 @@ def naver_login(request):
 def naver_login_callback(request):
     client_id = settings.NAVER_CLIENT_ID
     client_secret = settings.NAVER_CLIENT_SECRET
+    redirect_uri = "http://127.0.0.1:8000/users/login/naver/callback/"  
     code = request.GET.get("code")
     state = request.GET.get("state")
     
@@ -103,6 +98,7 @@ def naver_login_callback(request):
             "grant_type": "authorization_code",
             "client_id": client_id,
             "client_secret": client_secret,
+            "redirect_uri": redirect_uri,
             "code": code,
             "state": state,
         },
@@ -235,6 +231,8 @@ def login_view(request):
     return render(request, 'login/login.html', {'user': request.user})
 
 def main_view(request):
+    print(f"🔍 현재 로그인된 사용자: {request.user}")  
+    print(f"🔍 인증 여부: {request.user.is_authenticated}")  
     if request.user.is_authenticated:
         return render(request, 'main/main.html')
     return redirect('users:login')

@@ -165,3 +165,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"  # DB 기반 세션
+SESSION_COOKIE_AGE = 3600  # 세션 유지 시간 (1시간)
+SESSION_SAVE_EVERY_REQUEST = True  # 매 요청마다 세션 갱신
