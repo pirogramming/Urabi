@@ -1,0 +1,86 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'flash/flash_register.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<a id="myPage" href="#">My Page</a>
+{% endblock %}
+
+{% block content %}
+<section class="flash_register">
+    <section class="flash_title">
+        <h2>여행 속 반짝이는 만남, <span class="highlight">번개 모임</span> > 번개 찾기</h2>
+    </section>
+    
+    <section class="flash_map">
+        <img src="{% static 'img/flash_map_sample.png' %}" alt="번개 모임 지도">
+    </section>
+
+    <form method="POST" class="flash_register_form">
+        {% csrf_token %}
+
+        <div class="input_group">
+            <label for="title">*번개명</label>
+            <input type="text" id="title" name="title" placeholder="번개명을 입력하세요" required>
+        </div>
+
+        <div class="input_group">
+            <label for="location">*장소</label>
+            <input type="text" id="location" name="location" placeholder="장소를 입력하세요" required>
+        </div>
+
+        <div class="input_group">
+            <label for="date">*일시</label>
+            <input type="datetime-local" id="date" name="date" required>
+        </div>
+
+        <div class="input_group">
+            <label for="capacity">인원</label>
+            <select id="capacity" name="capacity">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5+</option>
+            </select>
+        </div>
+
+        <div class="input_group">
+            <label for="tag">태그 등록</label>
+            <div class="tag_input">
+                <input type="text" id="tag" name="tag" placeholder="#태그 입력">
+                <button type="button" id="add_tag_btn">+</button>
+            </div>
+            <div class="tag_list"></div>
+        </div>
+
+        <div class="input_group">
+            <label for="description">내용 입력</label>
+            <textarea id="description" name="description" rows="4" placeholder="내 내용을 입력하세요"></textarea>
+        </div>
+
+        <button type="submit" class="flash_submit_btn">등록</button>
+    </form>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addTagBtn = document.getElementById("add_tag_btn");
+        const tagInput = document.getElementById("tag");
+        const tagList = document.querySelector(".tag_list");
+
+        addTagBtn.addEventListener("click", function() {
+            if (tagInput.value.trim() !== "") {
+                const tag = document.createElement("span");
+                tag.classList.add("tag_item");
+                tag.textContent = tagInput.value;
+                tagList.appendChild(tag);
+                tagInput.value = "";
+            }
+        });
+    });
+</script>
+{% endblock %}

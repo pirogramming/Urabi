@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
@@ -21,7 +22,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    username = None  
+    username = None
     user_age = models.IntegerField(null=True, blank=True)  
     user_gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')])
     user_phone = models.CharField(max_length=20)
