@@ -1,0 +1,17 @@
+.market_detail_edit_btn{
+    display: flex;
+    gap: 5px;
+    border: 1.5px solid var(--red);
+    border-radius: 10px;
+    width: 170px;
+    height: 45px;
+    align-items: center;
+    justify-content: center;
+    color: var(--red);
+    cursor: pointer;
+}
+
+.market_detail_edit_btn:hover{
+    background-color: var(--red);
+    color:white
+}

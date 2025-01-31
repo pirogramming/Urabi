@@ -1,0 +1,235 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{%static 'mypage/userDetail.css'%}">
+{%endblock%}
+
+ {%block content%}
+ <main class="mypage-wrap">
+    <!-- 왼쪽 사이드 카테고리 -->
+    <nav class="mypage-nav">
+      <ul>
+        <li class="active">프로필</li>
+        <li><a href="#">찜 목록</a></li>
+        <li><a href="#">나의 여행 일정</a></li>
+        <li><a href="#">내 활동 관리</a></li>
+      </ul>
+    </nav>
+  
+    <!-- 메인 콘텐츠 영역 -->
+    <section class="mypage-content">
+  
+      <div class="nickname-wrap">
+        <div class="nickname-wrap-left">
+            <div class="nickname">{{ user.nickname }}</div>
+        <!-- <span class="score">{{ user.trust_score }}</span> -->
+        <span class="score">36.5°C</span>
+        </div>
+        <button class="chatting-btn">채팅하기</button>
+      </div>
+  
+      <!-- 프로필 섹션 -->
+      <section class="profile-section">
+        <h2 class="sub-title">프로필</h2>
+        <div class="passport-card">
+          <div class="passport-card-top">
+            <span class="passport-label">여권 PASSPORT</span>
+            <div class="passport-country">
+              대한민국 REPUBLIC OF KOREA
+            </div>
+          </div>
+          <div class="passport-card-body">
+            <div>
+              <img
+                src="{% static 'img/default-profile.png' %}" 
+                alt="프로필 사진"
+                class="profile-photo"
+              />
+              <div class="travel-score">
+                <span>여행지수</span>
+                <span class="score">36.5 °C</span>
+              </div>
+            </div>
+  
+            <!-- 오른쪽: 정보영역 -->
+            <div class="info-area">
+              <div class="info-row row-1">
+                <div class="info-item">
+                  <span class="label">국가 코드 / Country code</span>
+                  <span class="value">KOR</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">국적 / Nationality</span>
+                  <span class="value">REPUBLIC OF KOREA</span>
+                </div>
+              </div>
+              <div class="info-row row-2">
+                <div class="info-item">
+                  <span class="label">한글성명</span>
+                  <span class="value">{{ user.user_name }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">선호하는 이름 / Nickname</span>
+                  <span class="value">{{ user.nickname }}</span>
+                </div>
+              </div>
+              <div class="info-row row-3">
+                <div class="info-item">
+                  <span class="label">생년월일 / Date of Birth</span>
+                  <span class="value">{{ user.birth }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">성별 / Sex</span>
+                  <span class="value">{{ user.user_gender }}</span>
+                </div>
+              </div>
+              <div class="info-row row-4">
+                <div class="info-item">
+                  <span class="label">이메일 / Email</span>
+                  <span class="value">{{ user.email}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- 등록한 여행 일정 -->
+      <section class="schedule-section">
+        <h2 class="sub-title">등록한 여행 일정</h2>
+  
+        <div class="schedule-card">
+          <img
+            src="{% static 'img/banner.png' %}"
+            alt="여행 이미지"
+            class="schedule-img"
+          />
+          <div class="schedule-info">
+            <h3 class="schedule-title">2024 가을 여행</h3>
+            <p class="schedule-period">2025/2/4 ~ 2025/2/7</p>
+            
+          </div>
+        </div>
+      </section>
+  
+      <!-- 활동 이력 -->
+      <section class="activity-section">
+        <h2 class="sub-title">활동 이력</h2>
+  
+        <!-- 번개 모임 참여 이력 예시 -->
+        <div class="activity-box">
+          <p class="activity-header">
+            {{ user.nickname }} 님은 <span class="text-hilight">2</span>번의 모임에 참여했어요!
+          </p>
+  
+          <!-- 예: 첫 번째 모임 카드 -->
+          <div class="activity-card">
+            <img
+              src="{% static 'img/banner.png' %}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+            />
+            <div class="activity-info">
+              <div class="activity-title">프랑스 파리 동행</div>
+              <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+              <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">루브르 박물관</span>
+              </p>
+              <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">바토무슈</span>
+              </p>
+            </div>
+          </div>
+  
+          <!-- 두 번째 모임 카드 -->
+          <div class="activity-card">
+            <img
+              src="{% static 'img/banner.png' %}"
+              alt="이탈리아 남부 투어"
+              class="activity-img"
+            />
+            <div class="activity-info">
+              <div class="activity-title">이탈리아 남부 투어</div>
+                <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+              <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">루브르 박물관</span>
+              </p>
+              <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">바토무슈</span>
+              </p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- 모임이 없을 경우 -->
+        <div class="activity-box activity-none">
+          참여한 번개 모임이 없어요!
+        </div>
+  
+        <!-- 숙소 리뷰 이력 예시 -->
+        <div class="activity-box">
+          <p class="activity-header">
+            {{ user.nickname }} 님은  <span class="text-hilight">1</span>개의 숙소 리뷰를 남겼어요!
+          </p>
+          <div class="activity-card">
+            <div class="activity-review">
+                <p class="activity-review-title">
+              여기숙소진짜별로에요진짜오지마세요
+            </p>
+            <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+            <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">파리</span>
+              </p>
+            </div>
+            
+          </div>
+        </div>
+  
+        <!-- 글 작성 이력 예시 -->
+        <div class="activity-box">
+          <p class="activity-header">
+            {{ user.nickname }} 님은  <span class="text-hilight">2</span>개의 글을 올렸어요!
+          </p>
+          <div class="activity-card">
+            <div class="activity-review">
+                <div class="activity-review-header">
+            <span class="activity-review-type">🛒 구매해요</span>
+            <span class="activity-review-title">
+              멀미약 구해요
+            </span></div>
+            <p class="activity-date">2025/2/4</p>
+            <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">파리</span>
+              </p>
+            </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-review">
+                <div class="activity-review-header">
+                <span class="activity-review-type">🎁 나눔해요</span>
+                <span class="activity-review-title">
+                  여름 옷 가져가실 분 있나용
+                </span>
+                </div>
+                <p class="activity-date">2025/2/4</p>
+                <p class="schedule-location">
+                    <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                    <span class="schedule-location-text">파리</span>
+                  </p>
+                </div>    
+          </div>
+        </div>
+      </section>
+  
+    </section>
+  </main>
+  
+  {%endblock%}
+

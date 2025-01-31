@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'flash',
     'rest_framework',
     'rest_framework_simplejwt',
+    'accommodation',
 ]
 
 MIDDLEWARE = [

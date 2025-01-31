@@ -5,7 +5,9 @@
     margin : 0;
 }
 #main_LogIn:hover{
-    color: var(--red);
+    background-color: white;
+    color : var(--red);
+    border: 1.5px solid var(--red);
 }
 .main_join {
     margin-left: 20px;

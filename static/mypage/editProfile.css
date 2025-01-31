@@ -1,0 +1,196 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+
+*{
+    font-family: 'Paperlogy' !important; 
+  }
+
+  .mypage-wrap {
+    display: flex; 
+    max-width: 1200px;
+    margin-top: 50px;
+    justify-content: center;
+    margin: 50px auto
+  }
+  
+  .mypage-nav {
+    width: 180px;
+    margin: 50px 40px 0 0;
+  }
+
+  .mypage-nav ul {
+    list-style: none;
+  }
+  .mypage-nav li {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #000;
+    cursor: pointer;
+  }
+  .mypage-nav li.active {
+    color: var(--red); 
+    font-weight: bold;
+  }
+
+  .mypage-nav li a {
+    text-decoration: none;
+  }
+
+  .mypage-content {
+    flex: 1;
+    max-width: 800px; 
+    margin: 0 auto;
+    padding: 0 20px; 
+  }
+  
+  .main-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+  
+  /********************************
+    프로필 수정 헤더
+  ********************************/
+  .profile-edit-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .edit-title {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+  }
+  
+  .edit-title img{
+    width: 30px;
+    height: 30px;
+  }
+  /********************************
+    프로필 수정 섹션 
+  ********************************/
+  .profile-edit-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .profile-photo-area {
+    text-align: center;
+  }
+  
+  .photo-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+  .profile-photo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%; 
+  }
+  .camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px; 
+    height: 40px;
+    cursor: pointer;
+  }
+  .camera-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  /********************************
+    (2) 프로필 입력 폼
+  ********************************/
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 50%;
+    justify-content: center;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px; 
+  }
+  
+  .form-label {
+    font-size: 14px;
+    color: #444;
+  }
+  
+  .form-input,
+  .birth-year,
+  .birth-month,
+  .birth-day {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    outline: none;
+    width: 100%;
+  }
+
+  .form-input:focus,
+  .birth-year:focus,
+  .birth-month:focus,
+  .birth-day:focus {
+    border-color: var(--red-hover);
+    box-shadow: 0 0 4px rgba(216, 36, 36, 0.3);
+  }
+  
+  .birth-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-group.gender {
+    display: flex;         
+    flex-direction: row;      
+    align-items: center;
+    gap: 12px;    
+  }
+
+  .form-group.gender .form-input {
+    flex:1;
+  }
+
+  .gender{
+    width: 40%;
+  }
+
+  /********************************
+    수정 완료 버튼
+  ********************************/
+  .edit-save-area {
+    text-align: center;
+  }
+  .save-btn {
+    background-color: var(--red);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  .save-btn:hover {
+    background-color: var(--red-hover);
+    transition: all 0.3s ease;
+  }
+  
