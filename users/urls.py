@@ -19,4 +19,5 @@ urlpatterns = [
 
     path('accompany/', include('accompany.urls')),
 
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

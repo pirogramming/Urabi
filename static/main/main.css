@@ -1,3 +1,7 @@
+.main_companion, .main_flash, .main_accommodation{
+    border-bottom: 2px solid var(--strong-gray);
+}
+
 /*장기 동행 css*/
 .main_companion{
     background-image: url('/static/img/main_background.png');
@@ -49,11 +53,11 @@
     flex-direction: column;
     justify-content: center;
     gap:20px;
-}
-.main_flash_text{
     width: 100%;
     margin: 0 auto;
     max-width: 1200px; 
+}
+.main_flash_text{
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -72,9 +76,6 @@
     font-weight: 300;
 }
 .main_flash_body{
-    width:100%;
-    margin: 0 auto;
-    max-width: 1200px; 
     display: flex;
     justify-items: start;
     align-items: center;
@@ -189,9 +190,11 @@
 }
 .main_accommodation_left h2{
     text-align: center;
-    font-size: 20px;
-    margin :0;
+    font-size: 22px;
+    font-weight: 500;
+    margin: 11px;
 }
+
 .main_accommodation_left img{
     margin :0 auto;
     width: 56%;
@@ -199,18 +202,18 @@
     display: block;
 }
 .main_accommodation_left button{
-    font-weight: 500;
-    height: 40px;
+    font-weight: 700;
+    height: 42px;
     color: white;
     border: 2px solid white;
     border-radius: 15px;
-    width: 104px;
+    width: 122px;
     margin-left: auto;
     cursor: pointer;
     position: absolute;
-    bottom: -23px;
+    bottom: -12px;
     right: 10px;
-    font-size: 15px;
+    font-size: 16px;
 }
 .main_accommodation_left button:hover{
     background: white;
@@ -231,13 +234,13 @@
     position : absolute;
 }
 
-.main_tag:nth-child(1) { top: -117px; left: 121px; }
-.main_tag:nth-child(3) { top: 48px; left: 75px; }
-.main_tag:nth-child(2) { top: -37px; right: 246px; }
-.main_tag:nth-child(4) { top: 98px; right: 158px; }
+.main_tag:nth-child(1) { top: -104px; left: 151px; }
+.main_tag:nth-child(3) { top: 15px; left: 75px; }
+.main_tag:nth-child(2) { top: -37px; right: 232px; }
+.main_tag:nth-child(4) { top: 78px; right: 225px; }
 .main_tag:nth-child(5) { top: 14px; left: 402px; }
-.main_tag:nth-child(6) { top: 162px; right: 31px; }
-.main_tag:nth-child(7) { top: 174px; left: 154px; }
+.main_tag:nth-child(6) { top: 121px; right: 87px; }
+.main_tag:nth-child(7) { top: 153px; left: 154px; }
 .main_tag:nth-child(8) { bottom: 114px; right: 30px; }
 /*나눔 마켓*/
 .main_market{
