@@ -1,0 +1,129 @@
+.main{
+  margin: 0 auto;
+  width: 860px;
+}
+.blue{
+  color: var(--blue);
+}
+.red{
+  color: var(--red);
+}
+.banner{
+  height: 45px;
+}
+.banner h2{
+  font-size: 28px;
+  font-weight: 500;
+}
+.map-container{
+  width: 100%;
+  height: 400px;
+  background-color: aqua;
+}
+.banner-filter{
+  font-weight: 500;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 20px;
+}
+
+.filter-form {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.title input{
+  font-size: 24px;
+  font-weight: 500;
+  padding: 10px 0;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--blue);
+}
+.info{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  position: relative;
+}
+.filter-group input{
+  background-color: var(--gray);
+  padding: 15px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.file-upload svg{
+  position: absolute;
+  right: 0;
+}
+.file-upload svg:hover{
+  cursor: pointer;
+}
+#max-member{
+  width: 100px;
+}
+#image-name{
+  position: absolute;
+  right: 55px;
+  width: 100px;
+}
+#image-upload{
+  display: none;
+}
+#image-upload#file-upload-button{
+  display: none;
+}
+.filter-form button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  background-color: var(--blue);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+}
+.description{
+  border-bottom: solid 1px var(--blue);
+}
+#description{
+  min-height: 300px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  font-size: 18px;
+  font-family: 'Paperlogy';
+}
+#description:focus{
+  outline: none;
+}
+.tags{
+  padding: 10px;
+  display:flex;
+  gap: 10px;
+}
+.tags>span{
+  min-width: 80px;
+  font-size: 18px;
+  font-weight: 400;
+}
+.tags>textarea{
+  width: 100%;
+  min-height: 60px;
+  border: none;
+  padding: 5px;
+  background-color: var(--gray);
+  font-family: 'Paperlogy';
+  font-size: 18px;
+}
+.filter-form>button{
+  font-weight: 500;
+  align-self: flex-end;
+  width: 120px;
+  background-color: var(--red);
+}
+.filter-form>button:hover{
+  background-color: var(--red-hover);
+}
