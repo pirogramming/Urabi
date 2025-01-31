@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'accommodation',
+    'market',
 ]
 
 MIDDLEWARE = [
