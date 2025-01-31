@@ -29,4 +29,5 @@ urlpatterns = [
     path('accommodation/', include('accommodation.urls')),
     path('flash/', include('flash.urls')),
     path('market/', include('market.urls')),
+    path('accompany/', include('accompany.urls')),
 ]

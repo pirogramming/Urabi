@@ -1,0 +1,133 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{%static 'accompany/accompany_detail.css'%}">
+{%endblock%}
+
+{%block content%}
+<section class="filter">
+  <div class="banner-filter">
+    <form class="filter-form">
+      <div class="filter-group">
+        <input type="text" id="city" name="city" placeholder="도시">
+      </div>
+      <div class="filter-group">
+        <select id="gender" name="gender">
+          <option value="">전체</option>
+          <option value="mixed">혼성</option>
+          <option value="male">남성만</option>
+          <option value="female">여성만</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <input type="date" id="start-date" name="start-date" placeholder="시작일">
+      </div>
+      <div class="filter-group">
+        <input type="date" id="end-date" name="end-date" placeholder="종료일">
+      </div>
+      <div class="filter-group">
+        <input type="number" id="age" name="age" placeholder="나이">
+      </div>
+      <button type="submit">검색</button>
+    </form>
+  </div>
+</section>
+<section class="map">
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+</section>
+
+<section class="detail">
+  <div class="detail-header">
+    <h2>이탈리아 남부 투어</h2>
+    <div class="header-btns">
+      <button class="btn ask">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
+        <path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+        </svg>
+        <span>문의하기</span>
+      </button>
+      <button class="btn zzim"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+      </svg></button>
+    </div>
+  </div>
+  <div class="participants">
+    <div class="profile">
+      <img src="https://www.w3schools.com/w3images/lights.jpg" width="30" height="30" alt="profile">
+      <span class="writer">User1</span>
+      <span class="temperature">36.5°C</span> 
+      <span class="blue">&nbsp;|&nbsp;</span> 
+      <span class="created_at">2015-06-29</span>
+    </div>
+    <div class="members">
+      <span>3/4</span>
+      <button id="toggleMembers">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+          <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+        </svg>
+      </button>
+      <ul id="memberList" style="display: none;">
+        <li>User1</li>
+        <li>User2</li>
+        <li>User3</li>
+      </ul>
+    </div>
+  </div>
+  <div class="detail-content">
+    <div class="texts">
+      <p>
+        내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음<br>
+        내용없음내용없음내용없음내용없음내용없음
+      </p>
+    </div>
+    <div class="tags">
+      <ul>
+        <li>#포지타노</li>
+        <li>#폼페이</li>
+        <li>#소렌토전망대</li>
+      </ul>
+    </div>
+    <div class="imgs">
+      <img src="https://www.w3schools.com/w3images/lights.jpg">
+    </div>
+  </div>
+  <div class="detail-footer">
+    <button class="to-back">
+      <span>목록으로</span>
+    </button>
+  </div>
+</section>
+{%endblock%}
+
+{%block js%}
+<script>
+  document.getElementById('toggleMembers').addEventListener('click', function() {
+      var memberList = document.getElementById('memberList');
+      if (memberList.style.display === 'none') {
+          memberList.style.display = 'block';
+          this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>';
+      } else {
+          memberList.style.display = 'none';
+          this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>';
+      }
+  });
+
+  var memberList = document.getElementById('memberList');
+
+  members.forEach(function(member) {
+      var li = document.createElement('li');
+      li.textContent = member;
+      memberList.appendChild(li);
+  });
+</script>
+{%endblock js%}
