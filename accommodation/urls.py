@@ -5,4 +5,5 @@ app_name = 'accommodation'
 
 urlpatterns = [
     path('', views.accommodation_filter, name='filter'),
+    path('location/', views.location_view, name='location'),
 ]
