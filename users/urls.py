@@ -20,6 +20,4 @@ urlpatterns = [
     path('accompany/', include('accompany.urls')),
 
 
-    #테스트용
-    path('market/',views.market, name='market'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

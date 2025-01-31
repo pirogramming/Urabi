@@ -3,24 +3,33 @@
     margin: 0 auto;
     max-width: 1200px; 
 }
+.market_detail_head_group{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-bottom: 1.5px solid var(--blue);
+    padding-bottom: 10px;
+}
 .market_detail_head{
     height: 25vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-.market_detail_head a{
+.market_link{
     font-size: 20px;
     line-height: 40px;
-    padding-bottom: 10px;
     cursor: pointer;
 }
-
+.market_detail_link{
+    font-weight: 400;
+    cursor: pointer;
+}
 .market_detail_head a:hover{
     font-weight: 500;
 }
 
-.market_detail_head a, .market_detail_title,.market_detail_mid_title{
+.market_detail_head_group, .market_detail_title,.market_detail_mid_title{
     border-bottom: 1.5px solid var(--blue);
 }
 .market_detail_title{
