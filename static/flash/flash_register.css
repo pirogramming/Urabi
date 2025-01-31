@@ -1,0 +1,142 @@
+/* 번개 등록 페이지 전체 컨테이너 */
+.flash_register {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 페이지 타이틀 */
+.flash_register .flash_title {
+    text-align: left;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.flash_register .flash_title .highlight {
+    color: var(--red);
+}
+
+/* 지도 스타일 */
+.flash_map {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.flash_map img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* 번개 등록 폼 스타일 */
+.flash_register_form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 입력 필드 공통 스타일 */
+.input_group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input_group label {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.input_group input,
+.input_group select,
+.input_group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.input_group textarea {
+    resize: none;
+    height: 100px;
+}
+
+/* 태그 입력 필드 */
+.tag_input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.tag_input input {
+    flex: 1;
+}
+
+.tag_input button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tag_input button:hover {
+    background: #0056b3;
+}
+
+/* 태그 리스트 스타일 */
+.tag_list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag_item {
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+/* 등록 버튼 스타일 */
+.flash_submit_btn {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.flash_submit_btn:hover {
+    background: #0056b3;
+}
+
+/* 반응형 */
+@media screen and (max-width: 768px) {
+    .flash_register {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .flash_map {
+        height: 200px;
+    }
+}
