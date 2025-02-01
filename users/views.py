@@ -233,7 +233,5 @@ def login_view(request):
 def main_view(request):
     print(f"🔍 현재 로그인된 사용자: {request.user}")  
     print(f"🔍 인증 여부: {request.user.is_authenticated}")  
-    if request.user.is_authenticated:
-        return render(request, 'main/main.html')
-    return redirect('users:login')
+    return render(request, 'main/main.html')
 

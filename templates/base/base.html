@@ -5,11 +5,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Urabi</title>
+  {%block title %}<title>Urabi</title>{%endblock title%}
   <link rel="icon" type="image/x-icon" href="{% static 'img/Urabi_logo.svg' %}">
   <link rel="stylesheet" href="{% static 'reset.css' %}">
   <link rel="stylesheet" href="{% static 'base_css/base.css' %}">
-  <link rel="stylesheet" href="{% static 'main/main.css' %}">
   <link rel="stylesheet" href="{% static 'main/mainbeforeLogin.css' %}">
   {% block head %} {% endblock %}
 </head>
@@ -18,15 +17,20 @@
     <!-- Header -->
     <header class="header">
       <div class="header-container">
-      <div class="logo"><img width="150" src="{% static 'img/logo.png' %}"></div>
+      <div class="logo"><a href="{%url 'users:home' %}"><img width="150" src="{% static 'img/logo.png' %}"></a></div>
       <nav class="nav">
-        <a href="#">장기 동행</a>
-        <a href="#">번개 모임</a>
-        <a href="#">숙소 후기</a>
-        <a href="#" id="market_nav">나눔 마켓</a>
-        {% block header_content %}
-        <a id="myPage"href="#">My Page</a>
-        {% endblock %}
+        {%block navBar%}
+          <a href="{%url 'accompany:accompany_list'%}">장기 동행</a>
+          <a href="{%url 'flash:flash_list'%}">번개 모임</a>
+          <a href="{%url 'accommodation:filter'%}">숙소 후기</a>
+          <a href="{%url 'market:market_list'%}" id="market_nav">나눔 마켓</a>
+        {%endblock navBar%}
+        {%if user.is_authenticated%}
+          <a id="myPage"href="#">My Page</a>
+        {%else%}
+          <a id="main_join" href="{% url 'users:signup' %}">회원가입</a>
+          <a id="main_LogIn" href="{% url 'users:login' %}">LogIn</a>
+        {%endif%}
       </nav>
       </div>
     </header>
@@ -43,11 +47,16 @@
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-menu">
-        <a href="#">장기동행</a> | 
-        <a href="#">번개모임</a> | 
-        <a href="#">숙소후기</a> | 
-        <a href="#">나눔마켓</a> | 
-        <a href="#">MyPage</a>
+        <a href="{%url 'accompany:accompany_list'%}">장기동행</a> | 
+        <a href="{%url 'flash:flash_list'%}">번개모임</a> | 
+        <a href="{%url 'accommodation:filter'%}">숙소후기</a> | 
+        <a href="{%url 'market:market_list'%}">나눔마켓</a> | 
+        {%if user.is_authenticated%}
+          <a id="myPage"href="#">My Page</a>
+        {%else%}
+          <a href="{% url 'users:login' %}">로그인</a> |
+          <a href="{% url 'users:signup' %}">회원가입</a> 
+        {%endif%}
       </div>
       <div class="copyright">
         © 2025 Urabi. All rights reserved.

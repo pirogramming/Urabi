@@ -6,8 +6,8 @@ from django.conf.urls.static import static
 app_name = 'users'
 
 urlpatterns = [
-    #path('', views.login_view, name='main'),  
-    path('main/', views.main_view, name='main'), 
+    path('', views.main_view, name='home'),
+    path('users/', views.login_view, name='main'),  
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('login/kakao/', views.kakao_login, name='kakao-login'),
