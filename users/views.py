@@ -71,7 +71,7 @@ def kakao_login_callback(request):
         )
 
     login(request, user)
-    return redirect('users:main')  
+    return redirect('main:home')  
 
 def naver_login(request):
     client_id = settings.NAVER_CLIENT_ID
@@ -136,7 +136,7 @@ def naver_login_callback(request):
             user.save()
     
     login(request, user)
-    return redirect('users:main')
+    return redirect('main:home')
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -165,7 +165,7 @@ class LoginView(generics.GenericAPIView):
             
             if user:
                 login(request, user)
-                return redirect('users:home')
+                return redirect('main:home')
             return render(request, 'login/login.html', {'error': '로그인 실패'})
 
     def get(self, request):
@@ -215,7 +215,7 @@ def signup_view(request):
             
             # 회원가입 후 자동 로그인
             login(request, user)
-            return redirect('users:home')
+            return redirect('main:home')
             
         except Exception as e:
             print(f"회원가입 에러: {str(e)}")  # 디버깅용 로그
@@ -225,13 +225,10 @@ def signup_view(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('users:home')
+    return redirect('main:home')
 
 def login_view(request):
     return render(request, 'main/main.html', {'user': request.user})
 
-def main_view(request):
-    print(f"🔍 현재 로그인된 사용자: {request.user}")  
-    print(f"🔍 인증 여부: {request.user.is_authenticated}")  
-    return render(request, 'main/main.html')
+
 
