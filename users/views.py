@@ -228,7 +228,7 @@ def user_logout(request):
     return redirect('users:main')
 
 def login_view(request):
-    return render(request, 'login/login.html', {'user': request.user})
+    return render(request, 'main/main.html', {'user': request.user})
 
 def main_view(request):
     print(f"🔍 현재 로그인된 사용자: {request.user}")  
