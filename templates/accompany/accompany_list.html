@@ -47,184 +47,67 @@
           <button>동행 모집하기</button>
         </div>
         <div class="list-main">
-
+        {%for post in travelgroup_list%}
           <div class="card">
             <div class="card-image">
-              <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
+              {%if post.photo %}
+                <img width="150" height="120" src="{{post.photo.url}}" alt="여행 이미지">
+              {%else%}
+                <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
+              {%endif%}
             </div>
             <div class="card-info">
               <div class="info-header">
-                <h3>여행 제목</h3>
+                <h3>{{post.title}}</h3>
                 <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                   <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
                 </svg></button>
               </div>
+              <div class="info-date">
+                <p><p>{{ post.start_date|date:"Y-m-d" }} ~ {{ post.end_date|date:"Y-m-d" }}</p></p>
+              </div>
               <div class="info-user">
-                <h3>@idi101</h3>
-                <div class="max-member"> 1 / 4</div>
+                <h3>{{post.created_by}}</h3>
+                <div class="max-member"> 1 / {{post.max_member}}</div>
               </div>
               <div class="info-date">
 
               </div>
               <div class="info-contnet">
-                <p>여행설명여행설명여행설명여행설명여행설명여행설명</p>
+                {% if post.explanation|length > 10%}
+                  <p>{{ post.explanation|slice:":15" }} ... </p>
+                {%else%}
+                  <p>{{ post.explanation }}</p>
+                {%endif%}
               </div>
               <div class="tags">
-                <div class="tag"># 태그1</div>
-                <div class="tag"># 태그2</div>
-                <div class="tag"># 태그2</div>
+                {%if post.tags%}
+                  <div class="tag"># 태그1</div>
+                  <div class="tag"># 태그2</div>
+                  <div class="tag"># 태그2</div>
+                {%endif%}
               </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-image">
-              <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
-            </div>
-            <div class="card-info">
-              <div class="info-header">
-                <h3>여행 제목</h3>
-                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                </svg></button>
-              </div>
-              <div class="info-user">
-                <h3>@idi101</h3>
-                <div class="max-member"> 1 / 4</div>
-              </div>
-              <div class="info-date">
-
-              </div>
-              <div class="info-contnet">
-                <p>여행설명여행설명여행설명여행설명여행설명여행설명</p>
-              </div>
-              <div class="tags">
-                <div class="tag"># 태그1</div>
-                <div class="tag"># 태그2</div>
-                <div class="tag"># 태그2</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-image">
-              <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
-            </div>
-            <div class="card-info">
-              <div class="info-header">
-                <h3>여행 제목</h3>
-                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                </svg></button>
-              </div>
-              <div class="info-user">
-                <h3>@idi101</h3>
-                <div class="max-member"> 1 / 4</div>
-              </div>
-              <div class="info-date">
-
-              </div>
-              <div class="info-contnet">
-                <p>여행설명여행설명여행설명여행설명여행설명여행설명</p>
-              </div>
-              <div class="tags">
-                <div class="tag"># 태그1</div>
-                <div class="tag"># 태그2</div>
-                <div class="tag"># 태그2</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-image">
-              <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
-            </div>
-            <div class="card-info">
-              <div class="info-header">
-                <h3>여행 제목</h3>
-                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                </svg></button>
-              </div>
-              <div class="info-user">
-                <h3>@idi101</h3>
-                <div class="max-member"> 1 / 4</div>
-              </div>
-              <div class="info-date">
-
-              </div>
-              <div class="info-contnet">
-                <p>여행설명여행설명여행설명여행설명여행설명여행설명</p>
-              </div>
-              <div class="tags">
-                <div class="tag"># 태그1</div>
-                <div class="tag"># 태그2</div>
-                <div class="tag"># 태그2</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-image">
-              <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
-            </div>
-            <div class="card-info">
-              <div class="info-header">
-                <h3>여행 제목</h3>
-                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                </svg></button>
-              </div>
-              <div class="info-user">
-                <h3>@idi101</h3>
-                <div class="max-member"> 1 / 4</div>
-              </div>
-              <div class="info-date">
-
-              </div>
-              <div class="info-contnet">
-                <p>여행설명여행설명여행설명여행설명여행설명여행설명</p>
-              </div>
-              <div class="tags">
-                <div class="tag"># 태그1</div>
-                <div class="tag"># 태그2</div>
-                <div class="tag"># 태그2</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-image">
-              <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
-            </div>
-            <div class="card-info">
-              <div class="info-header">
-                <h3>여행 제목</h3>
-                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                </svg></button>
-              </div>
-              <div class="info-user">
-                <h3>@idi101</h3>
-                <div class="max-member"> 1 / 4</div>
-              </div>
-              <div class="info-date">
-
-              </div>
-              <div class="info-contnet">
-                <p>여행설명여행설명여행설명여행설명여행설명여행설명</p>
-              </div>
-              <div class="tags">
-                <div class="tag"># 태그1</div>
-                <div class="tag"># 태그2</div>
-                <div class="tag"># 태그2</div>
-              </div>
-            </div>
-          </div>
-          
+        {%endfor%}
         </div>
 
         <div class="pagination">
-          <button class="now">1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>4</button>
-          <button>5</button>
+          {% if is_paginated %}
+            <a href='?page=1';>&laquo; 처음으로</a>
+            {% for num in page_obj.paginator.page_range %}
+                {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                    {% if page_obj.number == num %}
+                        <button class="now">{{ num }}</button>
+                    {% else %}
+                        <button onclick="window.location.href='?page={{ num }}';">{{ num }}</button>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <a href='?page={{ page_obj.paginator.num_pages }}';>마지막으로 &raquo;</a>
+          {% else %}
+              <button class="now">1</button>
+          {% endif %}
         </div>
       </section>
   {%endblock%}

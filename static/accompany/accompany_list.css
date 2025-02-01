@@ -147,7 +147,6 @@
   gap: 15px;
   max-width: 430px;
   border: 1px solid #ccc;
-  cursor: pointer;
 }
 .card:hover{
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
@@ -175,6 +174,11 @@
 }
 .info-header>button{
   cursor:default;
+}
+.info-date{
+  font-size: 12px;
+  font-weight: 400;
+  color: #ccc;
 }
 .info-user>h3{
   font-size: 14px;
@@ -207,6 +211,10 @@
   background-color: var(--blue);
   color: #ffffff;
   border-radius: 20px;
+}
+.pagination>a{
+  font-size: 14px;
+  padding: 5px;
 }
 .pagination .now{
   background-color: var(--blue);

@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from . import views
 from django.views.generic import ListView
+from .models import TravelGroup, TravelParticipants
 
 # Create your views here.
 #class AccompanyListView(ListView):
 
-def accompany_list(request):
-    return render(request, 'accompany/accompany_list.html')
+class AccompanyListView(ListView):
+    model = TravelGroup
+    template_name = 'accompany/accompany_list.html' 
+    ordering = ['-created_at']
+    paginate_by = 6
 
 def accompany_detail(request):
     return render(request, 'accompany/accompany_detail.html')
