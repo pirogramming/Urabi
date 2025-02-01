@@ -9,7 +9,7 @@
   <div class="banner-filter">
     <form class="filter-form">
       <div class="filter-group">
-        <input type="text" id="city" name="city" placeholder="도시">
+        <input type="text" id="city" name="city" placeholder="도시" value="{{object.city}}">
       </div>
       <div class="filter-group">
         <select id="gender" name="gender">
@@ -20,10 +20,10 @@
         </select>
       </div>
       <div class="filter-group">
-        <input type="date" id="start-date" name="start-date" placeholder="시작일">
+        <input type="date" id="start-date" name="start-date" placeholder="시작일" value="{{object.start_date|date:'Y-m-d'}}">
       </div>
       <div class="filter-group">
-        <input type="date" id="end-date" name="end-date" placeholder="종료일">
+        <input type="date" id="end-date" name="end-date" placeholder="종료일" value="{{object.end_date|date:'Y-m-d'}}">
       </div>
       <div class="filter-group">
         <input type="number" id="age" name="age" placeholder="나이">
@@ -40,71 +40,82 @@
 
 <section class="detail">
   <div class="detail-header">
-    <h2>이탈리아 남부 투어</h2>
+    <h2>{{object.title}}</h2>
     <div class="header-btns">
+      {%if user != object.created_by%}
+        <button class="btn ask">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
+          <path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+          </svg>
+          <span>문의하기</span>
+        </button>
+        <button class="btn zzim"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+        </svg></button>
+      {%else%}
+      <a href="{%url 'accompany:accompany_update' object.travel_id%}">
       <button class="btn ask">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
-        <path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-        </svg>
-        <span>문의하기</span>
+        <span>수정하기</span>
       </button>
-      <button class="btn zzim"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-      </svg></button>
+      </a>
+      {%endif%}
     </div>
   </div>
   <div class="participants">
     <div class="profile">
       <img src="https://www.w3schools.com/w3images/lights.jpg" width="30" height="30" alt="profile">
-      <span class="writer">User1</span>
+      <span class="writer">{{object.created_by}}</span>
       <span class="temperature">36.5°C</span> 
       <span class="blue">&nbsp;|&nbsp;</span> 
-      <span class="created_at">2015-06-29</span>
+      <span class="created_at">{{object.created_at|date:'Y-m-d'}}</span>
     </div>
     <div class="members">
-      <span>3/4</span>
+      <span>3/{{object.max_member}}</span>
       <button id="toggleMembers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
           <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li>User1</li>
-        <li>User2</li>
-        <li>User3</li>
+        <li>여기</li>
+        <li>추가로</li>
+        <li>해야함함</li>
       </ul>
     </div>
   </div>
   <div class="detail-content">
     <div class="texts">
       <p>
-        내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음<br>
-        내용없음내용없음내용없음내용없음내용없음
+        {{object.explanation|linebreaksbr}}
       </p>
     </div>
     <div class="tags">
       <ul>
-        <li>#포지타노</li>
-        <li>#폼페이</li>
-        <li>#소렌토전망대</li>
+        {%if object.tags%}
+          <li>#포지타노</li>
+          <li>#폼페이</li>
+          <li>#소렌토전망대</li>
+        {%endif%}
       </ul>
     </div>
     <div class="imgs">
-      <img src="https://www.w3schools.com/w3images/lights.jpg">
+      {%if object.photo%}
+      <img src="{{object.photo.url}}" alt="photo">
+      {%endif%}
     </div>
   </div>
   <div class="detail-footer">
+    {%if user == object.created_by%}
+    <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+      {% csrf_token %}
+      <button class="del-btn" type="submit">삭제</button>
+    </form>
+    {%endif%}
+    <a href="{%url 'accompany:accompany_list'%}">
     <button class="to-back">
       <span>목록으로</span>
     </button>
+      </a>
   </div>
 </section>
 {%endblock%}
