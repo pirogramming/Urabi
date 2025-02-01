@@ -15,7 +15,9 @@
     <header class="header">
       <div class="header-container">
       <div class="logo">
-        <img width="150" src="{% static 'img/logo.png' %}">
+        <a href="{%url 'users:home' %}">
+          <img width="150" src="{% static 'img/logo.png' %}">
+        </a>
         <p>여행을 함께하는 동행 서비스</p>
       </div>
       <nav class="nav">

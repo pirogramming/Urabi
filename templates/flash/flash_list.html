@@ -22,7 +22,7 @@
             <h2 class="flash_list_title">12개의 모집중인 번 개</h2>
             <div class="flash_list_controls">
                 <h2>나만의 번개</h2>
-                <a href="{% url 'flash_register' %}" class="flash_register_btn">등록하기</a>
+                <a href="{% url 'flash:flash_register' %}" class="flash_register_btn">등록하기</a>
             </div>
         </section>
         
@@ -34,7 +34,7 @@
             <div class="flash_list_body">
                 <!-- 번개 모임 카드 -->
                 <div class="flash_card">
-                    <a href="{% url 'flash_detail' pk=1 %}" class="flash_card_link">
+                    <a href="{% url 'flash:flash_detail' pk=1 %}" class="flash_card_link">
                         <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
                         <div class="flash_card_info">
                             <h3>토트넘 경기보면서 맥주 드실 분~</h3>
