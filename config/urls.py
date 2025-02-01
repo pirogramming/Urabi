@@ -28,4 +28,5 @@ urlpatterns = [
     path('market/', include('market.urls')),
     path('accompany/', include('accompany.urls')),
     path('users/', include('users.urls')), 
+    path('chatbot/', include('chatbot.urls')),
 ]
