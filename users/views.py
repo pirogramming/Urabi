@@ -165,7 +165,7 @@ class LoginView(generics.GenericAPIView):
             
             if user:
                 login(request, user)
-                return redirect('users:main')
+                return redirect('users:home')
             return render(request, 'login/login.html', {'error': '로그인 실패'})
 
     def get(self, request):
@@ -215,7 +215,7 @@ def signup_view(request):
             
             # 회원가입 후 자동 로그인
             login(request, user)
-            return redirect('users:main')
+            return redirect('users:home')
             
         except Exception as e:
             print(f"회원가입 에러: {str(e)}")  # 디버깅용 로그
@@ -225,7 +225,7 @@ def signup_view(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('users:main')
+    return redirect('users:home')
 
 def login_view(request):
     return render(request, 'main/main.html', {'user': request.user})
