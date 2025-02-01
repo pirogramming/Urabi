@@ -7,5 +7,5 @@ app_name = 'accompany'
 urlpatterns = [
     path('', views.AccompanyListView.as_view(), name='accompany_list'),
     path('detail/<int:pk>', views.AccompanyDetailView.as_view(), name='accompany_detail'),
-    path('create', views.accompany_create, name='accompany_create'),
+    path('create/', views.AccompanyCreateView.as_view(), name='accompany_create'),
 ]

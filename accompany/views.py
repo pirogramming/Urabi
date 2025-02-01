@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from . import views
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import TravelGroup, TravelParticipants
+from .forms import TravelGroupForm
 
 # Create your views here.
 #class AccompanyListView(ListView):
@@ -16,5 +17,13 @@ class AccompanyDetailView(DetailView):
     model = TravelGroup
     template_name = 'accompany/accompany_detail.html'
 
-def accompany_create(request):
-    return render(request, 'accompany/accompany_create.html')
+
+class AccompanyCreateView(CreateView):
+    model = TravelGroup
+    form_class = TravelGroupForm
+    template_name = 'accompany/accompany_create.html'
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
