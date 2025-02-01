@@ -99,6 +99,12 @@
     </div>
   </div>
   <div class="detail-footer">
+    {%if user == object.created_by%}
+    <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+      {% csrf_token %}
+      <button class="del-btn" type="submit">삭제</button>
+    </form>
+    {%endif%}
     <button class="to-back">
       <a href="{%url 'accompany:accompany_list'%}">
       <span>목록으로</span>
