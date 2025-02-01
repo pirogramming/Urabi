@@ -21,10 +21,11 @@ from django.shortcuts import render
 
 
 urlpatterns = [
+    path('', include('main.urls')),
     path('admin/', admin.site.urls),
     path('accommodation/', include('accommodation.urls')),
     path('flash/', include('flash.urls')),
     path('market/', include('market.urls')),
     path('accompany/', include('accompany.urls')),
-    path('', include('users.urls')), 
+    path('users/', include('users.urls')), 
 ]
