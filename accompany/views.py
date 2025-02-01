@@ -27,7 +27,14 @@ class AccompanyCreateView(CreateView):
         return super().form_valid(form)
     def get_success_url(self):
         return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
-    
+
+class AccompanyUpdateView(UpdateView):
+    model = TravelGroup
+    form_class = TravelGroupForm
+    template_name = 'accompany/accompany_update.html'
+    def get_success_url(self):
+        return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
+
 class AccompanyDeleteView(DeleteView):
     model = TravelGroup
     template_name = 'accompany/accompany_detail.html'

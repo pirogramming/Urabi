@@ -127,3 +127,16 @@
 .filter-form>button:hover{
   background-color: var(--red-hover);
 }
+.update-image>a, #photo-clear_id, .update-image #text{
+  display: none;
+}
+.imgs {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px; 
+}
+.imgs img {
+  width: 100%;
+  height: auto;
+}
