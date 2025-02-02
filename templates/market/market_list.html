@@ -50,10 +50,12 @@
             <h1>전체 글 목록</h1>
             <div class="market_list_info">
                 <h3>"거래 중"인 <p>#태그</p> 관련 게시글입니다</h3>
-                <select name="market_list_count" id="market_list_count">
-                    <option>10개씩</option>
-                    <option>15개씩</option>
-                </select>
+                <form method='GET' action="{% url 'market:market_list' %}">
+                    <select name="items_per_page" id="market_list_count" onchange="this.form.submit()">
+                        <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10개씩</option>
+                        <option value="15" {% if items_per_page == 15 %}selected{% endif %}>15개씩</option>
+                    </select>
+                </form>
                 <a href="{% url 'market:market_create' %}" class="market_add">
                     <button><img src="/static/img/market_add_icon.svg" ></button>
                     <butoon class="market_add_text">등록하기</butoon>
@@ -89,12 +91,15 @@
         </table>
     </div>
     <div class="page_number"> 
-        <a>1</a>
-        <a>2</a>
-        <a>3</a>
-        <a>4</a>
-        <a>5</a>
-        <a>></a>
+        {% if markets.paginator.num_pages > 1 %}
+            {% for num in markets.paginator.page_range %}
+                {% if num == markets.number %}
+                    <strong class="active-page">{{ num }}</strong>
+                {% else %}
+                    <a href="?page={{num}}&items_per_page={{ items_per_page}}">{{num}}</a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
 </section>
 {% endblock %}

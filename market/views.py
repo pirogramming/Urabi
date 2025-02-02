@@ -3,11 +3,19 @@ from .models import Market
 from .forms import MarketForm
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def market_list(request):
-    markets = Market.objects.all()  
-    return render(request, 'market/market_list.html', {'markets': markets})
+    queryset = Market.objects.all()  
+    
+    items_per_page = int(request.GET.get('items_per_page', 10)) 
+
+    paginator = Paginator(queryset, items_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'market/market_list.html', {'markets': page_obj, 'items_per_page':items_per_page})
 
 
 @login_required
