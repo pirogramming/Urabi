@@ -27,12 +27,16 @@ class AccompanyListView(ListView):
             context['zzim_items'] = zzim_items
         else:
             context['zzim_items'] = []
-        
+        travel_groups = context['object_list']
+        for travel in travel_groups:
+            travel.tags = travel.tags.split(',') if travel.tags else []
+        context['tags'] = travel_groups
         return context
 
 class AccompanyDetailView(DetailView):
     model = TravelGroup
     template_name = 'accompany/accompany_detail.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
@@ -41,7 +45,11 @@ class AccompanyDetailView(DetailView):
             context['zzim_items'] = zzim_items
         else:
             context['zzim_items'] = []
-        
+        group = context['object']
+        if group.tags:
+            group_tags = group.tags.split(',')
+            context['tags'] = group_tags 
+
         return context
 
 

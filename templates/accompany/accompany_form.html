@@ -55,7 +55,14 @@
       </div>
       <div class="tags">
         <span>장소 태그</span>
-        {{form.tags}}
+        <div class="input_group">
+            <div class="tag_input_container">
+                <input type="text" id="tag_input" placeholder="#태그 입력">
+                <button type="button" id="add_tag_btn">+</button>
+            </div>
+            <div class="tag_list"></div>
+            <input type="hidden" name="tags" id="tags_hidden" value="{{ form.instance.tags|default:'' }}">
+        </div>
       </div>
       <button type="submit">등록하기</button>
     </form>
@@ -64,15 +71,5 @@
 {%endblock%}
 
 {%block js%}
-<script>
-  document.getElementById('image-upload').addEventListener('change', function() {
-    const fileInput = document.getElementById('image-upload');
-    const textInput = document.getElementById('image-name');
-    if (fileInput.files.length > 0) {
-        textInput.value = fileInput.files[0].name;
-    } else {
-        textInput.value = ''; // 파일이 선택되지 않았을 때
-    }
-});
-</script>
+<script src="{%static 'accompany/accompany_form.js'%}"></script>
 {%endblock js%}

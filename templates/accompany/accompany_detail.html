@@ -100,9 +100,9 @@
     <div class="tags">
       <ul>
         {%if object.tags%}
-          <li>#포지타노</li>
-          <li>#폼페이</li>
-          <li>#소렌토전망대</li>
+        {% for tag in tags %}
+          <li>#{{ tag }}</li>
+        {% endfor %}
         {%endif%}
       </ul>
     </div>
