@@ -10,56 +10,46 @@
     <h3><em>나눔 마켓</em> 물건 등록하기</h3>
 </section>
 <section id="market_register_body">
-    <div class="market_register_form">
-        <h3>제목</h3>
-        <input type="text" class="market_register_title" placeholder="제목을 입력하세요">
-    </div>
-    <div class="market_register_form">
-        <h3>거래 상태</h3>
-        <select class="market_register_tradeCon">
-            <option>거래 중</option>
-            <option>거래 완료</option>
-        </select>
-    </div>
-    <div class="market_register_form">
-        <h3>거래 방식</h3>
-        <select class="market_register_tradeWay"> 
-            <option>판매해요</option>
-            <option>나눔해요</option>
-            <option>구매해요</option>
-        </select>
-    </div>
-    <div class="market_register_form">
-        <h3>카테고리</h3>
-        <select class="market_register_category">
-            <option>#의약품</option>
-            <option>#티켓</option>
-            <option>#음식</option>
-            <option>#생활용품</option>
-            <option>#기념품</option>
-            <option>#기타</option>
-        </select>
-    </div>
-    <div class="market_register_form">
-        <h3>거래 장소</h3>
-        <input type="text" class="market_register_location">
-    </div>
-    <div class="market_register_form">
-        <h3>가격</h3>
-        <input type="number" class="market_register_price">
-    </div>
-    <div class="market_register_form">
-        <h3>사진</h3>
-        <input type="file" accept="image/*" class="market_register_picture">
-    </div>
-    <div class="market_register_form" id="market_register_description_container">
-        <h3>설명 추가</h3>
-        <textarea type="text" class="market_register_description" placeholder="거래에 대한 설명을 자세히 적어주세요"></textarea>
-    </div>
-    <div class="market_register_bottom">
-        <button class="market_register_enroll_btn">등록하기</button>
-        <button class="market_register_list_btn">목록</button>
-    </div>
+    <form method="POST" action="{% url 'market:market_create' %}" enctype="multipart/form-data">
+        {% csrf_token %} 
+
+        <div class="market_register_form">
+            <h3>제목</h3>
+            {{ form.title}}
+        </div>
+        <div class="market_register_form">
+            <h3>거래 상태</h3>
+            {{ form.status}}
+        </div>
+        <div class="market_register_form">
+            <h3>거래 방식</h3>
+            {{ form.trade_type}}
+        </div>
+        <div class="market_register_form">
+            <h3>카테고리</h3>
+            {{ form.category}}
+        </div>
+        <div class="market_register_form">
+            <h3>거래 장소</h3>
+            {{ form.city}}
+        </div>
+        <div class="market_register_form">
+            <h3>가격</h3>
+            {{ form.price}}
+        </div>
+        <div class="market_register_form">
+            <h3>사진</h3>
+            {{ form.photo}}
+        </div>
+        <div class="market_register_form" id="market_register_description_container">
+            <h3>설명 추가</h3>
+            {{ form.explanation }}
+        </div>
+        <div class="market_register_bottom">
+            <button type="submit" class="market_register_enroll_btn">등록하기</button>
+            <a href="{% url 'market:market_list' %}" class="market_register_list_btn">목록</a>
+        </div>
+    </form>
 </section>
 
 {% endblock %}

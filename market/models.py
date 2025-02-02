@@ -34,6 +34,7 @@ class Market(models.Model):
     status = models.CharField(max_length=20, default='거래 가능', choices=TRADE_STATUS_CHOICES)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
+    photo = models.ImageField('마켓_이미지', blank=True, upload_to='market/%Y%m%d')
 
     def __str__(self):
         return f"{self.get_trade_type_display()}"
