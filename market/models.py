@@ -1,5 +1,7 @@
 from django.db import models
 from users.models import User
+from django.conf import settings 
+
 # Create your models here.
 class Market(models.Model):
     TRADE_TYPE_CHOICES = [
@@ -38,3 +40,11 @@ class Market(models.Model):
 
     def __str__(self):
         return self.get_trade_type_display()
+    
+class MarketZzim(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    market = models.ForeignKey(Market, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "market")  # 중복 찜 방지
