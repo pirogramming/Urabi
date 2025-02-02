@@ -66,6 +66,7 @@
         <span>수정하기</span>
       </button>
       </a>
+      <span id="add-participant" href=""> + </span>
       {%endif%}
     </div>
   </div>
@@ -149,6 +150,62 @@
       li.textContent = member;
       memberList.appendChild(li);
   });
+</script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tippy.js@6/themes/light.css"
+/>
+<script>
+
+  const modal = `
+  <div id="add-participant-modal">
+    <input type="text" id="search-email" placeholder="이메일 검색" />
+
+    <ul id="userList">
+        {% for user in users %}
+            <li data-user-id="{{ user.id }}" class="user-item">
+                {{ user.email }}
+                <button class="add-btn">추가</button>
+            </li>
+        {% endfor %}
+    </ul>
+  </div>`;
+
+tippy('#add-participant', {
+  content: modal,
+  placement: 'bottom-end',
+  arrow: false,
+  theme: 'light',
+  trigger: 'click',
+  interactive: true,
+  allowHTML: true,
+});
+
+
+document.addEventListener('click', function(event) {
+  if (event.target.matches('#add-participant')) {
+    const searchInput = document.getElementById('search-email');
+    const userItems = document.querySelectorAll('.user-item');
+    
+    if (searchInput && userItems) {
+      // 이메일 검색 필터링 이벤트 추가
+      searchInput.addEventListener('input', function() {
+        var searchTerm = this.value.toLowerCase();
+        
+        userItems.forEach(function(item) {
+          var email = item.textContent.toLowerCase();
+          if (email.includes(searchTerm)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    }
+  }
+});
 </script>
 <script src="{%static 'accompany/zzim.js'%}"></script>
 {%endblock js%}

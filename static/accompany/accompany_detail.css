@@ -186,3 +186,13 @@
   background-color: var(--red);
   color: #ffffff;
 }
+
+#add-participant{
+  border: var(--red) 1px solid;
+  padding: 8px 10px;
+  color: var(--red);
+}
+#add-participant:hover{
+  background-color: var(--red);
+  color: #ffffff;
+}

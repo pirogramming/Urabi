@@ -46,6 +46,8 @@ class AccompanyDetailView(DetailView):
         else:
             context['zzim_items'] = []
         group = context['object']
+        users = User.objects.all()
+        context['users'] = users
         if group.tags:
             group_tags = group.tags.split(',')
             context['tags'] = group_tags 
