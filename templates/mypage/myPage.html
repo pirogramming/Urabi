@@ -22,7 +22,9 @@
       <section class="profile-section">
         <div class="profile-header">
             <div class="section-title">프로필</div>
-            <button class="edit-btn">수정</button>
+            <a href="{% url 'users:edit_profile' %}">
+              <button class="edit-btn">수정</button>
+            </a>
         </div>
 
         <div class="passport-card">
@@ -34,11 +36,12 @@
           </div>
           <div class="passport-card-body">
             <div>
-                <img
-              src="{% static 'img/default-profile.png' %}" 
-              alt="프로필 사진"
-              class="profile-photo"
-            />
+              <img 
+                  src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}" 
+                  alt="프로필 사진"
+                  class="profile-photo"
+              />
+
             <div class="travel-score">
                 <span>여행지수</span>
                 <span class="score">36.5°C</span>
@@ -70,11 +73,14 @@
                 <div class="info-row row-3">
                     <div class="info-item">
                         <span class="label">생년월일 / Date of Birth</span>
-                        <span class="value">{{ user.birth }}</span>
+                        <span class="value">{{ user.birth|date:"Y-m-d" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">성별 / Sex</span>
-                        <span class="value">{{ user.user_gender }}</span>
+                        <span class="value">
+                          {% if user.user_gender == "F" %} 여성 {% elif user.user_gender == "M" %} 남성 {% endif %}
+                        </span>
+                        
                     </div>
                 </div>
 
@@ -110,7 +116,9 @@
       </section>
   
       <div class="logout-area">
-        <button class="logout-btn">로그아웃</button>
+        <a href="{% url 'users:logout' %}">
+          <button class="logout-btn">로그아웃</button>
+        </a>
       </div>
     </section>
   </main>

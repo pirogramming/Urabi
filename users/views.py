@@ -12,6 +12,9 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render
 from .models import User
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
+from django.contrib.auth.decorators import login_required
+from .forms import UserUpdateForm
+from django.core.files.base import ContentFile
 
 
 def social_login(request):
@@ -121,7 +124,7 @@ def naver_login_callback(request):
     response = profile_json.get("response")
     email = response.get("email")
     name = response.get("name")
-    profile_image = response.get("profile_image")
+    profile_image_url = response.get("profile_image")
     
     try:
         user = User.objects.get(email=email)
@@ -131,9 +134,13 @@ def naver_login_callback(request):
             social_id=f"naver_{response.get('id')}",
             first_name=name,
         )
-        if profile_image:
-            user.profile_image = profile_image
-            user.save()
+        if profile_image_url:
+            response = requests.get(profile_image_url)  # 이미지 다운로드
+            if response.status_code == 200:
+                image_name = f"profile_images/{user.email.replace('@', '_')}.jpg"
+                user.profile_image.save(image_name, ContentFile(response.content))
+        
+        user.save()
     
     login(request, user)
     return redirect('main:home')
@@ -208,10 +215,11 @@ def signup_view(request):
             )
             
             if profile_image:
-                fs = FileSystemStorage()
-                filename = fs.save(f'profile_images/{profile_image.name}', profile_image)
-                user.profile_image = filename
-                user.save()
+                user.profile_image = profile_image
+            else:
+                user.profile_image = 'profile_images/default-profile.png'  # 기본 프로필 지정
+
+            user.save()
             
             # 회원가입 후 자동 로그인
             login(request, user)
@@ -232,3 +240,38 @@ def login_view(request):
 
 
 
+# 마이페이지 설정
+@login_required
+def my_page(request):
+    return render(request, 'mypage/myPage.html', {'user':request.user})
+
+# 정보 수정
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+
+        birth_year = request.POST.get("birth_year")
+        birth_month = request.POST.get("birth_month")
+        birth_day = request.POST.get("birth_day")
+
+        if 'profile_image' in request.FILES:
+            print("✅ 파일 업로드 감지됨!")
+        else:
+            print("⚠️ 파일 업로드가 안 됨")
+
+
+        if birth_year and birth_month and birth_day:
+            request.user.birth = f"{birth_year}-{birth_month}-{birth_day}"  # YYYY-MM-DD 형식으로 변환하여 저장
+
+        if form.is_valid():
+            form.save()
+            request.user.save() 
+            return redirect('users:my_page')
+        else:
+            print(form.errors)  # 디버깅용 출력
+
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
