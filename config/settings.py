@@ -182,4 +182,6 @@ SESSION_SAVE_EVERY_REQUEST = True  # 매 요청마다 세션 갱신
 
 
 MEDIA_URL = '/media/'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

@@ -156,6 +156,16 @@
     height: 53%;
     border: 1.5px solid var(--blue);
     border-radius: 10px;
+    display: flex;
+    align-items: start;
+}
+.market_detail_description h3{
+    width: 64px;
+    padding: 0 15px;
+    font-size: 18px;
+    white-space: nowrap;
+    border-right: 1.5px solid var(--blue);
+    margin: 15px 0;
 }
 .market_detail_description p{
     padding:15px;
@@ -165,8 +175,9 @@
 .market_detail_bottom{
     display: flex;
     justify-content: flex-end;
+    gap:20px;
 }
-.market_detail_chat_btn{
+.market_detail_chat_btn, .market_detail_edit_btn{
     display: flex;
     gap: 5px;
     border: 1.5px solid var(--blue);
@@ -189,3 +200,14 @@
 .market_detail_chat_btn:hover img {
     filter: invert(60%) brightness(220%);
 }
+
+.market_detail_edit_btn{
+    border: 1.5px solid var(--red);
+    color: var(--red);
+}
+
+.market_detail_edit_btn:hover{
+    background-color: var(--red);
+    color:white
+}
+
