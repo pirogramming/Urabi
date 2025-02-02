@@ -26,7 +26,7 @@
 }
 /* 지도 스타일 */
 .flash_map {
-    height: auto;
+    height: 800px;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -99,6 +99,19 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 1200px;
     margin: auto;
+
+    /* 최대 높이 지정 (원하는 높이 값 조정 가능) */
+    max-height: 800px;
+
+    /* 내용이 넘칠 경우 스크롤 */
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE & Edge */
+}
+
+/* Webkit (Chrome, Safari) */
+.flash_list::-webkit-scrollbar {
+    display: none;
 }
 
 /* 번개 카드 */

@@ -21,87 +21,110 @@
 
     <form method="POST" class="flash_register_form">
         {% csrf_token %}
-
+    
+        <input type="hidden" id="latitude" name="latitude" value="{{ flash.latitude|default:'' }}">
+        <input type="hidden" id="longitude" name="longitude" value="{{ flash.longitude|default:'' }}">
+    
         <div class="input_group">
             <label for="title">*번개명</label>
-            <input type="text" id="title" name="title" placeholder="번개명을 입력하세요" required>
+            <input type="text" id="title" name="title" placeholder="번개명을 입력하세요" required value="{{ flash.title|default:'' }}">
         </div>
-
+    
         <div class="input_group">
             <label for="location">*장소</label>
-            <input type="text" id="location" name="location" placeholder="장소를 입력하세요" required>
+            <input type="text" id="location" name="location" placeholder="장소를 입력하세요" required value="{{ flash.city|default:'' }}">
         </div>
-
+    
         <div class="input_group">
             <label for="date">*일시</label>
-            <input type="datetime-local" id="date" name="date" required>
+            <input type="datetime-local" id="date" name="date" required value="{{ flash.date_time|date:'Y-m-d\TH:i' }}">
         </div>
-
+    
         <div class="input_group">
             <div class="capacity_select_container">
                 <span for="capacity">인원</span>
                 <select id="capacity" name="capacity">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5+</option>
+                    <option value="1" {% if flash.max_people == 1 %}selected{% endif %}>1</option>
+                    <option value="2" {% if flash.max_people == 2 %}selected{% endif %}>2</option>
+                    <option value="3" {% if flash.max_people == 3 %}selected{% endif %}>3</option>
+                    <option value="4" {% if flash.max_people == 4 %}selected{% endif %}>4</option>
+                    <option value="5" {% if flash.max_people == 5 %}selected{% endif %}>5+</option>
                 </select>
             </div>
         </div>
-
+    
         <div class="input_group">
+            <span for="tag">태그 등록</span>
             <div class="tag_input_container">
-                <span for="tag">태그 등록</span>
-                <input type="text" id="tag" name="tag" placeholder="#태그 입력">
+                <input type="text" id="tag_input" placeholder="#태그 입력">
                 <button type="button" id="add_tag_btn">+</button>
             </div>
-            <div class="tag_list"></div> <!-- 태그가 추가되는 영역 -->
+            <div class="tag_list"></div>
+            <input type="hidden" name="tags" id="tags_hidden" value="{{ flash.tags|default:'' }}">
         </div>
-
+    
         <div class="input_group">
             <label for="description">내용 입력</label>
-            <textarea id="description" name="description" rows="4" placeholder="내용을 입력하세요"></textarea>
+            <textarea id="description" name="description" rows="4" placeholder="내용을 입력하세요">{{ flash.explanation|default:'' }}</textarea>
         </div>
-
-        <button type="submit" class="flash_submit_btn">등록</button>
-    </form>
+    
+        <button type="submit" class="flash_submit_btn">{% if edit_mode %}수정 완료{% else %}등록{% endif %}</button>
+    </form>    
 </section>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const addTagBtn = document.getElementById("add_tag_btn");
-        const tagInput = document.getElementById("tag");
+        const tagInput = document.getElementById("tag_input");
         const tagList = document.querySelector(".tag_list");
+        const tagsHiddenInput = document.getElementById("tags_hidden");
+
+        let tagsArray = tagsHiddenInput.value ? tagsHiddenInput.value.split(",") :[];
 
         addTagBtn.addEventListener("click", function() {
             let tagValue = tagInput.value.trim();
-            if (tagValue !== "") {
-                let tagText = `#${tagValue}`;
+            if (tagValue !== "" && !tagsArray.includes(tagValue)) {
+                tagsArray.push(tagValue);
+                updateTagsDisplay();
+                tagInput.value = "";
+            }
+        });
 
-                const tag = document.createElement("span");
-                tag.classList.add("tag_item");
-
-                const tagLabel = document.createElement("span");
-                tagLabel.textContent = tagText;
-
+        function updateTagsDisplay() {
+            tagList.innerHTML = "";
+            tagsArray.forEach(tag => {
+                const tagItem = document.createElement("span");
+                tagItem.classList.add("tag_item");
+                tagItem.textContent = "#" + tag;
 
                 const removeBtn = document.createElement("button");
                 removeBtn.classList.add("tag_remove_btn");
                 removeBtn.textContent = "x";
-                
                 removeBtn.addEventListener("click", function() {
-                    tag.remove();
+                    tagsArray = tagsArray.filter(t => t !== tag);
+                    updateTagsDisplay();
                 });
 
-                tag.appendChild(tagLabel);
-                tag.appendChild(removeBtn);
-                tagList.appendChild(tag);
+                tagItem.appendChild(removeBtn);
+                tagList.appendChild(tagItem);
+            });
 
+            // 태그들을 쉼표로 연결하여 hidden input에 저장
+            tagsHiddenInput.value = tagsArray.join(",");
+        }
+        addTagBtn.addEventListener("click", function() {
+            let tagValue = tagInput.value.trim();
+            if (tagValue !== "" && !tagsArray.includes(tagValue)) {
+                tagsArray.push(tagValue);
+                updateTagsDisplay();
                 tagInput.value = "";
             }
         });
+
+        // 페이지 로드 시 기존 태그 렌더링
+        updateTagsDisplay();
     });
 </script>
+
 
 {% endblock %}

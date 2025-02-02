@@ -12,6 +12,9 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render
 from .models import User
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
+from django.contrib.auth.decorators import login_required
+from .forms import UserUpdateForm
+from django.core.files.base import ContentFile
 
 
 def social_login(request):
@@ -53,9 +56,26 @@ def kakao_login_callback(request):
     
     kakao_account = profile_json.get("kakao_account", {})
     email = kakao_account.get("email")
-    
+    properties = profile_json.get("properties", {})
+
+    kakao_id = profile_json.get("id")
+    username = kakao_account.get("profile", {}).get("nickname", f"kakao_{kakao_id}")
+    profile_image = properties.get("profile_image")
+    birth = kakao_account.get("birthday")
+    birth_year = kakao_account.get("birthyear")
+
+    gender = kakao_account.get("gender")
+    gender_map = {"male": "M", "female": "F"}
+    user_gender = gender_map.get(gender, "U")
+    phone_number = kakao_account.get("phone_number")
+
+
+    full_birth = None
+
+    if birth and birth_year:
+        full_birth = f"{birth_year}-{birth[:2]}-{birth[2:]}"
+
     if not email:
-        kakao_id = profile_json.get("id")
         email = f"kakao_{kakao_id}@example.com"  # 카카오 ID를 활용한 임시 이메일 생성
         properties = profile_json.get("properties", {})
         nickname = properties.get("nickname")
@@ -66,10 +86,18 @@ def kakao_login_callback(request):
         user = User.objects.create_user(
             email=email,
             social_id=f"kakao_{profile_json.get('id')}",
-            first_name=nickname,
-            nickname=nickname,
+            username=username,
+            nickname=username,
+            birth=full_birth,
+            user_gender=user_gender,
+            user_phone=phone_number
         )
-
+        if profile_image:
+            response = requests.get(profile_image)
+            if response.status_code == 200:
+                image_name = f"profile_images/{user.email.replace('@', '_')}.jpg"
+                user.profile_image.save(image_name, ContentFile(response.content))
+        user.save()
     login(request, user)
     return redirect('main:home')  
 
@@ -121,7 +149,16 @@ def naver_login_callback(request):
     response = profile_json.get("response")
     email = response.get("email")
     name = response.get("name")
-    profile_image = response.get("profile_image")
+    profile_image_url = response.get("profile_image")
+    birth = response.get("birthday")
+    birth_year = response.get("birthyear")
+    phone_number = response.get("mobile")
+    gender_map = {"M": "M", "F": "F"}
+    user_gender = gender_map.get(response.get("gender"), "U")
+
+    full_birth = None
+    if birth and birth_year:
+        full_birth = f"{birth_year}-{birth[:2]}-{birth[3:]}"
     
     try:
         user = User.objects.get(email=email)
@@ -129,11 +166,19 @@ def naver_login_callback(request):
         user = User.objects.create_user(
             email=email,
             social_id=f"naver_{response.get('id')}",
-            first_name=name,
+            username=name,
+            nickname=name,
+             birth=full_birth,
+            user_gender=user_gender,
+            user_phone=phone_number
         )
-        if profile_image:
-            user.profile_image = profile_image
-            user.save()
+        if profile_image_url:
+            response = requests.get(profile_image_url)  # 이미지 다운로드
+            if response.status_code == 200:
+                image_name = f"profile_images/{user.email.replace('@', '_')}.jpg"
+                user.profile_image.save(image_name, ContentFile(response.content))
+        
+        user.save()
     
     login(request, user)
     return redirect('main:home')
@@ -174,54 +219,77 @@ class LoginView(generics.GenericAPIView):
 def signup_view(request):
     if request.method == 'POST':
         try:
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            name = request.POST.get('name')
-            nickname = request.POST.get('nickname')
-            birth_year = request.POST.get('birth-year')
-            birth_month = request.POST.get('birth-month')
-            birth_day = request.POST.get('birth-day')
-            phone = request.POST.get('phone')
-            gender = request.POST.get('gender')
+            email = request.POST.get('email', "").strip()
+            password = request.POST.get('password', "").strip()
+            name = request.POST.get('name', "").strip()
+            nickname = request.POST.get('nickname', "").strip()
+            birth_year = request.POST.get('birth-year', "").strip()
+            birth_month = request.POST.get('birth-month', "").strip()
+            birth_day = request.POST.get('birth-day', "").strip()
+            phone = request.POST.get('phone', "").strip()
+            gender = request.POST.get('gender', "").strip()
             profile_image = request.FILES.get('profile-picture')
-            
-            # 이메일 중복 체크
+
+            print(f"📢 회원가입 요청: email={email}, name={name}, nickname={nickname}")
+
+            # 🔹 이메일 중복 체크
             if User.objects.filter(email=email).exists():
                 return render(request, 'register/register.html', {'error': '이미 존재하는 이메일입니다.'})
-            
-            # 성별 값 변환
-            gender = 'M' if gender == 'male' else 'F'
-            
-            # 나이 계산 (예시)
-            from datetime import datetime
-            current_year = datetime.now().year
-            age = current_year - int(birth_year)
-            
+
+            # 🔹 성별 값 변환 (default: 'U' Unknown)
+            gender_map = {"male": "M", "female": "F"}
+            user_gender = gender_map.get(gender, "U")
+
+            # 🔹 닉네임 기본값 설정
+            if not nickname:
+                nickname = name or "사용자"
+
+            # 🔹 생년월일 설정
+            if birth_year and birth_month and birth_day:
+                birth = f"{birth_year}-{birth_month}-{birth_day}"
+            else:
+                birth = None  # 기본값 설정 가능
+
+            # 🔹 나이 계산 (예외 방지)
+            try:
+                from datetime import datetime
+                current_year = datetime.now().year
+                user_age = current_year - int(birth_year) if birth_year.isdigit() else None
+            except Exception as e:
+                print(f"⚠️ 나이 계산 오류: {e}")
+                user_age = None
+
+            # 🔹 사용자 생성
             user = User.objects.create_user(
                 email=email,
                 password=password,
-                first_name=name,
+                username=name or nickname,
                 nickname=nickname,
-                user_age=age,
-                user_gender=gender,
+                birth=birth,
+                user_age=user_age,
+                user_gender=user_gender,
                 user_phone=phone
             )
-            
+
+            # 🔹 프로필 이미지 저장
             if profile_image:
-                fs = FileSystemStorage()
-                filename = fs.save(f'profile_images/{profile_image.name}', profile_image)
-                user.profile_image = filename
-                user.save()
-            
-            # 회원가입 후 자동 로그인
+                user.profile_image = profile_image
+            else:
+                user.profile_image = 'profile_images/default-profile.png'  # 기본 프로필 지정
+
+            user.save()
+            print(f"✅ 회원가입 성공: {user.email}")
+
+            # 🔹 회원가입 후 자동 로그인
             login(request, user)
             return redirect('main:home')
-            
+
         except Exception as e:
-            print(f"회원가입 에러: {str(e)}")  # 디버깅용 로그
+            print(f"❌ 회원가입 중 오류 발생: {e}") 
             return render(request, 'register/register.html', {'error': str(e)})
-    
+
     return render(request, 'register/register.html')
+
 
 def user_logout(request):
     logout(request)
@@ -232,3 +300,38 @@ def login_view(request):
 
 
 
+# 마이페이지 설정
+@login_required
+def my_page(request):
+    return render(request, 'mypage/myPage.html', {'user':request.user})
+
+# 정보 수정
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+
+        birth_year = request.POST.get("birth_year")
+        birth_month = request.POST.get("birth_month")
+        birth_day = request.POST.get("birth_day")
+
+        if 'profile_image' in request.FILES:
+            print("✅ 파일 업로드 감지됨!")
+        else:
+            print("⚠️ 파일 업로드가 안 됨")
+
+
+        if birth_year and birth_month and birth_day:
+            request.user.birth = f"{birth_year}-{birth_month}-{birth_day}"  # YYYY-MM-DD 형식으로 변환하여 저장
+
+        if form.is_valid():
+            form.save()
+            request.user.save() 
+            return redirect('users:my_page')
+        else:
+            print(form.errors)  # 디버깅용 출력
+
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
