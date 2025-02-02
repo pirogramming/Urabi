@@ -62,7 +62,7 @@
                 <div class="info-row row-2">
                     <div class="info-item">
                         <span class="label">한글성명</span>
-                        <span class="value">{{ user.user_name }}</span>
+                        <span class="value">{{ user.username }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">선호하는 이름 / Nickname</span>
@@ -73,12 +73,15 @@
                 <div class="info-row row-3">
                     <div class="info-item">
                         <span class="label">생년월일 / Date of Birth</span>
-                        <span class="value">{{ user.birth|date:"Y-m-d" }}</span>
+                        <span class="value">{{ user.birth }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">성별 / Sex</span>
                         <span class="value">
-                          {% if user.user_gender == "F" %} 여성 {% elif user.user_gender == "M" %} 남성 {% endif %}
+                          {% if user.user_gender == "F" %} 여성 
+                          {% elif user.user_gender == "M" %} 남성
+                          {% else %} None
+                           {% endif %}
                         </span>
                         
                     </div>

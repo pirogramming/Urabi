@@ -8,7 +8,10 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email address')
         
-        extra_fields.setdefault('is_active', True)  
+        extra_fields.setdefault('is_active', True) 
+
+        if not extra_fields.get('nickname'):
+            extra_fields['nickname'] = extra_fields.get('username', '') 
 
         user = self.model(
             email=self.normalize_email(email),
@@ -25,10 +28,10 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    username = None
+    username = models.CharField(max_length=150, blank=True, null=True)
     user_age = models.IntegerField(null=True, blank=True)  
-    user_gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')])
-    user_phone = models.CharField(max_length=20)
+    user_gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=True, blank=True, default=None) # 오류땜에 잠깐 바꿈
+    user_phone = models.CharField(max_length=20, null=True, blank=True, default=None) # 오류땜에 잠깐 바꿈
     nickname = models.CharField(max_length=50, null=True)
     birth = models.DateField(null=True, blank=True)
     social_id = models.CharField(max_length=100, null=True, blank=True)
