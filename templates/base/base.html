@@ -26,7 +26,7 @@
           <a href="{%url 'market:market_list'%}" id="market_nav">나눔 마켓</a>
         {%endblock navBar%}
         {%if user.is_authenticated%}
-          <a id="myPage"href="#">My Page</a>
+          <a id="myPage"href="{% url 'users:my_page' %}">My Page</a>
           <a href="{% url 'users:logout' %}">로그아웃</a>
         {%else%}
           <a id="main_join" href="{% url 'users:signup' %}">회원가입</a>
@@ -53,7 +53,7 @@
         <a href="{%url 'accommodation:filter'%}">숙소후기</a> | 
         <a href="{%url 'market:market_list'%}">나눔마켓</a> | 
         {%if user.is_authenticated%}
-          <a href="#">My Page</a>
+          <a href="{% url 'users:my_page' %}">My Page</a>
         {%else%}
           <a href="{% url 'users:login' %}">로그인</a> |
           <a href="{% url 'users:signup' %}">회원가입</a> 

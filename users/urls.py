@@ -15,7 +15,8 @@ urlpatterns = [
     path('login/naver/callback/', views.naver_login_callback, name='naver-callback'),
     path('logout/', views.user_logout, name='logout'),
 
-
+    path('mypage/', views.my_page, name='my_page'),
+    path('mypage/edit', views.edit_profile, name='edit_profile'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -12,6 +12,8 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render
 from .models import User
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
+from django.contrib.auth.decorators import login_required
+from .forms import UserUpdateForm
 
 
 def social_login(request):
@@ -232,3 +234,32 @@ def login_view(request):
 
 
 
+# 마이페이지 설정
+@login_required
+def my_page(request):
+    return render(request, 'mypage/myPage.html', {'user':request.user})
+
+# 정보 수정
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+
+        birth_year = request.POST.get("birth_year")
+        birth_month = request.POST.get("birth_month")
+        birth_day = request.POST.get("birth_day")
+
+        if birth_year and birth_month and birth_day:
+            request.user.birth = f"{birth_year}-{birth_month}-{birth_day}"  # YYYY-MM-DD 형식으로 변환하여 저장
+
+        if form.is_valid():
+            form.save()
+            request.user.save() 
+            return redirect('users:my_page')
+        else:
+            print(form.errors)  # 디버깅용 출력
+
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})

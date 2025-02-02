@@ -28,7 +28,19 @@
           <img src="{% static 'img/account_icon.png' %}" alt="수정 아이콘">
         </h2>
       </div>
-  
+
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="error-messages">
+            {% for field, errors in form.errors.items %}
+                <p><strong>{{ field }}:</strong> {{ errors.0 }}</p>
+            {% endfor %}
+        </div>
+      {% endif %}
+
+     
       <section class="profile-edit-section">
         <div class="profile-photo-area">
           <div class="photo-wrapper">
@@ -43,7 +55,7 @@
             <input
               type="file"
               id="profilePhotoInput"
-              name="profile_photo"
+              name="profile_image"
               accept="image/*"
               style="display: none;"
             />
@@ -54,39 +66,16 @@
         <div class="profile-form">
           <!-- 한글 이름 -->
           <div class="form-group">
-            <label for="userName" class="form-label">한글 이름</label>
-            <input
-              type="text"
-              id="userName"
-              name="user_name"
-              class="form-input"
-              value="{{ user.user_name }}" 
-            />
-          </div>
+            <label for="username" class="form-label">한글 이름</label>
+            <input type="text" id="username" name="username" class="form-input" value="{{ user.username }}" />
+        </div>
   
           <!-- 선호하는 이름 -->
           <div class="form-group">
             <label for="nickname" class="form-label">선호하는 이름</label>
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              class="form-input"
-              value="{{ user.nickname }}" 
-            />
-          </div>
+            <input type="text" id="nickname" name="nickname" class="form-input" value="{{ user.nickname }}" />
+        </div>
   
-          <!-- 이메일 -->
-          <div class="form-group">
-            <label for="email" class="form-label">이메일</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-input"
-              value="{{ user.email }}" 
-            />
-          </div>
   
           <!-- 생일 (년/월/일 나눠서) -->
           <div class="form-group birth-group">
@@ -96,47 +85,43 @@
                 type="text"
                 name="birth_year"
                 class="birth-year"
-                value="2003"
+                value="{{ user.birth|date:'Y' }}"
               /> 년
               <input
                 type="text"
                 name="birth_month"
                 class="birth-month"
-                value="10"
+                value="{{ user.birth|date:'m' }}"
               /> 월
               <input
                 type="text"
                 name="birth_day"
                 class="birth-day"
-                value="23"
+                value="{{ user.birth|date:'d' }}"
               /> 일
             </div>
           </div>
 
           <div class="form-group">
             <label for="userPhone" class="form-label">휴대폰 번호</label>
-            <input
-              type="text"
-              id="userPhone"
-              name="user_phone"
-              class="form-input"
-              value="{{ user.user_phone }}"
-            />
-          </div>
+            <input type="text" id="userPhone" name="user_phone" class="form-input" value="{{ user.user_phone }}" />
+        </div>
   
-          <div class="form-group gender">
-              <label for="userGender" class="form-label">성별</label>
-              <select id="userGender" name="user_gender" class="form-input">
-                <option value="여성" selected>여성</option>
-                <option value="남성">남성</option>
-              </select>
-            </div>
+        <div class="form-group gender">
+          <label for="userGender" class="form-label">성별</label>
+          <select id="userGender" name="user_gender" class="form-input">
+              <option value="F" {% if user.user_gender == "F" %} selected {% endif %}>여성</option>
+              <option value="M" {% if user.user_gender == "M" %} selected {% endif %}>남성</option>
+          </select>
+      </div>
+      
             
       </section>
   
       <div class="edit-save-area">
         <button class="save-btn">수정 완료</button>
       </div>
+    </form>
     </section>
   </main>
   
