@@ -31,8 +31,7 @@
         
         <!-- 모집 중인 번개 리스트 -->        
         <section class="flash_list">
-            <div class="flash_list_body">
-                <!-- 번개 모임 카드 -->
+            <section class="flash_list_body">
                 <div class="flash_card">
                     <a href="{% url 'flash:flash_detail' pk=1 %}" class="flash_card_link">
                         <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
@@ -48,21 +47,30 @@
                         </div>
                     </a>
                 </div>
-        
+                {% for flash in flash_meetings %}
                 <div class="flash_card">
-                    <img src="{% static 'img/flash_meeting2.png' %}" alt="모임 이미지">
+                    <a href="{% url 'flash:flash_detail' flash.meeting_id %}">
+                        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
+                    </a>
                     <div class="flash_card_info">
-                        <h3>저녁먹기 전까지만 대화하실 분?</h3>
-                        <p class="flash_place">802dong 101ho, 30-20, Deongneung-ro 10-gil, Nowon-gu, Seoul, Republic of Korea</p>
-                        <p class="flash_date">2025년 01월 10일 18:00</p>
+                        <h3><a href="{% url 'flash:flash_detail' flash.meeting_id %}">{{ flash.title }}</a></h3>
+                        <p class="flash_place">{{ flash.city }}</p>
+                        <p class="flash_date">{{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
                         <div class="flash_card_tags">
-                            <span class="flash_tag">#여자분만</span>
-                            <span class="flash_tag">#빵 나눠먹어요</span>
-                            <span class="flash_capacity">2/6</span>
+                            {% for tag in flash.tag_list %}
+                                <span class="flash_tag">#{{ tag }}</span>
+                            {% empty %}
+                                <span class="flash_tag">태그 없음</span>
+                            {% endfor %}
                         </div>
+                        <span class="flash_capacity">{{ flash.max_people }}</span>
                     </div>
                 </div>
-            </div>
+                {% empty %}
+                <p>등록된 번개 모임이 없습니다.</p>
+                {% endfor %}
+            </section>
+            
         </section>
     </div>
 
