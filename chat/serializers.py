@@ -62,3 +62,24 @@ class ChatRoomInfoSerializer(serializers.Serializer):
     last_message_timestamp = serializers.DateTimeField(allow_null=True)
     unread_count = serializers.IntegerField()
     travel_title = serializers.CharField()   # TravelGroup의 title 필드 매핑
+
+class ChatRoomDetailSerializer(serializers.ModelSerializer):
+    """
+    [NEW] 채팅방 상세 정보를 표시하기 위한 직렬화 클래스
+    - 필요에 따라 user1, user2, 메시지 목록 등 세부 정보를 포함할 수 있음.
+    """
+    user1 = UserSerializer(read_only=True)
+    user2 = UserSerializer(read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ChatRoom
+        fields = [
+            'id',
+            'user1',
+            'user2',
+            'travel',
+            'created_at',
+            'last_message_time',  
+            'messages',
+        ]

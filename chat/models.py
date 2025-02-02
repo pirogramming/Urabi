@@ -33,6 +33,21 @@ class ChatRoom(models.Model):
         """
         self.last_message_time = timezone.now()
         self.save()
+    
+    @property
+    @cache_page(60*5)
+    def get_last_message(self):
+        """
+        채팅방의 마지막 메시지를 반환하며, 5분 동안 캐싱함.
+        """
+        cache_key = f'chatroom_{self.id}_last_message'  # 캐시 키 생성
+        last_msg = cache.get(cache_key)  # 캐시에서 가져오기
+
+        if last_msg is None:
+            last_msg = self.messages.order_by('-timestamp').first()  # 마지막 메시지 가져오기
+            cache.set(cache_key, last_msg, timeout=60 * 5)  # 5분 동안 캐싱
+
+        return last_msg
 
 class Message(models.Model):
     """
@@ -62,19 +77,3 @@ class Message(models.Model):
         super().save(*args, **kwargs) # 부모 클래스의 save() 실행
         if is_new:
             self.room.update_last_message_time() # 채팅방의 마지막 메시지 시간 업데이트
-            
-class ChatRoom(models.Model):
-    @property
-    @cache_page(60*5)
-    def get_last_message(self):
-        """
-        채팅방의 마지막 메시지를 반환하며, 5분 동안 캐싱함.
-        """
-        cache_key = f'chatroom_{self.id}_last_message'  # 캐시 키 생성
-        last_msg = cache.get(cache_key)  # 캐시에서 가져오기
-
-        if last_msg is None:
-            last_msg = self.messages.order_by('-timestamp').first()  # 마지막 메시지 가져오기
-            cache.set(cache_key, last_msg, timeout=60 * 5)  # 5분 동안 캐싱
-
-        return last_msg
