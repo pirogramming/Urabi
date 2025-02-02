@@ -29,7 +29,6 @@
 #market_register_body{
     display: flex;    
     flex-direction: column;
-    height: 83vh;
 }
 .market_register_form{
     border-top: 1.5px solid var(--blue);

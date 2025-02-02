@@ -201,3 +201,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # 웹소켓 URL 설정
 WEBSOCKET_URL = '/ws/'
+
+
+
+
