@@ -25,3 +25,13 @@ class TravelParticipants(models.Model):
 
     def __str__(self):
         return f"Participant {self.user.email} in {self.travel.title}"
+    
+class Accompany_Zzim(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='zzim')
+    item = models.ForeignKey(TravelGroup, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'item')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.item.title}"

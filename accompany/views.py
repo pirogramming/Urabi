@@ -1,8 +1,13 @@
 from django.shortcuts import render, reverse
 from . import views
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import TravelGroup, TravelParticipants
+from .models import TravelGroup, TravelParticipants, Accompany_Zzim
 from .forms import TravelGroupForm
+from users.models import User
 
 # Create your views here.
 #class AccompanyListView(ListView):
@@ -12,6 +17,17 @@ class AccompanyListView(ListView):
     template_name = 'accompany/accompany_list.html' 
     ordering = ['-created_at']
     paginate_by = 6
+    zzim_list = Accompany_Zzim.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            user_zzims = Accompany_Zzim.objects.filter(user=self.request.user)
+            zzim_items = [zzim.item for zzim in user_zzims]
+            context['zzim_items'] = zzim_items
+        else:
+            context['zzim_items'] = []
+        
+        return context
 
 class AccompanyDetailView(DetailView):
     model = TravelGroup

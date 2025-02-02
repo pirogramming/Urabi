@@ -172,9 +172,6 @@
   font-size: 18px;
   font-weight: 600;
 }
-.info-header>button{
-  cursor:default;
-}
 .info-date{
   font-size: 12px;
   font-weight: 400;
