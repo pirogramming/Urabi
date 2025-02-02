@@ -61,20 +61,23 @@
 
 .upload-button {
   background-image: url('../img/camera.png');
+  background-color: #ccc;
+  border-radius: 50%;
   background-size: 22px;
   background-repeat: no-repeat;
+  background-position: center center;
 
   position: absolute;
   bottom: 0;
-  right: 110px;
+  right: 120px;
 
   color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 18px;
   cursor: pointer;
   text-align: center;
   display: inline-block;
 }
+
 
 .upload-button input[type="file"] {
   display: none;
@@ -91,6 +94,7 @@
   flex-direction: column;
   margin-top: 50px;
 }
+
 
 .register-form label {
   display: flex;
@@ -136,5 +140,9 @@
   margin-top: 20px;
 
   width: 150px;
-  
+  font-family: 'Paperlogy';
+}
+
+input, select, input:placeholder-shown{
+  font-family: 'Paperlogy';
 }
