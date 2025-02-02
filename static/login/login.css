@@ -72,7 +72,6 @@
   align-items: center;
   gap: 5px;
   font-size: 26px;
-  font-weight: 700;
   margin-bottom: 10px;
 }
 .loginForm-name svg{
@@ -94,7 +93,6 @@
   font-size: 15px;
   margin: 0 10px;
   text-align: left; 
-  font-weight: 600;
 }
 
 .login-form input {
@@ -105,10 +103,13 @@
   border-radius: 20px;
 }
 
+.login-form input:placeholder-shown{
+  font-family: 'Paperlogy';
+}
+
 .login-form button{
   width: 100%;
   font-size: 14px;
-  font-weight: 600;
   color: aliceblue;
   background-color: var(--red);
   padding: 10px 0;
@@ -116,12 +117,10 @@
 }
 .login-container > p{
   color: gray;
-  font-weight: 400;
   margin-bottom: 40px;
 }
 .login-container > p .blue{
   color: var(--blue);
-  font-weight: 600;
 }
 
 .social-login{

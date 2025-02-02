@@ -170,6 +170,18 @@ body {
   cursor: pointer;
 }
 
+.chatbot{
+  left: 20px;
+  right: auto;
+  background-color: #dc3545;
+}
+
 .chat-btn:hover {
   background-color: #0056b3;
+  transition: all 0.3s ease;
+}
+
+.chatbot:hover{
+  background-color: var(--red-hover);
+  transition: all 0.3s ease;
 }
