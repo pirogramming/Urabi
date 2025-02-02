@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room - User 1</title>
+</head>
+<body>
+    <!-- 채팅방 제목 표시 -->
+    <h1>Chat Room: {{ room_name }} (User 1)</h1>
+    <div id="chat-log" style="height: 300px; border: 1px solid black; overflow-y: scroll;"></div>
+    <input id="chat-message-input" type="text" size="100">
+    <input id="chat-message-submit" type="button" value="Send">
+
+    <script>
+        // Django 템플릿에서 전달된 room_id와 access_token 값을 가져옴
+        const roomId = "{{ room_id }}";  // 채팅방 ID
+        const accessToken = "{{ access_token }}";  // 사용자 인증을 위한 액세스 토큰
+
+        // WebSocket 연결을 생성하여 채팅 서버와 연결
+        const chatSocket = new WebSocket(
+            'wss://' + window.location.host + '/ws/chat/' + roomId + '/?token=' + encodeURIComponent(accessToken)
+        );
+        
+        // 서버에서 메시지를 받을 때 이벤트 핸들러 실행 
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const chatLog = document.querySelector('#chat-log');
+            const newMessage = document.createElement('div');
+
+            // 메시지 형식: "보낸 사람 닉네임 [날짜]: 메시지 내용"
+            newMessage.innerText = `${data.sender_nickname} [${new Date(data.timestamp).toLocaleString()}]: ${data.content}`;
+            chatLog.appendChild(newMessage);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+
+        // 웹소켓 연결이 닫혔을 때 이벤트 핸들러 실행 
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+
+        // 사용자가 Enter 키(13번)를 누르면 메시지를 전송하도록 설정
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        // 전송 버튼 클릭 시 이벤트 핸들러로 메시지를 WebSocket을 통해 서버로 전송
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+
+            // WebSocket을 통해 메시지를 JSON 형식으로 서버로 전송
+            chatSocket.send(JSON.stringify({
+                'content': message
+            }));
+
+            // 메시지 입력 필드 초기화 
+            messageInputDom.value = '';
+        };
+    </script>
+</body>
+</html>
