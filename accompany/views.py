@@ -21,7 +21,7 @@ class AccompanyDetailView(DetailView):
 class AccompanyCreateView(CreateView):
     model = TravelGroup
     form_class = TravelGroupForm
-    template_name = 'accompany/accompany_create.html'
+    template_name = 'accompany/accompany_form.html'
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
@@ -31,7 +31,7 @@ class AccompanyCreateView(CreateView):
 class AccompanyUpdateView(UpdateView):
     model = TravelGroup
     form_class = TravelGroupForm
-    template_name = 'accompany/accompany_update.html'
+    template_name = 'accompany/accompany_form.html'
     def get_success_url(self):
         return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
 

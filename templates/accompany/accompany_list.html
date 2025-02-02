@@ -44,7 +44,7 @@
       <section class="accompany-list">
         <div class="list-header">
           <h2>동행을 기다리는 여정들</h2>
-          <button>동행 모집하기</button>
+          <button onclick="window.location.href=`{%url 'accompany:accompany_create'%}`">동행 모집하기</button>
         </div>
         <div class="list-main">
         {%for post in travelgroup_list%}
