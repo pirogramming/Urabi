@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'accommodation',
     'market',
     'chatbot',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 
 # Database
@@ -183,3 +185,19 @@ SESSION_SAVE_EVERY_REQUEST = True  # 매 요청마다 세션 갱신
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+# CORS 설정 (필요한 경우)
+CORS_ALLOW_ALL_ORIGINS = True  # 개발 환경에서만 사용, 프로덕션에서는 특정 도메인만 허용하도록 변경 필요
+CORS_ALLOW_CREDENTIALS = True
+
+# 웹소켓 URL 설정
+WEBSOCKET_URL = '/ws/'
