@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'chat'
+
 urlpatterns = [
     path('rooms/', views.ChatRoomList.as_view(), name='chat_room_list'),  # 채팅방 목록 조회
     path('rooms/<int:room_id>/', views.enter_chat_room, name='enter_chat_room'),  # 특정 채팅방 입장
