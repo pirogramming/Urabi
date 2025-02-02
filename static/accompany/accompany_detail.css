@@ -5,6 +5,9 @@
 .blue{
   color: var(--blue);
 }
+.red{
+  color: var(--red);
+}
 .banner-filter{
   font-weight: 500;
   width: 100%;
