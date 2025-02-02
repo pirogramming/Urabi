@@ -42,8 +42,8 @@ def market_update(request,pk):
             return redirect(reverse('market:market_detail', kwargs={'pk': market.item_id}))
     return render(request, 'market/market_update.html', {'form':form, 'market':market})
 
-def market_detail_self(request):
-    return render(request, 'market/market_detail_self.html')
 
-
-
+def market_delete(request, pk):
+    market = Market.objects.get(item_id = pk)
+    market.delete()
+    return redirect(reverse('market:market_list'))

@@ -64,6 +64,9 @@
 </div>
     {% if request.user == market.user %}
         <div class="market_detail_bottom">
+            <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_edit_btn">
+                <p>삭제하기</p>
+            </a>
             <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
                 <p>수정하기</p>
             </a>

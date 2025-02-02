@@ -175,6 +175,7 @@
 .market_detail_bottom{
     display: flex;
     justify-content: flex-end;
+    gap:20px;
 }
 .market_detail_chat_btn, .market_detail_edit_btn{
     display: flex;
@@ -209,3 +210,4 @@
     background-color: var(--red);
     color:white
 }
+
