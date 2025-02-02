@@ -33,6 +33,16 @@ class AccompanyListView(ListView):
 class AccompanyDetailView(DetailView):
     model = TravelGroup
     template_name = 'accompany/accompany_detail.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            user_zzims = Accompany_Zzim.objects.filter(user=self.request.user)
+            zzim_items = [zzim.item for zzim in user_zzims]
+            context['zzim_items'] = zzim_items
+        else:
+            context['zzim_items'] = []
+        
+        return context
 
 
 class AccompanyCreateView(CreateView):
