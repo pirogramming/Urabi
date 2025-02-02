@@ -4,4 +4,4 @@ from .models import Market
 class MarketForm(forms.ModelForm):
     class Meta:
         model= Market
-        fields = ('__all__')
+        exclude = ('created_at', 'updated_at','user')

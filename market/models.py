@@ -37,4 +37,4 @@ class Market(models.Model):
     photo = models.ImageField('마켓_이미지', blank=True, upload_to='market/%Y%m%d')
 
     def __str__(self):
-        return f"{self.get_trade_type_display()}"
+        return self.get_trade_type_display()

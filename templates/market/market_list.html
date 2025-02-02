@@ -72,12 +72,14 @@
             </thead>
             <tbody >
                 {% for market_item in markets %}
-                <tr>
-                    <td class="market_icon_table">{{market_item.trade_type}}</td>
-                    <td class="market_list_item">{{market_item.title}}</td>
-                    <td class="market_list_item">{{market_item.created_at|date:"Y-m-d"}}</td>
-                    <td class="market_list_item">{{market_item.user}}</td>
-                </tr>
+                <a href="{% url 'maket:market_detail'%}">
+                    <tr class="market_list_section">
+                        <td class="market_icon_table">{{market_item.get_trade_type_display}}</td>
+                        <td class="market_list_item">{{market_item.title}}</td>
+                        <td class="market_list_item">{{market_item.created_at|date:"Y-m-d"}}</td>
+                        <td class="market_list_item">{{market_item.user}}</td>
+                    </tr>
+                </a>
                 {% empty %}
                 <tr>
                     <td colspan="9">등록된 거래가 없습니다.</td>
