@@ -22,28 +22,38 @@
         <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지" class="flash_image">
         <div class="flash_description">
             <div class="flash_title_star">
-                <h2 class="flash_title">토트넘 경기보면서 맥주 드실 분~</h2>
+                <h2 class="flash_title">{{ flash.title }}</h2>
                 <div class="flash_star">
-                    <img id="star_icon" src="{% static 'img/empty_star.png' %}" alt="관심 번개">
+                    <img id="star_icon" 
+                         src="{% if is_zzimmed %}{% static 'img/fill_star.png' %}{% else %}{% static 'img/empty_star.png' %}{% endif %}" 
+                         alt="관심 번개">
                 </div>
             </div>
             <div class="flash_details">
-                <p class="flash_location">📍 802dong 101ho, 30-20, Deongneung-ro 10-gil, Nowon-gu, Seoul</p>
-                <p class="flash_date">📅 2025년 01월 01일 18:00</p>
+                <p class="flash_location">📍 {{ flash.city }}</p>
+                <p class="flash_date">📅 {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
             </div>
             <p class="flash_content">
-                안녕하세요! 경기를 보면서 맥주 한 잔 하실 분을 찾습니다.  
-                편하게 오셔서 즐거운 시간 보내요!  
-                장소는 홍대 근처 펍입니다.  
+                {{ flash.explanation }}
             </p>
             <div class="flash_tags_capacity">
                 <div class="flash_tags">
-                    <span class="flash_tag">#남녀무관</span>
-                    <span class="flash_tag">#타팬환영</span>
+                    {% for tag in tag_list %}
+                        <span class="flash_tag">#{{ tag }}</span>
+                    {% empty %}
+                        <span class="flash_tag">태그 없음</span>
+                    {% endfor %}
                 </div>
-                <span class="flash_capacity"><strong>1/4</strong></span>
+                <span class="flash_capacity"><strong>{{ flash.max_people }}</strong></span>
             </div>
-            <button class="flash_apply_btn">신청하기</button>
+            {% if request.user == flash.created_by %}
+                <div class="flash_buttons">
+                    <a href="{% url 'flash:flash_update' flash.pk %}" class="flash_edit_btn">수정하기</a>
+                    <button class="flash_delete_btn" onclick="deleteFlash({{ flash.pk }})">삭제하기</button>
+                </div>
+            {% else %}
+                <button class="flash_apply_btn">신청하기</button>
+            {% endif %}
         </div>
     </div>
 
@@ -52,7 +62,7 @@
     <div class="flash_host">
         <img src="{% static 'img/profile_sample.jpg' %}" alt="호스트 이미지" class="host_image">
         <div class="host_info">
-            <p class="host_name">주최자: 곽두팔</p>
+            <p class="host_name">주최자: {{ flash.created_by.nickname|default:flash.created_by.username }}</p>
             <p class="host_rating">⭐ 34.5</p>
         </div>
         <button class="host_chat_btn">💬 메시지 보내기</button>
@@ -63,7 +73,7 @@
     <section class="other_flash">
         <div class="other_flash_header">
             <h3>다른 번개 보기</h3>
-            <a href="{% url 'flash_list' %}" class="flash_list_btn">목록으로</a>
+            <a href="{% url 'flash:flash_list' %}" class="flash_list_btn">목록으로</a>
         </div>
         <div class="other_flash_list">
             <div class="other_flash_card">
@@ -81,14 +91,54 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const starIcon = document.getElementById("star_icon");
+        const flashId = "{{ flash.pk }}";
 
-        starIcon.addEventListener("click", function() {
-            if (starIcon.src.includes("empty_star.png")) {
-                starIcon.src = "{% static 'img/fill_star.png' %}";
-            } else {
-                starIcon.src = "{% static 'img/empty_star.png' %}";
+        // 페이지 로드 시, 찜 상태 확인 후 아이콘 설정
+        function updateStarIcon(isZzimmed) {
+            starIcon.src = isZzimmed ? "{% static 'img/fill_star.png' %}" : "{% static 'img/empty_star.png' %}";
+        }
+
+        // 찜 기능 토글
+        function toggleZzim(flashId) {
+            fetch(`/flash/${flashId}/zzim/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateStarIcon(data.zzimmed);
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        // 삭제 기능
+        function deleteFlash(flashId) {
+            if (confirm("정말로 이 번개 모임을 삭제하시겠습니까?")) {
+                fetch(`/flash/${flashId}/delete/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("번개 모임이 삭제되었습니다.");
+                        window.location.href = "{% url 'flash:flash_list' %}"; // 삭제 후 리스트로 이동
+                    } else {
+                        alert("삭제 권한이 없습니다.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
             }
+        }
+
+        // 이벤트 리스너 설정
+        starIcon.addEventListener("click", function() {
+            toggleZzim(flashId);
         });
     });
 </script>
+
 {% endblock %}
