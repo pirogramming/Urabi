@@ -2,7 +2,8 @@ from django.shortcuts import render, reverse
 from . import views
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 import json
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import TravelGroup, TravelParticipants, Accompany_Zzim
@@ -55,3 +56,16 @@ class AccompanyDeleteView(DeleteView):
     model = TravelGroup
     template_name = 'accompany/accompany_detail.html'
     success_url = '/accompany/'
+
+@login_required
+@csrf_exempt
+def toggle_zzim(request, travel_id):
+    travel = get_object_or_404(TravelGroup, pk=travel_id)
+    zzim, created = Accompany_Zzim.objects.get_or_create(user=request.user, item=travel)
+
+    if not created:
+        # 이미 찜한 경우 삭제
+        zzim.delete()
+        return JsonResponse({'travel_id':travel.travel_id, 'zzim': False})  # False면 찜이 해제된 상태
+
+    return JsonResponse({'zzim': True})  # True면 찜한 상태
