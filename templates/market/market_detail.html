@@ -8,16 +8,16 @@
 {% block content%}
 <div class="market_detail_head">
     <div class="market_detail_head_group">
-        <a class="market_link">나눔 마켓 ></a>
+        <a class="market_link" href="{% url 'market:market_list' %}">나눔 마켓 ></a>
         <a class="market_detail_link" href="#">상세 정보 </a>
     </div>
     <div class="market_detail_title">
         <div class="market_detail_title_info">
-            <h1>샤워 헤드 판매합니다</h1>
+            <h1>{{market.title}}</h1>
             <div class="market_detail_tag">
-                <p id="market_detail_cate">#생활용품</p>
-                <p id="market_detail_loca">영국 런던</p>
-                <p>거래 중</p>
+                <p id="market_detail_cate">{{market.category}}</p>
+                <p id="market_detail_loca">{{market.city}}</p>
+                <p>{{market.status}}</p>
             </div>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
@@ -26,38 +26,55 @@
     </div>
     <div class="market_detail_mid_title">
         <div class="market_detail_profile">
-            <p>닉네임 </p>
-            <p class="market_detail_temp">36.5℃</p>
+            <p>{{market.user}} </p>
+            <p class="market_detail_temp">{{trust_score}}</p>
         </div> 
         <div class="market_detail_tradeWay">
-            <img src="/static/img/selling_icon.svg">
-            <p>판매해요</p>
+            <p>{{market.get_trade_type_display}}</p>
         </div>
-        <p class="market_deatil_date">25.01.29</p>
+        <p class="market_deatil_date">
+            {% if market.updated_at and market.updated_at != market.created_at %}
+                {{market.updated_at|date:"Y-m-d"}}
+            {% else %}
+                {{market.created_at|date:"Y-m-d"}}
+            {%endif%}
+        </p>
     </div>
 </div>
 <div class="market_detail_body">
-    <img src="/static/img/main_background.png">
+    {% if market.photo %}
+        <img src="{{ market.photo.url }}" alt="거래 이미지">
+    {% else %}
+        <p>이미지가 없습니다.</p>
+    {% endif %}
     <div class="market_detail_body_right">
         <div class="market_detail_trade_location">
             <h3>거래 장소</h3>
-            <p>221B Baker Street, London, NW1 6XE, United Kingdom</p>
+            <p>{{market.city}}</p>
         </div>
         <div class="market_detail_price">
             <h3>가격</h3>
-            <p>25,000원</p>
+            <p>{{market.price}}</p>
         </div>
         <div class="market_detail_description">
-            <p>본문<br>어쩌구 저쩌구<br> 왤캐 어렵니</p>
+            <h3>본문</h3>
+            <p>{{market.explanation}}</p>
         </div>
     </div>
 </div>
-{% block edit_content%}
-<div class="market_detail_bottom">
-    <div class="market_detail_chat_btn">
-        <img src="/static/img/chat_icon.svg">
-        <p>채팅하기</p>
-    </div>
-</div>
-{% endblock %}
+    {% if request.user == market.user %}
+        <div class="market_detail_bottom">
+            <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
+                <p>수정하기</p>
+            </a>
+        </div>
+    {% else %}
+        <div class="market_detail_bottom">
+            <a href="#" class="market_detail_chat_btn">
+                <img src="/static/img/chat_icon.svg">
+                <p>채팅하기</p>
+            </a>
+        </div>
+    {%endif%}
+
 {% endblock %}
