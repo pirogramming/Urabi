@@ -36,11 +36,12 @@
           </div>
           <div class="passport-card-body">
             <div>
-                <img
-              src="{% static 'img/default-profile.png' %}" 
-              alt="프로필 사진"
-              class="profile-photo"
-            />
+              <img 
+                  src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}" 
+                  alt="프로필 사진"
+                  class="profile-photo"
+              />
+
             <div class="travel-score">
                 <span>여행지수</span>
                 <span class="score">36.5°C</span>

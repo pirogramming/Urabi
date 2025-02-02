@@ -44,23 +44,18 @@
       <section class="profile-edit-section">
         <div class="profile-photo-area">
           <div class="photo-wrapper">
-            <img
-              src="{% static 'img/default-profile.png' %}"
-              alt="프로필 사진"
-              class="profile-photo"
-            />
-            <label for="profilePhotoInput" class="camera-icon">
-              <img src="{% static 'img/camera.png' %}" alt="카메라 아이콘" />
-            </label>
-            <input
-              type="file"
-              id="profilePhotoInput"
-              name="profile_image"
-              accept="image/*"
-              style="display: none;"
-            />
+            <img id="profile-picture-preview" class="profile-photo"
+            src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+            alt="프로필 사진" />
+        
+        <label for="profilePhotoInput" class="camera-icon">
+            <img src="{% static 'img/camera.png' %}" alt="카메라 아이콘" />
+        </label>
+        <input type="file" id="profilePhotoInput" name="profile_image" accept="image/*" style="display: none;">
+        
           </div>
-        </div>
+      </div>
+      
   
         <!-- 텍스트 입력 영역 -->
         <div class="profile-form">
@@ -124,6 +119,20 @@
     </form>
     </section>
   </main>
+
+  <script>
+    document.getElementById("profilePhotoInput").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("profile-picture-preview").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+  </script>
+  
   
   {%endblock%}
 

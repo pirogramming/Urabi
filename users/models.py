@@ -32,7 +32,7 @@ class User(AbstractUser):
     nickname = models.CharField(max_length=50, null=True)
     birth = models.DateField(null=True, blank=True)
     social_id = models.CharField(max_length=100, null=True, blank=True)
-    profile_image = models.ImageField(upload_to='profile_images', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images', null=True, blank=True, default='profile_images/default-profile.png')
     trust_score = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
