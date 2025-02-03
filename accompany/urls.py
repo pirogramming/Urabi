@@ -11,4 +11,6 @@ urlpatterns = [
     path('update/<int:pk>', views.AccompanyUpdateView.as_view(), name='accompany_update'),
     path('delete/<int:pk>', views.AccompanyDeleteView.as_view(), name='accompany_delete'),
     path('toggle-zzim/<int:travel_id>/', views.toggle_zzim, name='toggle_zzim'),
+    path('add_participant/', views.add_participant, name='add_participant'),
+    path('remove_participant/', views.remove_participant, name='remove_participant'),
 ]

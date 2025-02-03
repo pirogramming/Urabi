@@ -1,4 +1,4 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, redirect
 from . import views
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -46,14 +46,18 @@ class AccompanyDetailView(DetailView):
         else:
             context['zzim_items'] = []
         group = context['object']
-        users = User.objects.all()
+        users = User.objects.all().exclude(pk=group.created_by.pk)
+        participants = TravelParticipants.objects.filter(travel=group)
+        participants_count = len(participants)+1
+        users = users.exclude(pk__in=[participant.user.pk for participant in TravelParticipants.objects.filter(travel=group)])
         context['users'] = users
+        context['participants'] = participants
+        context['participants_count'] = participants_count
         if group.tags:
             group_tags = group.tags.split(',')
             context['tags'] = group_tags 
 
         return context
-
 
 class AccompanyCreateView(CreateView):
     model = TravelGroup
@@ -89,3 +93,53 @@ def toggle_zzim(request, travel_id):
         return JsonResponse({'travel_id':travel.travel_id, 'zzim': False})  # False면 찜이 해제된 상태
 
     return JsonResponse({'zzim': True})  # True면 찜한 상태
+
+@login_required
+@csrf_exempt
+def add_participant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            travel_id = data.get("travel_id")
+            user_id = data.get("user_id")
+
+            travel = get_object_or_404(TravelGroup, travel_id=travel_id)
+            user = get_object_or_404(User, id=user_id)
+
+            # 중복 참가 방지
+            if TravelParticipants.objects.filter(travel=travel, user=user).exists():
+                return JsonResponse({"message": "이미 참가 중입니다."}, status=400)
+
+            # 최대 인원 초과 방지
+            if travel.participants.count() >= travel.max_member:
+                return JsonResponse({"message": "최대 인원을 초과했습니다."}, status=400)
+
+            # 참가자 추가
+            TravelParticipants.objects.create(travel=travel, user=user)
+
+            return JsonResponse({"message": "참가 완료!"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
+
+@login_required
+@csrf_exempt
+def remove_participant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            travel_id = data.get("travel_id")
+            user_id = data.get("user_id")
+
+            travel = get_object_or_404(TravelGroup, travel_id=travel_id)
+            user = get_object_or_404(User, id=user_id)
+
+            # 참가자 삭제
+            TravelParticipants.objects.filter(travel=travel, user=user).delete()
+
+            return JsonResponse({"message": "참가 취소!"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
