@@ -1,0 +1,119 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head%} 
+<link rel="stylesheet" href="{% static 'market/market_detail.css' %}">
+{% endblock %}
+
+{% block content%}
+<div class="market_detail_head">
+    <div class="market_detail_head_group">
+        <a class="market_link" href="{% url 'market:market_list' %}">나눔 마켓 ></a>
+        <a class="market_detail_link" href="#">상세 정보 </a>
+    </div>
+    <div class="market_detail_title">
+        <div class="market_detail_title_info">
+            <h1>{{market.title}}</h1>
+            <div class="market_detail_tag">
+                <p id="market_detail_cate">{{market.category}}</p>
+                <p id="market_detail_loca">{{market.city}}</p>
+                <p>{{market.status}}</p>
+            </div>
+        </div>
+        <div class="market_like">
+            <img id="like_icon" 
+                    src="{% if is_zzimmed %}{% static 'img/heart_icon.png' %}{% else %}{% static 'img/heart_empty.png' %}{% endif %}" 
+                    alt="관심 물품">
+        </div>
+    </div>
+    <div class="market_detail_mid_title">
+        <div class="market_detail_profile">
+            <p>{{market.user}} </p>
+            <p class="market_detail_temp">{{trust_score}}</p>
+        </div> 
+        <div class="market_detail_tradeWay">
+            <p>{{market.get_trade_type_display}}</p>
+        </div>
+        <p class="market_deatil_date">
+            {% if market.updated_at and market.updated_at != market.created_at %}
+                {{market.updated_at|date:"Y-m-d"}}
+            {% else %}
+                {{market.created_at|date:"Y-m-d"}}
+            {%endif%}
+        </p>
+    </div>
+</div>
+<div class="market_detail_body">
+    {% if market.photo %}
+        <img src="{{ market.photo.url }}" alt="거래 이미지">
+    {% else %}
+        <p>이미지가 없습니다.</p>
+    {% endif %}
+    <div class="market_detail_body_right">
+        <div class="market_detail_trade_location">
+            <h3>거래 장소</h3>
+            <p>{{market.city}}</p>
+        </div>
+        <div class="market_detail_price">
+            <h3>가격</h3>
+            <p>{{market.price}}</p>
+        </div>
+        <div class="market_detail_description">
+            <h3>본문</h3>
+            <p>{{market.explanation}}</p>
+        </div>
+    </div>
+</div>
+    {% if request.user == market.user %}
+        <div class="market_detail_bottom">
+            <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_edit_btn">
+                <p>삭제하기</p>
+            </a>
+            <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
+                <p>수정하기</p>
+            </a>
+        </div>
+    {% else %}
+        <div class="market_detail_bottom">
+            <a href="#" class="market_detail_chat_btn">
+                <img src="/static/img/chat_icon.svg">
+                <p>채팅하기</p>
+            </a>
+        </div>
+    {%endif%}
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const likeIcon = document.getElementById("like_icon");
+            const marketId = "{{ market.pk }}";
+    
+
+            // 페이지 로드 시, 찜 상태 확인 후 아이콘 설정
+            function updateLikeIcon(isZzimmed) {
+                likeIcon.src = isZzimmed ? "{% static 'img/heart_icon.png' %}" : "{% static 'img/heart_empty.png' %}";
+            }
+    
+            // 찜 기능 토글
+            function toggleZzim(marketId) {
+                fetch(`/market/${marketId}/zzim/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateLikeIcon(data.zzimmed);
+                })
+                .catch(error => console.error("Error:", error));
+            }
+
+            // 이벤트 리스너 설정
+            likeIcon.addEventListener("click", function() {
+                toggleZzim(marketId);
+            });
+        });
+    </script>
+
+{% endblock %}
