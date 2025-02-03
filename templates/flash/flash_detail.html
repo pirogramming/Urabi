@@ -92,6 +92,13 @@
     document.addEventListener("DOMContentLoaded", function() {
         const starIcon = document.getElementById("star_icon");
         const flashId = "{{ flash.pk }}";
+        const deleteBtn = document.querySelector(".flash_delete_btn");
+
+        if (deleteBtn) {
+            deleteBtn.addEventListener("click", function() {
+                deleteFlash(flashId);  // HTML의 `onclick` 대신 이벤트 리스너 사용 가능
+            });
+        }
 
         // 페이지 로드 시, 찜 상태 확인 후 아이콘 설정
         function updateStarIcon(isZzimmed) {

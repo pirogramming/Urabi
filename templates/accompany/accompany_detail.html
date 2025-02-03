@@ -66,6 +66,7 @@
         <span>수정하기</span>
       </button>
       </a>
+      <span id="add-participant" href=""> + </span>
       {%endif%}
     </div>
   </div>
@@ -78,16 +79,17 @@
       <span class="created_at">{{object.created_at|date:'Y-m-d'}}</span>
     </div>
     <div class="members">
-      <span>3/{{object.max_member}}</span>
+      <span>{{object.now_member}}/{{object.max_member}}</span>
       <button id="toggleMembers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
           <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li>여기</li>
-        <li>추가로</li>
-        <li>해야함함</li>
+        <li><span>{{user.email}}</span><span>🚩</span></li>
+        {%for member in participants%}
+          <li data-user-id="{{ member.user.id }}"><span>{{member.user.email}}</span><button class="red part-del-btn">x</button></li>
+        {%endfor%}
       </ul>
     </div>
   </div>
@@ -100,9 +102,9 @@
     <div class="tags">
       <ul>
         {%if object.tags%}
-          <li>#포지타노</li>
-          <li>#폼페이</li>
-          <li>#소렌토전망대</li>
+        {% for tag in tags %}
+          <li>#{{ tag }}</li>
+        {% endfor %}
         {%endif%}
       </ul>
     </div>
@@ -141,14 +143,119 @@
           this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>';
       }
   });
+</script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/tippy.js@6/themes/light.css"
+/>
+<script>
 
-  var memberList = document.getElementById('memberList');
+  const modal = `
+  <div id="add-participant-modal">
+    <input type="text" id="search-email" placeholder="이메일 검색" />
+    <ul id="userList">
+        {% for user in users %}
+            <li data-user-id="{{ user.id }}" class="user-item">
+                {{ user.email }}
+                <button class="add-btn" >+</button>
+            </li>
+        {% endfor %}
+    </ul>
+  </div>`;
 
-  members.forEach(function(member) {
-      var li = document.createElement('li');
-      li.textContent = member;
-      memberList.appendChild(li);
-  });
+tippy('#add-participant', {
+  content: modal,
+  placement: 'bottom-end',
+  arrow: false,
+  theme: 'light',
+  trigger: 'click',
+  interactive: true,
+  allowHTML: true,
+});
+
+
+document.addEventListener('click', function(event) {
+  if (event.target.matches('#add-participant')) {
+    const searchInput = document.getElementById('search-email');
+    const userItems = document.querySelectorAll('.user-item');
+    
+    if (searchInput && userItems) {
+      // 이메일 검색 필터링 이벤트 추가
+      searchInput.addEventListener('input', function() {
+        var searchTerm = this.value.toLowerCase();
+        
+        userItems.forEach(function(item) {
+          var email = item.textContent.toLowerCase();
+          if (email.includes(searchTerm)) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    }
+  }
+});
+
+document.addEventListener("click", function (event) {
+  if (event.target.matches(".add-btn")) {
+      const userId = event.target.closest("li").dataset.userId;  // 유저 ID 
+      const travelId = "{{ object.travel_id }}";  // 현재 여행 그룹 ID 
+      const csrfToken = document.getElementById("csrf_token").value; 
+
+      fetch("{% url 'accompany:add_participant' %}", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrfToken,
+          },
+          body: JSON.stringify({
+              user_id: userId,
+              travel_id: travelId,
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.message) {
+              alert(data.message);  // 성공 메시지 출력
+              location.reload();  // 새로고침하여 참가자 목록 반영
+          } else {
+              alert(data.error);  // 오류 메시지 출력
+          }
+      })
+      .catch(error => console.error("Error:", error));
+  }
+  if (event.target.matches(".part-del-btn")){
+    const userId = event.target.closest("li").dataset.userId;  // 유저 ID 
+    const travelId = "{{ object.travel_id }}";  // 현재 여행 그룹 ID 
+    const csrfToken = document.getElementById("csrf_token").value; 
+
+    fetch("{% url 'accompany:remove_participant' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            travel_id: travelId,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);  // 성공 메시지 출력
+            location.reload();  // 새로고침하여 참가자 목록 반영
+        } else {
+            alert(data.error);  // 오류 메시지 출력
+        }
+    })
+    .catch(error => console.error("Error:", error));
+  }
+});
+
 </script>
 <script src="{%static 'accompany/zzim.js'%}"></script>
 {%endblock js%}

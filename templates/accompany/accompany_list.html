@@ -79,7 +79,7 @@
               </div>
               <div class="info-user">
                 <h3>{{post.created_by}}</h3>
-                <div class="max-member"> 1 / {{post.max_member}}</div>
+                <div class="max-member"> {{post.now_member }} / {{post.max_member}}</div>
               </div>
               <div class="info-date">
 
@@ -91,11 +91,12 @@
                   <p>{{ post.explanation }}</p>
                 {%endif%}
               </div>
+              {{group_tags}}
               <div class="tags">
                 {%if post.tags%}
-                  <div class="tag"># 태그1</div>
-                  <div class="tag"># 태그2</div>
-                  <div class="tag"># 태그2</div>
+                  {% for tag in post.tags %}
+                    <div class="tag"># {{tag}} </div>
+                  {% endfor %}
                 {%endif%}
               </div>
             </div>

@@ -3,6 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'flash/flash_register.css' %}">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&callback=initMap"></script>
 {% endblock %}
 
 {% block header_content %}
@@ -16,7 +17,7 @@
     </section>
     
     <section class="flash_map">
-        <img src="{% static 'img/flash_map_sample.png' %}" alt="번개 모임 지도">
+        <div id="map"></div>
     </section>
 
     <form method="POST" class="flash_register_form">
@@ -73,6 +74,66 @@
 </section>
 
 <script>
+    function initMap() {
+        console.log("initMap 실행됨");
+
+        const defaultLocation = { lat: 37.5665, lng: 126.9780 }; // 기본 위치: 서울
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: defaultLocation
+        });
+
+        let marker = new google.maps.Marker({
+            position: defaultLocation,
+            map: map,
+            draggable: true
+        });
+
+        // Geocoder 인스턴스 생성 (위도/경도를 주소로 변환)
+        const geocoder = new google.maps.Geocoder();
+
+        // 사용자가 지도 클릭하면 마커 이동 + 위도/경도 업데이트 + 주소 가져오기
+        google.maps.event.addListener(map, "click", function(event) {
+            updateLocation(event.latLng, geocoder, marker);
+        });
+
+        // 마커를 드래그해서 위치 변경할 때
+        google.maps.event.addListener(marker, "dragend", function(event) {
+            updateLocation(event.latLng, geocoder, marker);
+        });
+
+        // 기존 데이터가 있으면 해당 위치로 이동
+        const existingLat = parseFloat(document.getElementById("latitude").value);
+        const existingLng = parseFloat(document.getElementById("longitude").value);
+        if (!isNaN(existingLat) && !isNaN(existingLng) && existingLat !== 0 && existingLng !== 0) {
+            const existingLocation = { lat: existingLat, lng: existingLng };
+            map.setCenter(existingLocation);
+            marker.setPosition(existingLocation);
+            updateLocation(existingLocation, geocoder, marker);
+        }
+    }
+
+    function updateLocation(latLng, geocoder, marker) {
+        marker.setPosition(latLng);
+        document.getElementById("latitude").value = latLng.lat();
+        document.getElementById("longitude").value = latLng.lng();
+
+        // Geocoder를 사용하여 주소 변환
+        geocoder.geocode({ location: latLng }, function(results, status) {
+            if (status === "OK") {
+                if (results[0]) {
+                    document.getElementById("location").value = results[0].formatted_address;
+                } else {
+                    document.getElementById("location").value = "주소를 찾을 수 없음";
+                }
+            } else {
+                console.error("Geocoder 실패: " + status);
+                document.getElementById("location").value = "주소 변환 오류";
+            }
+        });
+    }
+
+
     document.addEventListener("DOMContentLoaded", function() {
         const addTagBtn = document.getElementById("add_tag_btn");
         const tagInput = document.getElementById("tag_input");
@@ -112,6 +173,7 @@
             // 태그들을 쉼표로 연결하여 hidden input에 저장
             tagsHiddenInput.value = tagsArray.join(",");
         }
+
         addTagBtn.addEventListener("click", function() {
             let tagValue = tagInput.value.trim();
             if (tagValue !== "" && !tagsArray.includes(tagValue)) {
