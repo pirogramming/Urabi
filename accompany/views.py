@@ -30,6 +30,7 @@ class AccompanyListView(ListView):
         travel_groups = context['object_list']
         for travel in travel_groups:
             travel.tags = travel.tags.split(',') if travel.tags else []
+            travel.current_participants = travel.participants.count() 
         context['tags'] = travel_groups
         return context
 
@@ -116,7 +117,8 @@ def add_participant(request):
 
             # 참가자 추가
             TravelParticipants.objects.create(travel=travel, user=user)
-
+            travel.now_member += 1
+            travel.save()
             return JsonResponse({"message": "참가 완료!"}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
@@ -137,7 +139,8 @@ def remove_participant(request):
 
             # 참가자 삭제
             TravelParticipants.objects.filter(travel=travel, user=user).delete()
-
+            travel.now_member -= 1
+            travel.save()
             return JsonResponse({"message": "참가 취소!"}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
