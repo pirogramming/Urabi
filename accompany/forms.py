@@ -12,6 +12,10 @@ class TravelGroupForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
             'max_member': forms.NumberInput(attrs={'placeholder': '최대 인원', 'id':'max_member'}),
-            'tags': forms.Textarea(attrs={'placeholder': '장소 태그', 'id':'tags'}),
+            'tags': forms.TextInput(attrs={'placeholder': '장소 태그', 'id':'tags'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'file-upload-input', 'id':'image-upload'}),
         }
+        tags = forms.CharField(
+            required=False, 
+            widget=forms.HiddenInput()
+        )

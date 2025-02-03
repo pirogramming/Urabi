@@ -18,7 +18,8 @@
 .map-container{
   width: 100%;
   height: 400px;
-  margin-bottom: 20px;
+  background-color: aqua;
+  position: relative;
 }
 
 .banner-filter{
@@ -100,24 +101,10 @@
 #description:focus{
   outline: none;
 }
-.tags{
-  padding: 10px;
-  display:flex;
-  gap: 10px;
-}
 .tags>span{
   min-width: 80px;
   font-size: 18px;
   font-weight: 400;
-}
-.tags>textarea{
-  width: 100%;
-  height: 60px;
-  border: none;
-  padding: 5px;
-  background-color: var(--gray);
-  font-family: 'Paperlogy';
-  font-size: 18px;
 }
 .filter-form>button{
   font-weight: 500;
@@ -140,4 +127,63 @@
 .imgs img {
   width: 100%;
   height: auto;
+}
+
+.tags {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.tags .input_group {
+  margin-top: 10px;
+}
+
+.tags .tag_input_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#tag_input {
+  padding: 5px;
+  width: 150px;
+  background-color: var(--gray);
+  font-family: 'Paperlogy';
+  font-size: 14px;
+  border: none;
+}
+
+#add_tag_btn {
+  background-color: #FFD700;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tags .tag_list {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tags .tag_item {
+  background-color: #FFE8AD;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tags .tag_remove_btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: red;
+  padding: 5px;
 }
