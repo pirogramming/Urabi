@@ -39,6 +39,10 @@
             console.error('Chat socket closed unexpectedly');
         };
 
+        chatSocket.onerror = function(e) {
+            console.error("WebSocket 에러:", e);
+        };
+
         document.querySelector('#chat-message-input').focus();
 
         // 사용자가 Enter 키(13번)를 누르면 메시지를 전송하도록 설정
