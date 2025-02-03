@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JWT API Test</title>
+</head>
+<body>
+    <h1>JWT API Test</h1>
+    <button id="testBtn">Test Chat Room 1</button>
+    <pre id="result"></pre>
+    
+    <script>
+        document.getElementById('testBtn').addEventListener('click', function() {
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NTMzMjU1LCJpYXQiOjE3Mzg1MzI5NTUsImp0aSI6IjM5YzA5MmNkNDE5YTQxNzM4MjkxMDZjNzY3MTMzN2JiIiwidXNlcl9pZCI6MX0.aKxQjBEBd4wY0trXR6BI_JbDJcNiwjMybfj73MJ6dpw";
+            fetch("http://127.0.0.1:8000/chat/rooms/1/", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                console.log("API 응답:", data);
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = "Error: " + error;
+                console.error("API 요청 에러:", error);
+            });
+        });
+    </script>
+</body>
+</html>

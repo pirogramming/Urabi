@@ -24,10 +24,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         # JWT 토큰 기반 사용자 인증
         try:
-            token = self.scope['query_string'].decode().split('=')[1] # URL에서 JWT 토큰 추출
+            query_string = self.scope['query_string'].decode()
+            token = query_string.split('=')[1] if '=' in query_string else ''
             self.user = await self.get_user_from_token(token) # 토큰을 기반으로 사용자 가져오기
-        except:
-            await self.close() # 인증 실패 시 연결 종료
+        except Exception as e:
+            print(f"Error during token extraction: {e}")
+            await self.close()  # 인증 실패 시 연결 종료
             return
 
         if await self.validate_participation():
@@ -106,7 +108,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         2. ID를 기반으로 사용자 객체를 조회.
         3. 유효하지 않은 토큰이면 AnonymousUser 반환.
         """
-        
+
+        if not token:
+            return self.scope.get("user", AnonymousUser())
+    
         try:
             UntypedToken(token)
             user = User.objects.get(id=UntypedToken(token).payload['user_id'])  # 토큰에서 사용자 ID 추출 후 조회

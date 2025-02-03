@@ -15,6 +15,13 @@ from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm
 from django.core.files.base import ContentFile
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def get_csrf_token(request):
+    return JsonResponse({"csrfToken": get_token(request)})
 
 
 def social_login(request):
