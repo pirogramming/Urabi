@@ -49,11 +49,9 @@ class AccompanyDetailView(DetailView):
         group = context['object']
         users = User.objects.all().exclude(pk=group.created_by.pk)
         participants = TravelParticipants.objects.filter(travel=group)
-        participants_count = len(participants)+1
         users = users.exclude(pk__in=[participant.user.pk for participant in TravelParticipants.objects.filter(travel=group)])
         context['users'] = users
         context['participants'] = participants
-        context['participants_count'] = participants_count
         if group.tags:
             group_tags = group.tags.split(',')
             context['tags'] = group_tags 
