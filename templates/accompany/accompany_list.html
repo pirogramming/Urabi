@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{%static 'accompany/accompany_list.css'%}">
 {%endblock%}
 
- {%block content%}
+{%block content%}
       <section class="banner-container">
         <div class="banner">
           <div class="banner-text">
@@ -38,13 +38,13 @@
               <button type="submit">검색</button>
             </form>
           </div>
-          <p class="create_accompany"><a href="">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
+          <p class="create_accompany"><a href="{% url 'accompany:accompany_create'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
         </div>
       </section>
       <section class="accompany-list">
         <div class="list-header">
           <h2>동행을 기다리는 여정들</h2>
-          <button>동행 모집하기</button>
+          <a href="{% url 'accompany:accompany_create'%}" >동행 모집하기</a>
         </div>
         <div class="list-main">
         {%for post in travelgroup_list%}
@@ -110,5 +110,6 @@
           {% endif %}
         </div>
       </section>
-  {%endblock%}
 
+
+  {%endblock%}

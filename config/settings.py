@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'accommodation',
     'market',
     'chatbot',
+    'map',
 ]
 
 MIDDLEWARE = [
