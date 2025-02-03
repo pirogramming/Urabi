@@ -271,3 +271,10 @@ def chat_room_user2(request, room_id):
         'websocket_url': f"wss://{request.get_host()}/ws/chat/{room_id}/"
     }
     return render(request, 'chat/room_user2.html', context)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def some_protected_route(request):
+    return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
