@@ -75,7 +75,8 @@
 
 {%block js%}
 <script src="{%static 'accompany/accompany_form.js'%}"></script>
-<script>
+<script src="{%static 'accompany/accompany_map.js'%}"></script>
+{% comment %} <script>
   let map;
   let marker;
   function initMap() {
@@ -133,6 +134,6 @@
         map.setZoom(15);
       });
     }
-    window.initMap = initMap();
-</script>
+    window.initMap = initMap;
+</script> {% endcomment %}
 {%endblock js%}
