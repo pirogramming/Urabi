@@ -29,7 +29,7 @@ function initMap(){
 
                 //다중 마커 기능
                 google.maps.event.addListener(map, "click", function(event){
-                    addMarker(event.latLng, "사용자 추가 마커", true);
+                    toggleMarker(event.latLng, "사용자 추가 마커");
                 });
             },
             function(){
@@ -58,7 +58,7 @@ function addMarker(position, title, isDraggable){
     })
 
     marker.addListener("click",()=>{
-        infoWindow.open(map, marker);
+        removeMarker(marker);  //삭제 기능 안 쓸거면 정보창 띄우면 됨
     })
 
     //드래그 기능
@@ -66,6 +66,31 @@ function addMarker(position, title, isDraggable){
         marker.addListener("dragend", function(event) {
             updateLocation(event.latLng, marker);
         });
+    }
+}
+
+
+//마커 삭제 함수
+function removeMarker(marker){
+    marker.setMap(null);
+    markers = markers.filter((m) => m !== marker);
+}
+
+//마커 클릭 시 추가 또는 삭제
+function toggleMarker(position, title){
+
+    //해당 좌표의 마커 존재 여부 확인
+    const isExsitedMarker = markers.find(
+        (marker) =>
+            Math.abs(marker.getPosition().lat()-position.lat())<0.0001 &&
+            Math.abs(marker.getPosition().lng()-position.lng())<0.0001
+    );
+
+    //이미 있다면 제거 없으면 추가가
+    if(isExsitedMarker){
+        removeMarker(isExsitedMarker);
+    }else{
+        addMarker(position, title, true);
     }
 }
 
