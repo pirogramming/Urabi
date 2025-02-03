@@ -39,7 +39,7 @@
               <button type="submit">검색</button>
             </form>
           </div>
-          <p class="create_accompany"><a href="">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
+          <p class="create_accompany"><a href="{% url 'accompany:accompany_create'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
         </div>
       </section>
       <section class="accompany-list">
@@ -123,6 +123,8 @@
         </div>
         <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
       </section>
+
+
   {%endblock%}
 {%block js%}
 <script src="{% static 'accompany/zzim.js' %}"></script>

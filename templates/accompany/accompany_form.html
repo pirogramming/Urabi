@@ -20,6 +20,9 @@
   <div class="banner-filter">
     <form class="filter-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <input type="hidden" id="latitude" name="latitude">
+      <input type="hidden" id="longitude" name="longitude">
+
       <div class="title">
         {{form.title}}
       </div>
@@ -48,6 +51,14 @@
             {%endif%}
         </div>
       </div>
+
+      <div class="filter-group">
+        <label for="location">주소</label>
+        <input type="text" id="location" name="location" readonly>
+        <div id="address_container">
+        </div>
+      </div>
+
       <div class="description">
         {{form.explanation}}
       </div>
@@ -75,7 +86,8 @@
 
 {%block js%}
 <script src="{%static 'accompany/accompany_form.js'%}"></script>
-<script>
+<script src="{%static 'accompany/accompany_map.js'%}"></script>
+{% comment %} <script>
   let map;
   let marker;
   function initMap() {
@@ -133,6 +145,6 @@
         map.setZoom(15);
       });
     }
-    window.initMap = initMap();
-</script>
+    window.initMap = initMap;
+</script> {% endcomment %}
 {%endblock js%}
