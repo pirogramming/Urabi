@@ -20,6 +20,9 @@
   <div class="banner-filter">
     <form class="filter-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <input type="hidden" id="latitude" name="latitude">
+      <input type="hidden" id="longitude" name="longitude">
+
       <div class="title">
         {{form.title}}
       </div>
@@ -48,10 +51,14 @@
             {%endif%}
         </div>
       </div>
+
       <div class="filter-group">
         <label for="location">주소</label>
-        <input type="text" id="location" name="location" placeholder="주소를 입력하세요" readonly>
+        <input type="text" id="location" name="location" readonly>
+        <div id="address_container">
+        </div>
       </div>
+
       <div class="description">
         {{form.explanation}}
       </div>
