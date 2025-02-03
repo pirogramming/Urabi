@@ -1,6 +1,7 @@
 let map;
 let markers = []; // 마커들을 배열로 저장
 let geocoder;
+let polyline;
 
 function initMap(){
     // 현재 위치를 가져오기 위한 기본 설정
@@ -16,6 +17,15 @@ function initMap(){
                 map = new google.maps.Map(document.getElementById("map"), {
                     center: userLocation,
                     zoom: 15
+                });
+
+                //polyline 초기화
+                polyline = new google.maps.Polyline({
+                    path:[],
+                    geodesic : true, //지구 곡률 반영한 직선거리
+                    strokeColor : "#EF4141",
+                    strokeWeight : 2,
+                    map:map,
                 });
 
                 //현재 위치에 마커 추가
@@ -51,6 +61,7 @@ function addMarker(position, title, isDraggable){
     });
 
     markers.push(marker); //새롭게 찍은 마커 배열에 추가
+    updatePolyline(); //선 업데이트
     const latLng = new google.maps.LatLng(position.lat, position.lng);
     updateLocation(latLng, marker); //주소업데이트
 
@@ -78,6 +89,7 @@ function addMarker(position, title, isDraggable){
 function removeMarker(marker, addressInput){
     marker.setMap(null);
     markers = markers.filter((m) => m !== marker);
+    updatePolyline(); //선 업데이트
     addressInput.parentNode.remove();
 }
 
@@ -104,6 +116,12 @@ function toggleMarker(position, title){
         }
         
     }
+}
+
+//선 업데이트 
+function updatePolyline(){
+    const path = markers.map((marker)=>marker.getPosition());
+    polyline.setPath(path);
 }
 
 //마커 위치 업데이트 & 좌표 저장
