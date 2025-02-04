@@ -40,12 +40,14 @@ class AccompanyDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         if self.request.user.is_authenticated:
             user_zzims = Accompany_Zzim.objects.filter(user=self.request.user)
             zzim_items = [zzim.item for zzim in user_zzims]
             context['zzim_items'] = zzim_items
         else:
             context['zzim_items'] = []
+
         group = context['object']
         users = User.objects.all().exclude(pk=group.created_by.pk)
         participants = TravelParticipants.objects.filter(travel=group)
@@ -54,7 +56,11 @@ class AccompanyDetailView(DetailView):
         context['participants'] = participants
         if group.tags:
             group_tags = group.tags.split(',')
-            context['tags'] = group_tags 
+            context['tags'] = group_tags
+        
+        # 마커와 폴리라인 데이터를 JSON 형식으로 전달
+        context['markers'] = group.markers
+        context['polyline'] = group.polyline
 
         return context
 
@@ -64,6 +70,16 @@ class AccompanyCreateView(CreateView):
     template_name = 'accompany/accompany_form.html'
     def form_valid(self, form):
         form.instance.created_by = self.request.user
+
+        # 마커와 폴리라인 데이터를 처리
+        markers_data = self.request.POST.get('markers')
+        polyline_data = self.request.POST.get('polyline')
+
+        # 마커와 폴리라인 데이터를 저장할 필드를 모델에 추가하거나, 별도의 모델에 저장하는 로직을 구현해야 합니다.
+        # 예시로, TravelGroup 모델에 markers와 polyline이라는 JSONField를 추가한 경우:
+        form.instance.markers = markers_data
+        form.instance.polyline = polyline_data
+
         return super().form_valid(form)
     def get_success_url(self):
         return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})

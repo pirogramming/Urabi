@@ -8,7 +8,7 @@ function initMap(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                const userLocation ={   //현재위치치
+                const userLocation ={   //현재위치
                     lat : position.coords.latitude,
                     lng : position.coords.longitude,
                 }; 
@@ -29,7 +29,7 @@ function initMap(){
                 });
 
                 //현재 위치에 마커 추가
-                addMarker(userLocation, "현재 위치", true);
+                //addMarker(userLocation, "현재 위치", true);
 
                 //검색 기능 추가
                 searchBarLocationer();
@@ -41,6 +41,9 @@ function initMap(){
                 google.maps.event.addListener(map, "click", function(event){
                     toggleMarker(event.latLng, "사용자 추가 마커");
                 });
+
+                // 폼 제출 시 마커와 폴리라인 데이터를 저장
+                document.querySelector('form').addEventListener('submit', saveMapData);
             },
             function(){
                 alert("위치를 가져올 수 없습니다.");
@@ -54,10 +57,10 @@ function initMap(){
 //마커 추가 함수
 function addMarker(position, title, isDraggable){
     const marker = new google.maps.Marker({
-        position : position,
-        map : map,
-        title : title,
-        draggable : isDraggable,   //드래그 가능여부
+        position: position,
+        map: map,
+        title: title,
+        draggable: isDraggable,   //드래그 가능여부
     });
 
     markers.push(marker); //새롭게 찍은 마커 배열에 추가
@@ -68,11 +71,11 @@ function addMarker(position, title, isDraggable){
     //마커 정보창
     const infoWindow = new google.maps.InfoWindow({
         content: `<b>${title}</b>`,
-    })
+    });
 
     marker.addListener("click",()=>{
         removeMarker(marker);  //삭제 기능 안 쓸거면 정보창 띄우면 됨
-    })
+    });
 
     //드래그 기능
     if(isDraggable){
@@ -81,7 +84,7 @@ function addMarker(position, title, isDraggable){
         });
     }
 
-    return marker
+    return marker;
 }
 
 
@@ -90,7 +93,9 @@ function removeMarker(marker, addressInput){
     marker.setMap(null);
     markers = markers.filter((m) => m !== marker);
     updatePolyline(); //선 업데이트
-    addressInput.parentNode.remove();
+    if (addressInput) {
+        addressInput.parentNode.remove();
+    }
 }
 
 //마커 클릭 시 추가 또는 삭제
@@ -108,13 +113,11 @@ function toggleMarker(position, title){
         removeMarker(isExsitedMarker);
     }else{
         const newMarker = addMarker(position, title, true);
-        // const latLng = new google.maps.LatLng(position.lat, position.lng);
         if(newMarker){
             updateLocation(position, newMarker);
         }else{
             console.error("새 마커 생성 실패");
         }
-        
     }
 }
 
@@ -185,66 +188,55 @@ function updateLocation(latLng, marker) {
 }
 
 //검색 바 & 위치 이동
-function searchBarLocationer(){
-    // 검색 바에 자동 완성 기능 추가
+function searchBarLocationer() {
     const input = document.getElementById("search-bar");
     const autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.setFields(["place_id", "geometry"]);
+    autocomplete.setFields(["place_id", "geometry", "name"]);
 
-    // 검색한 장소의 위치로 지도 이동
-    autocomplete.addListener("place_changed", function() {
+    autocomplete.addListener("place_changed", function () {
         const place = autocomplete.getPlace();
         if (!place.geometry) {
             alert("해당 장소를 찾을 수 없습니다.");
             return;
         }
 
-        // 지도 중심을 검색한 장소로 이동
-        map.setCenter(place.geometry.location);
-        map.setZoom(15);
-        addMarker(place.geometry.location, place.name, true);
+        const position = place.geometry.location;
 
-        // 마커 위치 업데이트
-        // if (marker) {
-        // marker.setPosition(place.geometry.location);
-        // } else {
-        // marker = new google.maps.Marker({
-        //     position: place.geometry.location,
-        //     map: map,
-        //     title: place.name
-        // });
-        // }
+        // 지도 중심을 검색한 장소로 이동
+        map.setCenter(position);
+        map.setZoom(15);
+
+        // 검색된 위치에 마커 추가
+        const newMarker = addMarker(position, place.name || "검색 위치", true);
+
+        // 주소 업데이트 (마커 위치에 따른 주소 자동 입력)
+        if (newMarker) {
+            updateLocation(position, newMarker);
+        }
     });
 }
 
-//서버에서 마커 데이터 가져와서 지도에 표기
-// function loadSeverMarkers(){
-//     fetch("/get_locations/")
-//         .then((response)=>{
-//             if(!response.ok){
-//                 throw new Error(`Http 오류 : ${response.status}`);
-//             }
-//             return response.json();
-//         })
-//         .then((data)=>{
-//             if (data.length == 0 ){
-//                 console.warn("위치 데이터가 없습니다.");
-//                 return;
-//             }
 
-//             //가져온 위치에 마커 추가
-//             data.forEach((location)=>{
-//                 addMarker(
-//                     { lat : location.latitude, lng: location.longitude },
-//                     location.name,
-//                     false
-//                 );
-//             });
-//         })
-//         .catch((error)=> console.error("위치 데이터 호출 실패 : ",error));
-// }
+// 폼 제출 시 마커와 폴리라인 데이터를 저장
+function saveMapData(event) {
+    event.preventDefault();
 
+    const markersData = markers.map(marker => ({
+        lat: marker.getPosition().lat(),
+        lng: marker.getPosition().lng(),
+        title: marker.getTitle()
+    }));
 
+    const polylineData = polyline.getPath().getArray().map(latLng => ({
+        lat: latLng.lat(),
+        lng: latLng.lng()
+    }));
+
+    document.getElementById('markers').value = JSON.stringify(markersData);
+    document.getElementById('polyline').value = JSON.stringify(polylineData);
+
+    event.target.submit();
+}
 
 window.initMap = initMap;
 
@@ -255,5 +247,3 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("❌ Google Maps API가 로드되지 않음.");
     }
 });
-
-
