@@ -46,7 +46,7 @@
 }
 .market_filterInput {
     border: none;
-    background-color: var(--strong-gray);
+    background-color: var(--gray);
     height: 35px;
     margin-right: 10px;
     border-radius: 10px;

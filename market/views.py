@@ -20,7 +20,11 @@ def market_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'market/market_list.html', {'markets': page_obj, 'filterset':filterset, 'items_per_page':items_per_page})
+    selected_status = request.GET.get('status',None)
+    selected_category = request.GET.get('category',None)
+
+    return render(request, 'market/market_list.html', 
+                    {'markets': page_obj, 'filterset':filterset, 'items_per_page':items_per_page, 'selected_status':selected_status, 'selected_category':selected_category})
 
 
 @login_required
