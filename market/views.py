@@ -6,18 +6,21 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import MarketZzim
 from django.http import JsonResponse
+from .filters import MarketFilter
 
 
 def market_list(request):
-    queryset = Market.objects.all()  
+    queryset = Market.objects.all() 
+    filterset = MarketFilter(request.GET, queryset=queryset)  #필터 검색
 
+    filtered_queryset = filterset.qs
     items_per_page = int(request.GET.get('items_per_page', 10)) 
 
-    paginator = Paginator(queryset, items_per_page)
+    paginator = Paginator(filtered_queryset, items_per_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'market/market_list.html', {'markets': page_obj, 'items_per_page':items_per_page})
+    return render(request, 'market/market_list.html', {'markets': page_obj, 'filterset':filterset, 'items_per_page':items_per_page})
 
 
 @login_required
@@ -72,3 +75,4 @@ def market_zzim(request, pk):
         return JsonResponse({"zzimmed": False})
     
     return JsonResponse({"zzimmed": True})
+

@@ -10,7 +10,13 @@
 <section id="market_search">
     <h1 class="market_title">필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
     <div id="market_search_bar">
-        <div class="market_search_content">
+        <form method="GET">
+            {{filterset.form.as_p}}
+            <button type = "submit" class="market_search_btn">
+                <img src="/static/img/search_icon.svg" width="60">
+            </button>
+        </form>
+        {% comment %} <div class="market_search_content">
             <div class="market_search_title">
                 <h1>거래 현황</h1>
                 <select name="market_trade" id="market_trade">
@@ -40,7 +46,7 @@
         </div>
         <button class="market_search_btn">
             <img src="/static/img/search_icon.svg" width="60">
-        </button>
+        </button> {% endcomment %}
     </div>
 </section>
 
@@ -96,7 +102,7 @@
                 {% if num == markets.number %}
                     <strong class="active-page">{{ num }}</strong>
                 {% else %}
-                    <a href="?page={{num}}&items_per_page={{ items_per_page}}">{{num}}</a>
+                    <a href="?page={{num}}&items_per_page={{ items_per_page}}&{{request.GET.urlencode}}">{{num}}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}

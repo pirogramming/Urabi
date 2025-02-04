@@ -39,7 +39,7 @@ class Market(models.Model):
     photo = models.ImageField('마켓_이미지', blank=True, upload_to='market/%Y%m%d')
 
     def __str__(self):
-        return self.get_trade_type_display()
+        return f"{self.get_trade_type_display()}-{self.title} ({self.city})"
     
 class MarketZzim(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -48,3 +48,5 @@ class MarketZzim(models.Model):
 
     class Meta:
         unique_together = ("user", "market")  # 중복 찜 방지
+
+
