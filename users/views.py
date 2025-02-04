@@ -335,3 +335,7 @@ def edit_profile(request):
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
+
+@login_required
+def my_trip(request):
+    return render(request, 'mypage/myTrip.html', {'user':request.user})

@@ -3,6 +3,8 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'reset.css' %}">
   <link rel="stylesheet" href="{%static 'mypage/myTrip.css'%}">
+  <link rel="stylesheet" href="{%static 'accompany/accompany_map.css'%}">
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
 {%endblock%}
 
  {%block content%}
@@ -29,7 +31,8 @@
               </div>
 
               <div class="map-container">
-                <img src="{% static 'img/default-profile.png' %}" alt="지도" style="width: 100%; height: auto;">
+                <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+                <div id="map"></div>
               </div>
           
               <div class="timeline">
@@ -64,6 +67,9 @@
   
     </section>
   </main>
-  
   {%endblock%}
+
+  {%block js%}
+<script src="{%static 'accompany/accompany_map.js'%}"></script>
+  {%endblock js%}
 

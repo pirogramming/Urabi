@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('mypage/', views.my_page, name='my_page'),
     path('mypage/edit', views.edit_profile, name='edit_profile'),
+    path('mypage/trip', views.my_trip, name='my_trip'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
