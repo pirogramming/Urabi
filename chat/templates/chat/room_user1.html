@@ -1,70 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat Room - User 1</title>
+    <title>Chat Room - {{ room_name }}</title>
 </head>
 <body>
-    <!-- 채팅방 제목 표시 -->
-    <h1>Chat Room: {{ room_name }} (User 1)</h1>
+    <h1>Chat Room: {{ room_name }}(USER1)</h1>
     <div id="chat-log" style="height: 300px; border: 1px solid black; overflow-y: scroll;"></div>
     <input id="chat-message-input" type="text" size="100">
     <input id="chat-message-submit" type="button" value="Send">
 
     <script>
-        // Django 템플릿에서 전달된 room_id와 access_token 값을 가져옴
-        const roomId = "{{ room_id }}";  // 채팅방 ID
-        const accessToken = "{{ access_token }}";  // 사용자 인증을 위한 액세스 토큰
+        // Django 템플릿에서 전달된 room_id와 access_token 값을 사용
+        const roomId = "{{ room_id }}";
+        const accessToken = "{{ access_token }}";
 
         const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const wsUrl = wsProtocol + window.location.host + '/ws/chat/' + roomId + '/?token=' + encodeURIComponent(accessToken);
+        const wsUrl = `${wsProtocol}${window.location.host}/ws/chat/${roomId}/?token=${encodeURIComponent(accessToken)}`;
         console.log("WebSocket URL:", wsUrl);
 
-        // WebSocket 연결을 생성하여 채팅 서버와 연결
         const chatSocket = new WebSocket(wsUrl);
-        
-        // 서버에서 메시지를 받을 때 이벤트 핸들러 실행 
-        chatSocket.onmessage = function(e) {
+        const chatLog = document.querySelector('#chat-log');
+
+        // 1. WebSocket 연결이 열리면 기존 메시지 요청
+        chatSocket.onopen = function () {
+            console.log("WebSocket 연결됨.");
+            chatSocket.send(JSON.stringify({ command: 'fetch_messages' }));
+        };
+
+        // 2. 메시지를 수신하면 기존 메시지인지 새 메시지인지 구분하여 화면에 표시
+        chatSocket.onmessage = function (e) {
+            console.log("Message received:", e.data);
             const data = JSON.parse(e.data);
-            const chatLog = document.querySelector('#chat-log');
-            const newMessage = document.createElement('div');
 
-            // 메시지 형식: "보낸 사람 닉네임 [날짜]: 메시지 내용"
-            newMessage.innerText = `${data.sender_nickname} [${new Date(data.timestamp).toLocaleString()}]: ${data.content}`;
-            chatLog.appendChild(newMessage);
-            chatLog.scrollTop = chatLog.scrollHeight;
-        };
-
-        // 웹소켓 연결이 닫혔을 때 이벤트 핸들러 실행 
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        chatSocket.onerror = function(e) {
-            console.error("WebSocket 에러:", e);
-        };
-
-        document.querySelector('#chat-message-input').focus();
-
-        // 사용자가 Enter 키(13번)를 누르면 메시지를 전송하도록 설정
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  
-                document.querySelector('#chat-message-submit').click();
+            if (data.messages) {
+                // 기존 채팅 내역이 있는 경우 (리스트로 전달됨)
+                chatLog.innerHTML = ''; // 기존 내용 초기화
+                data.messages.forEach(message => {
+                    appendMessage(message.sender_nickname, message.timestamp, message.content);
+                });
+            } else {
+                // 단일 새 메시지인 경우 바로 추가
+                appendMessage(data.sender_nickname, data.timestamp, data.content);
             }
         };
 
-        // 전송 버튼 클릭 시 이벤트 핸들러로 메시지를 WebSocket을 통해 서버로 전송
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-
-            // WebSocket을 통해 메시지를 JSON 형식으로 서버로 전송
-            chatSocket.send(JSON.stringify({
-                'content': message
-            }));
-
-            // 메시지 입력 필드 초기화 
-            messageInputDom.value = '';
+        chatSocket.onerror = function (e) {
+            console.error("WebSocket 에러:", e);
         };
+
+        chatSocket.onclose = function (e) {
+            console.error("Chat socket closed unexpectedly");
+        };
+
+        const currentUser = "{{ user.nickname }}"; 
+        // 3. 사용자가 메시지 전송 시 (엔터 또는 버튼 클릭) 바로 화면에 표시한 후 서버로 전송
+        function sendMessage() {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value.trim();
+            if (!message) return;  // 빈 메시지 무시
+        
+            // 자신이 보낸 메시지는 현재 로그인한 사용자의 닉네임을 사용
+            appendMessage(currentUser, new Date().toISOString(), message);
+        
+            // 서버로 메시지 전송 (채팅방 ID 등 기존 로직 그대로)
+            chatSocket.send(JSON.stringify({ content: message }));
+        
+            messageInputDom.value = '';
+        }
+
+        document.querySelector('#chat-message-submit').onclick = sendMessage;
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                sendMessage();
+            }
+        };
+
+        // 4. 메시지를 채팅창에 추가하는 함수
+        function appendMessage(sender, timestamp, content) {
+            const newMessage = document.createElement('div');
+            newMessage.innerText = `${sender} [${new Date(timestamp).toLocaleString()}]: ${content}`;
+            chatLog.appendChild(newMessage);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
     </script>
 </body>
 </html>

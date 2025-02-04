@@ -50,7 +50,7 @@
                 <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." required>
             </label>
             <label><span class="labelName">비밀번호</span>
-                <input type="password" id="password" placeholder="비밀번호를 입력하세요." name="password" required>
+                <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요." required>
             </label>
             <button type="submit">로그인</button>
           </form>
@@ -104,45 +104,46 @@
     }); 
 
     function getToken() {
-      const email = document.getElementById('email').value;  // 이메일
+      const email = document.getElementById('email').value;  // 이메일을 입력받지만,
       const password = document.getElementById('password').value;  // 비밀번호
       
+      // SimpleJWT는 기본적으로 username과 password를 기대하므로,
+      // email 값을 username으로 보내도록 수정합니다.
       fetch("/api/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         credentials: "include",  
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email: email, password: password })
       })
         .then(response => response.json())
         .then(data => {
           console.log("🔑 로그인 성공:", data);
           localStorage.setItem("access_token", data.access);
-          localStorage.setItem("refresh_token", data.refresh);
-    
-          // 로그인 성공 후 `/api/some-protected-route/` 호출
-          fetch("/api/some-protected-route/", {
+          return fetch("/api/some-protected-route/", {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
             },
-          })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => console.log("✅ Protected API response:", data))
-          .catch((error) => console.error("❌ API 호출 실패:", error));
+          });
+        })
+        
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("✅ Protected API response:", data);
+          // 로그인 성공 후 메인 페이지로 이동하도록 처리
+          window.location.href = "{% url 'main:home' %}";
+        })
+        
+        .catch((error) => console.error("❌ API 호출 실패:", error));
     }
     
-    // 로그인 버튼 클릭 시 토큰을 발급받기
-    document.querySelector('.login-form').addEventListener('submit', function(event) {
-        event.preventDefault();  // 폼의 기본 제출을 막음
-        getToken();  // 로그인 후 토큰 발급
-    });
   </script>
 </body>
 </html>

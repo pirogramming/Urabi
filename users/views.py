@@ -18,7 +18,9 @@ from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 @csrf_exempt
 def get_csrf_token(request):
@@ -374,3 +376,9 @@ def get_token_for_logged_in_user(request):
     return JsonResponse({
         "access": str(refresh.access_token)
     })
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def some_protected_route(request):
+    return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)

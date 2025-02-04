@@ -21,7 +21,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from users import views
 
 
 urlpatterns = [
@@ -37,6 +37,9 @@ urlpatterns = [
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), 
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+     path('api/some-protected-route/', views.some_protected_route, name='some_protected_route'),
+    
 ]
 
 if settings.DEBUG:

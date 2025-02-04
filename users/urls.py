@@ -21,6 +21,7 @@ urlpatterns = [
     path('mypage/edit', views.edit_profile, name='edit_profile'),
     path("csrf/", views.get_csrf_token, name="get_csrf_token"),
     path('api/get_token/', views.get_token_for_logged_in_user, name='get_token'),
+    path('api/some-protected-route/', views.some_protected_route, name='some_protected_route'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
