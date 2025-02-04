@@ -12,13 +12,77 @@ from users.models import User
 from accompany.models import TravelGroup
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
 
 def jwt_api_test(request):
     """
     API 테스트용 HTML 파일(api_test.html)을 렌더링하는 뷰입니다.
     """
     return render(request, 'chat/apitest.html')
+
+User = get_user_model()
+
+@login_required
+def chat_main(request):
+    """
+    채팅 메인 페이지: 로그인한 사용자가 참여한 채팅방 리스트 표시  
+    "+" 버튼을 누르면 채팅방 생성 페이지(또는 팝업)로 이동하도록 구성합니다.
+    여기서는 간단하게 채팅방 리스트와 생성 링크만 구현합니다.
+    """
+    user = request.user
+    rooms = ChatRoom.objects.filter(Q(user1=user) | Q(user2=user)).order_by('-last_message_time')
+    context = {
+        'room_list': rooms,
+    }
+    return render(request, 'chat/chat_main.html', context)
+
+
+@login_required
+def create_chat_room(request):
+    """
+    채팅방 생성: GET이면 유저 목록(자신 제외)을 보여주고, POST이면 채팅방 생성.
+    간단히 상대방의 username을 POST 데이터로 받습니다.
+    """
+    if request.method == "POST":
+        other_username = request.POST.get("other_username")
+        try:
+            other_user = User.objects.get(username=other_username)
+        except User.DoesNotExist:
+            return HttpResponse("존재하지 않는 사용자입니다.", status=400)
+        # 채팅방 중복 여부 확인
+        room = ChatRoom.objects.filter(
+            (Q(user1=request.user) & Q(user2=other_user)) |
+            (Q(user1=other_user) & Q(user2=request.user))
+        ).first()
+        if not room:
+            room = ChatRoom.objects.create(user1=request.user, user2=other_user)
+        return redirect('chat:chat_room', room_id=room.id)
+    else:
+        # GET: 현재 로그인한 사용자를 제외한 사용자 목록 전달
+        users = User.objects.exclude(id=request.user.id)
+        context = {
+            'users': users,
+        }
+        return render(request, 'chat/create_chat_room.html', context)
+
+@login_required
+def chat_room(request, room_id):
+    """
+    채팅방 접속 페이지: 해당 채팅방에 접속하여 이전 메시지 내역을 보고 실시간 채팅 가능
+    """
+    room = get_object_or_404(ChatRoom, id=room_id)
+    # 권한 확인: request.user가 채팅방의 user1 또는 user2여야 함.
+    if request.user not in [room.user1, room.user2]:
+        return HttpResponse("접근 권한이 없습니다.", status=403)
+    context = {
+        'room': room,
+        # access_token은 JWT 사용 시 필요; 여기서는 세션 인증이므로 빈 문자열
+        'access_token': "",
+    }
+    return render(request, 'chat/room_chat.html', context)
+
 
 # 채팅방 목록 페이지네이션 설정
 class ChatRoomPagination(PageNumberPagination):
@@ -241,11 +305,11 @@ def chat_room_user1(request, room_id):
         'access_token': str(getattr(request, 'auth', '')),  # JWT 토큰을 문자열로 변환
         'other_user_nickname': other_user.nickname,
         'other_user_profile_image': request.build_absolute_uri(other_user.profile_image.url) if other_user.profile_image else None,
-        'travel_info': {
-            'title': room.travel.title,
-            'start_date': room.travel.start_date,
-            'end_date': room.travel.end_date,
-        },
+        # 'travel_info': {
+        #     'title': room.travel.title,
+        #     'start_date': room.travel.start_date,
+        #     'end_date': room.travel.end_date,
+        #},
         'websocket_url': f"wss://{request.get_host()}/ws/chat/{room_id}/"
     }
     return render(request, 'chat/room_user1.html', context)
@@ -263,11 +327,11 @@ def chat_room_user2(request, room_id):
         'access_token': str(getattr(request, 'auth', '')),  # JWT 토큰을 문자열로 변환
         'other_user_nickname': other_user.nickname,
         'other_user_profile_image': request.build_absolute_uri(other_user.profile_image.url) if other_user.profile_image else None,
-        'travel_info': {
-            'title': room.travel.title,
-            'start_date': room.travel.start_date,
-            'end_date': room.travel.end_date,
-        },
+        # 'travel_info': {
+        #     'title': room.travel.title,
+        #     'start_date': room.travel.start_date,
+        #     'end_date': room.travel.end_date,
+        # },
         'websocket_url': f"wss://{request.get_host()}/ws/chat/{room_id}/"
     }
     return render(request, 'chat/room_user2.html', context)
@@ -278,3 +342,16 @@ def chat_room_user2(request, room_id):
 @permission_classes([IsAuthenticated])
 def some_protected_route(request):
     return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
+
+@login_required
+def chat_room(request, room_id):
+    room = get_object_or_404(ChatRoom, id=room_id)
+    if request.user not in [room.user1, room.user2]:
+        return HttpResponse("접근 권한이 없습니다.", status=403)
+    # access_token이 필요한 경우, JWT 토큰을 생성하여 context에 추가할 수 있음.
+    # 여기서는 세션 기반 인증을 사용한다고 가정하여 빈 문자열로 전달합니다.
+    context = {
+        'room': room,
+        'access_token': "",  # 필요한 경우 JWT 토큰 문자열을 넣으세요.
+    }
+    return render(request, 'chat/room_chat.html', context)

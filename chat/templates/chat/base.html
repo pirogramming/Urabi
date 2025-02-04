@@ -1,0 +1,27 @@
+<!-- chat/templates/chat/base.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}채팅 앱{% endblock %}</title>
+    <!-- 필요시 Bootstrap CSS 등 추가 -->
+</head>
+<body>
+    <header>
+        <h1>채팅 앱</h1>
+        <nav>
+            <a href="{% url 'chat:chat_main' %}">채팅방 목록</a> |
+            <a href="{% url 'chat:create_chat_room' %}">+ 채팅방 생성</a>
+        </nav>
+        <hr>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <hr>
+        <p>&copy; 2025 My Chat App</p>
+    </footer>
+    {% block extra-script %}{% endblock %}
+</body>
+</html>

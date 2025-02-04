@@ -1,0 +1,18 @@
+<!-- chat/templates/chat/chat_main.html -->
+{% extends "chat/base.html" %}
+{% block title %}내 채팅방{% endblock %}
+
+{% block content %}
+<h2>내 채팅방</h2>
+<ul>
+    {% for room in room_list %}
+        <li>
+            <a href="{% url 'chat:chat_room' room.id %}">
+                {{ room.user1.username }} - {{ room.user2.username }}
+            </a>
+        </li>
+    {% empty %}
+        <li>채팅방이 없습니다.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
