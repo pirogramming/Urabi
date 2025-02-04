@@ -9,45 +9,34 @@
 {% block content%}
 <section id="market_search">
     <h1 class="market_title">필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
-    <div id="market_search_bar">
-        <form method="GET">
-            {{filterset.form.as_p}}
-            <button type = "submit" class="market_search_btn">
-                <img src="/static/img/search_icon.svg" width="60">
-            </button>
-        </form>
-        {% comment %} <div class="market_search_content">
+    <form method="GET" id="market_search_bar">
+        {% csrf_token %}
+        <div class="market_search_content">
             <div class="market_search_title">
                 <h1>거래 현황</h1>
-                <select name="market_trade" id="market_trade">
-                    <option>거래 중</option>
-                    <option>거래 완료</option>
-                </select>
+                {{filterset.form.status}}
             </div>
             <div class="market_search_title">
-                <h1>장소</h1>
-                <input type="text" name="market_location" id="market_location" placeholder="국가, 도시">
+                <h1>거래 유형</h1>
+                {{filterset.form.trade_type}}
             </div>
             <div class="market_search_title">
                 <h1>카테고리</h1>
-                <select name="market_category" id="market_category">
-                    <option>의약품</option>
-                    <option>티켓</option>
-                    <option>음식</option>
-                    <option>생활용품</option>
-                    <option>기념품</option>
-                    <option>기타</option>
-                </select>
+                {{filterset.form.category}}
+            </div>
+            <div class="market_search_title">
+                <h1>장소</h1>
+                {{filterset.form.city}}
             </div>
             <div class="market_search_title">
                 <h1>검색</h1>
-                <input type="text" name="market_search_text" id="market_search_text" placeholder="검색어를 입력하세요">
+                {{filterset.form.title}}
             </div>
         </div>
-        <button class="market_search_btn">
+        <button type="submit" class="market_search_btn">
             <img src="/static/img/search_icon.svg" width="60">
-        </button> {% endcomment %}
-    </div>
+        </button> 
+    </form>
 </section>
 
 <section id="market_body">
@@ -72,6 +61,7 @@
         <table class="market_list">
             <thead class="market_list_title">
                 <tr>
+                    
                     <th>거래 유형</th>
                     <th>제목</th>
                     <th>작성일</th>
