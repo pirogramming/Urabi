@@ -134,59 +134,6 @@
 {% endblock %}
 
 {% block js %}
-<script>
-  document.getElementById('toggleMembers').addEventListener('click', function() {
-      var memberList = document.getElementById('memberList');
-      if (memberList.style.display === 'none') {
-          memberList.style.display = 'block';
-          this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>';
-      } else {
-          memberList.style.display = 'none';
-          this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>';
-      }
-  });
-
-  // 마커와 폴리라인 데이터를 가져와서 지도에 표시
-  function initMap() {
-        const mapData = {
-        markers: {{ object.markers|safe }},
-        polyline: {{ object.polyline|safe }}
-    };
-
-    let center = { lat: 37.5665, lng: 126.9780 }; // 기본 위치 (서울)
-
-    if (mapData.markers.length > 0) {
-        center = { lat: mapData.markers[0].lat, lng: mapData.markers[0].lng }; // 첫 번째 마커 위치
-    }
-
-    const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: center
-    });
-
-    // 마커 추가
-    mapData.markers.forEach(markerData => {
-      new google.maps.Marker({
-        position: { lat: markerData.lat, lng: markerData.lng },
-        map: map,
-        title: markerData.title
-      });
-    });
-
-    // 폴리라인 추가
-    const polylinePath = mapData.polyline.map(point => ({ lat: point.lat, lng: point.lng }));
-    new google.maps.Polyline({
-      path: polylinePath,
-      geodesic: true,
-      strokeColor: '#EF4141',
-      strokeWeight: 2,
-      map: map
-    });
-  }
-
-window.initMap = initMap;
-
-</script>
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
 <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 <link
@@ -194,7 +141,13 @@ window.initMap = initMap;
   href="https://unpkg.com/tippy.js@6/themes/light.css"
 />
 <script>
-
+  window.mapData = {
+    markers: {{ object.markers|safe }},
+    polyline: {{ object.polyline|safe }}
+  };
+  const addURL = "{% url 'accompany:add_participant' %}";
+  const delURL = "{% url 'accompany:remove_participant' %}";
+  const travelId = "{{ object.travel_id }}";
   const modal = `
   <div id="add-participant-modal">
     <input type="text" id="search-email" placeholder="이메일 검색" />
@@ -207,98 +160,9 @@ window.initMap = initMap;
         {% endfor %}
     </ul>
   </div>`;
-
-tippy('#add-participant', {
-  content: modal,
-  placement: 'bottom-end',
-  arrow: false,
-  theme: 'light',
-  trigger: 'click',
-  interactive: true,
-  allowHTML: true,
-});
-
-
-document.addEventListener('click', function(event) {
-  if (event.target.matches('#add-participant')) {
-    const searchInput = document.getElementById('search-email');
-    const userItems = document.querySelectorAll('.user-item');
-    
-    if (searchInput && userItems) {
-      // 이메일 검색 필터링 이벤트 추가
-      searchInput.addEventListener('input', function() {
-        var searchTerm = this.value.toLowerCase();
-        
-        userItems.forEach(function(item) {
-          var email = item.textContent.toLowerCase();
-          if (email.includes(searchTerm)) {
-            item.style.display = 'flex';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      });
-    }
-  }
-});
-
-document.addEventListener("click", function (event) {
-  if (event.target.matches(".add-btn")) {
-      const userId = event.target.closest("li").dataset.userId;  // 유저 ID 
-      const travelId = "{{ object.travel_id }}";  // 현재 여행 그룹 ID 
-      const csrfToken = document.getElementById("csrf_token").value; 
-
-      fetch("{% url 'accompany:add_participant' %}", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": csrfToken,
-          },
-          body: JSON.stringify({
-              user_id: userId,
-              travel_id: travelId,
-          }),
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.message) {
-              alert(data.message);  // 성공 메시지 출력
-              location.reload();  // 새로고침하여 참가자 목록 반영
-          } else {
-              alert(data.error);  // 오류 메시지 출력
-          }
-      })
-      .catch(error => console.error("Error:", error));
-  }
-  if (event.target.matches(".part-del-btn")){
-    const userId = event.target.closest("li").dataset.userId;  // 유저 ID 
-    const travelId = "{{ object.travel_id }}";  // 현재 여행 그룹 ID 
-    const csrfToken = document.getElementById("csrf_token").value; 
-
-    fetch("{% url 'accompany:remove_participant' %}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-        },
-        body: JSON.stringify({
-            user_id: userId,
-            travel_id: travelId,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message);  // 성공 메시지 출력
-            location.reload();  // 새로고침하여 참가자 목록 반영
-        } else {
-            alert(data.error);  // 오류 메시지 출력
-        }
-    })
-    .catch(error => console.error("Error:", error));
-  }
-});
-
 </script>
+<script src="{% static 'accompany/add_member_toggle.js' %}"></script>
+<script src="{% static 'accompany/add_participants.js' %}"></script>
 <script src="{% static 'accompany/zzim.js' %}"></script>
+<script src="{%static 'accompany/show_map.js' %}"></script>
 {% endblock js %}
