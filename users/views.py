@@ -9,11 +9,12 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.shortcuts import render
-from .models import User
+from django.shortcuts import render, get_object_or_404
+from .models import User, TravelPlan
+from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm
+from .forms import UserUpdateForm, TravelPlanForm
 from django.core.files.base import ContentFile
 
 
@@ -335,3 +336,49 @@ def edit_profile(request):
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
+
+@login_required
+def my_trip(request):
+    if request.method == 'POST':
+        form = TravelPlanForm(request.POST)
+
+        if form.is_valid():
+            travel_plan = form.save(commit=False)
+            travel_plan.created_by = request.user
+
+            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+            travel_plan.polyline = request.POST.get('polyline', '')
+
+            travel_plan.save()  
+
+            return redirect('users:my_trip')
+    else:
+        form = TravelPlanForm()
+
+    return render(request, 'mypage/myTrip.html', {
+        'form': form,
+    })
+
+@login_required
+def user_detail(request, pk):
+    user = get_object_or_404(User, id=pk)
+    current_user = request.user  # 현재 로그인한 사용자
+    user_plans = TravelPlan.objects.filter(created_by=user)
+    user_accompany = TravelGroup.objects.filter(created_by=user)
+    accompany_count = user_accompany.count()
+    for accompany in user_accompany:
+        accompany.tags = accompany.tags.split(',') if accompany.tags else []
+    return render(request, 'mypage/userDetail.html', {
+        'user': user,
+        'current_user': current_user,
+        'plans': user_plans,
+        'accompanies': user_accompany,
+        'accompany_count': accompany_count,
+    })
+
+@login_required
+def plan_detail(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    return render(request, 'mypage/plan_detail.html', {
+        'travel_plan': travel_plan,
+    })
