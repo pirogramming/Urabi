@@ -22,6 +22,12 @@ def jwt_api_test(request):
     """
     return render(request, 'chat/apitest.html')
 
+def websoket_test(request):
+    """
+    API 테스트용 HTML 파일(api_test.html)을 렌더링하는 뷰입니다.
+    """
+    return render(request, 'chat/test_websoket.html')
+
 User = get_user_model()
 
 @login_required
@@ -67,21 +73,6 @@ def create_chat_room(request):
         }
         return render(request, 'chat/create_chat_room.html', context)
 
-@login_required
-def chat_room(request, room_id):
-    """
-    채팅방 접속 페이지: 해당 채팅방에 접속하여 이전 메시지 내역을 보고 실시간 채팅 가능
-    """
-    room = get_object_or_404(ChatRoom, id=room_id)
-    # 권한 확인: request.user가 채팅방의 user1 또는 user2여야 함.
-    if request.user not in [room.user1, room.user2]:
-        return HttpResponse("접근 권한이 없습니다.", status=403)
-    context = {
-        'room': room,
-        # access_token은 JWT 사용 시 필요; 여기서는 세션 인증이므로 빈 문자열
-        'access_token': "",
-    }
-    return render(request, 'chat/room_chat.html', context)
 
 
 # 채팅방 목록 페이지네이션 설정
@@ -170,6 +161,8 @@ def chat_rooms(request):
         chat_rooms_data.append(room_data)
 
     return paginator.get_paginated_response(ChatRoomInfoSerializer(chat_rooms_data, many=True).data)
+
+
 
 # 채팅방 입장 API
 @api_view(['GET'])

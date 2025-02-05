@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket 최소 테스트</title>
+    <style>
+        #chat_messages {
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>WebSocket 최소 테스트</h2>
+    <div id="chat_messages"></div>
+    <form id="message_form">
+        <input type="text" id="message_input" placeholder="메시지를 입력하세요..." autocomplete="off">
+        <button type="submit">전송</button>
+    </form>
+    <script>
+        // DOM 요소 가져오기
+        const chatMessages = document.getElementById("chat_messages");
+        const messageForm = document.getElementById("message_form");
+        const messageInput = document.getElementById("message_input");
+
+        // 테스트용 사용자 이름 (필요하면 사용)
+        const myUsername = "테스트유저";
+
+        // 고정된 WebSocket URL (예: room id를 1로 고정)
+        const protocol = location.protocol === "http:" ? "ws:" : "wss:";
+        const wsUrl = protocol + "//" + location.host + "/ws/chat/1/?token=";
+        console.log("WebSocket URL:", wsUrl);
+        const socket = new WebSocket(wsUrl);
+
+        socket.onopen = function() {
+            console.log("WebSocket 연결 성공:", wsUrl);
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("메시지 수신:", data);
+            // 여기서는 서버에서 "chat.message" 타입의 메시지를 보내도록 가정
+            if (data.type === "chat.message") {
+                appendMessage(data.sender_nickname, data.timestamp, data.content);
+            } else if (data.type === "chat.history" && data.messages) {
+                // 최초 history 메시지는 DOM을 초기화하고 추가
+                chatMessages.innerHTML = "";
+                data.messages.forEach(function(msg) {
+                    appendMessage(msg.sender_nickname, msg.timestamp, msg.content);
+                });
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.error("WebSocket 에러:", error);
+        };
+
+        socket.onclose = function(event) {
+            console.log("WebSocket 연결 종료됨:", event);
+        };
+
+        messageForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message !== "") {
+                console.log("메시지 전송:", message);
+                // 서버로 JSON 형태의 메시지 전송
+                socket.send(JSON.stringify({ content: message }));
+                messageInput.value = "";
+            }
+        });
+
+        function appendMessage(sender, timestamp, content) {
+            console.log("appendMessage 호출:", sender, timestamp, content);
+            const msgElem = document.createElement("div");
+            // timestamp가 문자열로 전송된다면, new Date(timestamp)를 사용하여 포맷합니다.
+            const ts = new Date(timestamp).toLocaleTimeString();
+            msgElem.textContent = `${sender} [${ts}]: ${content}`;
+            chatMessages.appendChild(msgElem);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

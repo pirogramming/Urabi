@@ -1,88 +1,162 @@
-<!-- chat/templates/chat/room_chat.html -->
 {% extends "chat/base.html" %}
-{% block title %}채팅방: {{ room }}{% endblock %}
+{% block title %}채팅방: {{ room.name }}{% endblock %}
+
+{% block extra-style %}
+<style>
+  /* 스타일은 그대로 둡니다 */
+  #chat_messages {
+      height: 400px;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+      padding: 10px;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container" style="margin-top:20px;">
-    <h2>채팅방: {{ room }}</h2>
+    <h2>채팅방: {{ room.name }}</h2>
     <!-- 채팅 메시지를 보여줄 영역 -->
-    <div id="chat_messages" style="height:400px; border:1px solid #ccc; overflow-y: scroll; padding:10px;"></div>
+    <div id="chat_messages"></div>
     <!-- 메시지 전송 폼 -->
-    <form id="message_form">
+    <form id="message_form" class="mt-3">
         {% csrf_token %}
-        <input type="text" id="message_input" placeholder="메시지를 입력하세요..." autocomplete="off" style="width:80%;">
-        <button type="submit">전송</button>
+        <input type="text" id="message_input" placeholder="메시지를 입력하세요..." autocomplete="off" style="width:80%;" class="form-control d-inline-block">
+        <button type="submit" class="btn btn-primary">전송</button>
     </form>
 </div>
 {% endblock %}
 
 {% block extra-script %}
 <script>
+document.addEventListener("DOMContentLoaded", function(){
+    console.log("DOMContentLoaded: DOM 완전히 로드됨");
+
     // DOM 요소 가져오기
     const chatMessages = document.getElementById("chat_messages");
     const messageForm = document.getElementById("message_form");
     const messageInput = document.getElementById("message_input");
 
-    // 현재 프로토콜에 따라 ws:// 또는 wss:// 설정
+    if (!chatMessages) {
+        console.error("ERROR: #chat_messages 요소를 찾지 못했습니다.");
+    } else {
+        console.log("chatMessages 요소 확인:", chatMessages);
+    }
+    if (!messageForm) {
+        console.error("ERROR: #message_form 요소를 찾지 못했습니다.");
+    } else {
+        console.log("messageForm 요소 확인:", messageForm);
+    }
+    if (!messageInput) {
+        console.error("ERROR: #message_input 요소를 찾지 못했습니다.");
+    } else {
+        console.log("messageInput 요소 확인:", messageInput);
+    }
+
+    // 현재 사용자 이름 (템플릿 변수)
+    const myUsername = "{{ request.user.username }}";
+    console.log("현재 사용자 이름:", myUsername);
+
+    // WebSocket URL 구성 (room.id 사용)
     const protocol = location.protocol === "http:" ? "ws:" : "wss:";
-    // WebSocket URL 구성: room.id와 access_token (JWT 사용 시; 여기서는 빈 문자열 사용)
     const wsUrl = protocol + "//" + location.host + "/ws/chat/{{ room.id }}/?token={{ access_token|default:'' }}";
     console.log("WebSocket URL:", wsUrl);
+
+    // WebSocket 객체 생성
     const chatSocket = new WebSocket(wsUrl);
+    console.log("WebSocket 객체 생성:", chatSocket);
 
-    // WebSocket 연결이 열리면 기존 메시지 내역을 요청
-    chatSocket.onopen = function() {
-        console.log("WebSocket 연결 성공:", wsUrl);
-        // fetch_messages 커맨드를 서버에 보내 기존 메시지 내역을 요청
-        chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
+    // 플래그: 히스토리 로딩 여부 (페이지 전체에서 한 번만 설정)
+    if (typeof window.historyLoaded === "undefined") {
+            window.historyLoaded = false;
+            console.log("window.historyLoaded 초기화: false");
+        } else {
+            console.log("window.historyLoaded 기존 값:", window.historyLoaded);
+        }
+
+        // WebSocket onopen 이벤트
+        chatSocket.onopen = function() {
+        console.log("WebSocket 연결 성공!");
+        if (chatSocket.readyState === WebSocket.OPEN) {
+            console.log("WebSocket is open and ready.");
+        }
     };
 
-    // 메시지 수신 처리
+
+    // WebSocket onmessage 이벤트
     chatSocket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        console.log("메시지 수신:", data);
-        // 기존 채팅 내역 (여러 메시지 배열로 전달되는 경우)
-        if (data.type === "chat.history" && data.messages) {
-            // 기존 내용을 초기화한 후, 모든 메시지를 추가
-            chatMessages.innerHTML = "";
-            data.messages.forEach(function(msg) {
-                appendMessage(msg.sender_nickname, msg.timestamp, msg.content);
-            });
-        }
-        // 단일 새 메시지인 경우
-        else if (data.type === "chat.message") {
-            appendMessage(data.sender_nickname, data.timestamp, data.content);
+        console.log("onmessage 이벤트 발생:", event);  // 확인을 위한 로그
+        try {
+            const data = JSON.parse(event.data);  // 데이터 파싱
+            console.log("수신된 데이터:", data);
+
+            if (data.type === "chat.history" && data.messages) {
+                console.log("기존 메시지 로드:", data.messages);
+                data.messages.forEach(function(msg) {
+                    appendMessage(msg.sender_nickname, msg.timestamp, msg.content);  // 메시지 추가
+                });
+            } else {
+                console.log("새로운 메시지 수신:", data);  // 수신된 새 메시지 로그
+                appendMessage(data.sender_nickname, data.timestamp, data.content);  // 새로운 메시지 추가
+            }
+        } catch (e) {
+            console.error("onmessage 오류:", e, event.data);  // 예외 처리
         }
     };
 
-    // 오류 처리
+
+
+
+
+    // WebSocket onerror 이벤트
     chatSocket.onerror = function(error) {
-        console.error("WebSocket 에러:", error);
+        console.error("onerror: WebSocket 에러 발생:", error);
     };
 
-    // 연결 종료 처리
+    // WebSocket onclose 이벤트
     chatSocket.onclose = function(event) {
         console.log("WebSocket 연결 종료됨:", event);
+        if (event.code !== 1000) {  // 정상 종료 코드가 아니면 재연결 시도
+            setTimeout(() => {
+                chatSocket = new WebSocket(wsUrl);
+            }, 1000);  // 1초 후 재연결
+        }
     };
 
-    // 메시지 전송 폼 제출 이벤트 처리
     messageForm.addEventListener("submit", function(e) {
         e.preventDefault();
         const message = messageInput.value.trim();
         if (message !== "") {
-            // 서버로 메시지를 전송
+            console.log("submit: 메시지 전송 중:", message);
             chatSocket.send(JSON.stringify({ content: message }));
+            console.log('전송 후 WebSocket 상태:', chatSocket.readyState);
             messageInput.value = "";
+        } else {
+            console.log("submit: 빈 메시지 무시");
         }
     });
 
-    // 채팅 메시지를 채팅 영역에 추가하는 함수
+
+    // appendMessage 함수 (DOM 업데이트 및 로그)
     function appendMessage(sender, timestamp, content) {
-        const msgElem = document.createElement("div");
-        const ts = new Date(timestamp).toLocaleTimeString();
-        msgElem.textContent = `${sender} [${ts}]: ${content}`;
-        chatMessages.appendChild(msgElem);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+    console.log("appendMessage 호출:", sender, timestamp, content);
+
+    // 메시지가 추가될 HTML 요소 생성
+    const msgElem = document.createElement("div");
+    const ts = new Date(timestamp).toLocaleTimeString();
+    msgElem.textContent = `${sender} [${ts}]: ${content}`;
+
+    // chatMessages 요소에 메시지 추가
+    chatMessages.appendChild(msgElem);
+    
+    // 새 메시지가 추가된 후, 스크롤을 맨 아래로 설정
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // 디버깅을 위한 상태 로그
+    console.log("현재 chatMessages.innerHTML:", chatMessages.innerHTML);
+}
+
+
+});
 </script>
 {% endblock %}

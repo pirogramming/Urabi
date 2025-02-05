@@ -5,7 +5,7 @@ app_name = 'chat'
 
 urlpatterns = [
     path('apitest/', views.jwt_api_test, name='jwt_api_test'), # 테스트용 : 나중에 지우기
-
+    path('websokettest/', views.websoket_test, name='websoket_test'),
     path("main/", views.chat_main, name="chat_main"),
     path("create/", views.create_chat_room, name="create_chat_room"),
 
