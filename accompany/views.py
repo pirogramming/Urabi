@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 import json
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import TravelGroup, TravelParticipants, Accompany_Zzim
+from .models import TravelGroup, TravelParticipants, Accompany_Zzim, AccompanyRequest
 from .forms import TravelGroupForm
 from users.models import User
 
@@ -30,7 +30,6 @@ class AccompanyListView(ListView):
         travel_groups = context['object_list']
         for travel in travel_groups:
             travel.tags = travel.tags.split(',') if travel.tags else []
-            travel.current_participants = travel.participants.count() 
         context['tags'] = travel_groups
         return context
 
@@ -49,10 +48,9 @@ class AccompanyDetailView(DetailView):
             context['zzim_items'] = []
 
         group = context['object']
-        users = User.objects.all().exclude(pk=group.created_by.pk)
         participants = TravelParticipants.objects.filter(travel=group)
-        users = users.exclude(pk__in=[participant.user.pk for participant in TravelParticipants.objects.filter(travel=group)])
-        context['users'] = users
+        requested_users = User.objects.filter(user_requests__travel=group)
+        context['users'] = requested_users
         context['participants'] = participants
         if group.tags:
             group_tags = group.tags.split(',')
@@ -160,3 +158,45 @@ def remove_participant(request):
             return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
+
+@csrf_exempt
+@login_required
+def apply_participant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            travel_id = data.get("travel_id")
+            accompany = TravelGroup.objects.get(travel_id=travel_id)
+            
+            # 중복 참가 방지
+            if TravelParticipants.objects.filter(travel=accompany, user=request.user).exists():
+                return JsonResponse({"success": False, "message": "이미 참가 신청을 했습니다."}, status=400)
+            
+            # 참가자 추가
+            AccompanyRequest.objects.create(travel=accompany, user=request.user)
+            
+            return JsonResponse({"success": True, "message": "참가 신청이 완료되었습니다!"})
+        except TravelGroup.DoesNotExist:
+            return JsonResponse({"success": False, "message": "해당 여행을 찾을 수 없습니다."}, status=404)
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)}, status=500)
+    return JsonResponse({"success": False, "message": "잘못된 요청입니다."}, status=400)
+
+@csrf_exempt
+@login_required
+def cancel_participant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            travel_id = data.get("travel_id")
+            accompany = TravelGroup.objects.get(travel_id=travel_id)
+            
+            # 참가 신청 취소
+            AccompanyRequest.objects.filter(travel=accompany, user=request.user).delete()
+            
+            return JsonResponse({"success": True, "message": "참가 신청이 취소되었습니다."})
+        except TravelGroup.DoesNotExist:
+            return JsonResponse({"success": False, "message": "해당 여행을 찾을 수 없습니다."}, status=404)
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)}, status=500)
+    return JsonResponse({"success": False, "message": "잘못된 요청입니다."}, status=400)

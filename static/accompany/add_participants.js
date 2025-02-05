@@ -75,4 +75,54 @@ document.addEventListener('click', function(event) {
       })
       .catch(error => console.error('Error:', error));
   }
+  const requestBtn = document.querySelector(".request-btn");
+  const requestCancelBtn = document.querySelector(".request-cancel-btn");
+    if (requestBtn) {
+        requestBtn.addEventListener("click", function () {
+            const csrfToken = document.querySelector("#csrf_token").value; // CSRF 토큰 가져오기
+
+            fetch(requestURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
+                },
+                body: JSON.stringify({ travel_id: travelId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("참가 신청이 완료되었습니다!");
+                    location.reload();  // 새로고침
+                } else {
+                    alert("참가 신청 실패: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    }
+    if(requestCancelBtn){
+        requestCancelBtn.addEventListener("click", function () {
+            const csrfToken = document.querySelector("#csrf_token").value; // CSRF 토큰 가져오기
+
+            fetch(requestCancelURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
+                },
+                body: JSON.stringify({ travel_id: travelId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("참가 신청이 취소되었습니다!");
+                    location.reload();  // 새로고침
+                } else {
+                    alert("참가 신청 취소 실패: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    }
 });

@@ -82,7 +82,15 @@
     </div>
     <div class="members">
       {% if user != object.created_by %}
-      <button class="request-btn">참여 요청</button>
+      {%if user in users%}
+        {%if user in participants%}
+        <span class="ing">참여중</span>
+        {%else%}
+        <button class="request-cancel-btn">요청 취소</button>
+        {%endif%}
+      {%else%}
+        <button class="request-btn">참여 요청</button>
+      {%endif%}
       {% endif %}
       <span>{{ object.now_member }}/{{ object.max_member }}</span>
       <button id="toggleMembers">
@@ -155,6 +163,8 @@
   const addURL = "{% url 'accompany:add_participant' %}";
   const delURL = "{% url 'accompany:remove_participant' %}";
   const travelId = "{{ object.travel_id }}";
+  const requestURL = "{% url 'accompany:request' %}";
+  const requestCancelURL = "{% url 'accompany:request_cancel' %}";
   const modal = `
   <div id="add-participant-modal">
     <input type="text" id="search-email" placeholder="이메일 검색" />
