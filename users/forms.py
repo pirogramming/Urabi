@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, TravelPlan
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
@@ -8,4 +8,16 @@ class UserUpdateForm(forms.ModelForm):
         widgets = {
             'user_gender': forms.Select(choices=[('M', 'Male'), ('F', 'Female')]), 
             'profile_image': forms.FileInput(), 
+        }
+
+class TravelPlanForm(forms.ModelForm):
+    class Meta:
+        model = TravelPlan
+        fields = ['title', 'city', 'explanation', 'start_date', 'end_date','is_public']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': '제목', 'id':'title'}),
+            'city': forms.TextInput(attrs={'placeholder': '도시', 'id':'city'}),
+            'explanation': forms.Textarea(attrs={'placeholder': '설명을 입력하세요!','id':'explanation'}),
+            'start_date': forms.DateInput(attrs={'type': 'date', 'id':'start_date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date', 'id':'end_date'}),
         }
