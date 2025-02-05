@@ -5,10 +5,13 @@ from django.contrib import messages
 
 def accommodation_filter(request):
     """메인페이지"""
-    # 숙소별로 가장 최근 리뷰만 가져오기
     from django.db.models import Max
     
-    # 각 숙소별 최신 리뷰의 ID를 찾기 
+    # 검색 파라미터 가져오기
+    city_query = request.GET.get('city', '')
+    rating_query = request.GET.get('rating', '')
+    
+    # 각 숙소별 최신 리뷰의 ID를 찾기
     latest_reviews = AccommodationReview.objects.values('accommodation_name').annotate(
         latest_id=Max('review_id')
     )
@@ -16,12 +19,31 @@ def accommodation_filter(request):
     # 최신 리뷰 ID 추출
     latest_review_ids = [item['latest_id'] for item in latest_reviews]
     
-    # 해당 ID의 리뷰들 가져오기 
-    reviews = AccommodationReview.objects.filter(
-        review_id__in=latest_review_ids
-    ).order_by('-created_at')
+    # 기본 쿼리셋 (최신 리뷰만 포함)
+    reviews = AccommodationReview.objects.filter(review_id__in=latest_review_ids)
+
+    # 검색 필터링 적용
+    if city_query:
+        reviews = reviews.filter(city__icontains=city_query)
+
+    if rating_query:
+        try:
+            min_rating = float(rating_query)
+            reviews = reviews.filter(rating__gte=min_rating)
+        except ValueError:
+            pass
+
+    # 최종 정렬
+    reviews = reviews.order_by('-created_at')
     
-    return render(request, "accommodation/accommodation_filter.html", {'reviews': reviews})
+    context = {
+        'reviews': reviews,
+        'city_query': city_query,  
+        'rating_query': rating_query  
+    }
+    
+    return render(request, "accommodation/accommodation_filter.html", context)
+
 
 def accommodation_location(request):
     """숙소 위치를 지도에서 보여주는 페이지"""
