@@ -16,17 +16,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 
-def jwt_api_test(request):
-    """
-    API 테스트용 HTML 파일(api_test.html)을 렌더링하는 뷰입니다.
-    """
-    return render(request, 'chat/apitest.html')
-
-def websoket_test(request):
-    """
-    API 테스트용 HTML 파일(api_test.html)을 렌더링하는 뷰입니다.
-    """
-    return render(request, 'chat/test_websoket.html')
 
 User = get_user_model()
 
@@ -285,50 +274,6 @@ def mark_as_read(request, message_id):
 
 
 # 사용자1 채팅방 렌더링 (테스트용)
-@login_required
-def chat_room_user1(request, room_id):
-    room = get_object_or_404(ChatRoom, id=room_id)
-    other_user = room.user2 if request.user == room.user1 else room.user1
-
-    
-    
-    context = {
-        'room_id': room_id,
-        'room_name': str(room),
-        'access_token': str(getattr(request, 'auth', '')),  # JWT 토큰을 문자열로 변환
-        'other_user_nickname': other_user.nickname,
-        'other_user_profile_image': request.build_absolute_uri(other_user.profile_image.url) if other_user.profile_image else None,
-        # 'travel_info': {
-        #     'title': room.travel.title,
-        #     'start_date': room.travel.start_date,
-        #     'end_date': room.travel.end_date,
-        #},
-        'websocket_url': f"wss://{request.get_host()}/ws/chat/{room_id}/"
-    }
-    return render(request, 'chat/room_user1.html', context)
-
-
-# 사용자2 채팅방 렌더링 (테스트용)
-@login_required
-def chat_room_user2(request, room_id):
-    room = get_object_or_404(ChatRoom, id=room_id)
-    other_user = room.user1 if request.user == room.user2 else room.user2
-    
-    context = {
-        'room_id': room_id,
-        'room_name': str(room),
-        'access_token': str(getattr(request, 'auth', '')),  # JWT 토큰을 문자열로 변환
-        'other_user_nickname': other_user.nickname,
-        'other_user_profile_image': request.build_absolute_uri(other_user.profile_image.url) if other_user.profile_image else None,
-        # 'travel_info': {
-        #     'title': room.travel.title,
-        #     'start_date': room.travel.start_date,
-        #     'end_date': room.travel.end_date,
-        # },
-        'websocket_url': f"wss://{request.get_host()}/ws/chat/{room_id}/"
-    }
-    return render(request, 'chat/room_user2.html', context)
-
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

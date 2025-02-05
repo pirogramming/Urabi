@@ -55,32 +55,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
-        logger.debug(f"RECEIVE: {text_data}")
         data = json.loads(text_data)
-        if data.get("command") == "fetch_messages":
-            messages = await self.get_existing_messages()
-            await self.send(text_data=json.dumps({
-                "type": "chat.history",
-                "messages": messages,
-            }))
-        elif data.get("content"):
-            message_content = data["content"]
-            logger.debug(f"받은 메시지 내용: {message_content}")
-            msg = await self.save_message(message_content)
+        if data.get("content"):
+            msg = await self.save_message(data["content"])
+
             event = {
-                "type": "chat.message",
+                "type": "chat_message",  
                 "message_id": msg.id,
                 "content": msg.content,
                 "sender_id": self.user.id,
                 "sender_nickname": self.user.username,
                 "timestamp": msg.timestamp.isoformat(),
             }
-            logger.debug(f"Broadcast event: {event}")
-            logger.debug(f"Adding client to group: {self.room_group_name}")
+            # 브로드캐스트
+            logger.debug(f"Broadcast event: {event}1")
             await self.channel_layer.group_send(self.room_group_name, event)
+            logger.debug(f"Broadcast event: {event}2")
+
+
 
     async def chat_message(self, event):
-        logger.debug(f"chat_message 호출됨, event: {event}")
+    # "chat_message" 타입 이벤트를 수신
+        logger.debug(f"chat_message 호출됨")
         await self.send(text_data=json.dumps(event))
         if event["sender_id"] != self.user.id:
             await self.mark_as_read(event["message_id"])
@@ -106,40 +102,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def validate_participation(self):
         return ChatRoom.objects.filter(Q(user1=self.user) | Q(user2=self.user), id=self.room_id).exists()
 
+    
     @database_sync_to_async
     def save_message(self, content):
         logger.debug(f"save_message 호출됨: {content}")
         room = ChatRoom.objects.get(id=self.room_id)
-        message = Message.objects.create(room=room, sender=self.user, content=content)
+        message = Message.objects.create(
+            room=room, sender=self.user, content=content
+        )
         message.read_by.add(self.user)
         room.update_last_message_time()
 
-        # 메시지 전송을 위한 로그 추가
         logger.debug(f"메시지 저장 완료: {message.id}, {message.content}")
-
-        # 중복된 메시지 전송 제거
-        self.send_message_to_clients(message)  # 메시지 전송
         return message
-
-    
-    def send_message_to_clients(self, message):
-        logger.debug(f"센드메시지투클라이언트호출")
-    # event 객체 생성
-        event = {
-            "type": "chat.message",  # 이벤트 타입
-            "message_id": message.id,  # 메시지 ID
-            "content": message.content,  # 메시지 내용
-            "sender_id": message.sender.id,  # 보낸 사람의 ID
-            "sender_nickname": message.sender.username,  # 보낸 사람의 닉네임
-            "timestamp": message.timestamp.isoformat(),  # 메시지 전송 시간
-        }
-        
-        # 로그 추가: event가 제대로 생성되는지 확인
-        logger.debug(f"Sending message to clients: {event}")
-        
-        # 그룹에 메시지 전송
-        self.channel_layer.group_send(self.room_group_name, event)
-
 
     @database_sync_to_async
     def mark_as_read(self, message_id):
