@@ -19,7 +19,7 @@
     <hr class="flash_divider">
 
     <div class="flash_info">
-        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지" class="flash_image">
+        <img id="place-img-{{ flash_meeting.id }}" src="{{ place_img_url }}" alt="모임 이미지" class="flash_image">
         <div class="flash_description">
             <div class="flash_title_star">
                 <h2 class="flash_title">{{ flash.title }}</h2>
