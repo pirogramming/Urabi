@@ -81,7 +81,9 @@
       <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
     </div>
     <div class="members">
+      {% if user != object.created_by %}
       <button class="request-btn">참여 요청</button>
+      {% endif %}
       <span>{{ object.now_member }}/{{ object.max_member }}</span>
       <button id="toggleMembers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
@@ -89,9 +91,13 @@
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li><span>{{ user.email }}</span><span>🚩</span></li>
+        <li><span>{{ object.created_by.email }}</span><span>🚩</span></li>
         {% for member in participants %}
-          <li data-user-id="{{ member.user.id }}"><span>{{ member.user.email }}</span><button class="red part-del-btn">x</button></li>
+          <li data-user-id="{{ member.user.id }}"><span>{{ member.user.email }}</span>
+            {% if user == object.created_by or member.user.id is user.id %}
+              <button class="red part-del-btn">x</button>
+            {%endif%}
+          </li>
         {% endfor %}
       </ul>
     </div>
