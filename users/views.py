@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan
+from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
@@ -363,10 +364,16 @@ def user_detail(request, pk):
     user = get_object_or_404(User, id=pk)
     current_user = request.user  # 현재 로그인한 사용자
     user_plans = TravelPlan.objects.filter(created_by=user)
+    user_accompany = TravelGroup.objects.filter(created_by=user)
+    accompany_count = user_accompany.count()
+    for accompany in user_accompany:
+        accompany.tags = accompany.tags.split(',') if accompany.tags else []
     return render(request, 'mypage/userDetail.html', {
         'user': user,
         'current_user': current_user,
         'plans': user_plans,
+        'accompanies': user_accompany,
+        'accompany_count': accompany_count,
     })
 
 @login_required

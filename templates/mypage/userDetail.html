@@ -128,8 +128,51 @@
       <!-- 활동 이력 -->
       <section class="activity-section">
         <h2 class="sub-title">활동 이력</h2>
+        <!-- 동행모집 -->
+        <div class="activity-box">
+          <p class="activity-header">
+            {{ user.nickname }} 님은 <span class="text-hilight">{{accompany_count}}</span>번의 동행을 모집했어요!
+          </p>
   
-        <!-- 번개 모임 참여 이력 예시 -->
+          {%if accompany_count%}
+           {%for accompany in accompanies%}
+           <div class="activity-card">
+            {%if accompany.photo%}
+            <img
+              src="{{accompany.photo.url}}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+            />
+            {%else%}
+            <img
+              src="{% static 'img/banner.png' %}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+              onclick="location.href='{%url 'accompany:accompany_detail' accompany.travel_id%}'"
+            />
+            {%endif%}
+            <div class="activity-info">
+              <div class="activity-title"><a href="{%url 'accompany:accompany_detail' accompany.travel_id%}">{{accompany.title}}</a></div>
+              <p class="activity-date">{{accompany.start_date}} ~ {{accompany.end_date}}</p>
+              
+                {%for tag in accompany.tags%}
+                <p class="schedule-location">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                  <span class="schedule-location-text">{{tag}}</span>
+                </p>
+                {%endfor%}
+            </div>
+          </div>
+           {%endfor%}
+          {%else%}
+          <div class="activity-card">
+            동행한 번개 모임이 없어요!
+          </div>
+          {%endif%}
+        </div>
+
+
+        <!--  모임 참여 이력 예시 -->
         <div class="activity-box">
           <p class="activity-header">
             {{ user.nickname }} 님은 <span class="text-hilight">2</span>번의 모임에 참여했어요!
