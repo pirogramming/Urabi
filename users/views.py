@@ -10,7 +10,7 @@ from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import render
-from .models import User
+from .models import User, TravelPlan
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
@@ -356,4 +356,11 @@ def my_trip(request):
 
     return render(request, 'mypage/myTrip.html', {
         'form': form,
+    })
+
+@login_required
+def plan_detail(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    return render(request, 'mypage/plan_detail.html', {
+        'travel_plan': travel_plan,
     })
