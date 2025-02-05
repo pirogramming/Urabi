@@ -1,0 +1,89 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'accommodation/accommodation_create.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="review-container">
+    <div class="review-main-header">
+        <div>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></div>
+        <p>> {{ parent_review.accommodation_name }} 후기 작성</p>
+    </div>
+
+    <form class="review-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="review-header">
+            <div class="user-info">
+                <img src="{% static 'img/default-profile.png' %}" alt="프로필" class="profile-img">
+                <span>{{ request.user.username }}</span>
+            </div>
+            <div class="review-header-right">
+                <div id="rating" class="stars">
+                    <input type="hidden" name="rating" id="rating-value" value="0">
+                    {% for i in "12345"|make_list %}
+                    <img src="{% static 'img/empty_star2.png' %}" alt="별점" data-rating="{{ forloop.counter }}">
+                    {% endfor %}
+                </div>
+                <div id="add-img">
+                    <label for="accommodation-img">
+                        <img src="{% static 'img/addimg_icon.png' %}" alt="Add Image">
+                    </label>
+                    <input type="file" id="accommodation-img" name="photo" accept="image/*" style="display: none;">
+                </div>
+            </div>
+        </div>
+        <div class="textarea-section">
+            <textarea name="content" id="review" rows="5" placeholder="후기를 작성해주세요!" required></textarea>
+        </div>
+        <button type="submit" class="submit-button">후기 등록하기</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 별점 기능
+    const stars = document.querySelectorAll('#rating img');
+    const ratingInput = document.getElementById('rating-value');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.dataset.rating;
+            ratingInput.value = rating;
+            
+            stars.forEach(s => {
+                if (s.dataset.rating <= rating) {
+                    s.src = "{% static 'img/fill_star.png' %}";
+                } else {
+                    s.src = "{% static 'img/empty_star2.png' %}";
+                }
+            });
+        });
+    });
+
+    // 이미지 미리보기
+    const imgInput = document.getElementById('accommodation-img');
+    imgInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.createElement('img');
+                preview.src = e.target.result;
+                preview.style.maxWidth = '200px';
+                preview.style.marginTop = '10px';
+                
+                const container = document.getElementById('add-img');
+                const existingPreview = container.querySelector('.preview-img');
+                if (existingPreview) {
+                    container.removeChild(existingPreview);
+                }
+                preview.classList.add('preview-img');
+                container.appendChild(preview);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+</script>
+{% endblock %}
