@@ -1,25 +1,31 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Market
+from .models import Market,MarketZzim
 from .forms import MarketForm
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from .models import MarketZzim
 from django.http import JsonResponse
-
+from .filters import MarketFilter
+from users.models import User
 
 def market_list(request):
-    queryset = Market.objects.all()  
+    queryset = Market.objects.all() 
+    filterset = MarketFilter(request.GET, queryset=queryset)  #필터 검색
 
+    filtered_queryset = filterset.qs
     items_per_page = int(request.GET.get('items_per_page', 10)) 
 
-    paginator = Paginator(queryset, items_per_page)
+    paginator = Paginator(filtered_queryset, items_per_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'market/market_list.html', {'markets': page_obj, 'items_per_page':items_per_page})
+    selected_status = request.GET.get('status',None)
+    selected_category = request.GET.get('category',None)
 
+    return render(request, 'market/market_list.html', 
+                    {'markets': page_obj, 'filterset':filterset, 'items_per_page':items_per_page, 'selected_status':selected_status, 'selected_category':selected_category})
 
+    
 @login_required
 def market_create(request):
     if request.method == 'POST':
@@ -60,15 +66,14 @@ def market_delete(request, pk):
 
 
 @login_required
-def market_zzim(request, pk):
+def market_zzim(request, item_id):
 
-    market = get_object_or_404(Market, pk=pk)
-    user = request.user
-
-    zzim, created = MarketZzim.objects.get_or_create(user=user, market=market)
+    market = get_object_or_404(Market, pk=item_id)
+    zzim, created = MarketZzim.objects.get_or_create(user=request.user, item=market)
 
     if not created:
         zzim.delete()  # 이미 찜한 경우 삭제
-        return JsonResponse({"zzimmed": False})
+        return JsonResponse({'item_id':market.item_id, "zzim": False})
     
-    return JsonResponse({"zzimmed": True})
+    return JsonResponse({"zzim": True})
+
