@@ -12,10 +12,10 @@
     <nav class="mypage-nav">
       {%if current_user.id is user.id%}
       <ul>
-        <li >프로필</li>
+        <li><a href="{%url 'users:my_page'%}">프로필</a></li>
         <li><a href="#">찜 목록</a></li>
-        <li><a href="#">나의 여행 일정</a></li>
-        <li class="active"><a href="#">내 활동 관리</a></li>
+        <li><a href="{%url 'users:my_trip'%}">나의 여행 일정</a></li>
+        <li class="active"><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
       </ul>
       {%endif%}
     </nav>
@@ -100,7 +100,7 @@
         {%endif%}
       </section>
       <!-- 등록한 여행 일정 -->
-      <section class="schedule-section">
+      <section class="schedule-section" id="upload-schedule">
         <h2 class="sub-title">등록한 여행 일정</h2>
         {%if plans%}
         {% for plan in plans%}
@@ -127,7 +127,7 @@
       
       <!-- 활동 이력 -->
       <section class="activity-section">
-        <h2 class="sub-title">활동 이력</h2>
+        <h2 class="sub-title">동행 모집 이력</h2>
         <!-- 동행모집 -->
         <div class="activity-box">
           <p class="activity-header">
@@ -141,7 +141,9 @@
             <img
               src="{{accompany.photo.url}}"
               alt="프랑스 파리 이미지"
-              class="activity-img"
+              class="activity-img"              
+              onclick="location.href='{%url 'accompany:accompany_detail' accompany.travel_id%}'"
+              style="cursor:pointer;"
             />
             {%else%}
             <img
@@ -149,6 +151,7 @@
               alt="프랑스 파리 이미지"
               class="activity-img"
               onclick="location.href='{%url 'accompany:accompany_detail' accompany.travel_id%}'"
+              style="cursor:pointer;"
             />
             {%endif%}
             <div class="activity-info">
@@ -171,7 +174,7 @@
           {%endif%}
         </div>
 
-
+        <h2 class="sub-title">동행 참여 이력</h2>
         <!--  모임 참여 이력 예시 -->
         <div class="activity-box">
           <p class="activity-header">
@@ -220,12 +223,12 @@
             </div>
           </div>
         </div>
-  
+        <h2 class="sub-title">번개 참여 이력</h2>
         <!-- 모임이 없을 경우 -->
         <div class="activity-box activity-none">
           참여한 번개 모임이 없어요!
         </div>
-  
+        <h2 class="sub-title">숙소 리뷰 이력</h2>
         <!-- 숙소 리뷰 이력 예시 -->
         <div class="activity-box">
           <p class="activity-header">
@@ -245,7 +248,7 @@
             
           </div>
         </div>
-  
+        <h2 class="sub-title">나눔 마켓 이력</h2>
         <!-- 글 작성 이력 예시 -->
         <div class="activity-box">
           <p class="activity-header">
