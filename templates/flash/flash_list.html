@@ -3,7 +3,8 @@
 
 {% block head %} 
 <link rel="stylesheet" href="{% static 'flash/flash_list.css' %}">
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script defer src="{% static 'flash/flash_map_list.js' %}"></script>
 {% endblock %}
 
 {% block header_content %}
@@ -33,25 +34,14 @@
         <!-- 모집 중인 번개 리스트 -->        
         <section class="flash_list">
             <section class="flash_list_body">
-                <div class="flash_card">
-                    <a href="{% url 'flash:flash_detail' pk=1 %}" class="flash_card_link">
-                        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
-                        <div class="flash_card_info">
-                            <h3>토트넘 경기보면서 맥주 드실 분~</h3>
-                            <p class="flash_place">123 High Street,London, SW1A 1AA United Kingdom</p>
-                            <p class="flash_date">2025년 01월 11일 12:00</p>
-                            <div class="flash_card_tags">
-                                <span class="flash_tag">#남녀무관</span>
-                                <span class="flash_tag">#타팬환영</span>
-                                <span class="flash_capacity">1/4</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
                 {% for flash in flash_meetings %}
-                <div class="flash_card">
+                <div class="flash_card"
+                    data-lat="{{ flash.latitude }}"
+                    data-lng="{{ flash.longitude }}"
+                    data-date="{{ flash.date_time|date:'Y-m-d H:i' }}"
+                    data-place-address="{{ flash.city }}">
                     <a href="{% url 'flash:flash_detail' flash.meeting_id %}">
-                        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
+                        <img id="place-img-{{ flash.meeting_id }}" src="https://via.placeholder.com/300" alt="모임 이미지">
                     </a>
                     <div class="flash_card_info">
                         <h3><a href="{% url 'flash:flash_detail' flash.meeting_id %}">{{ flash.title }}</a></h3>
@@ -76,50 +66,10 @@
     </div>
 
     <section class="flash_map">
+        <input id="search-bar" type="text" placeholder="장소를 검색하세요">
         <div id="map"></div>
     </section>
     
 </div>
-
-<script>
-    function initMap() {
-        const dafualt_place = { lat: 37.5665, lng: 126.9780 };  // 기본 지도 위치 (서울)
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
-            center: dafualt_place
-        });
-
-        const flashMeetings = [
-            {% for flash in flash_meetings %}
-                { lat: {{ flash.latitude }},
-                  lng: {{ flash.longitude }},
-                  title: "{{ flash.title }}" ,
-                  date: "{{ flash.date_time|date:'Y-m-d H:i' }}",
-                  url: "{% url 'flash:flash_detail' flash.meeting_id %}"
-                },
-            {% endfor %}
-        ];
-
-        flashMeetings.forEach(meeting => {
-            const marker = new google.maps.Marker({
-                position: { lat: meeting.lat, lng: meeting.lng },
-                map,
-                title: meeting.title
-            });
-
-            const infoWindow = new google.maps.InfoWindow({
-                content: `<div>
-                            <h3>${meeting.title}</h3>
-                            <p>📅 ${meeting.date}</p>
-                            <a href="${meeting.url}" target="_blank">상세보기</a>
-                          </div>`,
-            });
-            /* 마커 클릭 시 infowindow*/
-            marker.addListener("click", function() {
-                infoWindow.open(map, marker);
-            });
-        });
-    }
-</script>
 
 {% endblock %}
