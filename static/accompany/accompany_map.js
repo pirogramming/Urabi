@@ -8,7 +8,7 @@ function initMap(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                const userLocation ={   //현재위치치
+                const userLocation ={   //현재위치
                     lat : position.coords.latitude,
                     lng : position.coords.longitude,
                 }; 
