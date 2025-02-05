@@ -16,6 +16,11 @@ class TravelGroup(models.Model):
     max_member = models.IntegerField()
     tags = models.TextField(null=True, blank=True)
     photo = models.ImageField(upload_to='static/travel_photos/', null=True, blank=True)
+    
+    # 마커와 폴리라인 데이터를 저장할 필드를 추가
+    markers = models.JSONField(null=True, blank=True)
+    polyline = models.JSONField(null=True, blank=True)
+    
     def __str__(self):
         return self.title
 

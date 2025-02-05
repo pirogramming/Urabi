@@ -123,7 +123,24 @@
   .location-item{
     margin: 0 0 10px 30px;
   }
-
+  .address-wrapper{
+    margin: 0 0 10px 30px;
+  }
+  #location{
+    display: none;
+  }
+  .address_input{
+    font-size: 1rem;
+    border: none;
+  }
+.address_delete_btn{
+  padding: 2px 4px;
+  background-color: var(--red);
+  margin-left: 5px;
+  font-size: 1rem;
+  color: #ffffff;
+  border-radius: 8px;
+}
   /********************************
     공개 비공개 등록하기
   ********************************/

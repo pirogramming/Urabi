@@ -1,15 +1,17 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% block head %}
-  <link rel="stylesheet" href="{%static 'accompany/accompany_detail.css'%}">
-{%endblock%}
+  <link rel="stylesheet" href="{% static 'accompany/accompany_detail.css' %}">
+  <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+{% endblock %}
 
-{%block content%}
+{% block content %}
 <section class="filter">
   <div class="banner-filter">
     <form class="filter-form">
       <div class="filter-group">
-        <input type="text" id="city" name="city" placeholder="도시" value="{{object.city}}">
+        <input type="text" id="city" name="city" placeholder="도시" value="{{ object.city }}">
       </div>
       <div class="filter-group">
         <select id="gender" name="gender">
@@ -20,10 +22,10 @@
         </select>
       </div>
       <div class="filter-group">
-        <input type="date" id="start-date" name="start-date" placeholder="시작일" value="{{object.start_date|date:'Y-m-d'}}">
+        <input type="date" id="start-date" name="start-date" placeholder="시작일" value="{{ object.start_date|date:'Y-m-d' }}">
       </div>
       <div class="filter-group">
-        <input type="date" id="end-date" name="end-date" placeholder="종료일" value="{{object.end_date|date:'Y-m-d'}}">
+        <input type="date" id="end-date" name="end-date" placeholder="종료일" value="{{ object.end_date|date:'Y-m-d' }}">
       </div>
       <div class="filter-group">
         <input type="number" id="age" name="age" placeholder="나이">
@@ -40,12 +42,12 @@
 
 <section class="detail">
   <div class="detail-header">
-    <h2>{{object.title}}</h2>
+    <h2>{{ object.title }}</h2>
     <div class="header-btns">
-      {%if user != object.created_by%}
+      {% if user != object.created_by %}
         <button class="btn ask">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
-          <path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+          <path d="M2 0a2 0 0 0-2 2v8a2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
           </svg>
           <span>문의하기</span>
         </button>
@@ -60,68 +62,68 @@
               </svg>
           {% endif %}
         </button>
-      {%else%}
-      <a href="{%url 'accompany:accompany_update' object.travel_id%}">
+      {% else %}
+      <a href="{% url 'accompany:accompany_update' object.travel_id %}">
       <button class="btn ask">
         <span>수정하기</span>
       </button>
       </a>
       <span id="add-participant" href=""> + </span>
-      {%endif%}
+      {% endif %}
     </div>
   </div>
   <div class="participants">
     <div class="profile">
       <img src="https://www.w3schools.com/w3images/lights.jpg" width="30" height="30" alt="profile">
-      <span class="writer">{{object.created_by}}</span>
+      <span class="writer">{{ object.created_by }}</span>
       <span class="temperature">36.5°C</span> 
       <span class="blue">&nbsp;|&nbsp;</span> 
-      <span class="created_at">{{object.created_at|date:'Y-m-d'}}</span>
+      <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
     </div>
     <div class="members">
-      <span>{{object.now_member}}/{{object.max_member}}</span>
+      <span>{{ object.now_member }}/{{ object.max_member }}</span>
       <button id="toggleMembers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
           <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li><span>{{user.email}}</span><span>🚩</span></li>
-        {%for member in participants%}
-          <li data-user-id="{{ member.user.id }}"><span>{{member.user.email}}</span><button class="red part-del-btn">x</button></li>
-        {%endfor%}
+        <li><span>{{ user.email }}</span><span>🚩</span></li>
+        {% for member in participants %}
+          <li data-user-id="{{ member.user.id }}"><span>{{ member.user.email }}</span><button class="red part-del-btn">x</button></li>
+        {% endfor %}
       </ul>
     </div>
   </div>
   <div class="detail-content">
     <div class="texts">
       <p>
-        {{object.explanation|linebreaksbr}}
+        {{ object.explanation|linebreaksbr }}
       </p>
     </div>
     <div class="tags">
       <ul>
-        {%if object.tags%}
+        {% if object.tags %}
         {% for tag in tags %}
           <li>#{{ tag }}</li>
         {% endfor %}
-        {%endif%}
+        {% endif %}
       </ul>
     </div>
     <div class="imgs">
-      {%if object.photo%}
-      <img src="{{object.photo.url}}" alt="photo">
-      {%endif%}
+      {% if object.photo %}
+      <img src="{{ object.photo.url }}" alt="photo">
+      {% endif %}
     </div>
   </div>
   <div class="detail-footer">
-    {%if user == object.created_by%}
+    {% if user == object.created_by %}
     <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
       {% csrf_token %}
       <button class="del-btn" type="submit">삭제</button>
     </form>
-    {%endif%}
-    <a href="{%url 'accompany:accompany_list'%}">
+    {% endif %}
+    <a href="{% url 'accompany:accompany_list' %}">
     <button class="to-back">
       <span>목록으로</span>
     </button>
@@ -129,21 +131,9 @@
   </div>
   <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 </section>
-{%endblock%}
+{% endblock %}
 
-{%block js%}
-<script>
-  document.getElementById('toggleMembers').addEventListener('click', function() {
-      var memberList = document.getElementById('memberList');
-      if (memberList.style.display === 'none') {
-          memberList.style.display = 'block';
-          this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>';
-      } else {
-          memberList.style.display = 'none';
-          this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>';
-      }
-  });
-</script>
+{% block js %}
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
 <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 <link
@@ -151,7 +141,13 @@
   href="https://unpkg.com/tippy.js@6/themes/light.css"
 />
 <script>
-
+  window.mapData = {
+    markers: {{ object.markers|safe }},
+    polyline: {{ object.polyline|safe }}
+  };
+  const addURL = "{% url 'accompany:add_participant' %}";
+  const delURL = "{% url 'accompany:remove_participant' %}";
+  const travelId = "{{ object.travel_id }}";
   const modal = `
   <div id="add-participant-modal">
     <input type="text" id="search-email" placeholder="이메일 검색" />
@@ -164,98 +160,9 @@
         {% endfor %}
     </ul>
   </div>`;
-
-tippy('#add-participant', {
-  content: modal,
-  placement: 'bottom-end',
-  arrow: false,
-  theme: 'light',
-  trigger: 'click',
-  interactive: true,
-  allowHTML: true,
-});
-
-
-document.addEventListener('click', function(event) {
-  if (event.target.matches('#add-participant')) {
-    const searchInput = document.getElementById('search-email');
-    const userItems = document.querySelectorAll('.user-item');
-    
-    if (searchInput && userItems) {
-      // 이메일 검색 필터링 이벤트 추가
-      searchInput.addEventListener('input', function() {
-        var searchTerm = this.value.toLowerCase();
-        
-        userItems.forEach(function(item) {
-          var email = item.textContent.toLowerCase();
-          if (email.includes(searchTerm)) {
-            item.style.display = 'flex';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      });
-    }
-  }
-});
-
-document.addEventListener("click", function (event) {
-  if (event.target.matches(".add-btn")) {
-      const userId = event.target.closest("li").dataset.userId;  // 유저 ID 
-      const travelId = "{{ object.travel_id }}";  // 현재 여행 그룹 ID 
-      const csrfToken = document.getElementById("csrf_token").value; 
-
-      fetch("{% url 'accompany:add_participant' %}", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": csrfToken,
-          },
-          body: JSON.stringify({
-              user_id: userId,
-              travel_id: travelId,
-          }),
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.message) {
-              alert(data.message);  // 성공 메시지 출력
-              location.reload();  // 새로고침하여 참가자 목록 반영
-          } else {
-              alert(data.error);  // 오류 메시지 출력
-          }
-      })
-      .catch(error => console.error("Error:", error));
-  }
-  if (event.target.matches(".part-del-btn")){
-    const userId = event.target.closest("li").dataset.userId;  // 유저 ID 
-    const travelId = "{{ object.travel_id }}";  // 현재 여행 그룹 ID 
-    const csrfToken = document.getElementById("csrf_token").value; 
-
-    fetch("{% url 'accompany:remove_participant' %}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-        },
-        body: JSON.stringify({
-            user_id: userId,
-            travel_id: travelId,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message);  // 성공 메시지 출력
-            location.reload();  // 새로고침하여 참가자 목록 반영
-        } else {
-            alert(data.error);  // 오류 메시지 출력
-        }
-    })
-    .catch(error => console.error("Error:", error));
-  }
-});
-
 </script>
-<script src="{%static 'accompany/zzim.js'%}"></script>
-{%endblock js%}
+<script src="{% static 'accompany/add_member_toggle.js' %}"></script>
+<script src="{% static 'accompany/add_participants.js' %}"></script>
+<script src="{% static 'accompany/zzim.js' %}"></script>
+<script src="{%static 'accompany/show_map.js' %}"></script>
+{% endblock js %}
