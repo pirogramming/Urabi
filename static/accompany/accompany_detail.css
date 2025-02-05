@@ -139,6 +139,15 @@
   align-items: center;
   gap: 10px;
 }
+.request-btn{
+  padding: 8px 15px;
+  border: 1px solid var(--red);
+  margin-right: 10px;
+}
+.request-btn:hover{
+  background-color: var(--red);
+  color: #ffffff;
+}
 .detail-content{
   margin: 10px 0;
 }
