@@ -45,19 +45,25 @@
 }
 .info{
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
-  justify-content: flex-start;
-  position: relative;
 }
-.filter-group input{
+.filter-group-first{
+  display: flex;
+  gap: 7px;
+}
+
+.filter-group input, .filter-group select{
   background-color: var(--gray);
   padding: 15px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+.update-image{
+  display: flex;
+  gap: 10px;
+}
 .file-upload svg{
-  position: absolute;
   right: 0;
 }
 .file-upload svg:hover{
@@ -67,9 +73,8 @@
   width: 100px;
 }
 #image-name{
-  position: absolute;
   right: 55px;
-  width: 100px;
+  width: 288px;
 }
 #image-upload{
   display: none;
