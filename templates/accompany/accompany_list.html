@@ -15,23 +15,19 @@
           </div>
           <div class="banner-filter">
             <p class="blue">취향 맞는 동행자를 골라보세요</p>
-            <form class="filter-form">
+            <form method='GET' class="filter-form">
+              {% csrf_token %}
               <div class="filter-group">
-                <input type="text" id="city" name="city" placeholder="도시">
+                {{filterset.form.city}}
               </div>
               <div class="filter-group">
-                <select id="gender" name="gender">
-                  <option value="">전체</option>
-                  <option value="mixed">혼성</option>
-                  <option value="male">남성만</option>
-                  <option value="female">여성만</option>
-                </select>
+                {{filterset.form.gender}}
               </div>
               <div class="filter-group">
-                <input type="date" id="start-date" name="start-date" placeholder="시작일">
+                {{filterset.form.start_date}}
               </div>
               <div class="filter-group">
-                <input type="date" id="end-date" name="end-date" placeholder="종료일">
+                {{filterset.form.end_date}}
               </div>
               <div class="filter-group">
                 <input type="number" id="age" name="age" placeholder="나이">

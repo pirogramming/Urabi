@@ -1,8 +1,15 @@
 from django.db import models
 from users.models import User
 
+
 # Create your models here.
 class TravelGroup(models.Model):
+    GENDER_CHOICES = [
+    ('상관없음', '상관없음'),
+    ('남성만', '남성만'),
+    ('여성만', '여성만'),
+    ]
+    
     travel_id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
@@ -16,7 +23,8 @@ class TravelGroup(models.Model):
     max_member = models.IntegerField()
     tags = models.TextField(null=True, blank=True)
     photo = models.ImageField(upload_to='static/travel_photos/', null=True, blank=True)
-    
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='상관없음')
+    # age_range = models.JSONField()
     # 마커와 폴리라인 데이터를 저장할 필드를 추가
     markers = models.JSONField(null=True, blank=True)
     polyline = models.JSONField(null=True, blank=True)
