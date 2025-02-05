@@ -49,9 +49,11 @@ class AccompanyDetailView(DetailView):
 
         group = context['object']
         participants = TravelParticipants.objects.filter(travel=group)
+        participant_users = [participant.user for participant in participants]  # User 객체 리스트로 변환
         requested_users = User.objects.filter(user_requests__travel=group)
+        
         context['users'] = requested_users
-        context['participants'] = participants
+        context['participants'] = participant_users
         if group.tags:
             group_tags = group.tags.split(',')
             context['tags'] = group_tags
@@ -124,7 +126,7 @@ def add_participant(request):
                 return JsonResponse({"message": "이미 참가 중입니다."}, status=400)
 
             # 최대 인원 초과 방지
-            if travel.participants.count() >= travel.max_member:
+            if travel.travel_participants.count() >= travel.max_member:
                 return JsonResponse({"message": "최대 인원을 초과했습니다."}, status=400)
 
             # 참가자 추가
@@ -153,6 +155,8 @@ def remove_participant(request):
             TravelParticipants.objects.filter(travel=travel, user=user).delete()
             travel.now_member -= 1
             travel.save()
+
+            AccompanyRequest.objects.filter(travel=travel, user=user).delete()
             return JsonResponse({"message": "참가 취소!"}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)

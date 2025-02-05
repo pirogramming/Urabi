@@ -101,8 +101,8 @@
       <ul id="memberList" style="display: none;">
         <li><span>{{ object.created_by.email }}</span><span>🚩</span></li>
         {% for member in participants %}
-          <li data-user-id="{{ member.user.id }}"><span>{{ member.user.email }}</span>
-            {% if user == object.created_by or member.user.id is user.id %}
+          <li data-user-id="{{ member.id }}"><span>{{ member.email }}</span>
+            {% if user == object.created_by or member.id is user.id %}
               <button class="red part-del-btn">x</button>
             {%endif%}
           </li>
