@@ -8,18 +8,21 @@
  {%block content%}
  <main class="mypage-wrap">
     <!-- 왼쪽 사이드 카테고리 -->
+    
     <nav class="mypage-nav">
+      {%if current_user.id is user.id%}
       <ul>
-        <li class="active">프로필</li>
+        <li >프로필</li>
         <li><a href="#">찜 목록</a></li>
         <li><a href="#">나의 여행 일정</a></li>
-        <li><a href="#">내 활동 관리</a></li>
+        <li class="active"><a href="#">내 활동 관리</a></li>
       </ul>
+      {%endif%}
     </nav>
-  
+    
     <!-- 메인 콘텐츠 영역 -->
     <section class="mypage-content">
-  
+      {%if current_user.id is not user.id%}
       <div class="nickname-wrap">
         <div class="nickname-wrap-left">
             <div class="nickname">{{ user.nickname }}</div>
@@ -28,9 +31,10 @@
         </div>
         <button class="chatting-btn">채팅하기</button>
       </div>
-  
+      {%endif%}
       <!-- 프로필 섹션 -->
       <section class="profile-section">
+        {%if current_user.id is not user.id%}
         <h2 class="sub-title">프로필</h2>
         <div class="passport-card">
           <div class="passport-card-top">
@@ -93,24 +97,32 @@
             </div>
           </div>
         </div>
+        {%endif%}
       </section>
-  
       <!-- 등록한 여행 일정 -->
       <section class="schedule-section">
         <h2 class="sub-title">등록한 여행 일정</h2>
-  
+        {%if plans%}
+        {% for plan in plans%}
         <div class="schedule-card">
           <img
             src="{% static 'img/banner.png' %}"
             alt="여행 이미지"
             class="schedule-img"
+            onclick="location.href='{%url 'users:plan_detail' plan.plan_id%}'"
+            style="cursor:pointer;"
           />
           <div class="schedule-info">
-            <h3 class="schedule-title">2024 가을 여행</h3>
-            <p class="schedule-period">2025/2/4 ~ 2025/2/7</p>
-            
+            <h3 class="schedule-title"><a href="{%url 'users:plan_detail' plan.plan_id%}">{{plan.title}}</a></h3>
+            <p class="schedule-period">{{plan.start_date}} ~ {{plan.end_date}}</p>
           </div>
         </div>
+        {%endfor%}
+        {%else%}
+        <div class="schedule-card">
+          등록한 여행 일정이 없어요!
+        </div>
+        {%endif%}
       </section>
       
       <!-- 활동 이력 -->

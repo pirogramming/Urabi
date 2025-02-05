@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
@@ -356,6 +356,17 @@ def my_trip(request):
 
     return render(request, 'mypage/myTrip.html', {
         'form': form,
+    })
+
+@login_required
+def user_detail(request, pk):
+    user = get_object_or_404(User, id=pk)
+    current_user = request.user  # 현재 로그인한 사용자
+    user_plans = TravelPlan.objects.filter(created_by=user)
+    return render(request, 'mypage/userDetail.html', {
+        'user': user,
+        'current_user': current_user,
+        'plans': user_plans,
     })
 
 @login_required
