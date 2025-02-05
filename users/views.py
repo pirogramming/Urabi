@@ -344,7 +344,12 @@ def my_trip(request):
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
-            travel_plan.save()
+
+            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+            travel_plan.polyline = request.POST.get('polyline', '')
+
+            travel_plan.save()  
+
             return redirect('users:my_trip')
     else:
         form = TravelPlanForm()
