@@ -10,14 +10,15 @@
     <h1 class="title">다음 여행자를 위한 작은 안내서, <span class="highlight">숙소 후기</span></h1>
     
     <div class="search-section">
-        <div class="search-box">
-            <input type="text" placeholder="여행지 검색" class="location-input">
+        <form class="search-box" method="GET" action="{% url 'accommodation:filter' %}">
+            <input type="text" name="city" placeholder="여행지 검색" class="location-input" value="{{ city_query }}">
             <div class="divider"></div>
-            <input type="text" placeholder="이용자 평점" class="facility-input">
-            <button class="search-btn">
+            <input type="number" name="rating" placeholder="이용자 평점" class="facility-input" 
+                   min="0" max="5" step="0.5" value="{{ rating_query }}">
+            <button type="submit" class="search-btn">
                 <img src="{% static 'img/search-icon.svg' %}" alt="검색">
             </button>
-        </div>
+        </form>
     </div>
 
     
@@ -41,78 +42,58 @@
         </div>
     </section>
 
-    
     <div class="room-list">
-      <div class="room-card">
-          <div class="card-content">
-              <span class="guest-tag">게스트 선호</span>
-              <div class="image-wrapper">
-                  <div class="room-image">
-                      <img src="{% static 'img/room_ex1.png' %}" alt="Lancashire" class="room-img">
-                      <div class="star-rating">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/empty_star.png' %}" alt="별점">
-                      </div>
-                  </div>
-                  <div class="map-container">
-                      <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
-                      <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
-                      <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
-                      {% if review.pk %}
-                        <button class="review-view-btn" onclick="location.href='{% url 'accommodation:accommodation_review_detail' review.pk %}'">후기 보기</button>
-                      {% else %}
-                        <button class="review-view-btn" disabled>후기 없음</button>
-                      {% endif %}
-                  </div>
-              </div>
-              <div class="card-info">
-                  <div class="info-left">
-                      <h3>영국 Lancashire</h3>
-                      <span class="rating-text">평점 4.0</span>
-                      <span class="rating-text">최신리뷰: 너무 깨끗하고 무난하면서 좋았습니다~</span>
-                  </div>
-                  <img src="{% static 'img/fill_star.png' %}" alt="즐겨찾기" class="favorite-star">
-              </div>
-          </div>
-      </div>
-  
-      
-      <div class="room-card">
-          <div class="card-content">
-              <span class="guest-tag">인기 숙소</span>
-              <div class="image-wrapper">
-                  <div class="room-image">
-                      <img src="{% static 'img/room_ex2.png' %}" alt="Silecroft" class="room-img">
-                      <div class="star-rating">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                          <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                      </div>
-                  </div>
-                  <div class="map-container">
-                      <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
-                      <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
-                      <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
-                      <button class="review-view-btn">후기 보기 </button>
-                  </div>
-              </div>
-              <div class="card-info">
-                  <div class="info-left">
-                      <h3>영국 Silecroft</h3>
-                      <span class="rating-text">평점 5.0</span>
-                      <span class="rating-text">최신리뷰: 정말 좋은 숙소였습니다!</span>
-                  </div>
-                  <img src="{% static 'img/fill_star.png' %}" alt="즐겨찾기" class="favorite-star">
-              </div>
-          </div>
-      </div>
-  </div>
-  </div>
+        {% for review in reviews %}
+        <div class="room-card">
+            <div class="card-content">
+                <span class="guest-tag">
+                    {% if review.rating >= 4.5 %}게스트 선호   
+                    {% elif review.rating >= 4.0 %}인기 숙소
+                    {% else %}신규 등록{% endif %}
+                </span>
+                <div class="image-wrapper">
+                    <div class="room-image">
+                        {% if review.photo %}
+                            <img src="{{ review.photo.url }}" alt="{{ review.accommodation_name }}" class="room-img">
+                        {% else %}
+                            <img src="{% static 'img/default_room.png' %}" alt="기본 이미지" class="room-img">
+                        {% endif %}
+                        <div class="star-rating">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= review.rating %}
+                                    <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                                {% else %}
+                                    <img src="{% static 'img/empty_star.png' %}" alt="별점">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="map-container">
+                        <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
+                        <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
+                        <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
+                        <button class="review-view-btn" onclick="location.href='{% url 'accommodation:accommodation_review_detail' review.review_id %}'">
+                            후기 보기
+                        </button>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <div class="info-left">
+                        <h3>{{ review.city }} {{ review.accommodation_name }}</h3>
+                        <span class="rating-text">평점 {{ review.rating }}</span>
+                        <span class="rating-text">최신리뷰: {{ review.content|truncatechars:50 }}</span>
+                    </div>
+                    <img src="{% static 'img/fill_star.png' %}" alt="즐겨찾기" class="favorite-star">
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-reviews">
+            <p>등록된 숙소 후기가 없습니다.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
 </div>
 
 {% endblock %}
