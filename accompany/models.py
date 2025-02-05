@@ -26,18 +26,26 @@ class TravelGroup(models.Model):
 
 class TravelParticipants(models.Model):
     id = models.BigAutoField(primary_key=True)
-    travel = models.ForeignKey(TravelGroup, on_delete=models.CASCADE, related_name='participants')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='participations')
+    travel = models.ForeignKey(TravelGroup, on_delete=models.CASCADE, related_name='travel_participants')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_participations')
 
     def __str__(self):
         return f"Participant {self.user.email} in {self.travel.title}"
     
 class Accompany_Zzim(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='zzim')
-    item = models.ForeignKey(TravelGroup, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='zzims')
+    item = models.ForeignKey(TravelGroup, on_delete=models.CASCADE, related_name='zzim_items')
 
     class Meta:
         unique_together = ('user', 'item')
 
     def __str__(self):
         return f"{self.user.username} - {self.item.title}"
+
+
+class AccompanyRequest(models.Model):
+    travel = models.ForeignKey(TravelGroup, on_delete=models.CASCADE, related_name='travel_requests')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_requests')
+
+    def __str__(self):
+        return f"Request {self.user.email} in {self.travel.title}"
