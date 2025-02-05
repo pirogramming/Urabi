@@ -161,7 +161,6 @@
                     addressInput.type ="text";
                     addressInput.className ="address_input";
                     addressInput.value =newAddress;
-                    addressInput.readOnly = true;
                     addressInput.dataset.markerId = marker.__gm_id;
 
                     //삭제 버튼 추가

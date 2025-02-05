@@ -13,7 +13,7 @@ from django.shortcuts import render
 from .models import User
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm
+from .forms import UserUpdateForm, TravelPlanForm
 from django.core.files.base import ContentFile
 
 
@@ -338,4 +338,17 @@ def edit_profile(request):
 
 @login_required
 def my_trip(request):
-    return render(request, 'mypage/myTrip.html', {'user':request.user})
+    if request.method == 'POST':
+        form = TravelPlanForm(request.POST)
+
+        if form.is_valid():
+            travel_plan = form.save(commit=False)
+            travel_plan.created_by = request.user
+            travel_plan.save()
+            return redirect('users:my_trip')
+    else:
+        form = TravelPlanForm()
+
+    return render(request, 'mypage/myTrip.html', {
+        'form': form,
+    })

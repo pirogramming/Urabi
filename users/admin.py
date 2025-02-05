@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import User
+from .models import User, TravelPlan
+
+admin.site.register(TravelPlan)
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
