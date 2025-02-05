@@ -89,7 +89,11 @@ def flash_detail(request, pk):
     if request.user.is_authenticated:
         is_zzimmed = FlashZzim.objects.filter(user=request.user, flash=flash).exists()
 
-    return render(request, "flash/flash_detail.html", {"flash": flash, "tag_list": tag_list,"is_zzimmed": is_zzimmed})
+    place_img_url = "https://via.placeholder.com/300"
+    if flash.city:
+        place_img_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+
+    return render(request, "flash/flash_detail.html", {"flash": flash, "tag_list": tag_list,"is_zzimmed": is_zzimmed,'place_img_url': place_img_url})
 
 
 
