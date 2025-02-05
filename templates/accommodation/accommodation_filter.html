@@ -26,7 +26,7 @@
             <div class="main_accommodation_left">
                 <h2>방문했던 숙소의 솔직한 후기를 공유해주세요!</h2>
                 <img src="{% static 'img/main_hotel_review.svg' %}" alt="accommodation review">
-                <a class="main_review_btn">직접 후기 추가하기</a>
+                <a class="main_review_btn" href="{% url 'accommodation:accommodation_create' %}">직접 후기 추가하기</a>
             </div>
             <div class="main_accommodation_right">
                 <span class="main_tag">#치안</span>
@@ -61,7 +61,11 @@
                       <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
                       <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
                       <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
-                      <button class="review-view-btn">후기 보기 </button>
+                      {% if review.pk %}
+                        <button class="review-view-btn" onclick="location.href='{% url 'accommodation:accommodation_review_detail' review.pk %}'">후기 보기</button>
+                      {% else %}
+                        <button class="review-view-btn" disabled>후기 없음</button>
+                      {% endif %}
                   </div>
               </div>
               <div class="card-info">
