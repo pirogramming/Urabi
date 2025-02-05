@@ -102,7 +102,7 @@
 
 .market_list_info{
     display: grid;
-    grid-template-columns: 1.3fr 2fr 1fr;
+    grid-template-columns: 1.4fr 2fr 1fr;
 }
 
 .market_list_info h3, #market_list_count, .market_add_text{
@@ -182,6 +182,11 @@
 }
 .market_list_item{
     align-content: center;
+}
+
+#maket_nothing{
+    line-height: 50px;
+    text-align: center;
 }
 
 /*페이지 넘김*/
