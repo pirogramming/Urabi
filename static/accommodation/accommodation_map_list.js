@@ -1,69 +1,101 @@
-function initMap() {
-    console.log("🗺️ initMap 실행됨");
+window.initMap = async function() {
+    console.log("Map initialization started");
+    
+    try {
+        // Places 라이브러리 로드 대기
+        await google.maps.importLibrary("places");
+        
+        const defaultLocation = { lat: 37.5665, lng: 126.9780 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: defaultLocation,
+            mapTypeControl: true,
+            fullscreenControl: true
+        });
 
-    const defaultLocation = { lat: 37.5665, lng: 126.9780 }; // 기본 위치: 서울
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        center: defaultLocation
-    });
+        const placesService = new google.maps.places.PlacesService(map);
+        const streetViewService = new google.maps.StreetViewService();
+        const geocoder = new google.maps.Geocoder();
 
-    const placesService = new google.maps.places.PlacesService(map);
-    const streetViewService = new google.maps.StreetViewService();
-    const geocoder = new google.maps.Geocoder();
-
-    // 숙소 리스트에서 위치 가져와 지도에 마커 추가
-    addAccommodationMarkers(map, placesService, streetViewService, geocoder);
-
-    enableSearchBar(map, geocoder);
+        // 마커 추가 및 검색 기능 초기화
+        await addAccommodationMarkers(map, placesService, streetViewService, geocoder);
+        enableSearchBar(map, geocoder);
+        
+        console.log("Map initialization completed");
+    } catch (error) {
+        console.error("Map initialization failed:", error);
+    }
 }
 
-function addAccommodationMarkers(map, placesService, streetViewService, geocoder) {
+async function addAccommodationMarkers(map, placesService, streetViewService, geocoder) {
     const accommodationCards = document.querySelectorAll(".accommodation-card");
+    
+    const markerPromises = Array.from(accommodationCards).map(card => {
+        return new Promise((resolve) => {
+            const city = card.dataset.city;
+            const title = card.dataset.title;
+            const reviewId = card.dataset.reviewId;
+            const urlElement = card.querySelector(".view-review-btn");
+            const url = urlElement ? urlElement.href : "#";
+            const imgElement = document.getElementById(`place-img-${reviewId}`);
+            const infoImageId = `place-img-${reviewId}`;
 
-    accommodationCards.forEach((card) => {
-        const city = card.dataset.city;
-        const title = card.dataset.title;
-        const reviewId = card.dataset.reviewId;
-        const urlElement = card.querySelector(".view-review-btn"); // ✅ URL 가져오기
-        const url = urlElement ? urlElement.href : "#"; // URL이 없을 경우 기본값 설정
-        const imgElement = document.getElementById(`place-img-${reviewId}`);
-        const infoImageId = `place-img-${reviewId}`;
-
-        if (!city) {
-            console.warn(`❌ 숙소 주소(city) 없음: ${title}`);
-            return;
-        }
-
-        getLocationCoordinates(city, geocoder, (location) => {
-            if (!location) {
-                console.error(`🚨 Geocoding 실패: ${city}`);
+            if (!city) {
+                console.warn("Missing city address for:", title);
+                resolve();
                 return;
             }
 
-            console.log(`📍 변환된 좌표: ${city} → ${location.lat}, ${location.lng}`);
+            geocoder.geocode({ address: city }, (results, status) => {
+                if (status !== "OK" || !results[0]) {
+                    console.error("Geocoding failed for:", city);
+                    resolve();
+                    return;
+                }
 
-            const marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                title: title
+                const location = results[0].geometry.location;
+                console.log("Coordinates found for:", city);
+
+                const marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: title,
+                    animation: google.maps.Animation.DROP
+                });
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `<div>
+                        <img id="${infoImageId}" src="https://via.placeholder.com/150"
+                        alt="숙소 이미지" style="width:100%; max-width:150px; border-radius:10px;">
+                        <h3><a href="${url}" target="_blank">${title}</a></h3>
+                    </div>`
+                });
+
+                marker.addListener("click", () => {
+                    infoWindow.open(map, marker);
+                });
+
+                // 이미지 로딩
+                const request = {
+                    query: city,
+                    fields: ["place_id", "photos"]
+                };
+
+                placesService.findPlaceFromQuery(request, (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK && 
+                        results[0]?.photos?.length > 0) {
+                        const photoUrl = results[0].photos[0].getUrl({ maxWidth: 500, maxHeight: 500 });
+                        if (imgElement) imgElement.src = photoUrl;
+                        updateInfoWindowImage(infoWindow, infoImageId, photoUrl, title, url);
+                    }
+                    resolve();
+                });
             });
-
-            const infoWindow = new google.maps.InfoWindow({
-                content: `<div>
-                            <img id="${infoImageId}" src="https://via.placeholder.com/150"
-                            alt="숙소 이미지" style="width:100%; max-width:150px; border-radius:10px;">
-                            <h3><a href="${url}" target="_blank">${title}</a></h3>
-                          </div>`,
-            });
-
-            marker.addListener("click", function () {
-                infoWindow.open(map, marker);
-
-            });
-
-            getPlaceImage(city, placesService, streetViewService, infoWindow, imgElement, infoImageId, title, url);
         });
     });
+
+    // 모든 마커가 추가될 때까지 대기
+    await Promise.all(markerPromises);
 }
 
 function getLocationCoordinates(city, geocoder, callback) {
