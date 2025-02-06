@@ -63,7 +63,7 @@ def accommodation_location(request):
 
 @login_required
 def accommodation_create(request):
-    """숙소 후기 작성 페이지"""
+    """숙소 후기 작성 페이지 (후기랑 리뷰는 다른것이기에 후기를 첫 리뷰로 놓고나서 다른것들은 is_parent=False로 다르게 두기)"""
     if request.method == "POST":
         try:
             review = AccommodationReview(
@@ -72,7 +72,8 @@ def accommodation_create(request):
                 accommodation_name=request.POST.get('accommodation_name'),
                 category=request.POST.get('category'),
                 rating=float(request.POST.get('rating')),
-                content=request.POST.get('content')
+                content=request.POST.get('content'),
+                is_parent=True  # 첫 리뷰임을 표시
             )
             if 'photo' in request.FILES:
                 review.photo = request.FILES['photo']
@@ -83,19 +84,19 @@ def accommodation_create(request):
             messages.error(request, f'후기 등록 중 오류가 발생했습니다: {str(e)}')
     return render(request, "accommodation/accommodation_create.html")
 
+
+
 def accommodation_review_detail(request, pk):
-    # 메인 리뷰 가져오기
     review = get_object_or_404(AccommodationReview.objects.select_related('user'), pk=pk)
     
-    # 같은 숙소의 모든 리뷰들 가져오기 (현재 리뷰 포함)
+    # 같은 숙소의 리뷰들 중 is_parent=False인 것만 가져오기
     all_reviews = AccommodationReview.objects.select_related('user').filter(
-        accommodation_name=review.accommodation_name
+        accommodation_name=review.accommodation_name,
+        is_parent=False  # 첫 리뷰가 아닌 것만 가져오기
     ).order_by('-created_at')
     
-    # 리뷰 개수 계산
     review_count = all_reviews.count()
     
-    # 평균 평점 계산
     average_rating = AccommodationReview.objects.filter(
         accommodation_name=review.accommodation_name
     ).aggregate(avg_rating=Avg('rating'))['avg_rating']
@@ -112,7 +113,7 @@ def accommodation_review_detail(request, pk):
     
 @login_required
 def accommodation_review_create(request, pk):
-    """특정 숙소의 후기 작성 페이지"""
+    """특정 숙소의 후기 작성 페이지 (추가 리뷰)"""
     parent_review = get_object_or_404(AccommodationReview, pk=pk)
     
     if request.method == "POST":
@@ -123,7 +124,8 @@ def accommodation_review_create(request, pk):
                 accommodation_name=parent_review.accommodation_name,
                 category=parent_review.category,
                 rating=float(request.POST.get('rating')),
-                content=request.POST.get('content')
+                content=request.POST.get('content'),
+                is_parent=False  # 추가 리뷰임을 표시
             )
             if 'photo' in request.FILES:
                 review.photo = request.FILES['photo']

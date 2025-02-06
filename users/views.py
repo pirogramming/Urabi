@@ -17,6 +17,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
 from django.core.files.base import ContentFile
 from accommodation.models import AccommodationReview
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 def social_login(request):
@@ -372,11 +374,15 @@ def user_detail(request, pk):
     user_accompany = TravelGroup.objects.filter(created_by=user)
     accompany_count = user_accompany.count()
     
-    # 숙소 리뷰 관련 쿼리 추가
+    # 숙소 리뷰 쿼리 수정 - is_parent=False인 리뷰만 가져오기
     accommodation_reviews = AccommodationReview.objects.filter(
-        user=user
+        user=user,
+        is_parent=False
     ).order_by('-created_at')
+    
     review_count = accommodation_reviews.count()
+    
+    # 처음 5개만 보이도록 슬라이싱 initial_reviews = accommodation_reviews[:5]
     
     # 동행 태그 처리
     for accompany in user_accompany:
@@ -388,8 +394,40 @@ def user_detail(request, pk):
         'plans': user_plans,
         'accompanies': user_accompany,
         'accompany_count': accompany_count,
-        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가
+        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
         'review_count': review_count,  # 리뷰 개수 추가
+        'has_more': review_count > 5,  # 더보기 버튼 표시 여부
+    })
+    
+    
+# def load_more_reviews(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    offset = int(request.GET.get('offset', 5))
+    limit = 5  # 한 번에 추가로 보여줄 리뷰 수
+    
+    # is_parent=False인 리뷰만 가져오기
+    accommodation_reviews = AccommodationReview.objects.filter(
+        user=user,
+        is_parent=False
+    ).order_by('-created_at')[offset:offset+limit]
+    
+    # 더 보여줄 리뷰가 있는지 확인
+    total_reviews = AccommodationReview.objects.filter(
+        user=user,
+        is_parent=False
+    ).count()
+    
+    has_more = total_reviews > (offset + limit)
+    
+    context = {
+        'accommodation_reviews': accommodation_reviews
+    }
+    
+    html = render_to_string('mypage/_review_cards.html', context)
+    
+    return JsonResponse({
+        'html': html,
+        'has_more': has_more
     })
 
 @login_required

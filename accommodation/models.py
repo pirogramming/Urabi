@@ -14,7 +14,8 @@ class AccommodationReview(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # 작성일
     updated_at = models.DateTimeField(auto_now=True)  # 수정일
     photo = models.ImageField(upload_to="accommodation_reviews/", null=True, blank=True)  # 후기 사진
-
+    is_parent = models.BooleanField(default=True)
+    
     def __str__(self):
         return f"{self.accommodation_name} ({self.rating}⭐)"
     
