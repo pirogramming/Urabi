@@ -22,8 +22,9 @@
       {% csrf_token %}
       <input type="hidden" id="latitude" name="latitude">
       <input type="hidden" id="longitude" name="longitude">
-      <input type="hidden" id="markers" name="markers">
-      <input type="hidden" id="polyline" name="polyline">
+      <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'> 
+      <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
+      
       <div class="title">
         {{form.title}}
       </div>
@@ -88,5 +89,11 @@
 {%block js%}
 <script src="{%static 'accompany/accompany_form.js'%}"></script>
 <script src="{%static 'accompany/accompany_map.js'%}"></script>
+<script>
+  window.mapData = {
+    markers: {{ form.instance.markers|safe }},
+    polyline: {{ form.instance.polyline|safe }}
+  };
+</script>
 
 {%endblock js%}

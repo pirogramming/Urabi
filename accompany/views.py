@@ -101,6 +101,7 @@ class AccompanyUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('accompany:accompany_detail', kwargs={'pk': self.object.travel_id})
+
 class AccompanyDeleteView(DeleteView):
     model = TravelGroup
     template_name = 'accompany/accompany_detail.html'
