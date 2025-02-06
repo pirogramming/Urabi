@@ -96,12 +96,23 @@ class AccompanyCreateView(CreateView):
     def get_success_url(self):
         return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
 
+
 class AccompanyUpdateView(UpdateView):
     model = TravelGroup
     form_class = TravelGroupForm
     template_name = 'accompany/accompany_form.html'
+
+    def form_valid(self, form):
+        markers_data = self.request.POST.get('markers')
+        polyline_data = self.request.POST.get('polyline')
+
+        form.instance.markers = markers_data
+        form.instance.polyline = polyline_data
+
+        return super().form_valid(form)
+
     def get_success_url(self):
-        return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
+        return reverse('accompany:accompany_detail', kwargs={'pk': self.object.travel_id})
 
 class AccompanyDeleteView(DeleteView):
     model = TravelGroup
