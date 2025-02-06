@@ -139,6 +139,12 @@
   align-items: center;
   gap: 10px;
 }
+.request-btn, .request-cancel-btn, .ing{
+  padding: 8px 15px;
+  border: 1px solid var(--red);
+  margin-right: 10px;
+}
+
 .detail-content{
   margin: 10px 0;
 }
