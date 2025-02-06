@@ -172,6 +172,15 @@
   /********************************
     "등록한 여행 일정" 섹션
   ********************************/
+  .load-more-btn{
+    background-color: var(--red);
+    width: 200px;
+    padding: 10px;
+    color: #ffffff;
+  }
+  .load-more-btn:hover{
+    background-color: var(--red-hover);
+  }
   .schedule-section {
     margin-bottom: 40px;
   }
