@@ -2,52 +2,97 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'accommodation/accommodation_create.css' %}">
+<link rel="stylesheet" href="{% static 'accommodation/accommodation_create.css' %}">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script src="{% static 'accommodation/accommodation_map.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
 <div class="review-container">
     <div class="review-main-header">
-     <div>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></div>
-     <p>> 후기 등록</p>
- </div>
- 
-     <div class="location-section">
-         <input type="text" placeholder="숙소 이름" id="accommodation-name" >
-         <hr class="hr-blue">
-         <div class="map-placeholder">
-             <img src="{% static 'img/Map_ex.png' %}" alt="">
-         </div>
-     </div>
- 
-     <form class="review-form">
-         <div class="review-header">
-             <div>
-             <label for="city" >도시</label>
-             <input type="text" placeholder="도시 입력" id="review-city">
-         </div>
-         <div class="review-header-right">
-              <div id="rating" class="stars">
-                 <img src="{% static 'img/empty_star2.png' %}" alt="별점">
-                 <img src="{% static 'img/empty_star2.png' %}" alt="별점">
-                 <img src="{% static 'img/empty_star2.png' %}" alt="별점">
-                 <img src="{% static 'img/empty_star2.png' %}" alt="별점">
-                 <img src="{% static 'img/empty_star2.png' %}" alt="별점">   
-             </div>
-             <div id="add-img">
-                 <label for="accommodation-img">
-                     <img src="{% static 'img/addimg_icon.png' %}" alt="Add Image">
-                 </label>
-                 <input type="file" id="accommodation-img" style="display: none;">
-             </div>
-         </div>
-         </div>
-         <div class="textarea-section">
-             <textarea name="review" id="review" rows="5" placeholder="내용을 입력하세요!"></textarea>
-         </div>
-         <hr class="hr-blue" style="width: 100%;">
-         <button type="submit" class="submit-button">후기 등록하기</button>
-     </form>
- </div>
+    <div>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></div>
+    <p>> 후기 등록</p>
+</div>
+
+    <div class="location-section">
+        <hr class="hr-blue">
+        <div class="map-placeholder">
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="hidden" id="latitude" name="latitude" value="">
+        <input type="hidden" id="longitude" name="longitude" value="">
+
+        <div class="input_group">
+            <label for="accommodation_name">숙소명</label>
+            <input type="text" id="accommodation_name" name="accommodation_name" required>
+        </div>
+
+        <div class="input_group">
+            <label for="review-city">도시</label>
+            <input type="text" id="review-city" name="city" required>
+        </div>
+
+        <div class="input_group">
+            <label for="category">숙소 유형</label>
+            <select id="category" name="category">
+                <option value="호텔">호텔</option>
+                <option value="게스트하우스">게스트하우스</option>
+                <option value="에어비앤비">에어비앤비</option>
+                <option value="기타">기타</option>
+            </select>
+        </div>
+
+        <div class="review-header-right">
+            <div class="input_group">
+                <label>평점</label>
+                <div class="rating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="rating" name="rating" value="0">
+            </div>
+
+            <div id="add-img">
+                <label for="accommodation-img">
+                    <img src="{% static 'img/addimg_icon.png' %}" alt="Add Image">
+                </label>
+                <input type="file" id="accommodation-img" style="display: none;">
+            </div>
+        </div>
+        
+        <div class="textarea-section">
+            <textarea name="review" id="review" rows="5" placeholder="내용을 입력하세요!"></textarea>
+        </div>
+        <hr class="hr-blue" style="width: 100%;">
+        <button type="submit" class="submit-button">후기 등록하기</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("rating");
+
+        stars.forEach(star => {
+            star.addEventListener("click", function() {
+                const value = this.dataset.value;
+                ratingInput.value = value;
+                stars.forEach(s => s.classList.remove("selected"));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add("selected");
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}
