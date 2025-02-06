@@ -42,6 +42,7 @@
   width: 100%;
   border: none;
   border-bottom: 1px solid var(--blue);
+  padding-left: 5px;
 }
 .info{
   display: flex;
@@ -50,7 +51,17 @@
 }
 .filter-group-first{
   display: flex;
-  gap: 7px;
+  gap: 10px;
+}
+.filter-group-second{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--blue);
+}
+.filter_age input{
+  width: 86px;
 }
 
 .filter-group input, .filter-group select{
@@ -62,6 +73,7 @@
 .update-image{
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 .file-upload svg{
   right: 0;
@@ -74,13 +86,22 @@
 }
 #image-name{
   right: 55px;
-  width: 288px;
+  width: 292px;
 }
 #image-upload{
   display: none;
 }
 #image-upload#file-upload-button{
   display: none;
+}
+.filter_location{
+  padding-bottom: 10px;
+  padding-left:2px;
+  border-bottom: 1px solid var(--blue);
+}
+.filter_location label{
+  padding: 0 2px;
+  margin-right: 5px;
 }
 .filter-form button {
   padding: 10px 20px;

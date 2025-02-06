@@ -47,6 +47,12 @@
             </div>
           </div>
           <div class="filter-group-second">
+            <div class="filter-group filter_age">
+              {{form.min_age}}
+            </div>
+            <div class="filter-group filter_age">
+              {{form.max_age}}
+            </div>
             <div class="filter-group update-image">
                 <input type="text" id="image-name" name="image-name" placeholder="사진을 추가해주세요">
                 <label for="image-upload" class="file-upload">
@@ -61,7 +67,7 @@
           </div>
       </div>
 
-      <div class="filter-group">
+      <div class="filter-group filter_location">
         <label for="location">주소</label>
         <input type="text" id="location" name="location" readonly>
         <div id="address_container">
