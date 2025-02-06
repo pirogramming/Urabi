@@ -104,7 +104,7 @@
       <div id="schedule-cards-container">
         {% if plans %}
         {% for plan in plans %}
-        <div class="schedule-card" style="display: none;">
+        <div id="load-more-schedule-btn"class="schedule-card" style="display: none;">
           <img
             src="{% static 'img/banner.png' %}"
             alt="여행 이미지"
@@ -125,7 +125,7 @@
         {% endif %}
       </div>
       {% if plans %}
-      <button class="load-more-btn" onclick="loadMoreSchedules()">더보기</button>
+      <button id="load-more-accompany-btn"class="load-more-btn" onclick="loadMoreSchedules()">더보기</button>
       {% endif %}
     </section>
 
