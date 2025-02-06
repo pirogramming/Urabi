@@ -234,23 +234,37 @@
         참여한 번개 모임이 없어요!
       </div>
 
+      <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
       <h2 class="sub-title">숙소 리뷰 이력</h2>
-      <div id="review-cards-container">
-        <p class="activity-header">
-          {{ user.nickname }} 님은 <span class="text-hilight">1</span>개의 숙소 리뷰를 남겼어요!
-        </p>
-        <div class="activity-card" style="display: none;">
-          <div class="activity-review">
-            <p class="activity-review-title">
-              여기숙소진짜별로에요진짜오지마세요
-            </p>
-            <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
-            <p class="schedule-location">
-              <img src="{% static 'img/location_icon.png' %}" alt="위치">
-              <span class="schedule-location-text">파리</span>
-            </p>
-          </div>
-        </div>
+      <div class="activity-box">
+          <p class="activity-header">
+              {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
+          </p>
+
+          {% if accommodation_reviews %}
+              {% for review in accommodation_reviews %}
+                  <div class="activity-card">
+                      <div class="activity-review">
+                          <p class="activity-review-title">
+                              {{ review.accommodation_name }}
+                          </p>
+                          <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
+                          <p class="schedule-location">
+                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                              <span class="schedule-location-text">{{ review.city }}</span>
+                          </p>
+                          <p class="review-rating">⭐ {{ review.rating }}</p>
+                          <p class="review-content">{{ review.content }}</p>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% else %}
+              <div class="activity-card">
+                  <div class="activity-review">
+                      <p class="activity-review-title">작성한 숙소 리뷰가 없어요!</p>
+                  </div>
+              </div>
+          {% endif %}
       </div>
       <button id="load-more-review-btn" onclick="loadMoreReviews()">더보기</button>
 
