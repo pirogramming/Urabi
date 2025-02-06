@@ -1,113 +1,146 @@
-function initMap() {
-    console.log("initMap 실행됨");
+window.initMap = async function() {
+    try {
+        // Places 라이브러리 로드 대기
+        await google.maps.importLibrary("places");
+        console.log("Map initialization started");
 
-    const defaultLocation = { lat: 37.5665, lng: 126.9780 }; // 기본 위치: 서울
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        center: defaultLocation
-    });
+        const defaultLocation = { lat: 37.5665, lng: 126.9780 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: defaultLocation,
+            mapTypeControl: true,
+            fullscreenControl: true
+        });
 
-    let marker = new google.maps.Marker({
-        position: defaultLocation,
-        map: map,
-        draggable: true
-    });
+        let marker = new google.maps.Marker({
+            position: defaultLocation,
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+        });
 
-    // Geocoder 인스턴스 생성
-    const geocoder = new google.maps.Geocoder();
+        const geocoder = new google.maps.Geocoder();
 
-    // 사용자가 지도 클릭하면 마커 이동 + 주소 업데이트
-    google.maps.event.addListener(map, "click", function(event) {
-        updateLocation(event.latLng, geocoder, marker);
-    });
+        // 지도 클릭 이벤트
+        map.addListener("click", function(event) {
+            updateLocation(event.latLng, geocoder, marker);
+        });
 
-    // 마커를 드래그해서 위치 변경할 때
-    google.maps.event.addListener(marker, "dragend", function(event) {
-        updateLocation(event.latLng, geocoder, marker);
-    });
+        // 마커 드래그 이벤트
+        marker.addListener("dragend", function(event) {
+            updateLocation(marker.getPosition(), geocoder, marker);
+        });
 
-    // 실시간 위치 불러오기
-    getCurrentLocation(map, marker, geocoder);
+        // 실시간 위치 및 검색 기능 초기화
+        await initializeLocationFeatures(map, marker, geocoder);
 
-    // 🔹 검색 바 자동완성 기능 추가
-    enableSearchBar(map, marker, geocoder);
+    } catch (error) {
+        console.error("Map initialization failed:", error);
+    }
 }
 
-function updateLocation(latLng, geocoder, marker) {
-    marker.setPosition(latLng);
+async function initializeLocationFeatures(map, marker, geocoder) {
+    try {
+        await getCurrentLocation(map, marker, geocoder);
+        await enableSearchBar(map, marker, geocoder);
+    } catch (error) {
+        console.error("Location features initialization failed:", error);
+    }
+}
 
-    // Geocoder를 사용하여 주소 변환
-    geocoder.geocode({ location: latLng }, function(results, status) {
-        if (status === "OK") {
-            if (results[0]) {
-                document.getElementById("review-city").value = results[0].formatted_address;
-            } else {
-                document.getElementById("review-city").value = "주소를 찾을 수 없음";
-            }
-        } else {
-            console.error("Geocoder 실패: " + status);
-            document.getElementById("review-city").value = "주소 변환 오류";
+async function updateLocation(latLng, geocoder, marker) {
+    try {
+        marker.setPosition(latLng);
+
+        const response = await new Promise((resolve, reject) => {
+            geocoder.geocode({ location: latLng }, (results, status) => {
+                if (status === "OK") {
+                    resolve(results);
+                } else {
+                    reject(status);
+                }
+            });
+        });
+
+        const cityInput = document.getElementById("review-city");
+        if (cityInput) {
+            cityInput.value = response[0]?.formatted_address || "주소를 찾을 수 없음";
         }
-    });
+    } catch (error) {
+        console.error("Address lookup failed:", error);
+        const cityInput = document.getElementById("review-city");
+        if (cityInput) {
+            cityInput.value = "주소 변환 오류";
+        }
+    }
 }
 
 function getCurrentLocation(map, marker, geocoder) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                const userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-
-                console.log("현재 위치:", userLocation);
-
-                // 지도 및 마커 업데이트
-                map.setCenter(userLocation);
-                marker.setPosition(userLocation);
-                updateLocation(userLocation, geocoder, marker);
-            },
-            function() {
-                console.warn("위치를 가져올 수 없습니다.");
-            }
-        );
-    } else {
-        console.warn("이 브라우저에서는 위치 서비스를 지원하지 않습니다.");
-    }
-}
-
-function enableSearchBar(map, marker, geocoder) {
-    const searchInput = document.getElementById("search-bar");
-    if (!searchInput) {
-        console.error("❌ 검색 바 요소를 찾을 수 없음");
-        return;
-    }
-
-    // Google Places Autocomplete 설정
-    const autocomplete = new google.maps.places.Autocomplete(searchInput, {
-        fields: ["geometry", "formatted_address"]
-    });
-
-    // 검색한 장소 선택 시 실행
-    autocomplete.addListener("place_changed", function() {
-        const place = autocomplete.getPlace();
-        console.log("검색한 장소 정보:", place);
-
-        if (!place.geometry || !place.geometry.location) {
-            alert("해당 장소를 찾을 수 없습니다.");
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            console.warn("Geolocation is not supported by this browser");
+            resolve(false);
             return;
         }
 
-        // 지도 중심 이동 & 마커 이동
-        map.setCenter(place.geometry.location);
-        marker.setPosition(place.geometry.location);
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
 
-        // 위치 업데이트
-        updateLocation(place.geometry.location, geocoder, marker);
+                    map.setCenter(userLocation);
+                    marker.setPosition(userLocation);
+                    await updateLocation(userLocation, geocoder, marker);
+                    resolve(true);
+                } catch (error) {
+                    console.error("Error updating location:", error);
+                    resolve(false);
+                }
+            },
+            (error) => {
+                console.warn("Error getting current location:", error);
+                resolve(false);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        );
     });
 }
 
-// 초기화
-document.addEventListener("DOMContentLoaded", function() {
-    initMap();
-});
+async function enableSearchBar(map, marker, geocoder) {
+    const searchInput = document.getElementById("search-bar");
+    if (!searchInput) {
+        console.warn("Search bar element not found");
+        return;
+    }
+
+    try {
+        const autocomplete = new google.maps.places.Autocomplete(searchInput, {
+            fields: ["geometry", "formatted_address"]
+        });
+
+        autocomplete.addListener("place_changed", async () => {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry || !place.geometry.location) {
+                alert("선택한 장소를 찾을 수 없습니다.");
+                return;
+            }
+
+            map.setCenter(place.geometry.location);
+            map.setZoom(15);
+            marker.setPosition(place.geometry.location);
+            await updateLocation(place.geometry.location, geocoder, marker);
+        });
+    } catch (error) {
+        console.error("Error setting up search bar:", error);
+    }
+}
+
+// DOMContentLoaded 이벤트 리스너 제거 (callback으로 대체)
