@@ -9,6 +9,15 @@
 {%block content%}
 <section class="banner">
   <h2>함께 쌓는 추억, <span class="red">장기 동행</span> > 동행 모집하기</h2>
+  <div class="plan-selection">
+    <select id="plan-selector">
+      <option value="">일정을 선택하세요</option>
+      {% for plan in travel_plans %}
+      <option value="{{ plan.plan_id }}">{{ plan.title }} ({{ plan.start_date }} ~ {{ plan.end_date }})</option>
+      {% endfor %}
+    </select>
+    <button onclick="loadSelectedPlan()">불러오기</button>
+  </div>
 </section>
 <section class="map">
   <div class="map-container">
@@ -22,9 +31,9 @@
       {% csrf_token %}
       <input type="hidden" id="latitude" name="latitude">
       <input type="hidden" id="longitude" name="longitude">
-      <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'> 
-      <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
-      
+      <input type="hidden" id="markers" name="markers" value="{{ form.instance.markers|default:'[]'|escapejs }}">
+      <input type="hidden" id="polyline" name="polyline" value="{{ form.instance.polyline|default:'[]'|escapejs }}">
+
       <div class="title">
         {{form.title}}
       </div>
@@ -103,10 +112,25 @@
 <script src="{%static 'accompany/accompany_form.js'%}"></script>
 <script src="{%static 'accompany/accompany_map.js'%}"></script>
 <script>
+  function loadSelectedPlan() {
+    const planId = document.getElementById('plan-selector').value;
+    if (planId) {
+      const url = "{% url 'accompany:accompany_create' %}?plan_id=" + planId;
+      window.location.href = url;
+    }
+  }
+
+  {%if this_plan %}
   window.mapData = {
-    markers: {{ form.instance.markers|safe }},
-    polyline: {{ form.instance.polyline|safe }}
+    markers: {{ this_plan.markers|safe }},
+    polyline: {{ this_plan.polyline|safe }}
   };
+  {%else%}
+    window.mapData = {
+      markers: {{ form.instance.markers|safe }},
+      polyline: {{ form.instance.polyline|safe }}
+    };
+    {%endif%}
 </script>
 
 {%endblock js%}
