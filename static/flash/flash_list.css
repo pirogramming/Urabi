@@ -11,6 +11,9 @@
     color: var(--red);
     font-weight: bold;
 }
+.flash_title .highlight:hover{
+    border-bottom: 3px solid var(--red);
+}
 .flash_searchBar{
     height: 80px;
     border: 1.5px solid black;
@@ -58,7 +61,6 @@
     gap: 20px;
     margin: auto;
     align-items: stretch;
-    height: 80vh;
 }
 
 .flash-left {
