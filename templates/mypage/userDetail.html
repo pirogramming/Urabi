@@ -237,11 +237,11 @@
       <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
       <h2 class="sub-title">숙소 리뷰 이력</h2>
       <div class="activity-box">
-          <p class="activity-header">
-              {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
-          </p>
-
-          {% if accommodation_reviews %}
+        <p class="activity-header">
+            {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
+        </p>
+    
+        {% if accommodation_reviews %}
               {% for review in accommodation_reviews %}
                   <div class="activity-card">
                       <div class="activity-review">
@@ -267,6 +267,9 @@
           {% endif %}
       </div>
       <button id="load-more-review-btn" onclick="loadMoreReviews()">더보기</button>
+        
+
+    
 
       <h2 class="sub-title">나눔 마켓 이력</h2>
       <div id="market-cards-container">
@@ -330,6 +333,7 @@
       }
     };
   }
+
 
   const loadMoreSchedules = loadMoreItems('schedule-cards-container', 'load-more-schedule-btn');
   const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
