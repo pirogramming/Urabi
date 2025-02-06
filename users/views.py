@@ -16,6 +16,7 @@ from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
 from django.core.files.base import ContentFile
+from accommodation.models import AccommodationReview
 
 
 def social_login(request):
@@ -363,17 +364,30 @@ def my_trip(request):
 def user_detail(request, pk):
     user = get_object_or_404(User, id=pk)
     current_user = request.user  # 현재 로그인한 사용자
+    
+    # 여행 계획 및 동행 관련 쿼리 작성 
     user_plans = TravelPlan.objects.filter(created_by=user)
     user_accompany = TravelGroup.objects.filter(created_by=user)
     accompany_count = user_accompany.count()
+    
+    # 숙소 리뷰 관련 쿼리 추가
+    accommodation_reviews = AccommodationReview.objects.filter(
+        user=user
+    ).order_by('-created_at')
+    review_count = accommodation_reviews.count()
+    
+    # 동행 태그 처리
     for accompany in user_accompany:
         accompany.tags = accompany.tags.split(',') if accompany.tags else []
+    
     return render(request, 'mypage/userDetail.html', {
         'user': user,
         'current_user': current_user,
         'plans': user_plans,
         'accompanies': user_accompany,
         'accompany_count': accompany_count,
+        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가
+        'review_count': review_count,  # 리뷰 개수 추가
     })
 
 @login_required
