@@ -2,25 +2,26 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import AccommodationReview
 from django.contrib import messages
+from django.db.models import Subquery, OuterRef, Max
+from django.db.models import Avg
 
 def accommodation_filter(request):
     """메인페이지"""
-    from django.db.models import Max
-    
     # 검색 파라미터 가져오기
     city_query = request.GET.get('city', '')
     rating_query = request.GET.get('rating', '')
     
-    # 각 숙소별 최신 리뷰의 ID를 찾기
-    latest_reviews = AccommodationReview.objects.values('accommodation_name').annotate(
-        latest_id=Max('review_id')
-    )
-    
-    # 최신 리뷰 ID 추출
-    latest_review_ids = [item['latest_id'] for item in latest_reviews]
+    # 각 숙소별 최신 리뷰를 가져오는 서브쿼리
+    latest_reviews = AccommodationReview.objects.filter(
+        accommodation_name=OuterRef('accommodation_name')
+    ).order_by('-created_at')
     
     # 기본 쿼리셋 (최신 리뷰만 포함)
-    reviews = AccommodationReview.objects.filter(review_id__in=latest_review_ids)
+    reviews = AccommodationReview.objects.filter(
+        review_id=Subquery(
+            latest_reviews.values('review_id')[:1]
+        )
+    )
 
     # 검색 필터링 적용
     if city_query:
@@ -47,7 +48,17 @@ def accommodation_filter(request):
 
 def accommodation_location(request):
     """숙소 위치를 지도에서 보여주는 페이지"""
-    reviews = AccommodationReview.objects.all()
+    # 각 숙소의 최신 리뷰만 가져오기
+    latest_reviews = AccommodationReview.objects.filter(
+        accommodation_name=OuterRef('accommodation_name')
+    ).order_by('-created_at')
+    
+    reviews = AccommodationReview.objects.filter(
+        review_id=Subquery(
+            latest_reviews.values('review_id')[:1]
+        )
+    ).order_by('-created_at')
+    
     return render(request, "accommodation/accommodation_location.html", {"reviews": reviews})
 
 @login_required
@@ -73,18 +84,32 @@ def accommodation_create(request):
     return render(request, "accommodation/accommodation_create.html")
 
 def accommodation_review_detail(request, pk):
-    """숙소 후기 상세 조회 페이지"""
-    review = get_object_or_404(AccommodationReview, pk=pk)
-    # 같은 숙소의 다른 후기들 가져오기
-    related_reviews = AccommodationReview.objects.filter(
+    # 메인 리뷰 가져오기
+    review = get_object_or_404(AccommodationReview.objects.select_related('user'), pk=pk)
+    
+    # 같은 숙소의 모든 리뷰들 가져오기 (현재 리뷰 포함)
+    all_reviews = AccommodationReview.objects.select_related('user').filter(
         accommodation_name=review.accommodation_name
-    ).exclude(pk=review.pk).order_by('-created_at')
+    ).order_by('-created_at')
+    
+    # 리뷰 개수 계산
+    review_count = all_reviews.count()
+    
+    # 평균 평점 계산
+    average_rating = AccommodationReview.objects.filter(
+        accommodation_name=review.accommodation_name
+    ).aggregate(avg_rating=Avg('rating'))['avg_rating']
+    
+    if average_rating:
+        average_rating = round(average_rating, 1)
     
     return render(request, "accommodation/accommodation_reviewdetail.html", {
         "review": review,
-        "related_reviews": related_reviews
+        "all_reviews": all_reviews,
+        "average_rating": average_rating,
+        "review_count": review_count 
     })
-
+    
 @login_required
 def accommodation_review_create(request, pk):
     """특정 숙소의 후기 작성 페이지"""

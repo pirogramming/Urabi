@@ -22,36 +22,36 @@
     <div class="detail-info">
         <div class="detail-info-header">
             <div class="detail-info-title">{{ review.city }} {{ review.accommodation_name }}</div>
-            <span class="rating">⭐ {{ review.rating }}</span> 
+            <span class="rating">⭐ {{ average_rating }}</span> 
             <button>
                 <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
             </button>
         </div>
         <div class="search-container">
-            <p class="review-count">{{ related_reviews.count|add:1 }}개의 리뷰</p>
+            <p class="review-count">{{ review_count }}개의 리뷰</p>
             <button>
                 <img src="{% static 'img/search-icon.svg' %}" alt="찾기" class="search-icon">
             </button>
         </div>
 
         <div class="reviews">
-            {% for review in related_reviews %}
+            {% for review_item in all_reviews %}
             <div class="review">
                 <div class="review-header">
                     <span class="review-profileimg">
                         <img src="{% static 'img/default-profile.png' %}" alt="">
                     </span>
-                    <span class="review-author">{{ review.user.username }}</span>
-                    <span class="review-rating">⭐ {{ review.rating }}</span>
+                    <span class="review-author">{{ review_item.user.username }}</span>
+                    <span class="review-rating">⭐ {{ review_item.rating }}</span>
                     <button class="review-heart">
                         <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
                     </button>
                 </div>
                 <div class="review-content">
-                    <p class="review-text">{{ review.content }}</p>
-                    {% if review.photo %}
+                    <p class="review-text">{{ review_item.content }}</p>
+                    {% if review_item.photo %}
                     <div class="review-image">
-                        <img src="{{ review.photo.url }}" alt="Review Image">
+                        <img src="{{ review_item.photo.url }}" alt="Review Image">
                     </div>
                     {% endif %}
                 </div>
@@ -66,5 +66,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
