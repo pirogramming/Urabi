@@ -46,9 +46,9 @@
     <div class="header-btns">
       {% if user != object.created_by %}
         <button class="btn ask">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
-          <path d="M2 0a2 0 0 0-2 2v8a2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-          </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"  class="bi bi-chat-square-fill">
+              <path fill="currentColor" d="m6 18l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"/>
+            </svg>
           <span>문의하기</span>
         </button>
         <button class="zzim-btn" data-travel-id="{{ object.travel_id }}">
@@ -81,6 +81,17 @@
       <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
     </div>
     <div class="members">
+      {% if user != object.created_by %}
+      {%if user in users%}
+        {%if user in participants%}
+        <span class="ing">참여중</span>
+        {%else%}
+        <button class="request-cancel-btn">요청 취소</button>
+        {%endif%}
+      {%else%}
+        <button class="request-btn">참여 요청</button>
+      {%endif%}
+      {% endif %}
       <span>{{ object.now_member }}/{{ object.max_member }}</span>
       <button id="toggleMembers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
@@ -88,9 +99,13 @@
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li><span>{{ user.email }}</span><span>🚩</span></li>
+        <li><span>{{ object.created_by.email }}</span><span>🚩</span></li>
         {% for member in participants %}
-          <li data-user-id="{{ member.user.id }}"><span>{{ member.user.email }}</span><button class="red part-del-btn">x</button></li>
+          <li data-user-id="{{ member.id }}"><span>{{ member.email }}</span>
+            {% if user == object.created_by or member.id is user.id %}
+              <button class="red part-del-btn">x</button>
+            {%endif%}
+          </li>
         {% endfor %}
       </ul>
     </div>
@@ -148,6 +163,8 @@
   const addURL = "{% url 'accompany:add_participant' %}";
   const delURL = "{% url 'accompany:remove_participant' %}";
   const travelId = "{{ object.travel_id }}";
+  const requestURL = "{% url 'accompany:request' %}";
+  const requestCancelURL = "{% url 'accompany:request_cancel' %}";
   const modal = `
   <div id="add-participant-modal">
     <input type="text" id="search-email" placeholder="이메일 검색" />

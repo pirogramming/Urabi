@@ -2,118 +2,44 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'accommodation/accommodation_location.css' %}">
+    <link rel="stylesheet" href="{% static 'accommodation/accommodation_location.css' %}">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+    <script defer src="{% static 'accommodation/accommodation_map_list.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="location-container">
     <div class="accommodation-list">
-        <div class="accommodation-card">
+        {% for review in reviews %}
+        <div class="accommodation-card" data-lat="{{ review.latitude }}" data-lng="{{ review.longitude }}" data-title="{{ review.accommodation_name }}" data-review-id="{{ review.review_id }}">
             <div class="card-left">
-                <span class="guest-tag">게스트 선호</span>
                 <div class="hotel-image">
-                    <img src="{% static 'img/hotel_test.jpg' %}" alt="hotel">
+                    <img id="place-img-{{ review.review_id }}" src="https://via.placeholder.com/300" alt="숙소 이미지">
                     <div class="rating">
-                        <img src="{% static 'img/fill_star.png' %}" alt="star">
-                        <img src="{% static 'img/fill_star.png' %}" alt="star">
-                        <img src="{% static 'img/fill_star.png' %}" alt="star">
-                        <img src="{% static 'img/fill_star.png' %}" alt="star">
-                        <img src="{% static 'img/empty_star.png' %}" alt="star">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= review.rating %}
+                                <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                            {% else %}
+                                <img src="{% static 'img/empty_star.png' %}" alt="별점">
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="hotel-info">
-                    <div class="hotel-title">대한민국, 노원구의 숙소</div>
-                    <div class="hotel-address">802dong 101ho, 30-20, Deongneung-ro 10-gil, Nowon-gu, Seoul, Republic of Korea</div>
-                    <div class="review-info">
-                        <span class="emoji">😊</span>
-                        <span class="review-text">"주인분이 한국말 잘 하시고 숙소가 깨끗해요!"</span>
-                    </div>
-                    <div class="price-rating">
-                        <span class="price">$ 75 / 1박</span>
-                        <div class="rating-info">
-                            <img src="{% static 'img/redstar.svg' %}" alt="rating" class="rating-star">
-                            <span>4.0</span>
-                            <span class="review-count">15개의 리뷰</span>
-                        </div>
-                    </div>
+                    <div class="hotel-title">{{ review.accommodation_name }}</div>
+                    <div class="hotel-address">{{ review.city }}</div>
+                    <p class="review-content">{{ review.content }}</p>
                 </div>
-                <button class="favorite-btn">
-                    <img src="{% static 'img/heart.svg' %}" alt="찜하기">
-                </button>
+                <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}" class="view-review-btn">후기 보기</a>
             </div>
         </div>
-        <div class="accommodation-card">
-          <div class="card-left">
-              <span class="guest-tag">게스트 선호</span>
-              <div class="hotel-image">
-                  <img src="{% static 'img/hotel_test.jpg' %}" alt="hotel">
-                  <div class="rating">
-                      <img src="{% static 'img/fill_star.png' %}" alt="star">
-                      <img src="{% static 'img/fill_star.png' %}" alt="star">
-                      <img src="{% static 'img/fill_star.png' %}" alt="star">
-                      <img src="{% static 'img/fill_star.png' %}" alt="star">
-                      <img src="{% static 'img/empty_star.png' %}" alt="star">
-                  </div>
-              </div>
-              <div class="hotel-info">
-                  <div class="hotel-title">대한민국, 노원구의 숙소</div>
-                  <div class="hotel-address">802dong 101ho, 30-20, Deongneung-ro 10-gil, Nowon-gu, Seoul, Republic of Korea</div>
-                  <div class="review-info">
-                      <span class="emoji">😊</span>
-                      <span class="review-text">"주인분이 한국말 잘 하시고 숙소가 깨끗해요!"</span>
-                  </div>
-                  <div class="price-rating">
-                      <span class="price">$ 75 / 1박</span>
-                      <div class="rating-info">
-                          <img src="{% static 'img/redstar.svg' %}" alt="rating" class="rating-star">
-                          <span>4.0</span>
-                          <span class="review-count">15개의 리뷰</span>
-                      </div>
-                  </div>
-              </div>
-              <button class="favorite-btn">
-                  <img src="{% static 'img/heart.svg' %}" alt="찜하기">
-              </button>
-          </div>
-      </div>
-            <div class="accommodation-card">
-              <div class="card-left">
-                  <span class="guest-tag">게스트 선호</span>
-                  <div class="hotel-image">
-                      <img src="{% static 'img/hotel_test.jpg' %}" alt="hotel">
-                      <div class="rating">
-                          <img src="{% static 'img/fill_star.png' %}" alt="star">
-                          <img src="{% static 'img/fill_star.png' %}" alt="star">
-                          <img src="{% static 'img/fill_star.png' %}" alt="star">
-                          <img src="{% static 'img/fill_star.png' %}" alt="star">
-                          <img src="{% static 'img/empty_star.png' %}" alt="star">
-                      </div>
-                  </div>
-                  <div class="hotel-info">
-                      <div class="hotel-title">대한민국, 노원구의 숙소</div>
-                      <div class="hotel-address">802dong 101ho, 30-20, Deongneung-ro 10-gil, Nowon-gu, Seoul, Republic of Korea</div>
-                      <div class="review-info">
-                          <span class="emoji">😊</span>
-                          <span class="review-text">"주인분이 한국말 잘 하시고 숙소가 깨끗해요!"</span>
-                      </div>
-                      <div class="price-rating">
-                          <span class="price">$ 75 / 1박</span>
-                          <div class="rating-info">
-                              <img src="{% static 'img/redstar.svg' %}" alt="rating" class="rating-star">
-                              <span>4.0</span>
-                              <span class="review-count">15개의 리뷰</span>
-                          </div>
-                      </div>
-                  </div>
-                  <button class="favorite-btn">
-                      <img src="{% static 'img/heart.svg' %}" alt="찜하기">
-                  </button>
-              </div>
-          </div>
-            
+        {% empty %}
+        <p>등록된 숙소 후기가 없습니다.</p>
+        {% endfor %}        
     </div>
+
     <div class="map-section">
-      <img src="{% static 'img/map_test.png' %}" alt="full map" class="full-map">
+        <div id="map"></div>
     </div>
 </div>
 {% endblock %}

@@ -13,4 +13,6 @@ urlpatterns = [
     path('toggle-zzim/<int:travel_id>/', views.toggle_zzim, name='toggle_zzim'),
     path('add_participant/', views.add_participant, name='add_participant'),
     path('remove_participant/', views.remove_participant, name='remove_participant'),
+    path('request/', views.apply_participant, name='request'),
+    path('cancel/', views.cancel_participant, name='request_cancel'),
 ]
