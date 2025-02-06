@@ -56,10 +56,6 @@ function addFlashMeetingMarkers(map) {
 
             marker.addListener("click", function () {
                 infoWindow.open(map, marker);
-
-                setTimeout(() => {
-                    getPlaceImage(placesService, streetViewService, placeAddress, lat, lng, imgElement, infoImageId, infoWindow, title, url, date);
-                }, 500);
             });
 
             getPlaceImage(placesService, streetViewService, placeAddress, lat, lng, imgElement, infoImageId, infoWindow, title, url, date);
