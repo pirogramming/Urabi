@@ -18,12 +18,37 @@
 }
 /*검색 필터*/
 .flash_filter{
-    display: flex;
-    gap: 10px;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
     height: 100%;
 }
+.flash_filter_content{
+    display: grid;
+    grid-template-columns: 5fr 3fr 2fr;
+    align-items: center;
+    gap:10px;
+    margin-left: 10px;
+}
 
+.filter-group input,
+.filter-group select {
+    background-color: var(--gray);
+    padding: 15px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.flash_filter button{
+    background-color: var(--blue);
+    width: 60px;
+    height: 50px;
+    margin: auto;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+}
 
 
 /* 제목 아래 영역 */
@@ -89,7 +114,7 @@
     padding: 8px 16px;
     background: white;
     color: #007bff;
-    border: 2px solid #007bff;
+    border: 1.5px solid #007bff;
     border-radius: 8px;
     font-size: 14px;
     font-weight: bold;

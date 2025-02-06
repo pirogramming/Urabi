@@ -19,25 +19,16 @@
 <div class="flash_searchBar">
     <form method='GET' class="flash_filter">
         {% csrf_token %}
-        <div class="filter-group">
-            <input type="text" id="city" name="city" placeholder="도시">
-        </div>
-        <div class="filter-group">
-            <select id="gender" name="gender">
-                <option value="">전체</option>
-                <option value="mixed">혼성</option>
-                <option value="male">남성만</option>
-                <option value="female">여성만</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <input type="date" id="start-date" name="start-date" placeholder="시작일">
-        </div>
-        <div class="filter-group">
-            <input type="date" id="start-date" name="start-date" placeholder="시작일">
-        </div>
-        <div class="filter-group">
-            <input type="number" id="age" name="age" placeholder="나이">
+        <div class="flash_filter_content">
+            <div class="filter-group">
+                {{filterset.form.title}}
+            </div>
+            <div class="filter-group">
+                {{filterset.form.tags}}
+            </div>
+            <div class="filter-group">
+                {{filterset.form.date_time}}
+            </div>
         </div>
         <button type="submit">검색</button>
     </form>
