@@ -2,304 +2,346 @@
 {% load static %}
 {% block head %}
   <link rel="stylesheet" href="{% static 'reset.css' %}">
-  <link rel="stylesheet" href="{%static 'mypage/userDetail.css'%}">
-{%endblock%}
+  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+{% endblock %}
 
- {%block content%}
- <main class="mypage-wrap">
-    <!-- 왼쪽 사이드 카테고리 -->
-    
-    <nav class="mypage-nav">
-      {%if current_user.id is user.id%}
-      <ul>
-        <li><a href="{%url 'users:my_page'%}">프로필</a></li>
-        <li><a href="#">찜 목록</a></li>
-        <li><a href="{%url 'users:my_trip'%}">나의 여행 일정</a></li>
-        <li class="active"><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
-      </ul>
-      {%endif%}
-    </nav>
-    
-    <!-- 메인 콘텐츠 영역 -->
-    <section class="mypage-content">
-      {%if current_user.id is not user.id%}
-      <div class="nickname-wrap">
-        <div class="nickname-wrap-left">
-            <div class="nickname">{{ user.nickname }}</div>
+{% block content %}
+<main class="mypage-wrap">
+  <!-- 왼쪽 사이드 카테고리 -->
+  <nav class="mypage-nav">
+    {% if current_user.id is user.id %}
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li><a href="#">찜 목록</a></li>
+      <li><a href="{% url 'users:my_trip' %}">나의 여행 일정</a></li>
+      <li class="active"><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+    {% endif %}
+  </nav>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <section class="mypage-content">
+    {% if current_user.id is not user.id %}
+    <div class="nickname-wrap">
+      <div class="nickname-wrap-left">
+        <div class="nickname">{{ user.nickname }}</div>
         <!-- <span class="score">{{ user.trust_score }}</span> -->
         <span class="score">36.5°C</span>
-        </div>
-        <button class="chatting-btn">채팅하기</button>
       </div>
-      {%endif%}
-      <!-- 프로필 섹션 -->
-      <section class="profile-section">
-        {%if current_user.id is not user.id%}
-        <h2 class="sub-title">프로필</h2>
-        <div class="passport-card">
-          <div class="passport-card-top">
-            <span class="passport-label">여권 PASSPORT</span>
-            <div class="passport-country">
-              대한민국 REPUBLIC OF KOREA
+      <button class="chatting-btn">채팅하기</button>
+    </div>
+    {% endif %}
+    <!-- 프로필 섹션 -->
+    <section class="profile-section">
+      {% if current_user.id is not user.id %}
+      <h2 class="sub-title">프로필</h2>
+      <div class="passport-card">
+        <div class="passport-card-top">
+          <span class="passport-label">여권 PASSPORT</span>
+          <div class="passport-country">
+            대한민국 REPUBLIC OF KOREA
+          </div>
+        </div>
+        <div class="passport-card-body">
+          <div>
+            <img
+              src="{% static 'img/default-profile.png' %}" 
+              alt="프로필 사진"
+              class="profile-photo"
+            />
+            <div class="travel-score">
+              <span>여행지수</span>
+              <span class="score">36.5 °C</span>
             </div>
           </div>
-          <div class="passport-card-body">
-            <div>
-              <img
-                src="{% static 'img/default-profile.png' %}" 
-                alt="프로필 사진"
-                class="profile-photo"
-              />
-              <div class="travel-score">
-                <span>여행지수</span>
-                <span class="score">36.5 °C</span>
+
+          <!-- 오른쪽: 정보영역 -->
+          <div class="info-area">
+            <div class="info-row row-1">
+              <div class="info-item">
+                <span class="label">국가 코드 / Country code</span>
+                <span class="value">KOR</span>
+              </div>
+              <div class="info-item">
+                <span class="label">국적 / Nationality</span>
+                <span class="value">REPUBLIC OF KOREA</span>
               </div>
             </div>
-  
-            <!-- 오른쪽: 정보영역 -->
-            <div class="info-area">
-              <div class="info-row row-1">
-                <div class="info-item">
-                  <span class="label">국가 코드 / Country code</span>
-                  <span class="value">KOR</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">국적 / Nationality</span>
-                  <span class="value">REPUBLIC OF KOREA</span>
-                </div>
+            <div class="info-row row-2">
+              <div class="info-item">
+                <span class="label">한글성명</span>
+                <span class="value">{{ user.user_name }}</span>
               </div>
-              <div class="info-row row-2">
-                <div class="info-item">
-                  <span class="label">한글성명</span>
-                  <span class="value">{{ user.user_name }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">선호하는 이름 / Nickname</span>
-                  <span class="value">{{ user.nickname }}</span>
-                </div>
+              <div class="info-item">
+                <span class="label">선호하는 이름 / Nickname</span>
+                <span class="value">{{ user.nickname }}</span>
               </div>
-              <div class="info-row row-3">
-                <div class="info-item">
-                  <span class="label">생년월일 / Date of Birth</span>
-                  <span class="value">{{ user.birth }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">성별 / Sex</span>
-                  <span class="value">{{ user.user_gender }}</span>
-                </div>
+            </div>
+            <div class="info-row row-3">
+              <div class="info-item">
+                <span class="label">생년월일 / Date of Birth</span>
+                <span class="value">{{ user.birth }}</span>
               </div>
-              <div class="info-row row-4">
-                <div class="info-item">
-                  <span class="label">이메일 / Email</span>
-                  <span class="value">{{ user.email}}</span>
-                </div>
+              <div class="info-item">
+                <span class="label">성별 / Sex</span>
+                <span class="value">{{ user.user_gender }}</span>
+              </div>
+            </div>
+            <div class="info-row row-4">
+              <div class="info-item">
+                <span class="label">이메일 / Email</span>
+                <span class="value">{{ user.email }}</span>
               </div>
             </div>
           </div>
         </div>
-        {%endif%}
-      </section>
-      <!-- 등록한 여행 일정 -->
-      <section class="schedule-section" id="upload-schedule">
-        <h2 class="sub-title">등록한 여행 일정</h2>
-        {%if plans%}
-        {% for plan in plans%}
-        <div class="schedule-card">
+      </div>
+      {% endif %}
+    </section>
+    <!-- 등록한 여행 일정 -->
+    <section class="schedule-section" id="upload-schedule">
+      <h2 class="sub-title">등록한 여행 일정</h2>
+      <div id="schedule-cards-container">
+        {% if plans %}
+        {% for plan in plans %}
+        <div id="load-more-schedule-btn"class="schedule-card" style="display: none;">
           <img
             src="{% static 'img/banner.png' %}"
             alt="여행 이미지"
             class="schedule-img"
-            onclick="location.href='{%url 'users:plan_detail' plan.plan_id%}'"
+            onclick="location.href='{% url 'users:plan_detail' plan.plan_id %}'"
             style="cursor:pointer;"
           />
           <div class="schedule-info">
-            <h3 class="schedule-title"><a href="{%url 'users:plan_detail' plan.plan_id%}">{{plan.title}}</a></h3>
-            <p class="schedule-period">{{plan.start_date}} ~ {{plan.end_date}}</p>
+            <h3 class="schedule-title"><a href="{% url 'users:plan_detail' plan.plan_id %}">{{ plan.title }}</a></h3>
+            <p class="schedule-period">{{ plan.start_date }} ~ {{ plan.end_date }}</p>
           </div>
         </div>
-        {%endfor%}
-        {%else%}
+        {% endfor %}
+        {% else %}
         <div class="schedule-card">
           등록한 여행 일정이 없어요!
         </div>
-        {%endif%}
-      </section>
-      
-      <!-- 활동 이력 -->
-      <section class="activity-section">
-        <h2 class="sub-title">동행 모집 이력</h2>
-        <!-- 동행모집 -->
-        <div class="activity-box">
-          <p class="activity-header">
-            {{ user.nickname }} 님은 <span class="text-hilight">{{accompany_count}}</span>번의 동행을 모집했어요!
-          </p>
-  
-          {%if accompany_count%}
-           {%for accompany in accompanies%}
-           <div class="activity-card">
-            {%if accompany.photo%}
-            <img
-              src="{{accompany.photo.url}}"
-              alt="프랑스 파리 이미지"
-              class="activity-img"              
-              onclick="location.href='{%url 'accompany:accompany_detail' accompany.travel_id%}'"
-              style="cursor:pointer;"
-            />
-            {%else%}
-            <img
-              src="{% static 'img/banner.png' %}"
-              alt="프랑스 파리 이미지"
-              class="activity-img"
-              onclick="location.href='{%url 'accompany:accompany_detail' accompany.travel_id%}'"
-              style="cursor:pointer;"
-            />
-            {%endif%}
-            <div class="activity-info">
-              <div class="activity-title"><a href="{%url 'accompany:accompany_detail' accompany.travel_id%}">{{accompany.title}}</a></div>
-              <p class="activity-date">{{accompany.start_date}} ~ {{accompany.end_date}}</p>
-              
-                {%for tag in accompany.tags%}
-                <p class="schedule-location">
-                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                  <span class="schedule-location-text">{{tag}}</span>
-                </p>
-                {%endfor%}
-            </div>
+        {% endif %}
+      </div>
+      {% if plans %}
+      <button id="load-more-accompany-btn"class="load-more-btn" onclick="loadMoreSchedules()">더보기</button>
+      {% endif %}
+    </section>
+
+    <!-- 활동 이력 -->
+    <section class="activity-section">
+      <h2 class="sub-title">동행 모집 이력</h2>
+      <div id="accompany-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행을 모집했어요!
+        </p>
+
+        {% if accompany_count %}
+        {% for accompany in accompanies %}
+        <div class="activity-card" style="display: none;">
+          {% if accompany.photo %}
+          <img
+            src="{{ accompany.photo.url }}"
+            alt="프랑스 파리 이미지"
+            class="activity-img"
+            onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+            style="cursor:pointer;"
+          />
+          {% else %}
+          <img
+            src="{% static 'img/banner.png' %}"
+            alt="프랑스 파리 이미지"
+            class="activity-img"
+            onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+            style="cursor:pointer;"
+          />
+          {% endif %}
+          <div class="activity-info">
+            <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
+            <p class="activity-date">{{ accompany.start_date }} ~ {{ accompany.end_date }}</p>
+            {% for tag in accompany.tags %}
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">{{ tag }}</span>
+            </p>
+            {% endfor %}
           </div>
-           {%endfor%}
-          {%else%}
-          <div class="activity-card">
-            동행한 번개 모임이 없어요!
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="activity-card">
+          동행한 번개 모임이 없어요!
+        </div>
+        {% endif %}
+      </div>
+      {% if accompany_count %}
+      <button class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
+      {% endif %}
+
+      <h2 class="sub-title">동행 참여 이력</h2>
+      <div id="participation-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">2</span>번의 모임에 참여했어요!
+        </p>
+
+        <!-- 예: 첫 번째 모임 카드 -->
+        <div class="activity-card" style="display: none;">
+          <img
+            src="{% static 'img/banner.png' %}"
+            alt="프랑스 파리 이미지"
+            class="activity-img"
+          />
+          <div class="activity-info">
+            <div class="activity-title">프랑스 파리 동행</div>
+            <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">루브르 박물관</span>
+            </p>
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">바토무슈</span>
+            </p>
           </div>
-          {%endif%}
         </div>
 
-        <h2 class="sub-title">동행 참여 이력</h2>
-        <!--  모임 참여 이력 예시 -->
-        <div class="activity-box">
-          <p class="activity-header">
-            {{ user.nickname }} 님은 <span class="text-hilight">2</span>번의 모임에 참여했어요!
-          </p>
-  
-          <!-- 예: 첫 번째 모임 카드 -->
-          <div class="activity-card">
-            <img
-              src="{% static 'img/banner.png' %}"
-              alt="프랑스 파리 이미지"
-              class="activity-img"
-            />
-            <div class="activity-info">
-              <div class="activity-title">프랑스 파리 동행</div>
-              <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">루브르 박물관</span>
-              </p>
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">바토무슈</span>
-              </p>
-            </div>
-          </div>
-  
-          <!-- 두 번째 모임 카드 -->
-          <div class="activity-card">
-            <img
-              src="{% static 'img/banner.png' %}"
-              alt="이탈리아 남부 투어"
-              class="activity-img"
-            />
-            <div class="activity-info">
-              <div class="activity-title">이탈리아 남부 투어</div>
-                <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">루브르 박물관</span>
-              </p>
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">바토무슈</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <h2 class="sub-title">번개 참여 이력</h2>
-        <!-- 모임이 없을 경우 -->
-        <div class="activity-box activity-none">
-          참여한 번개 모임이 없어요!
-        </div>
-        <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
-        <h2 class="sub-title">숙소 리뷰 이력</h2>
-        <div class="activity-box">
-            <p class="activity-header">
-                {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
+        <!-- 두 번째 모임 카드 -->
+        <div class="activity-card" style="display: none;">
+          <img
+            src="{% static 'img/banner.png' %}"
+            alt="이탈리아 남부 투어"
+            class="activity-img"
+          />
+          <div class="activity-info">
+            <div class="activity-title">이탈리아 남부 투어</div>
+            <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">루브르 박물관</span>
             </p>
-    
-            {% if accommodation_reviews %}
-                {% for review in accommodation_reviews %}
-                    <div class="activity-card">
-                        <div class="activity-review">
-                            <p class="activity-review-title">
-                                {{ review.accommodation_name }}
-                            </p>
-                            <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
-                            <p class="schedule-location">
-                                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                                <span class="schedule-location-text">{{ review.city }}</span>
-                            </p>
-                            <p class="review-rating">⭐ {{ review.rating }}</p>
-                            <p class="review-content">{{ review.content }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="activity-card">
-                    <div class="activity-review">
-                        <p class="activity-review-title">작성한 숙소 리뷰가 없어요!</p>
-                    </div>
-                </div>
-            {% endif %}
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">바토무슈</span>
+            </p>
+          </div>
         </div>
-        <h2 class="sub-title">나눔 마켓 이력</h2>
-        <!-- 글 작성 이력 예시 -->
-        <div class="activity-box">
+      </div>
+      <button id="load-more-participation-btn" onclick="loadMoreParticipations()">더보기</button>
+
+      <h2 class="sub-title">번개 참여 이력</h2>
+      <div class="activity-box activity-none">
+        참여한 번개 모임이 없어요!
+      </div>
+
+      <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
+      <h2 class="sub-title">숙소 리뷰 이력</h2>
+      <div class="activity-box">
           <p class="activity-header">
-            {{ user.nickname }} 님은  <span class="text-hilight">2</span>개의 글을 올렸어요!
+              {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
           </p>
-          <div class="activity-card">
-            <div class="activity-review">
-                <div class="activity-review-header">
-            <span class="activity-review-type">🛒 구매해요</span>
-            <span class="activity-review-title">
-              멀미약 구해요
-            </span></div>
+
+          {% if accommodation_reviews %}
+              {% for review in accommodation_reviews %}
+                  <div class="activity-card">
+                      <div class="activity-review">
+                          <p class="activity-review-title">
+                              {{ review.accommodation_name }}
+                          </p>
+                          <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
+                          <p class="schedule-location">
+                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                              <span class="schedule-location-text">{{ review.city }}</span>
+                          </p>
+                          <p class="review-rating">⭐ {{ review.rating }}</p>
+                          <p class="review-content">{{ review.content }}</p>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% else %}
+              <div class="activity-card">
+                  <div class="activity-review">
+                      <p class="activity-review-title">작성한 숙소 리뷰가 없어요!</p>
+                  </div>
+              </div>
+          {% endif %}
+      </div>
+      <button id="load-more-review-btn" onclick="loadMoreReviews()">더보기</button>
+
+      <h2 class="sub-title">나눔 마켓 이력</h2>
+      <div id="market-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">2</span>개의 글을 올렸어요!
+        </p>
+        <div class="activity-card" style="display: none;">
+          <div class="activity-review">
+            <div class="activity-review-header">
+              <span class="activity-review-type">🛒 구매해요</span>
+              <span class="activity-review-title">
+                멀미약 구해요
+              </span>
+            </div>
             <p class="activity-date">2025/2/4</p>
             <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">파리</span>
-              </p>
-            </div>
-          </div>
-          <div class="activity-card">
-            <div class="activity-review">
-                <div class="activity-review-header">
-                <span class="activity-review-type">🎁 나눔해요</span>
-                <span class="activity-review-title">
-                  여름 옷 가져가실 분 있나용
-                </span>
-                </div>
-                <p class="activity-date">2025/2/4</p>
-                <p class="schedule-location">
-                    <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                    <span class="schedule-location-text">파리</span>
-                  </p>
-                </div>    
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">파리</span>
+            </p>
           </div>
         </div>
-      </section>
-  
+        <div class="activity-card" style="display: none;">
+          <div class="activity-review">
+            <div class="activity-review-header">
+              <span class="activity-review-type">🎁 나눔해요</span>
+              <span class="activity-review-title">
+                여름 옷 가져가실 분 있나용
+              </span>
+            </div>
+            <p class="activity-date">2025/2/4</p>
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">파리</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <button id="load-more-market-btn" onclick="loadMoreMarkets()">더보기</button>
     </section>
-  </main>
-  
-  {%endblock%}
+  </section>
+</main>
+{% endblock %}
 
+{% block js %}
+<script>
+  const plansPerPage = 2;
+
+  function loadMoreItems(containerId, buttonId) {
+    let currentIndex = 0;
+    const items = document.querySelectorAll(`#${containerId} .activity-card, #${containerId} .schedule-card`);
+
+    return function() {
+      const nextIndex = currentIndex + plansPerPage;
+      for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
+        items[i].style.display = 'block';
+      }
+      currentIndex = nextIndex;
+
+      if (currentIndex >= items.length) {
+        document.getElementById(buttonId).style.display = 'none';
+      }
+    };
+  }
+
+  const loadMoreSchedules = loadMoreItems('schedule-cards-container', 'load-more-schedule-btn');
+  const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
+  const loadMoreParticipations = loadMoreItems('participation-cards-container', 'load-more-participation-btn');
+  const loadMoreReviews = loadMoreItems('review-cards-container', 'load-more-review-btn');
+  const loadMoreMarkets = loadMoreItems('market-cards-container', 'load-more-market-btn');
+
+  // 초기 로딩 시 처음 2개의 일정만 보이도록 설정
+  loadMoreSchedules();
+  loadMoreAccompanies();
+  loadMoreParticipations();
+  loadMoreReviews();
+  loadMoreMarkets();
+</script>
+{% endblock %}
