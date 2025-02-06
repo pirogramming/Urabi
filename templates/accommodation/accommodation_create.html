@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'accommodation/accommodation_create.css' %}">
+<link rel="stylesheet" href="{% static 'accommodation/accommodation_create.css' %}">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script src="{% static 'accommodation/accommodation_map.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -17,9 +19,8 @@
         <div class="location-section">
             <input type="text" placeholder="숙소 이름" id="accommodation-name" name="accommodation_name" required>
             <hr class="hr-blue">
-            <div class="map-placeholder">
-                <img src="{% static 'img/Map_ex.png' %}" alt="">
-            </div>
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+            <div id="map" style="width: 100%; height: 300px; border-radius: 10px;"></div>
         </div>
 
         <div class="review-header">
