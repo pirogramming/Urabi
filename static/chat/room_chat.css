@@ -2,7 +2,7 @@
 @import '../reset.css';
 
 * {
-    font-family: 'Paperlogy';
+    font-family: 'Paperlogy' !important;
 }
 
 /* 날짜 구분선 */
@@ -37,13 +37,7 @@
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: 80vh;
-    max-width: 600px;
-    margin: 20px auto;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #fff;
+    height: 100vh;
 }
 
 .chat-header {
@@ -68,7 +62,7 @@
 /* 채팅 메시지 영역 */
 .chat-messages {
     flex-grow: 1;
-    padding: 15px;
+    padding: 25px 25px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -186,6 +180,9 @@
     padding: 10px;
     border-top: 1px solid #ccc;
     background: #fff;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
 }
 
 /* 입력 필드 */

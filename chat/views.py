@@ -19,18 +19,27 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
-
 @login_required
 def chat_main(request):
-    """
-    채팅 메인 페이지: 로그인한 사용자가 참여한 채팅방 리스트
-    """
     user = request.user
-    rooms = ChatRoom.objects.filter(
-        Q(user1=user) | Q(user2=user)
-    ).order_by('-last_message_time')
+    error_message = ""
+    searched_users = []  # 검색 결과 유저 리스트
 
+    if request.method == "POST":
+        search_email = request.POST.get("other_email", "").strip()
+
+        if not search_email:
+            error_message = "이메일을 입력하세요."
+        elif search_email == user.email:
+            error_message = "자기 자신과 채팅할 수 없습니다."
+        else:
+            # 부분 검색
+            searched_users = User.objects.filter(email__icontains=search_email).exclude(id=user.id)
+            if not searched_users.exists():
+                error_message = "해당 이메일을 가진 사용자를 찾을 수 없습니다."
+
+    # 채팅방 목록
+    rooms = ChatRoom.objects.filter(Q(user1=user) | Q(user2=user)).order_by('-last_message_time')
     for room in rooms:
         if room.user1 == user:
             room.other_user = room.user2
@@ -40,44 +49,37 @@ def chat_main(request):
         last_msg = room.messages.order_by('-timestamp').first()
         room.last_message = last_msg.content if last_msg else None
         
-        unread_count = room.messages.filter(
-            ~Q(sender=user),  
-            ~Q(read_by=user) 
-        ).count()
+        unread_count = room.messages.filter(~Q(sender=user), ~Q(read_by=user)).count()
         room.unread_count = unread_count
 
     context = {
         'room_list': rooms,
+        'searched_users': searched_users,   # 검색 결과
+        'error_message': error_message,
     }
     return render(request, 'chat/chat_main.html', context)
 
 
 @login_required
-def create_chat_room(request):
-    """
-    채팅방 생성: GET이면 유저 목록(자신 제외)을 보여주고, POST이면 채팅방 생성.
-    간단히 상대방의 username을 POST 데이터로 받습니다.
-    """
-    if request.method == "POST":
-        other_username = request.POST.get("other_username")
-        try:
-            other_user = User.objects.get(username=other_username)
-        except User.DoesNotExist:
-            return HttpResponse("존재하지 않는 사용자입니다.", status=400)
-        # 채팅방 중복 여부 확인
-        room = ChatRoom.objects.filter(
-            (Q(user1=request.user) & Q(user2=other_user)) |
-            (Q(user1=other_user) & Q(user2=request.user))
-        ).first()
-        if not room:
-            room = ChatRoom.objects.create(user1=request.user, user2=other_user)
-        return redirect('chat:chat_room', room_id=room.id)
-    else:
-        users = User.objects.exclude(id=request.user.id)
-        context = {
-            'users': users,
-        }
-        return render(request, 'chat/create_chat_room.html', context)
+def create_chat_room(request, user_id):
+    """유저 클릭 시 해당 유저와 채팅방으로 이동(없으면 생성)"""
+    current_user = request.user
+    other_user = get_object_or_404(User, id=user_id)
+
+    if current_user == other_user:
+        return HttpResponse("자기 자신과는 채팅할 수 없습니다.", status=400)
+
+    # 채팅방 중복 여부 확인
+    room = ChatRoom.objects.filter(
+        (Q(user1=current_user) & Q(user2=other_user)) |
+        (Q(user1=other_user) & Q(user2=current_user))
+    ).first()
+
+    if not room:
+        room = ChatRoom.objects.create(user1=current_user, user2=other_user)
+
+    return redirect('chat:chat_room', room_id=room.id)
+
 
 
 # 채팅방 목록 페이지네이션 

@@ -5,7 +5,7 @@ app_name = 'chat'
 
 urlpatterns = [
     path("main/", views.chat_main, name="chat_main"),
-    path("create/", views.create_chat_room, name="create_chat_room"),
+    path('create/<int:user_id>/', views.create_chat_room, name='create_chat_room'),
 
     path('rooms/', views.ChatRoomList.as_view(), name='chat_room_list'),  # 채팅방 목록 조회
     path("room/<int:room_id>/", views.chat_room, name="chat_room"),  # 특정 채팅방 입장

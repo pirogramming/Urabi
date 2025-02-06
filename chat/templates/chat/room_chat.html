@@ -1,200 +1,200 @@
-{% extends "chat/base.html" %}
 {% load static %}
-{% block title %}채팅방: {{ room.name }}{% endblock %}
-
-{% block extra-style %}
-<link rel="stylesheet" href="{% static 'chat/room_chat.css' %}">
-{% endblock %}
-
-{% block content %}
-<div class="chat-container">
-    <!-- 채팅방 헤더 -->
-    <div class="chat-header">
-        <a href="{% url 'chat:chat_main' %}">
-            <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000" style="width: 14px; height: 14px;"><title>arrow-left</title><path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></svg>
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                    <path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></g></svg>
-        </a>
-        <div class="chat-header-title">{{ room }}</div>
-        <div></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting</title>
+    <link rel="stylesheet" href="{% static 'chat/room_chat.css' %}">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- 채팅방 헤더 -->
+        <div class="chat-header">
+            <a href="{% url 'chat:chat_main' %}">
+                <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000" style="width: 14px; height: 14px;"><title>arrow-left</title><path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></svg>
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+                        <path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></g></svg>
+            </a>
+            <div class="chat-header-title">{{ room }}</div>
+            <div></div>
+        </div>
+    
+        <!-- 채팅 메시지 영역 -->
+        <div class="chat-messages" id="chat_messages"></div>
+        
+        <!-- 메시지 입력창 -->
+        <form id="message_form" class="chat-input">
+            {% csrf_token %}
+            <input type="text" id="message_input" placeholder="메시지를 입력하세요..." autocomplete="off" class="form-control">
+            <button type="submit" class="btn btn-primary">전송</button>
+        </form>
     </div>
 
-    <!-- 채팅 메시지 영역 -->
-    <div class="chat-messages" id="chat_messages"></div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const chatMessages = document.getElementById("chat_messages");
+        const messageForm = document.getElementById("message_form");
+        const messageInput = document.getElementById("message_input");
     
-    <!-- 메시지 입력창 -->
-    <form id="message_form" class="chat-input">
-        {% csrf_token %}
-        <input type="text" id="message_input" placeholder="메시지를 입력하세요..." autocomplete="off" class="form-control">
-        <button type="submit" class="btn btn-primary">전송</button>
-    </form>
-</div>
-{% endblock %}
-
-{% block extra-script %}
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const chatMessages = document.getElementById("chat_messages");
-    const messageForm = document.getElementById("message_form");
-    const messageInput = document.getElementById("message_input");
-
-    const myUsername = "{{ request.user.username }}";
-    console.log("현재 사용자 이름:", myUsername);
-
-    const protocol = location.protocol === "http:" ? "ws:" : "wss:";
-    const wsUrl = protocol + "//" + location.host + "/ws/chat/{{ room.id }}/?token={{ access_token|default:'' }}";
-    console.log("WebSocket URL:", wsUrl);
-    const chatSocket = new WebSocket(wsUrl);
-
-    let historyLoaded = (chatMessages.innerHTML.trim() !== "");
-
-    // --- 전역 변수: 마지막 메시지 상태 ---
-    let lastDate = null; 
-    let lastMinute = null;
-    let lastSender = null; 
-
-    chatSocket.onopen = function(event) {
-        console.log("WebSocket 연결 성공!");
-        if (!historyLoaded) {
-            chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
-        }
-    };
-
-    chatSocket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        console.log("메시지 수신:", data);
-
-        if (data.type === "chat.history" && data.messages && !historyLoaded) {
-            if (chatMessages.innerHTML.trim() === "") {
-                chatMessages.innerHTML = "";
-                data.messages.forEach(function(msg) {
-                    const isUser = (msg.sender_nickname === myUsername);
-                    appendMessage(msg.sender_nickname, msg.timestamp, msg.content, isUser, msg.profile_image_url);
-                });
+        const myUsername = "{{ request.user.username }}";
+        console.log("현재 사용자 이름:", myUsername);
+    
+        const protocol = location.protocol === "http:" ? "ws:" : "wss:";
+        const wsUrl = protocol + "//" + location.host + "/ws/chat/{{ room.id }}/?token={{ access_token|default:'' }}";
+        console.log("WebSocket URL:", wsUrl);
+        const chatSocket = new WebSocket(wsUrl);
+    
+        let historyLoaded = (chatMessages.innerHTML.trim() !== "");
+    
+        // --- 전역 변수: 마지막 메시지 상태 ---
+        let lastDate = null; 
+        let lastMinute = null;
+        let lastSender = null; 
+    
+        chatSocket.onopen = function(event) {
+            console.log("WebSocket 연결 성공!");
+            if (!historyLoaded) {
+                chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
             }
-            historyLoaded = true;
-        }
-        else if (data.type === "chat_message") {
-            const isUser = (data.sender_nickname === myUsername);
-            appendMessage(data.sender_nickname, data.timestamp, data.content, isUser, data.profile_image_url);
-        }
-    };
-
-    chatSocket.onerror = function(error) {
-        console.error("WebSocket 에러:", error);
-    };
-
-    chatSocket.onclose = function(event) {
-        console.log("WebSocket 연결 종료:", event);
-    };
-
-    // 메시지 전송
-    messageForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const message = messageInput.value.trim();
-        if (message !== "") {
-            if (chatSocket.readyState === WebSocket.OPEN) {
-                chatSocket.send(JSON.stringify({ content: message }));
+        };
+    
+        chatSocket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("메시지 수신:", data);
+    
+            if (data.type === "chat.history" && data.messages && !historyLoaded) {
+                if (chatMessages.innerHTML.trim() === "") {
+                    chatMessages.innerHTML = "";
+                    data.messages.forEach(function(msg) {
+                        const isUser = (msg.sender_nickname === myUsername);
+                        appendMessage(msg.sender_nickname, msg.timestamp, msg.content, isUser, msg.profile_image_url);
+                    });
+                }
+                historyLoaded = true;
             }
-            messageInput.value = "";
+            else if (data.type === "chat_message") {
+                const isUser = (data.sender_nickname === myUsername);
+                appendMessage(data.sender_nickname, data.timestamp, data.content, isUser, data.profile_image_url);
+            }
+        };
+    
+        chatSocket.onerror = function(error) {
+            console.error("WebSocket 에러:", error);
+        };
+    
+        chatSocket.onclose = function(event) {
+            console.log("WebSocket 연결 종료:", event);
+        };
+    
+        // 메시지 전송
+        messageForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message !== "") {
+                if (chatSocket.readyState === WebSocket.OPEN) {
+                    chatSocket.send(JSON.stringify({ content: message }));
+                }
+                messageInput.value = "";
+            }
+        });
+    
+        // 날짜 형식 
+        function getYmdString(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+    
+        // 시간 형식 24시간제
+        function getHmString(date) {
+            let hh = date.getHours();
+            let mm = date.getMinutes();
+            if (mm < 10) {
+                mm = "0" + mm;
+            }
+            return hh + ":" + mm;
+        }
+    
+        // 메시지 추가
+        function appendMessage(sender, timestamp, content, isUser, profileUrl) {
+            // 날짜 시간 
+            const dateObj = new Date(timestamp);
+            const dateStr = getYmdString(dateObj); 
+            const hmStr = getHmString(dateObj);  
+    
+            // 날짜 변경 시 구분선
+            if (lastDate !== dateStr) {
+                insertDateLine(dateStr);
+                lastDate = dateStr;
+            }
+    
+            let hideProfile = false;
+            if (lastDate === dateStr && lastMinute === hmStr && lastSender === sender)
+            {  hideProfile = true; }
+    
+            // 최상위 div
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            if (isUser) {
+                messageDiv.classList.add("user");
+            } else {
+                messageDiv.classList.add("other");
+            }
+    
+            // 메시지 헤더 
+            const headerDiv = document.createElement("div");
+            headerDiv.classList.add("message-header");
+            if (!hideProfile) {
+                // 프로필 이미지
+                const imgElem = document.createElement("img");
+                imgElem.classList.add("profile-pic");
+                imgElem.src = profileUrl;
+                headerDiv.appendChild(imgElem);
+    
+                // 닉네임
+                const nickSpan = document.createElement("span");
+                nickSpan.classList.add("nickname");
+                nickSpan.textContent = sender;
+                headerDiv.appendChild(nickSpan);
+            } else {
+                // 같은 날짜/시/분/유저 => 숨김
+                headerDiv.style.display = "none";
+            }
+    
+            // 메시지 본문
+            const messageContentDiv = document.createElement("div");
+            messageContentDiv.classList.add("message-content");
+    
+            const bubbleDiv = document.createElement("div");
+            bubbleDiv.classList.add("bubble");
+            bubbleDiv.textContent = content;
+    
+            const timeDiv = document.createElement("div");
+            timeDiv.classList.add("message-time");
+            timeDiv.textContent = hmStr;
+    
+            messageContentDiv.appendChild(bubbleDiv);
+            messageContentDiv.appendChild(timeDiv);
+    
+            messageDiv.appendChild(headerDiv);
+            messageDiv.appendChild(messageContentDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+            lastMinute = hmStr;
+            lastSender = sender;
+        }
+    
+        // 날짜 구분선 삽입
+        function insertDateLine(dateStr) {
+            const divider = document.createElement("div");
+            divider.classList.add("date-divider");
+            divider.textContent = dateStr; 
+            chatMessages.appendChild(divider);
         }
     });
-
-    // 날짜 형식 
-    function getYmdString(date) {
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, '0');
-        const d = String(date.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`;
-    }
-
-    // 시간 형식 24시간제
-    function getHmString(date) {
-        let hh = date.getHours();
-        let mm = date.getMinutes();
-        if (mm < 10) {
-            mm = "0" + mm;
-        }
-        return hh + ":" + mm;
-    }
-
-    // 메시지 추가
-    function appendMessage(sender, timestamp, content, isUser, profileUrl) {
-        // 날짜 시간 
-        const dateObj = new Date(timestamp);
-        const dateStr = getYmdString(dateObj); 
-        const hmStr = getHmString(dateObj);  
-
-        // 날짜 변경 시 구분선
-        if (lastDate !== dateStr) {
-            insertDateLine(dateStr);
-            lastDate = dateStr;
-        }
-        
-        let hideProfile = false;
-        if (lastDate === dateStr && lastMinute === hmStr && lastSender === sender)
-        {  hideProfile = true; }
-
-        // 최상위 div
-        const messageDiv = document.createElement("div");
-        messageDiv.classList.add("message");
-        if (isUser) {
-            messageDiv.classList.add("user");
-        } else {
-            messageDiv.classList.add("other");
-        }
-
-        // 메시지 헤더 
-        const headerDiv = document.createElement("div");
-        headerDiv.classList.add("message-header");
-        if (!hideProfile) {
-            // 프로필 이미지
-            const imgElem = document.createElement("img");
-            imgElem.classList.add("profile-pic");
-            imgElem.src = profileUrl;
-            headerDiv.appendChild(imgElem);
-
-            // 닉네임
-            const nickSpan = document.createElement("span");
-            nickSpan.classList.add("nickname");
-            nickSpan.textContent = sender;
-            headerDiv.appendChild(nickSpan);
-        } else {
-            // 같은 날짜/시/분/유저 => 숨김
-            headerDiv.style.display = "none";
-        }
-
-        // 메시지 본문
-        const messageContentDiv = document.createElement("div");
-        messageContentDiv.classList.add("message-content");
-
-        const bubbleDiv = document.createElement("div");
-        bubbleDiv.classList.add("bubble");
-        bubbleDiv.textContent = content;
-
-        const timeDiv = document.createElement("div");
-        timeDiv.classList.add("message-time");
-        timeDiv.textContent = hmStr;
-
-        messageContentDiv.appendChild(bubbleDiv);
-        messageContentDiv.appendChild(timeDiv);
-
-        messageDiv.appendChild(headerDiv);
-        messageDiv.appendChild(messageContentDiv);
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        lastMinute = hmStr;
-        lastSender = sender;
-    }
-
-    // 날짜 구분선 삽입
-    function insertDateLine(dateStr) {
-        const divider = document.createElement("div");
-        divider.classList.add("date-divider");
-        divider.textContent = dateStr; 
-        chatMessages.appendChild(divider);
-    }
-});
-</script>
-{% endblock %}
+    </script>
+</body>
+</html>

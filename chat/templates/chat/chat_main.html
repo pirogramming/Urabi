@@ -1,47 +1,83 @@
-{% extends "chat/base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting</title>
+    <link rel="stylesheet" href="{% static 'chat/chat_main.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/Urabi_logo.svg' %}">
+</head>
+<body>
+    <div class="chat-header">
+        <div class="chat-header-title">Chatting</div>
+        <div class="logo"><img width="100" src="{% static 'img/logo.png' %}"></div>
+    </div>
 
-{% block title %}내 채팅방{% endblock %}
-{% block extra-style %}
-  <link rel="stylesheet" href="{% static 'chat/chat_main.css' %}">
-{% endblock %}
+    <!-- 이메일로 사용자 검색 + 채팅방 생성 -->
+    <form method="post" class="search-container">
+        {% csrf_token %}
+        <div class="search-box">
+            <input type="email" name="other_email" id="other_email" placeholder="이메일을 입력하세요 ..." required>
+            <button type="submit">검색</button>
+        </div>
+        {% if error_message %}
+            <div class="error-message">⚠️ {{ error_message }}</div>
+        {% endif %}
+    </form>
 
-{% block content %}
-<h2>내 채팅방</h2>
-
-<ul class="chat-room-list">
-    {% for room in room_list %}
-    <li class="chat-room-item">
-        <a href="{% url 'chat:chat_room' room.id %}">
-            <div class="room-wrapper">
-                <!-- 상대방 프로필 -->
+    <!-- 검색 결과 목록 -->
+    {% if searched_users %}
+    <ul class="search-results">
+        {% for su in searched_users %}
+        <li class="user-item">
+            <!-- 클릭 시 채팅방 생성/이동 -->
+            <a href="{% url 'chat:create_chat_room' su.id %}" class="user-link">
                 <img class="profile-pic"
-                     src="{{ room.other_user.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}"
-                     alt="프로필">
+                    src="{{ su.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}"
+                    alt="프로필">
+                <div class="user-info">
+                    <div class="nickname">{{ su.nickname|default:su.username }}</div>
+                    <div class="email">{{ su.email }}</div>
+                </div>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="chat-icon">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.9886 20.9463L12.88 19.9522L12.35 20.0101L12.1027 20.4825L12.9886 20.9463ZM6.45572 19.09L7.06966 19.8793L8.08109 19.0927L7.07226 18.3027L6.45572 19.09ZM4.23006 20.8211L3.61612 20.0317L3.61611 20.0317L4.23006 20.8211ZM20 12C20 16.1206 16.8838 19.5148 12.88 19.9522L13.0973 21.9404C18.1043 21.3933 22 17.1523 22 12H20ZM12 4C16.4183 4 20 7.58172 20 12H22C22 6.47715 17.5228 2 12 2V4ZM4 12C4 7.58172 7.58172 4 12 4V2C6.47715 2 2 6.47715 2 12H4ZM7.07226 18.3027C5.20015 16.8366 4 14.5587 4 12H2C2 15.1996 3.50381 18.0485 5.83917 19.8773L7.07226 18.3027ZM4.844 21.6104L7.06966 19.8793L5.84178 18.3006L3.61612 20.0317L4.844 21.6104ZM4.29145 20C5.1484 20 5.52041 21.0843 4.84401 21.6104L3.61611 20.0317C2.78939 20.6747 3.24408 22 4.29145 22V20ZM12 20H4.29145V22H12V20ZM12.9 20H12V22H12.9V20ZM12.1027 20.4825C12.2517 20.1979 12.5519 20 12.9 20V22C13.3252 22 13.6921 21.7586 13.8746 21.4102L12.1027 20.4825Z" fill="#1E88E5"></path> <path d="M9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12Z" fill="#1E88E5"></path>
+                        <path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#1E88E5"></path> <path d="M17 12C17 12.5523 16.5523 13 16 13C15.4477 13 15 12.5523 15 12C15 11.4477 15.4477 11 16 11C16.5523 11 17 11.4477 17 12Z" fill="#1E88E5"></path> </g></svg>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
-                <div class="room-text">
-                    <!-- 상대방 닉네임 -->
-                    <div class="nickname">
-                        {{ room.other_user.nickname|default:room.other_user.username }}
-                    </div>
-                    
-                    <!-- 마지막 메시지 + (안 읽은 메시지 수) -->
-                    <div class="last-message">
-                        {{ room.last_message|default:"(대화 없음)" }}
-                        
-                        {% if room.unread_count > 0 %}
-                            <!-- 안 읽은 메시지가 있으면 표시 -->
-                            <span class="unread-badge">
-                                {{ room.unread_count }}
-                            </span>
-                        {% endif %}
+    <ul class="chat-room-list">
+        <div class="my-chat-title">채팅방 </div>
+        {% for room in room_list %}
+        <li class="chat-room-item">
+            <a href="{% url 'chat:chat_room' room.id %}">
+                <div class="room-wrapper">
+                    <img class="profile-pic"
+                        src="{{ room.other_user.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}"
+                        alt="프로필">
+                    <div class="room-text">
+                        <div class="nickname">
+                            {{ room.other_user.nickname|default:room.other_user.username }}
+                        </div>
+                        <div class="last-message">
+                            {{ room.last_message|default:"(대화 없음)" }}
+                            {% if room.unread_count > 0 %}
+                                <span class="unread-badge">
+                                    {{ room.unread_count }}
+                                </span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    </li>
-    {% empty %}
+            </a>
+        </li>
+        {% empty %}
         <li>채팅방이 없습니다.</li>
-    {% endfor %}
-</ul>
-{% endblock %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
