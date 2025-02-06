@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("accompany", "0003_travelgroup_markers_travelgroup_polyline"),
+        ("accompany", "0002_accompanyrequest"),
     ]
 
     operations = [
