@@ -1,0 +1,213 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+
+* {
+    font-family: 'Paperlogy';
+}
+
+/* 날짜 구분선 */
+.date-divider {
+    text-align: center;
+    color: gray;
+    font-size: 12px;
+    margin: 10px 0;
+    position: relative;
+}
+
+.date-divider:before,
+.date-divider:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: #ccc;
+}
+.date-divider:before {
+    left: 10%;
+}
+.date-divider:after {
+    right: 10%;
+}
+
+.message-header[style*="display: none"] {
+    display: none !important;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--blue);
+    color: white;
+    position: relative; 
+}
+
+.chat-header .chat-header-title {
+    position: absolute; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    white-space: nowrap; 
+}
+
+
+/* 채팅 메시지 영역 */
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 기본 설정 */
+.message {
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    position: relative;
+    margin-bottom: 3px;
+}
+
+/* 내 메시지  */
+.message.user {
+    align-self: flex-end;
+    text-align: right;
+}
+
+/* 상대 메시지  */
+.message.other {
+    align-self: flex-start;
+    text-align: left;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.profile-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin-right: 8px;
+}
+
+.profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-row {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 메시지 닉네임 */
+.nickname {
+    font-size: 14px;
+}
+.message.user .message-content {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+}
+
+.message.other .message-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-left: 40px;
+}
+
+/* 말풍선 */
+.bubble {
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    white-space: pre-wrap;
+    max-width: 80%;
+    word-break: break-word;
+    display: inline-block;
+}
+
+.message.user .bubble {
+    background: var(--blue);
+    color: #fff;
+    border-bottom-right-radius: 0;
+    align-self: flex-end;
+}
+
+.message.other .bubble {
+    background: #f4f4f4;
+    color: #000;
+    border-bottom-left-radius: 0;
+    align-self: flex-start;
+}
+
+/* 시간 표시 */
+.message-time {
+    font-size: 10px;
+    color: gray;
+    margin-top: 5px;
+}
+
+/* 내 메시지 시간 (왼쪽) */
+.message.user .message-time, .message.other .message-time {
+    margin: 5px
+}
+
+.message.user .nickname, .message.user .profile-pic{
+    display: none;
+}
+
+/* 메시지 입력 영역 */
+.chat-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background: #fff;
+}
+
+/* 입력 필드 */
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+/* 전송 버튼 */
+.chat-input button {
+    border: none;
+    background: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #0056b3;
+    transition: all 0.3s ease;
+}

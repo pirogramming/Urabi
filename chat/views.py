@@ -19,15 +19,33 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+
 @login_required
 def chat_main(request):
     """
-    채팅 메인 페이지: 로그인한 사용자가 참여한 채팅방 리스트 표시  
-    "+" 버튼을 누르면 채팅방 생성 페이지(또는 팝업)로 이동하도록 구성합니다.
-    여기서는 간단하게 채팅방 리스트와 생성 링크만 구현합니다.
+    채팅 메인 페이지: 로그인한 사용자가 참여한 채팅방 리스트
     """
     user = request.user
-    rooms = ChatRoom.objects.filter(Q(user1=user) | Q(user2=user)).order_by('-last_message_time')
+    rooms = ChatRoom.objects.filter(
+        Q(user1=user) | Q(user2=user)
+    ).order_by('-last_message_time')
+
+    for room in rooms:
+        if room.user1 == user:
+            room.other_user = room.user2
+        else:
+            room.other_user = room.user1
+
+        last_msg = room.messages.order_by('-timestamp').first()
+        room.last_message = last_msg.content if last_msg else None
+        
+        unread_count = room.messages.filter(
+            ~Q(sender=user),  
+            ~Q(read_by=user) 
+        ).count()
+        room.unread_count = unread_count
+
     context = {
         'room_list': rooms,
     }
@@ -55,7 +73,6 @@ def create_chat_room(request):
             room = ChatRoom.objects.create(user1=request.user, user2=other_user)
         return redirect('chat:chat_room', room_id=room.id)
     else:
-        # GET: 현재 로그인한 사용자를 제외한 사용자 목록 전달
         users = User.objects.exclude(id=request.user.id)
         context = {
             'users': users,
@@ -63,8 +80,7 @@ def create_chat_room(request):
         return render(request, 'chat/create_chat_room.html', context)
 
 
-
-# 채팅방 목록 페이지네이션 설정
+# 채팅방 목록 페이지네이션 
 class ChatRoomPagination(PageNumberPagination):
     page_size = 20 # 한 페이지당 표시할 채팅방 수
     page_size_query_param = 'page_size'
@@ -272,8 +288,6 @@ def mark_as_read(request, message_id):
     else:
         return Response({'message': '이미 읽은 메시지입니다.'}, status=status.HTTP_200_OK)
 
-
-# 사용자1 채팅방 렌더링 (테스트용)
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

@@ -66,6 +66,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "sender_id": self.user.id,
                 "sender_nickname": self.user.username,
                 "timestamp": msg.timestamp.isoformat(),
+                "profile_image_url": (
+                    msg.sender.profile_image.url 
+                    if getattr(msg.sender, 'profile_image', None) 
+                       and msg.sender.profile_image 
+                    else ""
+                ),
             }
             # 브로드캐스트
             logger.debug(f"Broadcast event: {event}1")
@@ -95,6 +101,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "sender_nickname": message.sender.username,
                 "timestamp": message.timestamp.isoformat(),
                 "is_read": is_read,
+                "profile_image_url": (
+                    message.sender.profile_image.url
+                    if getattr(message.sender, 'profile_image', None)
+                       and message.sender.profile_image
+                    else ""
+                ),
             })
         return msg_list
 

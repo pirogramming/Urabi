@@ -1,16 +1,45 @@
-<!-- chat/templates/chat/chat_main.html -->
 {% extends "chat/base.html" %}
+{% load static %}
+
 {% block title %}내 채팅방{% endblock %}
+{% block extra-style %}
+  <link rel="stylesheet" href="{% static 'chat/chat_main.css' %}">
+{% endblock %}
 
 {% block content %}
 <h2>내 채팅방</h2>
-<ul>
+
+<ul class="chat-room-list">
     {% for room in room_list %}
-        <li>
-            <a href="{% url 'chat:chat_room' room.id %}">
-                {{ room.user1.username }} - {{ room.user2.username }}
-            </a>
-        </li>
+    <li class="chat-room-item">
+        <a href="{% url 'chat:chat_room' room.id %}">
+            <div class="room-wrapper">
+                <!-- 상대방 프로필 -->
+                <img class="profile-pic"
+                     src="{{ room.other_user.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}"
+                     alt="프로필">
+
+                <div class="room-text">
+                    <!-- 상대방 닉네임 -->
+                    <div class="nickname">
+                        {{ room.other_user.nickname|default:room.other_user.username }}
+                    </div>
+                    
+                    <!-- 마지막 메시지 + (안 읽은 메시지 수) -->
+                    <div class="last-message">
+                        {{ room.last_message|default:"(대화 없음)" }}
+                        
+                        {% if room.unread_count > 0 %}
+                            <!-- 안 읽은 메시지가 있으면 표시 -->
+                            <span class="unread-badge">
+                                {{ room.unread_count }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </li>
     {% empty %}
         <li>채팅방이 없습니다.</li>
     {% endfor %}
