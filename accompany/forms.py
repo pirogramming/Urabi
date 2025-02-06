@@ -14,6 +14,8 @@ class TravelGroupForm(forms.ModelForm):
             'max_member': forms.NumberInput(attrs={'placeholder': '최대 인원', 'id':'max_member'}),
             'tags': forms.TextInput(attrs={'placeholder': '장소 태그', 'id':'tags'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'file-upload-input', 'id':'image-upload'}),
+            'markers': forms.HiddenInput(attrs={'id':'markers', 'name':'markers'}),
+            'polyline': forms.HiddenInput(attrs={'id':'polyline', 'name':'polyline'}),
         }
         tags = forms.CharField(
             required=False, 

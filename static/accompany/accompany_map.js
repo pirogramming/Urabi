@@ -139,7 +139,7 @@
         const lng = latLng.lng();
 
         if (isNaN(lat) || isNaN(lng)) {
-            console.error("❌ 위치 값이 올바르지 않습니다.", lat, lng);
+            //console.error("❌ 위치 값이 올바르지 않습니다.", lat, lng);
             return;
         }
         marker.setPosition(latLng);
