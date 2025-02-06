@@ -39,9 +39,9 @@
     
                 <input type="hidden" id="latitude" name="latitude">
                 <input type="hidden" id="longitude" name="longitude">
-                <input type="hidden" id="markers" name="markers">
-                <input type="hidden" id="polyline" name="polyline">
-                
+                <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'> 
+                <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
+      
                 <label for="title">여행 제목</label>
                 {{form.title}}
     
@@ -104,6 +104,12 @@
   {%endblock%}
 
   {%block js%}
+    <script>
+      window.mapData = {
+        markers: {{ form.instance.markers|safe }},
+        polyline: {{ form.instance.polyline|safe }}
+      };
+    </script>
     <script src="{%static 'accompany/accompany_map.js'%}"></script>
   {%endblock js%}
 

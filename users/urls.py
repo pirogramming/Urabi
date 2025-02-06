@@ -18,6 +18,8 @@ urlpatterns = [
     path('mypage/', views.my_page, name='my_page'),
     path('mypage/edit/', views.edit_profile, name='edit_profile'),
     path('mypage/trip/', views.my_trip, name='my_trip'),
+    path('mypage/trip/update/<int:pk>', views.update_trip, name='update_trip'),
+    path('mypage/trip/delete/<int:pk>/', views.delete_trip, name='delete_trip'),
     path('mypage/detail/<int:pk>/', views.user_detail, name='user_detail'),
     path('mypage/plan/<int:pk>/', views.plan_detail, name='plan_detail'),
 
