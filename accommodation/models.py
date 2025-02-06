@@ -17,3 +17,17 @@ class AccommodationReview(models.Model):
 
     def __str__(self):
         return f"{self.accommodation_name} ({self.rating}⭐)"
+    
+    
+class ReviewComment(models.Model):
+    comment_id = models.BigAutoField(primary_key=True)
+    review = models.ForeignKey(AccommodationReview, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'review_comment'
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.review.accommodation_name}"
