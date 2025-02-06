@@ -3,7 +3,19 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'accommodation/accommodation_create.css' %}">
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script>
+    // 전역 스코프에서 initMap 함수 정의
+    window.initMap = async function() {
+        if (!google || !google.maps) {
+            console.error('Google Maps not loaded');
+            return;
+        }
+        // 나머지 초기화 코드는 accommodation_map.js에서 실행
+    };
+</script>
+<script async defer 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap">
+</script>
 <script src="{% static 'accommodation/accommodation_map.js' %}" defer></script>
 {% endblock %}
 
