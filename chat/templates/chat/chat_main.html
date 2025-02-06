@@ -78,6 +78,49 @@
         <li>채팅방이 없습니다.</li>
         {% endfor %}
     </ul>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function(){
+    const userId = "{{ request.user.id }}";
+    const userProtocol = (location.protocol === "https:") ? "wss:" : "ws:";
+    const userWsUrl = userProtocol + "//" + location.host + "/ws/user/" + userId + "/";
+    const userSocket = new WebSocket(userWsUrl);
+
+    userSocket.onmessage = function(e){
+        const data = JSON.parse(e.data);
+        if(data.type === "user_notification"){
+            const roomId = data.room_id;
+            const unreadCount = data.unread_count;
+            const lastMsg = data.last_message_content || "(대화 없음)";
+            // update DOM
+            const li = document.querySelector(`.chat-room-item[data-room-id='${roomId}']`);
+            if(li){
+                // unread
+                const badge = li.querySelector(".unread-badge");
+                if(unreadCount > 0){
+                    if(!badge){
+                        const span = document.createElement("span");
+                        span.classList.add("unread-badge");
+                        span.textContent = unreadCount;
+                        li.querySelector(".last-message").appendChild(span);
+                    } else {
+                        badge.textContent = unreadCount;
+                    }
+                } else {
+                    if(badge) { badge.remove(); }
+                }
+                // last message
+                li.querySelector(".last-message-text").textContent = lastMsg;
+                // reorder
+                li.parentNode.insertBefore(li, li.parentNode.firstChild);
+            } else {
+                // maybe create new item or reload
+            }
+        }
+    };
+});
+</script>
+
 </body>
 </html>
 

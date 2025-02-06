@@ -200,21 +200,12 @@ def enter_chat_room(request, room_id):
     if auth_header.startswith("Bearer "):
         token = auth_header[7:]
 
-     # TravelGroup 기본키는 'travel_id'로 처리 (기존의 'id'가 아님)
-    travel_info = {
-        'id': chat_room.travel.travel_id,  
-        'title': chat_room.travel.title,
-        'start_date': chat_room.travel.start_date,
-        'end_date': chat_room.travel.end_date,
-    }
-    
     # 채팅방 정보 응답
     response_data = {
         'room_id': chat_room.id,
         'room_name': f"{chat_room.user1.nickname} - {chat_room.user2.nickname}",
         'other_user_nickname': other_user.nickname,
         'other_user_profile_image': request.build_absolute_uri(other_user.profile_image.url) if other_user.profile_image else None,
-        'travel_info': travel_info,
         'websocket_url': f"wss://{request.get_host()}/ws/chat/{chat_room.id}/?token={token}"
     }
 
@@ -300,12 +291,17 @@ def some_protected_route(request):
 @login_required
 def chat_room(request, room_id):
     room = get_object_or_404(ChatRoom, id=room_id)
+    user = request.user
     if request.user not in [room.user1, room.user2]:
         return HttpResponse("접근 권한이 없습니다.", status=403)
-    # access_token이 필요한 경우, JWT 토큰을 생성하여 context에 추가할 수 있음.
-    # 여기서는 세션 기반 인증을 사용한다고 가정하여 빈 문자열로 전달합니다.
+    
+    other_user = room.user2 if room.user1 == user else room.user1
+    unread_msgs = room.messages.filter(sender=other_user).exclude(read_by=user)
+    for msg in unread_msgs:
+        msg.read_by.add(user)
+
     context = {
         'room': room,
-        'access_token': "",  # 필요한 경우 JWT 토큰 문자열을 넣으세요.
+        'access_token': "",  # 필요한 경우 JWT 토큰 문자열
     }
     return render(request, 'chat/room_chat.html', context)
