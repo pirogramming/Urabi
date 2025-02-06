@@ -49,22 +49,40 @@
   width: 100%;
   border: none;
   border-bottom: 1px solid var(--blue);
+  padding-left: 5px;
 }
 .info{
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
-  justify-content: flex-start;
-  position: relative;
 }
-.filter-group input{
+.filter-group-first{
+  display: flex;
+  gap: 10px;
+}
+.filter-group-second{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--blue);
+}
+.filter_age input{
+  width: 86px;
+}
+
+.filter-group input, .filter-group select{
   background-color: var(--gray);
   padding: 15px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+.update-image{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 .file-upload svg{
-  position: absolute;
   right: 0;
 }
 .file-upload svg:hover{
@@ -74,15 +92,23 @@
   width: 100px;
 }
 #image-name{
-  position: absolute;
   right: 55px;
-  width: 100px;
+  width: 292px;
 }
 #image-upload{
   display: none;
 }
 #image-upload#file-upload-button{
   display: none;
+}
+.filter_location{
+  padding-bottom: 10px;
+  padding-left:2px;
+  border-bottom: 1px solid var(--blue);
+}
+.filter_location label{
+  padding: 0 2px;
+  margin-right: 5px;
 }
 .filter-form button {
   padding: 10px 20px;

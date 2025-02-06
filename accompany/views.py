@@ -9,6 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import TravelGroup, TravelParticipants, Accompany_Zzim, AccompanyRequest
 from .forms import TravelGroupForm
 from users.models import User
+from .filters import AccompanyFilter
 
 # Create your views here.
 #class AccompanyListView(ListView):
@@ -19,14 +20,25 @@ class AccompanyListView(ListView):
     ordering = ['-created_at']
     paginate_by = 6
     zzim_list = Accompany_Zzim.objects.all()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        self.filterset = AccompanyFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+
         if self.request.user.is_authenticated:
             user_zzims = Accompany_Zzim.objects.filter(user=self.request.user)
             zzim_items = [zzim.item for zzim in user_zzims]
             context['zzim_items'] = zzim_items
         else:
             context['zzim_items'] = []
+            
         travel_groups = context['object_list']
         for travel in travel_groups:
             travel.tags = travel.tags.split(',') if travel.tags else []
