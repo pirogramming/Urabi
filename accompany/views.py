@@ -8,7 +8,7 @@ import json
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import TravelGroup, TravelParticipants, Accompany_Zzim, AccompanyRequest
 from .forms import TravelGroupForm
-from users.models import User
+from users.models import User, TravelPlan
 from .filters import AccompanyFilter
 
 # Create your views here.
@@ -80,6 +80,32 @@ class AccompanyCreateView(CreateView):
     model = TravelGroup
     form_class = TravelGroupForm
     template_name = 'accompany/accompany_form.html'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        plan_id = self.request.GET.get('plan_id')  
+
+        if plan_id:
+            travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
+            initial.update({
+                'title': travel_plan.title,
+                'city': travel_plan.city,
+                'explanation': travel_plan.explanation,
+                'start_date': travel_plan.start_date,
+                'end_date': travel_plan.end_date,
+            })
+        return initial
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        plan_id = self.request.GET.get('plan_id')
+        if plan_id:
+            travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
+            context['this_plan'] = travel_plan
+        context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
+        return context
+
     def form_valid(self, form):
         form.instance.created_by = self.request.user
 
@@ -87,15 +113,13 @@ class AccompanyCreateView(CreateView):
         markers_data = self.request.POST.get('markers')
         polyline_data = self.request.POST.get('polyline')
 
-        # 마커와 폴리라인 데이터를 저장할 필드를 모델에 추가하거나, 별도의 모델에 저장하는 로직을 구현해야 합니다.
-        # 예시로, TravelGroup 모델에 markers와 polyline이라는 JSONField를 추가한 경우:
         form.instance.markers = markers_data
         form.instance.polyline = polyline_data
 
         return super().form_valid(form)
-    def get_success_url(self):
-        return reverse('accompany:accompany_detail', kwargs={'pk' : self.object.travel_id})
 
+    def get_success_url(self):
+        return reverse('accompany:accompany_detail', kwargs={'pk': self.object.travel_id})
 
 class AccompanyUpdateView(UpdateView):
     model = TravelGroup

@@ -39,6 +39,11 @@
             <p><strong>공개 여부:</strong> {{ travel_plan.is_public|yesno:"공개,비공개" }}</p>
           </div>
           
+          <div class="btns">
+            <button class="btn" onclick="window.location.href='{% url 'users:update_trip' travel_plan.plan_id %}'">수정</button>
+            <button class="btn" onclick="confirmDelete({{ travel_plan.plan_id }})">삭제</button>
+          </div>
+
           <div class="trip-map-data">
             <input type="hidden" id="latitude" value="{{ travel_plan.latitude }}">
             <input type="hidden" id="longitude" value="{{ travel_plan.longitude }}">
@@ -52,6 +57,11 @@
 
 {% block js %}
     <script>
+      function confirmDelete(planId) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          window.location.href = "{% url 'users:delete_trip' 0 %}".replace("0", planId);
+        }
+      }
       const travelId = "{{ travel_plan.plan_id }}";
       window.mapData = {
         markers: {{ travel_plan.markers|safe }},

@@ -351,7 +351,9 @@ def my_trip(request):
 
             travel_plan.save()  
 
-            return redirect('users:my_trip')
+            return render(request, 'mypage/plan_detail.html', {
+                'travel_plan': travel_plan,
+            })
     else:
         form = TravelPlanForm()
 
@@ -381,4 +383,24 @@ def plan_detail(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
     return render(request, 'mypage/plan_detail.html', {
         'travel_plan': travel_plan,
+    })
+
+def delete_trip(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    travel_plan.delete()
+    return redirect('users:my_trip')
+
+def update_trip(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    if request.method == 'POST':
+        form = TravelPlanForm(request.POST, instance=travel_plan)
+        if form.is_valid():
+            travel_plan = form.save(commit=False)
+            travel_plan.created_by = request.user
+            travel_plan.save()
+            return redirect('users:my_trip')
+    else:
+        form = TravelPlanForm(instance=travel_plan)
+    return render(request, 'mypage/myTrip.html', {
+        'form': form,
     })
