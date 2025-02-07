@@ -40,10 +40,11 @@ def market_create(request):
 
     return render(request, 'market/market_create.html', {'form': form})
 
-def market_detail(request,pk):
-    market = Market.objects.get(item_id=pk)
+def market_detail(request,item_id):
+    market = Market.objects.get(pk=item_id)
+    is_zzim = MarketZzim.objects.filter(user=request.user, market=market).exists()
     trust_score = market.user.trust_score
-    return render(request, 'market/market_detail.html', {'market':market, 'trust_score':trust_score})
+    return render(request, 'market/market_detail.html', {'market':market, 'is_zzim':is_zzim, 'trust_score':trust_score})
 
 
 def market_update(request,pk):
@@ -69,11 +70,11 @@ def market_delete(request, pk):
 def market_zzim(request, item_id):
 
     market = get_object_or_404(Market, pk=item_id)
-    zzim, created = MarketZzim.objects.get_or_create(user=request.user, item=market)
+    zzim, created = MarketZzim.objects.get_or_create(user=request.user, market=market)
 
     if not created:
         zzim.delete()  # 이미 찜한 경우 삭제
         return JsonResponse({'item_id':market.item_id, "zzim": False})
     
-    return JsonResponse({"zzim": True})
+    return JsonResponse({"item_id":market.item_id, "zzim": True})
 

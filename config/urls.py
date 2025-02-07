@@ -32,8 +32,6 @@ urlpatterns = [
     path('accompany/', include('accompany.urls')),
     path('users/', include('users.urls')), 
     path('chatbot/', include('chatbot.urls')),
-
-
     path('map/', include('map.urls')),
 ]
 
