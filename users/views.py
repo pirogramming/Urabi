@@ -19,6 +19,7 @@ from django.core.files.base import ContentFile
 from accommodation.models import AccommodationReview
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from market.models import MarketZzim
 
 
 def social_login(request):
@@ -471,7 +472,14 @@ def zzim_list(request):
     ac_zzims = Accompany_Zzim.objects.filter(user=user)
     ac_zzim_items = [zzim.item for zzim in ac_zzims]
     ac_zzim_count = ac_zzims.count()
+
+    mkt_zzims = MarketZzim.objects.filter(user=user)
+    mkt_zzims_items = [zzim.market for zzim in mkt_zzims]
+    mkt_zzim_count = mkt_zzims.count()
+
     return render(request, 'mypage/zzim_list.html', {
         'ac_zzims': ac_zzim_items,
         'ac_zzim_count': ac_zzim_count,
+        'mkt_zzims_items':mkt_zzims_items,
+        'mkt_zzim_count' : mkt_zzim_count,
     })
