@@ -74,7 +74,12 @@
     height: 32px;
     cursor: pointer;
 }
-
+.bi-heart-fill {
+    width: 72px;
+    height: 32px;
+    cursor: pointer;
+    fill:var(--red);
+}
 /*중간 title*/
 .market_detail_mid_title{
     display: flex;

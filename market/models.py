@@ -42,11 +42,13 @@ class Market(models.Model):
         return f"{self.get_trade_type_display()}-{self.title} ({self.city})"
     
 class MarketZzim(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     market = models.ForeignKey(Market, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("user", "market")  # 중복 찜 방지
+    
+    def __str__(self):
+        return f"{self.user} : {self.market.title}"
 
 

@@ -203,3 +203,8 @@
     border-radius: 5px;
     padding: 7px 9px;
 }
+
+/*찜*/
+.bi-heart-fill{
+    fill:var(--red);
+}

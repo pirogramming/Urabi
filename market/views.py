@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .filters import MarketFilter
 from users.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 def market_list(request):
     queryset = Market.objects.all() 
@@ -22,6 +23,13 @@ def market_list(request):
     selected_status = request.GET.get('status',None)
     selected_category = request.GET.get('category',None)
 
+    if request.user.is_authenticated:
+        user_zzim = MarketZzim.objects.filter(user=request.user).values_list('market__item_id', flat=True)
+    else:
+        user_zzim = []
+        
+    for market in page_obj:
+        market.is_zzim = market.item_id in user_zzim
     return render(request, 'market/market_list.html', 
                     {'markets': page_obj, 'filterset':filterset, 'items_per_page':items_per_page, 'selected_status':selected_status, 'selected_category':selected_category})
 
@@ -40,10 +48,11 @@ def market_create(request):
 
     return render(request, 'market/market_create.html', {'form': form})
 
-def market_detail(request,pk):
-    market = Market.objects.get(item_id=pk)
+def market_detail(request,item_id):
+    market = Market.objects.get(pk=item_id)
+    is_zzim = MarketZzim.objects.filter(user=request.user, market=market).exists()
     trust_score = market.user.trust_score
-    return render(request, 'market/market_detail.html', {'market':market, 'trust_score':trust_score})
+    return render(request, 'market/market_detail.html', {'market':market, 'is_zzim':is_zzim, 'trust_score':trust_score})
 
 
 def market_update(request,pk):
@@ -66,14 +75,19 @@ def market_delete(request, pk):
 
 
 @login_required
-def market_zzim(request, item_id):
-
-    market = get_object_or_404(Market, pk=item_id)
-    zzim, created = MarketZzim.objects.get_or_create(user=request.user, item=market)
+@csrf_exempt
+def market_zzim(request, pk):
+    
+    try:
+        market = Market.objects.get(pk=pk)
+    except Market.DoesNotExist:
+        return JsonResponse({"error":"Market item을 찾지 못했습니다."},statis=404)
+    
+    zzim, created = MarketZzim.objects.get_or_create(user=request.user, market=market)
 
     if not created:
         zzim.delete()  # 이미 찜한 경우 삭제
-        return JsonResponse({'item_id':market.item_id, "zzim": False})
+        return JsonResponse({'pk':market.pk, "zzim": False})
     
-    return JsonResponse({"zzim": True})
+    return JsonResponse({"pk":market.pk, "zzim": True})
 
