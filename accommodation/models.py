@@ -15,6 +15,9 @@ class AccommodationReview(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  # 수정일
     photo = models.ImageField(upload_to="accommodation_reviews/", null=True, blank=True)  # 후기 사진
     is_parent = models.BooleanField(default=True)
+    latitude = models.FloatField(null=True, blank=True)  # 위도
+    longitude = models.FloatField(null=True, blank=True)  # 경도
+    location_view = models.ImageField(upload_to="accommodation_views/", null=True, blank=True)  # 위치 뷰 이미지
     
     def __str__(self):
         return f"{self.accommodation_name} ({self.rating}⭐)"
