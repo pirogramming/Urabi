@@ -271,7 +271,22 @@
     margin-right: 5%;
   }
 
-
+  .schedule-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .schedule-header button{
+    background-color: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .schedule-header button:hover{
+    background-color: var(--red-hover);
+  }
   .activity-info .activity-title{
     font-size: 1.2rem;
     margin-bottom: 4px;

@@ -341,7 +341,7 @@ def edit_profile(request):
     return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
 
 @login_required
-def my_trip(request):
+def my_trip(request): # 여행 계획 작성
     if request.method == 'POST':
         form = TravelPlanForm(request.POST)
 
@@ -440,7 +440,7 @@ def plan_detail(request, pk):
 def delete_trip(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
     travel_plan.delete()
-    return redirect('users:my_trip')
+    return redirect('users:user_list')
 
 def update_trip(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
@@ -450,9 +450,28 @@ def update_trip(request, pk):
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
             travel_plan.save()
-            return redirect('users:my_trip')
+            return redirect('users:plan_detail', pk=travel_plan.plan_id)
     else:
         form = TravelPlanForm(instance=travel_plan)
     return render(request, 'mypage/myTrip.html', {
         'form': form,
+    })
+
+def user_list(request):
+    user = get_object_or_404(User, id=request.user.id)
+    user_plans = TravelPlan.objects.filter(created_by=user)
+    user_plan_count = user_plans.count()
+    return render(request, 'mypage/planlist.html', {
+        'plans': user_plans,
+        'plan_count': user_plan_count,
+    })
+
+def zzim_list(request):
+    user = get_object_or_404(User, id=request.user.id)
+    ac_zzims = Accompany_Zzim.objects.filter(user=user)
+    ac_zzim_items = [zzim.item for zzim in ac_zzims]
+    ac_zzim_count = ac_zzims.count()
+    return render(request, 'mypage/zzim_list.html', {
+        'ac_zzims': ac_zzim_items,
+        'ac_zzim_count': ac_zzim_count,
     })
