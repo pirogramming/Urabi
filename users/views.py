@@ -465,3 +465,13 @@ def user_list(request):
         'plans': user_plans,
         'plan_count': user_plan_count,
     })
+
+def zzim_list(request):
+    user = get_object_or_404(User, id=request.user.id)
+    ac_zzims = Accompany_Zzim.objects.filter(user=user)
+    ac_zzim_items = [zzim.item for zzim in ac_zzims]
+    ac_zzim_count = ac_zzims.count()
+    return render(request, 'mypage/zzim_list.html', {
+        'ac_zzims': ac_zzim_items,
+        'ac_zzim_count': ac_zzim_count,
+    })

@@ -23,6 +23,7 @@ urlpatterns = [
     path('mypage/detail/<int:pk>/', views.user_detail, name='user_detail'),
     path('mypage/plan/<int:pk>/', views.plan_detail, name='plan_detail'),
     path('mypage/list/', views.user_list, name='user_list'),
+    path('mypage/zzim/', views.zzim_list, name='zzim_list'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
