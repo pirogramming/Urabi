@@ -31,6 +31,9 @@
         <button class="btn" onclick="window.location.href='{% url 'users:my_trip' %}'">여행 일정 생성</button>
       </div>
       <div id="schedule-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{plan_count}}</span>번의 일정이 있어요!
+        </p>
         {% if plans %}
         {% for plan in plans %}
         <div class="schedule-card" style="display: none;">
@@ -58,6 +61,57 @@
       {% endif %}
     </section>
 
+    <h2 class="sub-title">참여한 동행</h2>
+    <div id="participation-cards-container">
+      <p class="activity-header">
+        {{ user.nickname }} 님은 <span class="text-hilight">2</span>번의 모임에 참여했어요!
+      </p>
+
+      <!-- 예: 첫 번째 모임 카드 -->
+      <div class="activity-card" style="display: none;">
+        <img
+          src="{% static 'img/banner.png' %}"
+          alt="프랑스 파리 이미지"
+          class="activity-img"
+        />
+        <div class="activity-info">
+          <div class="activity-title">프랑스 파리 동행</div>
+          <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+          <p class="schedule-location">
+            <img src="{% static 'img/location_icon.png' %}" alt="위치">
+            <span class="schedule-location-text">루브르 박물관</span>
+          </p>
+          <p class="schedule-location">
+            <img src="{% static 'img/location_icon.png' %}" alt="위치">
+            <span class="schedule-location-text">바토무슈</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- 두 번째 모임 카드 -->
+      <div class="activity-card" style="display: none;">
+        <img
+          src="{% static 'img/banner.png' %}"
+          alt="이탈리아 남부 투어"
+          class="activity-img"
+        />
+        <div class="activity-info">
+          <div class="activity-title">이탈리아 남부 투어</div>
+          <p class="activity-date">2025/2/4 ~ 2025/2/7</p>
+          <p class="schedule-location">
+            <img src="{% static 'img/location_icon.png' %}" alt="위치">
+            <span class="schedule-location-text">루브르 박물관</span>
+          </p>
+          <p class="schedule-location">
+            <img src="{% static 'img/location_icon.png' %}" alt="위치">
+            <span class="schedule-location-text">바토무슈</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <button id="load-more-participation-btn" onclick="loadMoreParticipations()">더보기</button>
+
+
   </section>
 </main>
 {% endblock %}
@@ -83,8 +137,9 @@
     };
   }
 
-
+  const loadMoreParticipations = loadMoreItems('participation-cards-container', 'load-more-participation-btn');
   const loadMoreSchedules = loadMoreItems('schedule-cards-container', 'load-more-schedule-btn');
   loadMoreSchedules();
+  loadMoreParticipations();
 </script>
 {% endblock %}

@@ -460,6 +460,8 @@ def update_trip(request, pk):
 def user_list(request):
     user = get_object_or_404(User, id=request.user.id)
     user_plans = TravelPlan.objects.filter(created_by=user)
+    user_plan_count = user_plans.count()
     return render(request, 'mypage/planlist.html', {
         'plans': user_plans,
+        'plan_count': user_plan_count,
     })

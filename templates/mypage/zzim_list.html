@@ -9,98 +9,20 @@
 <main class="mypage-wrap">
   <!-- 왼쪽 사이드 카테고리 -->
   <nav class="mypage-nav">
-    {% if current_user.id == user.id %}
     <ul>
       <li><a href="{% url 'users:my_page' %}">프로필</a></li>
       <li><a href="#">찜 목록</a></li>
       <li><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
       <li class="active"><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
     </ul>
-    {% endif %}
   </nav>
 
   <!-- 메인 콘텐츠 영역 -->
   <section class="mypage-content">
-    {% if current_user.id != user.id %}
-    <div class="nickname-wrap">
-      <div class="nickname-wrap-left">
-        <div class="nickname">{{ user.nickname }}</div>
-        <span class="score">36.5°C</span>
-      </div>
-      <button class="chatting-btn">채팅하기</button>
-    </div>
-    {% endif %}
-    <!-- 프로필 섹션 -->
-    <section class="profile-section">
-      {% if current_user.id != user.id %}
-      <h2 class="sub-title">프로필</h2>
-      <div class="passport-card">
-        <div class="passport-card-top">
-          <span class="passport-label">여권 PASSPORT</span>
-          <div class="passport-country">
-            대한민국 REPUBLIC OF KOREA
-          </div>
-        </div>
-        <div class="passport-card-body">
-          <div>
-            <img
-              src="{% static 'img/default-profile.png' %}" 
-              alt="프로필 사진"
-              class="profile-photo"
-            />
-            <div class="travel-score">
-              <span>여행지수</span>
-              <span class="score">36.5 °C</span>
-            </div>
-          </div>
-
-          <!-- 오른쪽: 정보영역 -->
-          <div class="info-area">
-            <div class="info-row row-1">
-              <div class="info-item">
-                <span class="label">국가 코드 / Country code</span>
-                <span class="value">KOR</span>
-              </div>
-              <div class="info-item">
-                <span class="label">국적 / Nationality</span>
-                <span class="value">REPUBLIC OF KOREA</span>
-              </div>
-            </div>
-            <div class="info-row row-2">
-              <div class="info-item">
-                <span class="label">한글성명</span>
-                <span class="value">{{ user.user_name }}</span>
-              </div>
-              <div class="info-item">
-                <span class="label">선호하는 이름 / Nickname</span>
-                <span class="value">{{ user.nickname }}</span>
-              </div>
-            </div>
-            <div class="info-row row-3">
-              <div class="info-item">
-                <span class="label">생년월일 / Date of Birth</span>
-                <span class="value">{{ user.birth }}</span>
-              </div>
-              <div class="info-item">
-                <span class="label">성별 / Sex</span>
-                <span class="value">{{ user.user_gender }}</span>
-              </div>
-            </div>
-            <div class="info-row row-4">
-              <div class="info-item">
-                <span class="label">이메일 / Email</span>
-                <span class="value">{{ user.email }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-    </section>
-
+    <h1 class="main-title">찜목록</h1>
     <!-- 활동 이력 -->
     <section class="activity-section">
-      <h2 class="sub-title">동행 모집 이력</h2>
+      <h2 class="sub-title">동행 모집</h2>
       <div id="accompany-cards-container">
         <p class="activity-header">
           {{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행을 모집했어요!
@@ -148,51 +70,12 @@
       <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
       {% endif %}
 
-
-      <h2 class="sub-title">번개 참여 이력</h2>
+      <h2 class="sub-title">번개 모임</h2>
       <div class="activity-box activity-none">
         참여한 번개 모임이 없어요!
       </div>
-
-      <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
-      <h2 class="sub-title">숙소 리뷰 이력</h2>
-      <div id="review-cards-container" class="activity-box">
-        <p class="activity-header">
-            {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
-        </p>
-    
-        {% if accommodation_reviews %}
-              {% for review in accommodation_reviews %}
-                  <div class="activity-card" style="display: none;">
-                      <div class="activity-review">
-                          <p class="activity-review-title">
-                              {{ review.accommodation_name }}
-                          </p>
-                          <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
-                          <p class="schedule-location">
-                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                              <span class="schedule-location-text">{{ review.city }}</span>
-                          </p>
-                          <p class="review-rating">⭐ {{ review.rating }}</p>
-                          <p class="review-content">{{ review.content }}</p>
-                      </div>
-                  </div>
-              {% endfor %}
-          {% else %}
-              <div class="activity-card">
-                  <div class="activity-review">
-                      <p class="activity-review-title">작성한 숙소 리뷰가 없어요!</p>
-                  </div>
-              </div>
-          {% endif %}
-          <button id="load-more-review-btn" class="load-more-btn" onclick="loadMoreReviews()">더보기</button>
-      </div>
       
-        
-
-    
-
-      <h2 class="sub-title">나눔 마켓 이력</h2>
+      <h2 class="sub-title">나눔 마켓</h2>
       <div id="market-cards-container">
         <p class="activity-header">
           {{ user.nickname }} 님은 <span class="text-hilight">2</span>개의 글을 올렸어요!
@@ -257,11 +140,12 @@
 
 
   const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
-  const loadMoreReviews = loadMoreItems('review-cards-container', 'load-more-review-btn');
+  const loadMoreParticipations = loadMoreItems('participation-cards-container', 'load-more-participation-btn');
   const loadMoreMarkets = loadMoreItems('market-cards-container', 'load-more-market-btn');
 
   // 초기 로딩 시 처음 2개의 일정만 보이도록 설정
   loadMoreAccompanies();
+  loadMoreParticipations();
   loadMoreReviews();
   loadMoreMarkets();
 </script>
