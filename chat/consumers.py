@@ -77,7 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             logger.debug(f"Broadcast event: {event}1")
             await self.channel_layer.group_send(self.room_group_name, event)
             logger.debug(f"Broadcast event: {event}2")
-
+            await self.notify_room_users(msg)
 
 
     async def chat_message(self, event):
@@ -86,21 +86,119 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event))
         if event["sender_id"] != self.user.id:
             await self.mark_as_read(event["message_id"])
+            await self.notify_message_read(event["message_id"], self.user.id)
+
+            read_event = {
+                "type": "chat_read_event",
+                "message_id": event["message_id"],
+                "reader_id": self.user.id
+            }
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                read_event
+
+            )
+
+    # 메시지 읽음 이벤트 수신
+    async def chat_read_event(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "chat.read_event",
+            "message_id": event["message_id"],
+            "reader_id": event["reader_id"]
+        }))
+
+        
+    async def notify_room_users(self, new_msg):
+        """
+        채팅방의 user1, user2에게 각각 user_notification 전송
+        => unread_count, last_message, etc
+        """
+        room = await self.get_room()
+        user1_id, user2_id = room.user1_id, room.user2_id
+
+        unread1 = await self.get_unread_count(room, user1_id)
+        unread2 = await self.get_unread_count(room, user2_id)
+        last_msg_content = new_msg.content
+        last_msg_ts = new_msg.timestamp.isoformat()
+
+        # user1
+        await self.channel_layer.group_send(
+            f"user_{user1_id}",
+            {
+                "type": "user_notification",
+                "room_id": room.id,
+                "unread_count": unread1,
+                "last_message_content": last_msg_content,
+                "last_message_timestamp": last_msg_ts
+            }
+        )
+        # user2
+        await self.channel_layer.group_send(
+            f"user_{user2_id}",
+            {
+                "type": "user_notification",
+                "room_id": room.id,
+                "unread_count": unread2,
+                "last_message_content": last_msg_content,
+                "last_message_timestamp": last_msg_ts
+            }
+        )
+
+    async def notify_message_read(self, message_id, reader_id):
+        """
+        sender에게 '메시지가 읽혔음' 알림
+        => sender can show "V" or "read"
+        """
+        msg = await self.get_message(message_id)
+        sender_id = msg.sender_id
+        if sender_id != reader_id:  # 자기 자신이 보낸 메시지면 X
+            await self.channel_layer.group_send(
+                f"user_{sender_id}",
+                {
+                    "type": "user_notification",
+                    "event": "message_read",
+                    "message_id": message_id,
+                    "reader_id": reader_id
+                }
+            )
+    
+    @database_sync_to_async
+    def get_room(self):
+        return ChatRoom.objects.get(id=self.room_id)
+
+    @database_sync_to_async
+    def get_message(self, message_id):
+        return Message.objects.get(id=message_id)
+
+    @database_sync_to_async
+    def get_unread_count(self, room, user_id):
+        return room.messages.filter(~Q(sender_id=user_id), ~Q(read_by__id=user_id)).count()
 
     @database_sync_to_async
     def get_existing_messages(self):
         room = ChatRoom.objects.get(id=self.room_id)
         messages = list(room.messages.order_by("timestamp").select_related("sender"))
+        my_id = self.user.id
+        
         msg_list = []
         for message in messages:
-            is_read = message.read_by.filter(id=self.user.id).exists()
+            is_read_by_me = message.read_by.filter(id=my_id).exists()
+
+            if message.sender_id == my_id:
+                other_id = room.user2_id if room.user1_id == my_id else room.user1_id
+                is_read_by_other = message.read_by.filter(id=other_id).exists()
+            else:
+                is_read_by_other = False  # 또는 None
+
             msg_list.append({
                 "message_id": message.id,
                 "content": message.content,
                 "sender_id": message.sender.id,
                 "sender_nickname": message.sender.username,
                 "timestamp": message.timestamp.isoformat(),
-                "is_read": is_read,
+                "is_read": is_read_by_me,  
+                "is_read_by_other": is_read_by_other,
                 "profile_image_url": (
                     message.sender.profile_image.url
                     if getattr(message.sender, 'profile_image', None)
@@ -130,8 +228,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def mark_as_read(self, message_id):
-        message = Message.objects.get(id=message_id)
-        message.read_by.add(self.user)
+        msg = Message.objects.get(id=message_id)
+        msg.read_by.add(self.user)
 
     @database_sync_to_async
     def get_user_from_token(self, token):
@@ -144,3 +242,56 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return user
         except (InvalidToken, TokenError, User.DoesNotExist):
             return AnonymousUser()
+    
+    async def notify_users(self, room, new_msg):
+        user1_id = room.user1_id
+        user2_id = room.user2_id
+        
+        # unread counts
+        unread_count_user1 = await self.get_unread_count(room, user1_id)
+        unread_count_user2 = await self.get_unread_count(room, user2_id)
+
+        last_message_content = new_msg.content
+        last_message_ts = new_msg.timestamp.isoformat()
+
+        # broadcast
+        for uid, uc in [(user1_id, unread_count_user1), (user2_id, unread_count_user2)]:
+            await self.channel_layer.group_send(
+                f"user_{uid}",
+                {
+                    "type": "user_notification",
+                    "room_id": room.id,
+                    "unread_count": uc,
+                    "last_message_content": last_message_content,
+                    "last_message_timestamp": last_message_ts
+                }
+            )
+
+class UserConsumer(AsyncWebsocketConsumer):
+    """
+    각 유저가 chat_main 페이지에서 접속: /ws/user/<user_id>/
+    새로운 메시지 or 메시지 읽음 이벤트를 받아 실시간 목록 갱신
+    """
+    async def connect(self):
+        self.user_id = self.scope['url_route']['kwargs']['user_id']
+        self.user_group_name = f"user_{self.user_id}"
+
+        # 로그인 사용자인지 확인
+        if self.scope["user"].id != int(self.user_id):
+            await self.close()
+            return
+
+        await self.channel_layer.group_add(self.user_group_name, self.channel_name)
+        await self.accept()
+        logger.debug(f"[UserConsumer] user_{self.user_id} 연결됨")
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
+        logger.debug(f"[UserConsumer] user_{self.user_id} 해제됨")
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        # 필요 시 명령 처리
+
+    async def user_notification(self, event):
+        await self.send(text_data=json.dumps(event))

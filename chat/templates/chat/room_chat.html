@@ -2,199 +2,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatting</title>
-    <link rel="stylesheet" href="{% static 'chat/room_chat.css' %}">
+  <meta charset="UTF-8">
+  <title>Room {{ room }}</title>
+  <link rel="stylesheet" href="{% static 'chat/room_chat.css' %}">
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <div class="chat-container">
-        <!-- 채팅방 헤더 -->
-        <div class="chat-header">
-            <a href="{% url 'chat:chat_main' %}">
-                <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000" style="width: 14px; height: 14px;"><title>arrow-left</title><path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></svg>
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                        <path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></g></svg>
-            </a>
-            <div class="chat-header-title">{{ room }}</div>
-            <div></div>
-        </div>
-    
-        <!-- 채팅 메시지 영역 -->
-        <div class="chat-messages" id="chat_messages"></div>
-        
-        <!-- 메시지 입력창 -->
-        <form id="message_form" class="chat-input">
-            {% csrf_token %}
-            <input type="text" id="message_input" placeholder="메시지를 입력하세요..." autocomplete="off" class="form-control">
-            <button type="submit" class="btn btn-primary">전송</button>
-        </form>
-    </div>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const chatMessages = document.getElementById("chat_messages");
-        const messageForm = document.getElementById("message_form");
-        const messageInput = document.getElementById("message_input");
+<div class="chat-container">
+  <div class="chat-header">
+    <a href="{% url 'chat:chat_main' %}">
+        <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000" style="width: 14px; height: 14px;"><title>arrow-left</title><path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></svg>
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+                <path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></g></svg>
+    </a>
+    <div class="chat-header-title">{{ room }}</div>
+    <div></div>
+  </div>
+
+  <div class="chat-messages" id="chat_messages"></div>
+
+  <form id="message_form" class="chat-input">
+    {% csrf_token %}
+    <input type="text" id="message_input" placeholder="메시지..." autocomplete="off">
+    <button type="submit">전송</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+    const chatMessages = document.getElementById("chat_messages");
+    const messageForm  = document.getElementById("message_form");
+    const messageInput = document.getElementById("message_input");
     
-        const myUsername = "{{ request.user.username }}";
-        console.log("현재 사용자 이름:", myUsername);
+    const myUsername = "{{ request.user.username }}";
+    const roomId = "{{ room.id }}";
+    console.log("roomId:", roomId);
     
-        const protocol = location.protocol === "http:" ? "ws:" : "wss:";
-        const wsUrl = protocol + "//" + location.host + "/ws/chat/{{ room.id }}/?token={{ access_token|default:'' }}";
-        console.log("WebSocket URL:", wsUrl);
-        const chatSocket = new WebSocket(wsUrl);
+    let currentPage = 1;
+    let isLoading = false;
+    let historyLoaded = false;
+    let noMoreMessages = false;  
     
-        let historyLoaded = (chatMessages.innerHTML.trim() !== "");
+    let lastDate = null;
+    let lastMinute = null;
+    let lastSender = null;
     
-        // --- 전역 변수: 마지막 메시지 상태 ---
-        let lastDate = null; 
-        let lastMinute = null;
-        let lastSender = null; 
-    
-        chatSocket.onopen = function(event) {
-            console.log("WebSocket 연결 성공!");
-            if (!historyLoaded) {
-                chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
-            }
-        };
-    
-        chatSocket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            console.log("메시지 수신:", data);
-    
-            if (data.type === "chat.history" && data.messages && !historyLoaded) {
-                if (chatMessages.innerHTML.trim() === "") {
-                    chatMessages.innerHTML = "";
-                    data.messages.forEach(function(msg) {
-                        const isUser = (msg.sender_nickname === myUsername);
-                        appendMessage(msg.sender_nickname, msg.timestamp, msg.content, isUser, msg.profile_image_url);
-                    });
-                }
-                historyLoaded = true;
-            }
-            else if (data.type === "chat_message") {
-                const isUser = (data.sender_nickname === myUsername);
-                appendMessage(data.sender_nickname, data.timestamp, data.content, isUser, data.profile_image_url);
-            }
-        };
-    
-        chatSocket.onerror = function(error) {
-            console.error("WebSocket 에러:", error);
-        };
-    
-        chatSocket.onclose = function(event) {
-            console.log("WebSocket 연결 종료:", event);
-        };
-    
-        // 메시지 전송
-        messageForm.addEventListener("submit", function(e) {
-            e.preventDefault();
-            const message = messageInput.value.trim();
-            if (message !== "") {
-                if (chatSocket.readyState === WebSocket.OPEN) {
-                    chatSocket.send(JSON.stringify({ content: message }));
-                }
-                messageInput.value = "";
-            }
-        });
-    
-        // 날짜 형식 
-        function getYmdString(date) {
-            const y = date.getFullYear();
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const d = String(date.getDate()).padStart(2, '0');
-            return `${y}-${m}-${d}`;
-        }
-    
-        // 시간 형식 24시간제
-        function getHmString(date) {
-            let hh = date.getHours();
-            let mm = date.getMinutes();
-            if (mm < 10) {
-                mm = "0" + mm;
-            }
-            return hh + ":" + mm;
-        }
-    
-        // 메시지 추가
-        function appendMessage(sender, timestamp, content, isUser, profileUrl) {
-            // 날짜 시간 
-            const dateObj = new Date(timestamp);
-            const dateStr = getYmdString(dateObj); 
-            const hmStr = getHmString(dateObj);  
-    
-            // 날짜 변경 시 구분선
-            if (lastDate !== dateStr) {
-                insertDateLine(dateStr);
-                lastDate = dateStr;
-            }
-    
-            let hideProfile = false;
-            if (lastDate === dateStr && lastMinute === hmStr && lastSender === sender)
-            {  hideProfile = true; }
-    
-            // 최상위 div
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            if (isUser) {
-                messageDiv.classList.add("user");
-            } else {
-                messageDiv.classList.add("other");
-            }
-    
-            // 메시지 헤더 
-            const headerDiv = document.createElement("div");
-            headerDiv.classList.add("message-header");
-            if (!hideProfile) {
-                // 프로필 이미지
-                const imgElem = document.createElement("img");
-                imgElem.classList.add("profile-pic");
-                imgElem.src = profileUrl;
-                headerDiv.appendChild(imgElem);
-    
-                // 닉네임
-                const nickSpan = document.createElement("span");
-                nickSpan.classList.add("nickname");
-                nickSpan.textContent = sender;
-                headerDiv.appendChild(nickSpan);
-            } else {
-                // 같은 날짜/시/분/유저 => 숨김
-                headerDiv.style.display = "none";
-            }
-    
-            // 메시지 본문
-            const messageContentDiv = document.createElement("div");
-            messageContentDiv.classList.add("message-content");
-    
-            const bubbleDiv = document.createElement("div");
-            bubbleDiv.classList.add("bubble");
-            bubbleDiv.textContent = content;
-    
-            const timeDiv = document.createElement("div");
-            timeDiv.classList.add("message-time");
-            timeDiv.textContent = hmStr;
-    
-            messageContentDiv.appendChild(bubbleDiv);
-            messageContentDiv.appendChild(timeDiv);
-    
-            messageDiv.appendChild(headerDiv);
-            messageDiv.appendChild(messageContentDiv);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-            lastMinute = hmStr;
-            lastSender = sender;
-        }
-    
-        // 날짜 구분선 삽입
-        function insertDateLine(dateStr) {
-            const divider = document.createElement("div");
-            divider.classList.add("date-divider");
-            divider.textContent = dateStr; 
-            chatMessages.appendChild(divider);
-        }
+    function getSenderNickname(msg) {
+      if (msg.sender_nickname) return msg.sender_nickname;
+      if (msg.sender && msg.sender.nickname) return msg.sender.nickname;
+      return "";
+    }
+    function getProfileImage(msg) {
+      if (msg.profile_image_url) return msg.profile_image_url;
+      if (msg.sender && msg.sender.profile_image) return msg.sender.profile_image;
+      return "{% static 'img/default_profile.png' %}";
+    }
+    chatMessages.addEventListener("scroll", function(){
+      if (chatMessages.scrollTop < 50 && !isLoading && !noMoreMessages) {
+        currentPage += 1;
+        loadMoreMessages(currentPage);
+      }
     });
-    </script>
+    
+    function loadMoreMessages(page) {
+      console.log("Loading messages for page:", page);
+      isLoading = true;
+      fetch(`/chat/rooms/${roomId}/messages/?page=${page}`, { credentials: 'include' })
+        .then(res => {
+          if (!res.ok) {
+            if (res.status === 404) {
+              noMoreMessages = true;
+              return Promise.resolve({ results: [] });
+            }
+            throw new Error("HTTP " + res.status);
+          }
+          return res.json();
+        })
+        .then(data => {
+          const msgs = data.results || [];
+          if (msgs.length === 0) {
+            console.log("no more messages");
+            noMoreMessages = true;
+            return;
+          }
+          lastDate = null;
+          lastMinute = null;
+          lastSender = null;
+          msgs.reverse().forEach(msg => {
+            if (!msg.sender_nickname && msg.sender) {
+              msg.sender_nickname = msg.sender.nickname;
+            }
+            if (!msg.profile_image_url && msg.sender) {
+              msg.profile_image_url = msg.sender.profile_image;
+            }
+            if (!msg.message_id && msg.id) {
+              msg.message_id = msg.id;
+            }
+            prependMessage(msg);
+          });
+        })
+        .catch(err => {
+          if (!err.message.startsWith("HTTP 404")) {
+            console.error("Pagination error:", err);
+          }
+        })
+        .finally(() => { isLoading = false; });
+    }
+    
+    function prependMessage(msg) {
+      const senderNickname = getSenderNickname(msg);
+      const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
+      const dateObj = new Date(msg.timestamp);
+      const msgDiv = createMessageDiv(msg, dateObj, isMyMessage);
+      chatMessages.insertBefore(msgDiv, chatMessages.firstChild);
+    }
+    
+    function createMessageDiv(msg, dateObj, isMyMessage) {
+      const dateStr = getYmdString(dateObj);
+      const hmStr = getHmString(dateObj);
+      if (lastDate !== dateStr) {
+        insertDateLine(dateStr);
+        lastDate = dateStr;
+      }
+      const senderNickname = getSenderNickname(msg);
+      let hideProfile = false;
+      if (lastDate === dateStr && lastMinute === hmStr && lastSender === senderNickname) {
+        hideProfile = true;
+      }
+    
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message");
+      if (msg.message_id) {
+        msgDiv.dataset.messageId = msg.message_id;
+      }
+      msgDiv.classList.add(isMyMessage ? "user" : "other");
+    
+      const headerDiv = document.createElement("div");
+      headerDiv.classList.add("message-header");
+      if (!hideProfile) {
+        const imgElem = document.createElement("img");
+        imgElem.classList.add("profile-pic");
+        imgElem.src = getProfileImage(msg);
+        headerDiv.appendChild(imgElem);
+        const nickSpan = document.createElement("span");
+        nickSpan.classList.add("nickname");
+        nickSpan.textContent = senderNickname;
+        headerDiv.appendChild(nickSpan);
+      } else {
+        headerDiv.style.display = "none";
+      }
+    
+      const messageContentDiv = document.createElement("div");
+      messageContentDiv.classList.add("message-content");
+      const bubbleDiv = document.createElement("div");
+      bubbleDiv.classList.add("bubble");
+      bubbleDiv.textContent = msg.content;
+      const timeDiv = document.createElement("div");
+      timeDiv.classList.add("message-time");
+      timeDiv.textContent = hmStr;
+      const readSpan = document.createElement("span");
+      readSpan.classList.add("read-mark");
+      readSpan.textContent = isMyMessage ? (msg.is_read_by_other ? "읽음" : "1") : "";
+    
+      messageContentDiv.appendChild(bubbleDiv);
+      messageContentDiv.appendChild(timeDiv);
+      messageContentDiv.appendChild(readSpan);
+    
+      msgDiv.appendChild(headerDiv);
+      msgDiv.appendChild(messageContentDiv);
+    
+      lastMinute = hmStr;
+      lastSender = senderNickname;
+    
+      return msgDiv;
+    }
+    
+    // insertDateLine: 날짜 구분선 생성 및 삽입
+    function insertDateLine(dateStr) {
+      const divider = document.createElement("div");
+      divider.classList.add("date-divider");
+      divider.textContent = dateStr;
+      chatMessages.insertBefore(divider, chatMessages.firstChild);
+    }
+    
+    function getHmString(dt) {
+      const hh = String(dt.getHours()).padStart(2, '0');
+      const mm = String(dt.getMinutes()).padStart(2, '0');
+      return hh + ":" + mm;
+    }
+    function getYmdString(dt) {
+      const yyyy = dt.getFullYear();
+      const mm = String(dt.getMonth() + 1).padStart(2, '0');
+      const dd = String(dt.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    
+    // WebSocket 연결
+    const protocol = (location.protocol === 'https:') ? 'wss:' : 'ws:';
+    const wsUrl = protocol + '//' + location.host + `/ws/chat/${roomId}/?token={{ access_token|default:'' }}`;
+    const chatSocket = new WebSocket(wsUrl);
+    
+    chatSocket.onopen = function(e) {
+      console.log("ChatConsumer connected");
+      if (!historyLoaded) {
+        chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
+      }
+    };
+    
+    chatSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      console.log("chatSocket recv:", data);
+      if (data.type === "chat.history" && data.messages && !historyLoaded) {
+        chatMessages.innerHTML = "";
+        data.messages.forEach(msg => {
+          const senderNickname = getSenderNickname(msg);
+          const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
+          appendMessage(senderNickname, msg.timestamp, msg.content,
+                        isMyMessage, msg.profile_image_url, msg.message_id, msg.is_read_by_other);
+        });
+        historyLoaded = true;
+      } else if (data.type === "chat_message") {
+        const senderNickname = getSenderNickname(data);
+        const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
+        appendMessage(senderNickname, data.timestamp, data.content,
+                      isMyMessage, data.profile_image_url, data.message_id, data.is_read_by_other);
+      } else if (data.type === "chat.read_event") {
+        handleReadEvent(data.message_id, data.reader_id);
+      }
+    };
+    
+    chatSocket.onerror = function(err) {
+      console.error("ChatConsumer error:", err);
+    };
+    chatSocket.onclose = function(ev) {
+      console.log("ChatConsumer closed:", ev);
+    };
+    
+    function appendMessage(sender, timestamp, content, isMyMessage, profileUrl, messageId, isReadByOther) {
+      const dateObj = new Date(timestamp);
+      const dateStr = getYmdString(dateObj);
+      const hmStr = getHmString(dateObj);
+      if (lastDate !== dateStr) {
+        insertDateLine(dateStr);
+        lastDate = dateStr;
+      }
+      let hideProfile = false;
+      if (lastDate === dateStr && lastMinute === hmStr && lastSender === sender) {
+        hideProfile = true;
+      }
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message");
+      if (messageId) {
+        msgDiv.dataset.messageId = messageId;
+      }
+      msgDiv.classList.add(isMyMessage ? "user" : "other");
+    
+      const headerDiv = document.createElement("div");
+      headerDiv.classList.add("message-header");
+      if (!hideProfile) {
+        const imgElem = document.createElement("img");
+        imgElem.classList.add("profile-pic");
+        imgElem.src = profileUrl || "{% static 'img/default_profile.png' %}";
+        headerDiv.appendChild(imgElem);
+        const nickSpan = document.createElement("span");
+        nickSpan.classList.add("nickname");
+        nickSpan.textContent = sender;
+        headerDiv.appendChild(nickSpan);
+      } else {
+        headerDiv.style.display = "none";
+      }
+    
+      const messageContentDiv = document.createElement("div");
+      messageContentDiv.classList.add("message-content");
+      const bubbleDiv = document.createElement("div");
+      bubbleDiv.classList.add("bubble");
+      bubbleDiv.textContent = content;
+      const timeDiv = document.createElement("div");
+      timeDiv.classList.add("message-time");
+      timeDiv.textContent = hmStr;
+      const readSpan = document.createElement("span");
+      readSpan.classList.add("read-mark");
+      readSpan.textContent = isMyMessage ? (isReadByOther ? "읽음" : "1") : "";
+    
+      messageContentDiv.appendChild(bubbleDiv);
+      messageContentDiv.appendChild(timeDiv);
+      messageContentDiv.appendChild(readSpan);
+    
+      msgDiv.appendChild(headerDiv);
+      msgDiv.appendChild(messageContentDiv);
+    
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+      lastMinute = hmStr;
+      lastSender = sender;
+    }
+    
+    function handleReadEvent(messageId, readerId) {
+      const msgElem = document.querySelector(`.message[data-message-id='${messageId}']`);
+      if (!msgElem) return;
+      if (!msgElem.classList.contains("user")) return;
+      const readMark = msgElem.querySelector(".read-mark");
+      if (readMark) {
+        readMark.textContent = "읽음";
+      }
+    }
+    
+    messageForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const message = messageInput.value.trim();
+      if (message) {
+        if (chatSocket.readyState === WebSocket.OPEN) {
+          chatSocket.send(JSON.stringify({ content: message }));
+        }
+        messageInput.value = "";
+      }
+    });
+  });
+  </script>
 </body>
 </html>

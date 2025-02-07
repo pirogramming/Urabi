@@ -15,10 +15,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
-
+from rest_framework.authentication import SessionAuthentication
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 User = get_user_model()
-
 @login_required
 def chat_main(request):
     user = request.user
@@ -33,7 +34,6 @@ def chat_main(request):
         elif search_email == user.email:
             error_message = "자기 자신과 채팅할 수 없습니다."
         else:
-            # 부분 검색
             searched_users = User.objects.filter(email__icontains=search_email).exclude(id=user.id)
             if not searched_users.exists():
                 error_message = "해당 이메일을 가진 사용자를 찾을 수 없습니다."
@@ -51,10 +51,10 @@ def chat_main(request):
         
         unread_count = room.messages.filter(~Q(sender=user), ~Q(read_by=user)).count()
         room.unread_count = unread_count
-
+        
     context = {
         'room_list': rooms,
-        'searched_users': searched_users,   # 검색 결과
+        'searched_users': searched_users,
         'error_message': error_message,
     }
     return render(request, 'chat/chat_main.html', context)
@@ -80,13 +80,10 @@ def create_chat_room(request, user_id):
 
     return redirect('chat:chat_room', room_id=room.id)
 
-
-
 # 채팅방 목록 페이지네이션 
 class ChatRoomPagination(PageNumberPagination):
     page_size = 20 # 한 페이지당 표시할 채팅방 수
     page_size_query_param = 'page_size'
-    max_page_size = 100
 
 # 채팅방 목록 조회 및 생성 API 뷰
 class ChatRoomList(generics.ListCreateAPIView):
@@ -213,6 +210,7 @@ def enter_chat_room(request, room_id):
 
 # 채팅 메시지 조회 API
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def get_chat_messages(request, room_id):
@@ -291,17 +289,25 @@ def some_protected_route(request):
 @login_required
 def chat_room(request, room_id):
     room = get_object_or_404(ChatRoom, id=room_id)
-    user = request.user
     if request.user not in [room.user1, room.user2]:
-        return HttpResponse("접근 권한이 없습니다.", status=403)
-    
-    other_user = room.user2 if room.user1 == user else room.user1
-    unread_msgs = room.messages.filter(sender=other_user).exclude(read_by=user)
-    for msg in unread_msgs:
-        msg.read_by.add(user)
+        return HttpResponse("No Permission", status=403)
 
-    context = {
+    other_user = room.user2 if room.user1 == request.user else room.user1
+    unread_msgs = room.messages.filter(sender=other_user).exclude(read_by=request.user)
+    
+    channel_layer = get_channel_layer()
+    for m in unread_msgs:
+        m.read_by.add(request.user)
+        async_to_sync(channel_layer.group_send)(
+            f"chat_{room.id}",
+            {
+                "type": "chat.read_event",  
+                "message_id": m.id,
+                "reader_id": request.user.id,
+            }
+        )
+
+    return render(request, 'chat/room_chat.html', {
         'room': room,
-        'access_token': "",  # 필요한 경우 JWT 토큰 문자열
-    }
-    return render(request, 'chat/room_chat.html', context)
+        'access_token': "",
+    })
