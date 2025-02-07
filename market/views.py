@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .filters import MarketFilter
 from users.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 def market_list(request):
     queryset = Market.objects.all() 
@@ -67,14 +68,19 @@ def market_delete(request, pk):
 
 
 @login_required
-def market_zzim(request, item_id):
-
-    market = get_object_or_404(Market, pk=item_id)
+@csrf_exempt
+def market_zzim(request, pk):
+    
+    try:
+        market = Market.objects.get(pk=pk)
+    except Market.DoesNotExist:
+        return JsonResponse({"error":"Market item을 찾지 못했습니다."},statis=404)
+    
     zzim, created = MarketZzim.objects.get_or_create(user=request.user, market=market)
 
     if not created:
         zzim.delete()  # 이미 찜한 경우 삭제
-        return JsonResponse({'item_id':market.item_id, "zzim": False})
+        return JsonResponse({'pk':market.pk, "zzim": False})
     
-    return JsonResponse({"item_id":market.item_id, "zzim": True})
+    return JsonResponse({"pk":market.pk, "zzim": True})
 
