@@ -2,7 +2,21 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'accommodation/accommodation_filter.css' %}">
+    <link rel="stylesheet" href="{% static 'accommodation/accommodation_filter.css' %}">
+    <link rel="stylesheet" href="{% static 'accommodation/accommodation_location.css' %}">
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places">
+    </script>
+    <script>
+        window.addEventListener('load', function() {
+            if (google && google.maps) {
+                initMap();
+            } else {
+                console.error('Google Maps API not loaded');
+            }
+        });
+    </script>
+    <script defer src="{% static 'accommodation/accommodation_map_list.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -21,7 +35,6 @@
         </form>
     </div>
 
-    
     <section class="main_accommodation">
         <div class="main_accommodation_container">
             <div class="main_accommodation_left">
@@ -42,23 +55,19 @@
         </div>
     </section>
 
-    <div class="room-list">
-        {% for review in reviews %}
-        <div class="room-card">
-            <div class="card-content">
-                <span class="guest-tag">
-                    {% if review.rating >= 4.5 %}게스트 선호   
-                    {% elif review.rating >= 4.0 %}인기 숙소
-                    {% else %}신규 등록{% endif %}
-                </span>
-                <div class="image-wrapper">
-                    <div class="room-image">
-                        {% if review.photo %}
-                            <img src="{{ review.photo.url }}" alt="{{ review.accommodation_name }}" class="room-img">
-                        {% else %}
-                            <img src="{% static 'img/default_room.png' %}" alt="기본 이미지" class="room-img">
-                        {% endif %}
-                        <div class="star-rating">
+    <div class="location-container">
+        <div class="accommodation-list">
+            {% for review in reviews %}
+            <div class="accommodation-card" 
+                 data-title="{{ review.accommodation_name }}" 
+                 data-city="{{ review.city }}" 
+                 data-review-id="{{ review.review_id }}">
+                <div class="card-left">
+                    <div class="hotel-image">
+                        <img id="place-img-{{ review.review_id }}" 
+                            src="{% static 'img/room_ex1.png' %}" 
+                            alt="숙소 이미지">
+                        <div class="rating">
                             {% for i in "12345"|make_list %}
                                 {% if forloop.counter <= review.rating %}
                                     <img src="{% static 'img/fill_star.png' %}" alt="별점">
@@ -68,32 +77,33 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="map-container">
-                        <img src="{% static 'img/Map_ex.png' %}" alt="지도" class="map-img">
-                        <img src="{% static 'img/heart.svg' %}" alt="찜하기" class="heart-icon">
-                        <img src="{% static 'img/location.svg' %}" alt="위치" class="location-icon">
-                        <button class="review-view-btn" onclick="location.href='{% url 'accommodation:accommodation_review_detail' review.review_id %}'">
-                            후기 보기
-                        </button>
+                    <div class="hotel-info">
+                        <div class="hotel-title">{{ review.accommodation_name }}</div>
+                        <div class="hotel-address">{{ review.city }}</div>
+                        <p class="review-content">{{ review.content }}</p>
                     </div>
-                </div>
-                <div class="card-info">
-                    <div class="info-left">
-                        <h3>{{ review.city }} {{ review.accommodation_name }}</h3>
-                        <span class="rating-text">평점 {{ review.rating }}</span>
-                        <span class="rating-text">최신리뷰: {{ review.content|truncatechars:50 }}</span>
-                    </div>
-                    <img src="{% static 'img/fill_star.png' %}" alt="즐겨찾기" class="favorite-star">
+                    <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}" 
+                       class="view-review-btn">
+                        후기 보기
+                    </a>
                 </div>
             </div>
+            {% empty %}
+            <div class="no-reviews">
+                <p>등록된 숙소 후기가 없습니다.</p>
+            </div>
+            {% endfor %}        
         </div>
-        {% empty %}
-        <div class="no-reviews">
-            <p>등록된 숙소 후기가 없습니다.</p>
-        </div>
-        {% endfor %}
-    </div>
-    
-</div>
 
+        <div class="map-section">
+            <div id="map"></div>
+            <div class="search-container">
+                <input id="search-bar" 
+                       type="text" 
+                       placeholder="장소를 검색하세요"
+                       autocomplete="off">
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
