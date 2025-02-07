@@ -23,6 +23,13 @@ def market_list(request):
     selected_status = request.GET.get('status',None)
     selected_category = request.GET.get('category',None)
 
+    if request.user.is_authenticated:
+        user_zzim = MarketZzim.objects.filter(user=request.user).values_list('market__item_id', flat=True)
+    else:
+        user_zzim = []
+        
+    for market in page_obj:
+        market.is_zzim = market.item_id in user_zzim
     return render(request, 'market/market_list.html', 
                     {'markets': page_obj, 'filterset':filterset, 'items_per_page':items_per_page, 'selected_status':selected_status, 'selected_category':selected_category})
 
