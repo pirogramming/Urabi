@@ -22,6 +22,7 @@ urlpatterns = [
     path('mypage/trip/delete/<int:pk>/', views.delete_trip, name='delete_trip'),
     path('mypage/detail/<int:pk>/', views.user_detail, name='user_detail'),
     path('mypage/plan/<int:pk>/', views.plan_detail, name='plan_detail'),
+    path('mypage/list/', views.user_list, name='user_list'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
