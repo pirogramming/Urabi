@@ -19,7 +19,7 @@ from django.core.files.base import ContentFile
 from accommodation.models import AccommodationReview
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from market.models import MarketZzim
+from market.models import Market,MarketZzim
 
 
 def social_login(request):
@@ -385,6 +385,10 @@ def user_detail(request, pk):
     
     # 처음 5개만 보이도록 슬라이싱 initial_reviews = accommodation_reviews[:5]
     
+    #나눔마켓
+    mkt_self_items = Market.objects.filter(user=user)
+    mkt_self_count = mkt_self_items.count()
+
     # 동행 태그 처리
     for accompany in user_accompany:
         accompany.tags = accompany.tags.split(',') if accompany.tags else []
@@ -398,6 +402,8 @@ def user_detail(request, pk):
         'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
         'review_count': review_count,  # 리뷰 개수 추가
         'has_more': review_count > 5,  # 더보기 버튼 표시 여부
+        'mkt_self_items' :mkt_self_items, #마켓 작성자 게시글
+        'mkt_self_count' :mkt_self_count
     })
     
     
