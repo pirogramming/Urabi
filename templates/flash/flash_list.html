@@ -37,7 +37,7 @@
     <!-- 지도 -->
     <div class="flash_left">
         <section class="flash_list_header">
-            <h2 class="flash_list_title">12개의 모집중인 번개</h2>
+            <h2 class="flash_list_title">{{ flash_meetings.count }}개의 모집중인 번개</h2>
             <div class="flash_list_controls">
                 <h2>나만의 번개</h2>
                 <a href="{% url 'flash:flash_register' %}" class="flash_register_btn">등록하기</a>
@@ -59,18 +59,20 @@
                     <a href="{% url 'flash:flash_detail' flash.meeting_id %}">
                         <img id="place-img-{{ flash.meeting_id }}" src="https://via.placeholder.com/300" alt="모임 이미지">
                     </a>
-                    <div class="flash_card_info">
-                        <h3><a href="{% url 'flash:flash_detail' flash.meeting_id %}">{{ flash.title }}</a></h3>
-                        <p class="flash_place">{{ flash.city }}</p>
-                        <p class="flash_date">{{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
-                        <div class="flash_card_tags">
-                            {% for tag in flash.tag_list %}
-                                <span class="flash_tag">#{{ tag }}</span>
-                            {% empty %}
-                                <span class="flash_tag">태그 없음</span>
-                            {% endfor %}
+                    <div class ="flash_card_content">
+                        <div class="flash_card_info">
+                            <h3><a href="{% url 'flash:flash_detail' flash.meeting_id %}">{{flash.title}}</a></h3>
+                            <p class="flash_date">{{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                            <p class="flash_place">{{ flash.city }}</p>
                         </div>
-                        <span class="flash_capacity">{{ flash.max_people }}</span>
+                        <div class="flash_card_tags">
+                                {% for tag in flash.tag_list %}
+                                    <span class="flash_tag">#{{ tag }}</span>
+                                {% empty %}
+                                    <span class="flash_tag">태그 없음</span>
+                                {% endfor %}
+                                <span class="flash_capacity">{{ flash.max_people }}</span>
+                        </div>
                     </div>
                 </div>
                 {% empty %}
@@ -87,5 +89,16 @@
     </section>
     
 </div>
+
+<script>
+    window.initMap = function () {
+        console.log("⚡ Google Maps API 로드됨: initMap 실행");
+        if (typeof window.actualInitMap === "function") {
+            window.actualInitMap();
+        } else {
+            console.error("🚨 actualInitMap 함수가 정의되지 않음!");
+        }
+    };
+</script>
 
 {% endblock %}

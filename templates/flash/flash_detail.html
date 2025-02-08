@@ -48,7 +48,9 @@
             </div>
             {% if request.user == flash.created_by %}
                 <div class="flash_buttons">
-                    <a href="{% url 'flash:flash_update' flash.pk %}" class="flash_edit_btn">수정하기</a>
+                    <button class="flash_edit_btn">
+                        <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
+                    </button>
                     <button class="flash_delete_btn" onclick="deleteFlash({{ flash.pk }})">삭제하기</button>
                 </div>
             {% else %}
