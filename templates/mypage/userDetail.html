@@ -22,14 +22,14 @@
 
   <!-- 메인 콘텐츠 영역 -->
   <section class="mypage-content">
-    <h1 class="main-title">내 활동 관리</h1>
     {% if current_user.id != user.id %}
     <div class="nickname-wrap">
       <div class="nickname-wrap-left">
         <div class="nickname">{{ user.nickname }}</div>
         <span class="score">36.5°C</span>
       </div>
-      <button class="chatting-btn">채팅하기</button>
+      <button id="chatWithUserBtn" class="chatting-btn" data-other-user-id="{{ user.id }}">채팅하기</button>
+
     </div>
     {% endif %}
     <!-- 프로필 섹션 -->
@@ -45,11 +45,9 @@
         </div>
         <div class="passport-card-body">
           <div>
-            <img
-              src="{% static 'img/default-profile.png' %}" 
-              alt="프로필 사진"
-              class="profile-photo"
-            />
+            <img id="profile-picture-preview" class="profile-photo"
+            src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+            alt="프로필 사진" />
             <div class="travel-score">
               <span>여행지수</span>
               <span class="score">36.5 °C</span>
@@ -71,7 +69,7 @@
             <div class="info-row row-2">
               <div class="info-item">
                 <span class="label">한글성명</span>
-                <span class="value">{{ user.user_name }}</span>
+                <span class="value">{{ user.username }}</span>
               </div>
               <div class="info-item">
                 <span class="label">선호하는 이름 / Nickname</span>
@@ -261,5 +259,45 @@
   loadMoreAccompanies();
   loadMoreReviews();
   loadMoreMarkets();
+
+  // 채팅하기 버튼을 눌렀을 때 채팅 모달에 해당 채팅방을 로드하는 함수
+  document.addEventListener("DOMContentLoaded", function() {
+    const chattingBtn = document.getElementById("chatWithUserBtn");
+    const chatModal = document.getElementById("chatModal");
+    const chatFrame = document.getElementById("chatFrame");
+
+    if(chattingBtn) {
+      chattingBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        const otherUserId = chattingBtn.dataset.otherUserId;
+
+        const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+        
+        fetch(createRoomUrl, {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"  // AJAX 요청
+          },
+          credentials: "include"
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.chat_room_url) {
+            // base.html에 있는 모달의 iframe(src)를 해당 채팅방 URL로 변경
+            const chatFrame = document.getElementById("chatFrame");
+            chatFrame.src = data.chat_room_url;
+            // 모달 열기 
+            const chatModal = document.getElementById("chatModal");
+            chatModal.style.display = "block";
+          } else if (data.error) {
+            alert(data.error);
+          }
+        })
+        .catch(error => {
+          console.error("Error creating chat room:", error);
+        });
+      });
+    }
+  });
 </script>
 {% endblock %}

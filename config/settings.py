@@ -53,6 +53,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    "daphne",
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -75,6 +78,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,6 +87,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'config.urls'
 
@@ -103,6 +108,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 
 # Database
@@ -168,6 +174,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -176,15 +183,71 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # DB 기반 세션
 SESSION_COOKIE_AGE = 3600  # 세션 유지 시간 (1시간)
 SESSION_SAVE_EVERY_REQUEST = True  # 매 요청마다 세션 갱신
 
+#임의수정
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_HTTPONLY = False  # JavaScript에서 CSRF 토큰을 읽을 수 있도록 False
+CSRF_COOKIE_SAMESITE = "Lax"
+
+# CORS 설정 추가 (필요 시)
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False  # 보안상 특정 Origin만 허용하는 것이 좋음
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000"
+]
+
+
 
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CHANNEL_LAYERS = {
+    "default": {
+        # 'BACKEND': 'chat.redis_layer.CustomRedisChannelLayer',
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'chat.consumer': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
+
+
+# 웹소켓 URL 설정
+WEBSOCKET_URL = '/ws/'
+
+# Clickjacking 보호 설정 변경
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # 같은 도메인에서는 iframe 허용
+
+
+
+
 

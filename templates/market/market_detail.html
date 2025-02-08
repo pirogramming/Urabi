@@ -85,7 +85,7 @@
         </div>
     {% else %}
         <div class="market_detail_bottom">
-            <a href="#" class="market_detail_chat_btn">
+            <a href="#" class="market_detail_chat_btn" data-other-user-id="{{ market.user.id }}">
                 <img src="/static/img/chat_icon.svg">
                 <p>채팅하기</p>
             </a>
@@ -150,6 +150,39 @@
             }
         });
     });
+
+    const marketChatBtn = document.querySelector(".market_detail_chat_btn");
+    if(marketChatBtn) {
+        marketChatBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            const otherUserId = marketChatBtn.dataset.otherUserId;
+            // create_chat_room 뷰 URL 생성 (판매자 ID 사용)
+            const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+            
+            fetch(createRoomUrl, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"  // AJAX 요청임을 표시
+                },
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.chat_room_url) {
+                    // base.html에 정의된 채팅 모달 사용 (iframe에 채팅방 URL 할당)
+                    const chatFrame = document.getElementById("chatFrame");
+                    chatFrame.src = data.chat_room_url;
+                    const chatModal = document.getElementById("chatModal");
+                    chatModal.style.display = "block";
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error creating chat room:", error);
+            });
+        });
+    }
 
     </script>
     {%endblock js%}

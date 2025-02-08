@@ -3,7 +3,7 @@
 
 {% block head %} 
 <link rel="stylesheet" href="{% static 'flash/flash_list.css' %}">
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap&loading=async"></script>
 <script defer src="{% static 'flash/flash_map_list.js' %}"></script>
 {% endblock %}
 
@@ -37,7 +37,7 @@
     <!-- 지도 -->
     <div class="flash_left">
         <section class="flash_list_header">
-            <h2 class="flash_list_title">12개의 모집중인 번개</h2>
+            <h2 class="flash_list_title">{{ flash_meetings|length }}개의 모집중인 번개</h2>
             <div class="flash_list_controls">
                 <h2>나만의 번개</h2>
                 <a href="{% url 'flash:flash_register' %}" class="flash_register_btn">등록하기</a>
