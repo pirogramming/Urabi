@@ -25,7 +25,6 @@ urlpatterns = [
     path('mypage/list/', views.user_list, name='user_list'),
     path('mypage/zzim/', views.zzim_list, name='zzim_list'),
 
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
