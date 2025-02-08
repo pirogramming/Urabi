@@ -9,6 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from .models import ChatRoom, Message
 from .serializers import ChatRoomSerializer, ChatRoomInfoSerializer, MessageSerializer, ChatRoomDetailSerializer
 from users.models import User
+from django.urls import reverse
 from accompany.models import TravelGroup
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -96,17 +97,24 @@ def create_chat_room(request, user_id):
     ).first()
 
     if room:
-        # 만약 내가 이전에 삭제한 상태였다면 삭제 시각을 초기화(= None)하여 다시 보이게
+        # 만약 현재 사용자가 이전에 삭제한 상태라면 삭제 시각을 초기화
         if room.user1 == current_user and room.deleted_at_user1:
             room.deleted_at_user1 = None
             room.save()
         elif room.user2 == current_user and room.deleted_at_user2:
             room.deleted_at_user2 = None
             room.save()
-        return redirect('chat:chat_room', room_id=room.id)
     else:
         room = ChatRoom.objects.create(user1=current_user, user2=other_user)
-        return redirect('chat:chat_room', room_id=room.id)
+
+    # 채팅방 URL 생성 (reverse를 이용)
+    chat_room_url = reverse('chat:chat_room', kwargs={'room_id': room.id})
+    
+    # AJAX 요청이면 JSON 반환, 아니라면 redirect
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return JsonResponse({"chat_room_url": chat_room_url})
+    else:
+        return redirect(chat_room_url)
 
 # 채팅방 목록 페이지네이션 
 class ChatRoomPagination(PageNumberPagination):
