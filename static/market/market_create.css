@@ -94,7 +94,12 @@
 .market_register_list_btn{
     background-color: var(--blue);
 }
-
+.market_register_list_btn >p {
+    line-height: 40px;
+    font-weight: 300;
+    color:white;
+    text-align: center;
+}
 .market_register_enroll_btn:hover, .market_register_list_btn:hover{
     box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
 }
