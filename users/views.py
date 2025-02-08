@@ -11,17 +11,25 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan
-from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup
+from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup, AccompanyRequest
 from flash.models import FlashZzim
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
 from django.core.files.base import ContentFile
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from accommodation.models import AccommodationReview
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from market.models import Market,MarketZzim
 
+@csrf_exempt
+def get_csrf_token(request):
+    return JsonResponse({"csrfToken": get_token(request)})
 
 def social_login(request):
     return render(request, 'users/social_login.html')
@@ -199,6 +207,8 @@ class LoginView(generics.GenericAPIView):
             user = authenticate(email=email, password=password)
 
             if user:
+                login(request, user)
+                request.session.save()
                 refresh = RefreshToken.for_user(user)
                 return Response({
                     "token": str(refresh.access_token),
@@ -216,11 +226,13 @@ class LoginView(generics.GenericAPIView):
             
             if user:
                 login(request, user)
+                request.session.save()
                 return redirect('main:home')
             return render(request, 'login/login.html', {'error': '로그인 실패'})
 
     def get(self, request):
         return render(request, 'login/login.html')
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -302,14 +314,33 @@ def user_logout(request):
     return redirect('main:home')
 
 def login_view(request):
-    return render(request, 'main/main.html', {'user': request.user})
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            # 세션에 로그인 처리 (Django의 세션 인증)
+            login(request, user)
+
+            # JWT 토큰 발급 (API용)
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+
+            # 여기서 세션 쿠키가 설정되었으므로, 일반 페이지에서는 user가 인증된 상태로 나타납니다.
+            # API 요청 시 클라이언트는 발급된 JWT 토큰을 사용하면 됩니다.
+            return redirect('main:home')
+        else:
+            return render(request, 'login/login.html', {'error': '로그인 실패'})
+    return render(request, 'login/login.html')
 
 
 # 마이페이지 설정
 @login_required
 def my_page(request):
     return render(request, 'mypage/myPage.html', {'user':request.user})
+
+
 
 # 정보 수정
 @login_required
@@ -341,6 +372,20 @@ def edit_profile(request):
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
+
+# 채팅 : 토큰 발급
+@login_required
+def get_token_for_logged_in_user(request):
+    refresh = RefreshToken.for_user(request.user)
+    return JsonResponse({
+        "access": str(refresh.access_token)
+    })
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def some_protected_route(request):
+    return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
 
 @login_required
 def my_trip(request): # 여행 계획 작성
@@ -408,35 +453,35 @@ def user_detail(request, pk):
     })
     
     
-# def load_more_reviews(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    offset = int(request.GET.get('offset', 5))
-    limit = 5  # 한 번에 추가로 보여줄 리뷰 수
+# # def load_more_reviews(request, user_id):
+#     user = get_object_or_404(User, id=user_id)
+#     offset = int(request.GET.get('offset', 5))
+#     limit = 5  # 한 번에 추가로 보여줄 리뷰 수
     
-    # is_parent=False인 리뷰만 가져오기
-    accommodation_reviews = AccommodationReview.objects.filter(
-        user=user,
-        is_parent=False
-    ).order_by('-created_at')[offset:offset+limit]
+#     # is_parent=False인 리뷰만 가져오기
+#     accommodation_reviews = AccommodationReview.objects.filter(
+#         user=user,
+#         is_parent=False
+#     ).order_by('-created_at')[offset:offset+limit]
     
-    # 더 보여줄 리뷰가 있는지 확인
-    total_reviews = AccommodationReview.objects.filter(
-        user=user,
-        is_parent=False
-    ).count()
+#     # 더 보여줄 리뷰가 있는지 확인
+#     total_reviews = AccommodationReview.objects.filter(
+#         user=user,
+#         is_parent=False
+#     ).count()
     
-    has_more = total_reviews > (offset + limit)
+#     has_more = total_reviews > (offset + limit)
     
-    context = {
-        'accommodation_reviews': accommodation_reviews
-    }
+#     context = {
+#         'accommodation_reviews': accommodation_reviews
+#     }
     
-    html = render_to_string('mypage/_review_cards.html', context)
+#     html = render_to_string('mypage/_review_cards.html', context)
     
-    return JsonResponse({
-        'html': html,
-        'has_more': has_more
-    })
+#     return JsonResponse({
+#         'html': html,
+#         'has_more': has_more
+#     })
 
 @login_required
 def plan_detail(request, pk):
@@ -469,9 +514,20 @@ def user_list(request):
     user = get_object_or_404(User, id=request.user.id)
     user_plans = TravelPlan.objects.filter(created_by=user)
     user_plan_count = user_plans.count()
+    user_accompanies = TravelParticipants.objects.filter(user=user)
+    user_accompany_count = user_accompanies.count()
+    for accompany in user_accompanies:
+        travel_group = TravelGroup.objects.get(travel_id=accompany.travel_id)
+        accompany.tags = travel_group.tags.split(',') if travel_group.tags else []
+    user_request = AccompanyRequest.objects.filter(user=user)
+    user_request_count = user_request.count()
+
     return render(request, 'mypage/planlist.html', {
         'plans': user_plans,
         'plan_count': user_plan_count,
+        'accompanies': user_accompanies,
+        'accompany_count': user_accompany_count+user_request_count,
+        'ac_requests': user_request,
     })
 
 def zzim_list(request):

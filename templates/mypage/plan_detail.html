@@ -3,7 +3,7 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'mypage/myTrip.css' %}">
   <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
-  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap&loading=async"></script>
 {% endblock %}
 
 {% block content %}
@@ -36,7 +36,7 @@
             <p><strong>도시:</strong> {{ travel_plan.city }}</p>
             <p><strong>기간:</strong> {{ travel_plan.start_date }} ~ {{ travel_plan.end_date }}</p>
             <p><strong>설명:</strong> {{ travel_plan.explanation }}</p>
-            <p><strong>공개 여부:</strong> {{ travel_plan.is_public|yesno:"공개,비공개" }}</p>
+            {% comment %} <p><strong>공개 여부:</strong> {{ travel_plan.is_public|yesno:"공개,비공개" }}</p> {% endcomment %}
           </div>
           
           <div class="btns">

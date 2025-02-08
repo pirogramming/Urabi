@@ -146,7 +146,7 @@
 {% block js %}
 <script>
   const plansPerPage = 2;
-  console.log("flash_zzim_count:", "{{ flash_zzim_count }}");
+  {% comment %} console.log("flash_zzim_count:", "{{ flash_zzim_count }}");
   console.log("flash_zzims:", {{ flash_zzims|safe }});
   document.addEventListener("DOMContentLoaded", function () {
     const flashContainer = document.getElementById("flash-activity-container");
@@ -158,7 +158,7 @@
     flashCards.forEach((card, index) => {
       console.log(`Card ${index + 1}:`, card);
     });
-  });
+  }); {% endcomment %}
   
   function loadMoreItems(containerId, buttonId) {
     let currentIndex = 0;

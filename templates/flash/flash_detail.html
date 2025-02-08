@@ -61,14 +61,17 @@
 
     <hr class="flash_divider">
 
-    <div class="flash_host">
-        <img src="{% static 'img/profile_sample.jpg' %}" alt="호스트 이미지" class="host_image">
-        <div class="host_info">
+    <a href="{% url 'users:user_detail' flash.created_by.id %}">
+        <div class="flash_host">
+          <img src="{{ flash.created_by.profile_image.url }}" alt="호스트 이미지" class="host_image">
+          <div class="host_info">
             <p class="host_name">주최자: {{ flash.created_by.nickname|default:flash.created_by.username }}</p>
             <p class="host_rating">⭐ 34.5</p>
+          </div>
+          <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 메시지 보내기</button>
         </div>
-        <button class="host_chat_btn">💬 메시지 보내기</button>
-    </div>
+      </a>
+      
 
     <hr class="flash_divider">
 
@@ -150,6 +153,41 @@
             toggleZzim(flashId);
         });
     });
+
+    const hostChatBtn = document.querySelector(".host_chat_btn");
+    if (hostChatBtn) {
+        hostChatBtn.addEventListener("click", function(e) {
+            // 부모 <a> 태그의 링크로 이동하지 않도록 처리
+            e.preventDefault();
+            e.stopPropagation();
+            const otherUserId = hostChatBtn.dataset.otherUserId;
+            // create_chat_room 뷰 URL 생성: '0'을 실제 id로 교체
+            const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+
+            fetch(createRoomUrl, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.chat_room_url) {
+                    // base.html에 정의된 채팅 모달을 사용함 (iframe에 채팅방 URL 설정)
+                    const chatFrame = document.getElementById("chatFrame");
+                    chatFrame.src = data.chat_room_url;
+                    const chatModal = document.getElementById("chatModal");
+                    chatModal.style.display = "block";
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error creating chat room:", error);
+            });
+        });
+    }
 </script>
 
 {% endblock %}

@@ -15,5 +15,6 @@ class AccompanyFilter(django_filters.FilterSet):
         model = TravelGroup
         fields = ['city', 'start_date', 'end_date', 'gender', 'age']
 
+
     def filtered_age(self, queryset, name, value):
         return queryset.filter(min_age__lte=value, max_age__gte=value)

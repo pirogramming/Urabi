@@ -1,0 +1,274 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+
+* {
+    font-family: 'Paperlogy' !important;
+}
+
+/* 전체 화면 크기 조정 */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 채팅방 헤더 */
+.chat-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: var(--blue);
+    color: white;
+    width: 100%;
+}
+
+.chat-header .chat-header-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin : 0 20px
+}
+
+/* 검색창  */
+.search-container {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.search-box
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.error-message{
+    text-align: center;
+    margin-top: 10px;
+    color: darkgray;
+    font-size: 13px;
+}
+
+.search-box input {
+    width: 85%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    margin-right: 5px;
+}
+
+.search-box button {
+    background: var(--blue);
+    color: white;
+    padding: 11px 16px;
+    border-radius: 15px;
+    border: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    background: #0056b3;
+    transition: all 0.3s ease;
+}
+
+/* 검색 결과 목록 */
+.search-results {
+    margin: 10px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    max-width: 350px;
+    width: 100%;
+}
+
+/* 검색 결과 개별 항목 */
+.user-item {
+    border-bottom: 1px solid #ddd;
+    max-width: 350px;
+}
+
+.user-item:last-child {
+    display: block;
+    border-bottom: none;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.user-link {
+    display: flex;  
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 12px;
+    width: 100%;
+    color: inherit;  
+}
+
+.profile-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.chat-icon{
+    width: 30px;
+    height: 30px;
+    margin-left: auto;
+}
+
+.nickname {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.email {
+    font-size: 12px;
+    color: #666;
+}
+
+.user-item:hover {
+    background: #f7f7f7;
+    transition: all 0.3s ease;
+}
+
+.my-chat-title{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.room-list-title-container{
+    display: flex;
+    max-width: 350px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+
+.room-list-title{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 5px;
+}
+.chat-room-list {
+    list-style: none;
+    padding: 0;
+    max-width: 350px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.chat-room-item {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    padding: 0;  /* 내부 패딩 없음 (a가 전체 영역을 차지하도록) */
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.chat-room-item:hover {
+    background: #f5f5f5;
+}
+
+.chat-room-item a {
+    display: flex;
+    width: 100%;
+    text-decoration: none;
+    color: #000;
+}
+
+
+.room-checkbox {
+    margin: auto 0;
+    margin-left: 20px;
+    appearance: checkbox;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+
+/* 채팅방 정보 */
+.room-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 12px;
+}
+
+.room-wrapper .profile-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.room-text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* 채팅방 닉네임 */
+.room-text .nickname {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+/*  마지막 메시지 */
+.room-text .last-message {
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.unread-badge {
+    background: var(--red);
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 6px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 22px;
+    height: 22px;
+    margin-right: 5px;
+    margin-left: auto;
+}
+
+#edit-button{
+    color: var(--yellow);
+}
+#delete-button{
+    display: none;
+    margin-right: 5px;
+    color: var(--red);
+}
+
+#cancel-button{
+    display: none;
+    margin-right: 5px;
+}
