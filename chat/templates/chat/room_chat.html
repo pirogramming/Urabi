@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function(){
     return hh + ":" + mm;
   }
 
-  // 날짜 구분선 생성 (중복 방지)
+  // 날짜 구분선 생성 
   function insertDateLine(dateStr) {
     const existingDivider = document.querySelector(`.date-divider[data-date="${dateStr}"]`);
     if (existingDivider) return;
@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function(){
     chatMessages.appendChild(divider);
   }
 
-  // 모든 메시지 로드: 로딩 전에 날짜 관련 변수 초기화
   function loadAllMessages() {
     fetch(`/chat/rooms/${roomId}/messages/`, { credentials: 'include' })
       .then(res => {
@@ -92,7 +91,6 @@ document.addEventListener("DOMContentLoaded", function(){
         return res.json();
       })
       .then(data => {
-        // 초기화: 첫 메시지부터 날짜 구분선을 제대로 추가하기 위해
         lastDate = null;
         lastMinute = null;
         lastSender = null;
@@ -117,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function(){
     if (lastDate !== dateStr) {
         insertDateLine(dateStr);
         lastDate = dateStr;
-        // 새 날짜이므로 헤더 정보 초기화
         lastMinute = null;
         lastSender = null;
     }
