@@ -59,14 +59,17 @@
 
     <hr class="flash_divider">
 
-    <div class="flash_host">
-        <img src="{% static 'img/profile_sample.jpg' %}" alt="호스트 이미지" class="host_image">
-        <div class="host_info">
+    <a href="{% url 'users:user_detail' flash.created_by.id %}">
+        <div class="flash_host">
+          <img src="{{ flash.created_by.profile_image.url }}" alt="호스트 이미지" class="host_image">
+          <div class="host_info">
             <p class="host_name">주최자: {{ flash.created_by.nickname|default:flash.created_by.username }}</p>
             <p class="host_rating">⭐ 34.5</p>
+          </div>
+          <button class="host_chat_btn">💬 메시지 보내기</button>
         </div>
-        <button class="host_chat_btn">💬 메시지 보내기</button>
-    </div>
+      </a>
+      
 
     <hr class="flash_divider">
 

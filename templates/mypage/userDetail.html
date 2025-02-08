@@ -22,7 +22,6 @@
 
   <!-- 메인 콘텐츠 영역 -->
   <section class="mypage-content">
-    <h1 class="main-title">내 활동 관리</h1>
     {% if current_user.id != user.id %}
     <div class="nickname-wrap">
       <div class="nickname-wrap-left">
@@ -45,11 +44,9 @@
         </div>
         <div class="passport-card-body">
           <div>
-            <img
-              src="{% static 'img/default-profile.png' %}" 
-              alt="프로필 사진"
-              class="profile-photo"
-            />
+            <img id="profile-picture-preview" class="profile-photo"
+            src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+            alt="프로필 사진" />
             <div class="travel-score">
               <span>여행지수</span>
               <span class="score">36.5 °C</span>
@@ -71,7 +68,7 @@
             <div class="info-row row-2">
               <div class="info-item">
                 <span class="label">한글성명</span>
-                <span class="value">{{ user.user_name }}</span>
+                <span class="value">{{ user.username }}</span>
               </div>
               <div class="info-item">
                 <span class="label">선호하는 이름 / Nickname</span>
