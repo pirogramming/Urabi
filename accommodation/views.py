@@ -102,7 +102,7 @@ def accommodation_create(request):
                 is_parent=True,
                 latitude=request.POST.get('latitude'),
                 longitude=request.POST.get('longitude'),
-                place_id=request.POST.get('place_id')
+                #place_id=request.POST.get('place_id')
             )
             
             if 'photo' in request.FILES:
@@ -119,7 +119,7 @@ def accommodation_create(request):
     }
     return render(request, "accommodation/accommodation_create.html", context)
 
-
+from django.core.paginator import Paginator
 def accommodation_review_detail(request, pk):
     review = get_object_or_404(AccommodationReview.objects.select_related('user'), pk=pk)
     
@@ -131,6 +131,10 @@ def accommodation_review_detail(request, pk):
     
     review_count = all_reviews.count()
     
+    #페이지네이션ㄴ 추가
+    pages = Paginator(all_reviews, 5)
+    curr_page_number = request.GET.get('page', 1)
+    page = pages.page(curr_page_number)
     average_rating = AccommodationReview.objects.filter(
         accommodation_name=review.accommodation_name
     ).aggregate(avg_rating=Avg('rating'))['avg_rating']
@@ -142,7 +146,8 @@ def accommodation_review_detail(request, pk):
         "review": review,
         "all_reviews": all_reviews,
         "average_rating": average_rating,
-        "review_count": review_count 
+        "review_count": review_count,
+        "page": page
     })
     
 @login_required
