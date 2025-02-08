@@ -64,6 +64,19 @@
       </div>
     </footer>
 
+  <!-- Chat Modal -->
+  <div id="chatModal" class="chat-modal">
+    <div class="chat-modal-content">
+      <span class="close-btn">&times;</span>
+      
+      {% if not user.is_authenticated %}
+      {% else %}
+        <iframe id="chatFrame" src="" frameborder="0"></iframe>
+      {% endif %}
+    </div>
+  </div>
+
+
     <button class="chat-btn">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4C9.373 4 4 9.373 4 16c0 2.165.572 4.193 1.573 5.945a1 1 0 0 1 .094.77l-1.439 5.059l5.061-1.44a1 1 0 0 1 .77.094A11.94 11.94 0 0 0 16 28c6.628 0 12-5.373 12-12S22.628 4 16 4M2 16C2 8.268 8.268 2 16 2s14 6.268 14 14s-6.268 14-14 14c-2.368 0-4.602-.589-6.56-1.629l-5.528 1.572A1.5 1.5 0 0 1 2.06 28.09l1.572-5.527A13.94 13.94 0 0 1 2 16m8-3a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H11a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2z"/></svg>
     </button>
@@ -76,7 +89,51 @@
   </div></a>
 
   <script>
-    const chatButton = document.querySelector('.chat-btn');
+    document.addEventListener("DOMContentLoaded", function() {
+      const chatButton = document.querySelector(".chat-btn");  
+      const chatModal = document.getElementById("chatModal");
+      const chatFrame = document.getElementById("chatFrame");
+      const closeBtn = document.querySelector(".close-btn");
+      const chatButtonLeft = document.querySelector('#chatbotbtn');
+      const footer = document.querySelector('.footer');
+  
+      if (!chatButton || !chatModal || !chatFrame || !closeBtn) {
+        console.error("Error: One or more required elements not found!");
+        return;
+    }
+  
+      chatButton.addEventListener("click", function() {
+          chatFrame.src = "{% url 'chat:chat_main' %}"; 
+          chatModal.style.display = "block";
+      });
+  
+      closeBtn.addEventListener("click", function() {
+          chatModal.style.display = "none";
+          chatFrame.src = "";  // 모달 닫힐 때 iframe 비우기
+      });
+  
+      // 스크롤 이벤트 수정 (chatButton이 null일 경우 오류 방지)
+      window.addEventListener('scroll', () => {
+          if (!chatButton || !chatButtonLeft || !footer) return;
+  
+          const footerTop = footer.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          
+          if (footerTop < windowHeight) {
+              chatButton.style.bottom = `${windowHeight - footerTop + 20}px`;
+              chatButtonLeft.style.position = 'fixed';  
+              chatButtonLeft.style.bottom = `${windowHeight - footerTop + 20}px`; 
+          } else {
+              chatButton.style.position = 'fixed';
+              chatButton.style.bottom = '20px';
+  
+              chatButtonLeft.style.position = 'fixed';
+              chatButtonLeft.style.bottom = '20px';
+          }
+      });
+  });
+
+  
     const chatButtonLeft = document.querySelector('#chatbotbtn');
     const footer = document.querySelector('.footer');
 
