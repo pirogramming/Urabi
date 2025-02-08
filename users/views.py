@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan
 from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup
+from flash.models import FlashZzim
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
@@ -475,10 +476,16 @@ def user_list(request):
 
 def zzim_list(request):
     user = get_object_or_404(User, id=request.user.id)
+
     ac_zzims = Accompany_Zzim.objects.filter(user=user)
     ac_zzim_items = [zzim.item for zzim in ac_zzims]
     ac_zzim_count = ac_zzims.count()
 
+    # 사용자가 찜한 번개 목록 가져오기
+    flash_zzims = FlashZzim.objects.filter(user=user).select_related("flash")
+    flash_zzim_items = [zzim.flash for zzim in flash_zzims]
+    flash_zzim_count = flash_zzims.count()
+    
     mkt_zzims = MarketZzim.objects.filter(user=user)
     mkt_zzims_items = [zzim.market for zzim in mkt_zzims]
     mkt_zzim_count = mkt_zzims.count()
@@ -486,6 +493,8 @@ def zzim_list(request):
     return render(request, 'mypage/zzim_list.html', {
         'ac_zzims': ac_zzim_items,
         'ac_zzim_count': ac_zzim_count,
+        'flash_zzims': flash_zzim_items,
+        'flash_zzim_count': flash_zzim_count,
         'mkt_zzims':mkt_zzims_items,
         'mkt_zzim_count' : mkt_zzim_count,
     })

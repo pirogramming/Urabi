@@ -4,6 +4,7 @@ from .models import AccommodationReview
 from django.contrib import messages
 from django.db.models import Subquery, OuterRef, Max
 from django.db.models import Avg
+from django.conf import settings
 
 def accommodation_filter(request):
     """메인페이지"""
@@ -48,44 +49,77 @@ def accommodation_filter(request):
 
 def accommodation_location(request):
     """숙소 위치를 지도에서 보여주는 페이지"""
+    # 검색 파라미터 가져오기
+    city_query = request.GET.get('city', '')
+    rating_query = request.GET.get('rating', '')
+    
     # 각 숙소의 최신 리뷰만 가져오기
     latest_reviews = AccommodationReview.objects.filter(
         accommodation_name=OuterRef('accommodation_name')
     ).order_by('-created_at')
     
+    # 기본 쿼리셋 (최신 리뷰만 포함)
     reviews = AccommodationReview.objects.filter(
         review_id=Subquery(
             latest_reviews.values('review_id')[:1]
         )
-    ).order_by('-created_at')
-    
-    return render(request, "accommodation/accommodation_location.html", {"reviews": reviews})
+    )
 
+    # 검색 필터링 적용
+    if city_query:
+        reviews = reviews.filter(city__icontains=city_query)
+
+    if rating_query:
+        try:
+            min_rating = float(rating_query)
+            reviews = reviews.filter(rating__gte=min_rating)
+        except ValueError:
+            pass
+
+    # 최종 정렬
+    reviews = reviews.order_by('-created_at')
+    
+    return render(request, "accommodation/accommodation_location.html", {
+        "reviews": reviews,
+        "city_query": city_query,
+        "rating_query": rating_query
+    })
+    
 @login_required
 def accommodation_create(request):
-    """숙소 후기 작성 페이지 (후기랑 리뷰는 다른것이기에 후기를 첫 리뷰로 놓고나서 다른것들은 is_parent=False로 다르게 두기)"""
     if request.method == "POST":
         try:
+            accommodation_name = request.POST.get('accommodation_name')
+            city = request.POST.get('city')
+            
             review = AccommodationReview(
                 user=request.user,
-                city=request.POST.get('city'),
-                accommodation_name=request.POST.get('accommodation_name'),
+                city=city,
+                accommodation_name=accommodation_name,
                 category=request.POST.get('category'),
                 rating=float(request.POST.get('rating')),
                 content=request.POST.get('content'),
-                is_parent=True  # 첫 리뷰임을 표시
+                is_parent=True,
+                latitude=request.POST.get('latitude'),
+                longitude=request.POST.get('longitude'),
+                #place_id=request.POST.get('place_id')
             )
+            
             if 'photo' in request.FILES:
                 review.photo = request.FILES['photo']
+                
             review.save()
             messages.success(request, '후기가 성공적으로 등록되었습니다.')
             return redirect('accommodation:filter')
         except Exception as e:
             messages.error(request, f'후기 등록 중 오류가 발생했습니다: {str(e)}')
-    return render(request, "accommodation/accommodation_create.html")
+            
+    context = {
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
+    }
+    return render(request, "accommodation/accommodation_create.html", context)
 
-
-
+from django.core.paginator import Paginator
 def accommodation_review_detail(request, pk):
     review = get_object_or_404(AccommodationReview.objects.select_related('user'), pk=pk)
     
@@ -97,6 +131,10 @@ def accommodation_review_detail(request, pk):
     
     review_count = all_reviews.count()
     
+    #페이지네이션ㄴ 추가
+    pages = Paginator(all_reviews, 5)
+    curr_page_number = request.GET.get('page', 1)
+    page = pages.page(curr_page_number)
     average_rating = AccommodationReview.objects.filter(
         accommodation_name=review.accommodation_name
     ).aggregate(avg_rating=Avg('rating'))['avg_rating']
@@ -108,7 +146,8 @@ def accommodation_review_detail(request, pk):
         "review": review,
         "all_reviews": all_reviews,
         "average_rating": average_rating,
-        "review_count": review_count 
+        "review_count": review_count,
+        "page": page
     })
     
 @login_required

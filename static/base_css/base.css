@@ -5,6 +5,9 @@
   font-style: normal;
 }
 
+.gm-style-mtc-bbw{
+  display: none;
+}
 @font-face {
   font-family: 'Paperlogy';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
