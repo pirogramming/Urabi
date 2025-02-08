@@ -36,6 +36,7 @@
         <div class="market_register_form">
             <h3>가격</h3>
             {{form.price}}
+            {{form.currency_unit}}
         </div>
         <div class="market_register_form">
             <h3>사진</h3>
@@ -51,7 +52,9 @@
         </div>
     </form>
 </section>
+{% endblock %}
 
+{%block js%}
 <script>
     document.querySelector('form').addEventListener('submit',function(event){
         const price = parseFloat(document.querySelector('input[name="price"]').value);
@@ -63,5 +66,4 @@
     });
 </script>
 
-{% endblock %}
-
+{%endblock js%}

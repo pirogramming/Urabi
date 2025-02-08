@@ -155,6 +155,7 @@
 
 .market_detail_trade_location p, .market_detail_price p{
     margin-left: 10px;
+    font-size: 18px;
 }
 .market_detail_description{
     width: 100%;
