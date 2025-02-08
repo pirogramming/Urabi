@@ -30,10 +30,10 @@
             {% for review_item in page.object_list %}
             <div class="review">
                 <div class="review-header">
-                    <span class="review-profileimg">
-                        <img src="{% static 'img/default-profile.png' %}" alt="">
-                    </span>
-                    <span class="review-author">{{ review_item.user.nickname }}</span>
+                    <a href="{%url 'users:user_detail' review_item.user.id%}">
+                        <span class="review-profileimg"><img src="{% static 'img/default-profile.png' %}" alt=""></span>
+                        <span class="review-author">{{ review_item.user.nickname }}</span>
+                    </a>
                     <span class="review-rating">⭐ {{ review_item.rating }}</span>
                     <button class="review-heart">
                         <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
@@ -43,7 +43,7 @@
                     <p class="review-text">{{ review_item.content }}</p>
                     {% if review_item.photo %}
                     <div class="review-image">
-                        <img src="{{ review_item.photo.url }}" alt="Review Image">
+                        <img style="max-height: 350px;"src="{{ review_item.photo.url }}" alt="Review Image">
                     </div>
                     {% endif %}
                 </div>
