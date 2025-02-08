@@ -4,7 +4,7 @@
     let geocoder;
     let polyline;
 
-    function initMap() {
+    window.initMap = async function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
@@ -247,3 +247,4 @@
     window.initMap = initMap;
 
 }
+window.initMap = initMap;
