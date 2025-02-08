@@ -480,6 +480,6 @@ def zzim_list(request):
     return render(request, 'mypage/zzim_list.html', {
         'ac_zzims': ac_zzim_items,
         'ac_zzim_count': ac_zzim_count,
-        'mkt_zzims_items':mkt_zzims_items,
+        'mkt_zzims':mkt_zzims_items,
         'mkt_zzim_count' : mkt_zzim_count,
     })
