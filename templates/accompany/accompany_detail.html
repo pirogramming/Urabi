@@ -99,9 +99,9 @@
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li><span>{{ object.created_by.email }}</span><span>🚩</span></li>
+        <li><span><a href="{%url 'users:user_detail' object.created_by.id%}">{{ object.created_by.email }}</a></span><span>🚩</span></li>
         {% for member in participants %}
-          <li data-user-id="{{ member.id }}"><span>{{ member.email }}</span>
+          <li data-user-id="{{ member.id }}"><span><a href="{%url 'users:user_detail' member.id%}">{{ member.email }}</a></span>
             {% if user == object.created_by or member.id is user.id %}
               <button class="red part-del-btn">x</button>
             {%endif%}
