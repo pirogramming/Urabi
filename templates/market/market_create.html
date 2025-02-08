@@ -35,7 +35,7 @@
         </div>
         <div class="market_register_form">
             <h3>가격</h3>
-            {{ form.price}}
+            {{form.price}}
         </div>
         <div class="market_register_form">
             <h3>사진</h3>
@@ -51,6 +51,17 @@
         </div>
     </form>
 </section>
+
+<script>
+    document.querySelector('form').addEventListener('submit',function(event){
+        const price = parseFloat(document.querySelector('input[name="price"]').value);
+
+        if (price <= 0){
+            event.preventDefault();
+            alert('가격은 0보다 커야합니다.');
+        }
+    });
+</script>
 
 {% endblock %}
 
