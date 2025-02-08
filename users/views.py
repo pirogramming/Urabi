@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan
-from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup
+from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup, AccompanyRequest
 from flash.models import FlashZzim
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
@@ -453,35 +453,35 @@ def user_detail(request, pk):
     })
     
     
-# def load_more_reviews(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    offset = int(request.GET.get('offset', 5))
-    limit = 5  # 한 번에 추가로 보여줄 리뷰 수
+# # def load_more_reviews(request, user_id):
+#     user = get_object_or_404(User, id=user_id)
+#     offset = int(request.GET.get('offset', 5))
+#     limit = 5  # 한 번에 추가로 보여줄 리뷰 수
     
-    # is_parent=False인 리뷰만 가져오기
-    accommodation_reviews = AccommodationReview.objects.filter(
-        user=user,
-        is_parent=False
-    ).order_by('-created_at')[offset:offset+limit]
+#     # is_parent=False인 리뷰만 가져오기
+#     accommodation_reviews = AccommodationReview.objects.filter(
+#         user=user,
+#         is_parent=False
+#     ).order_by('-created_at')[offset:offset+limit]
     
-    # 더 보여줄 리뷰가 있는지 확인
-    total_reviews = AccommodationReview.objects.filter(
-        user=user,
-        is_parent=False
-    ).count()
+#     # 더 보여줄 리뷰가 있는지 확인
+#     total_reviews = AccommodationReview.objects.filter(
+#         user=user,
+#         is_parent=False
+#     ).count()
     
-    has_more = total_reviews > (offset + limit)
+#     has_more = total_reviews > (offset + limit)
     
-    context = {
-        'accommodation_reviews': accommodation_reviews
-    }
+#     context = {
+#         'accommodation_reviews': accommodation_reviews
+#     }
     
-    html = render_to_string('mypage/_review_cards.html', context)
+#     html = render_to_string('mypage/_review_cards.html', context)
     
-    return JsonResponse({
-        'html': html,
-        'has_more': has_more
-    })
+#     return JsonResponse({
+#         'html': html,
+#         'has_more': has_more
+#     })
 
 @login_required
 def plan_detail(request, pk):
@@ -514,9 +514,20 @@ def user_list(request):
     user = get_object_or_404(User, id=request.user.id)
     user_plans = TravelPlan.objects.filter(created_by=user)
     user_plan_count = user_plans.count()
+    user_accompanies = TravelParticipants.objects.filter(user=user)
+    user_accompany_count = user_accompanies.count()
+    for accompany in user_accompanies:
+        travel_group = TravelGroup.objects.get(travel_id=accompany.travel_id)
+        accompany.tags = travel_group.tags.split(',') if travel_group.tags else []
+    user_request = AccompanyRequest.objects.filter(user=user)
+    user_request_count = user_request.count()
+
     return render(request, 'mypage/planlist.html', {
         'plans': user_plans,
         'plan_count': user_plan_count,
+        'accompanies': user_accompanies,
+        'accompany_count': user_accompany_count+user_request_count,
+        'ac_requests': user_request,
     })
 
 def zzim_list(request):

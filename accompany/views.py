@@ -168,6 +168,9 @@ def add_participant(request):
             travel = get_object_or_404(TravelGroup, travel_id=travel_id)
             user = get_object_or_404(User, id=user_id)
 
+            del_data = AccompanyRequest.objects.filter(travel=travel, user=user)
+            del_data.delete()
+
             # 중복 참가 방지
             if TravelParticipants.objects.filter(travel=travel, user=user).exists():
                 return JsonResponse({"message": "이미 참가 중입니다."}, status=400)
@@ -218,7 +221,6 @@ def apply_participant(request):
             data = json.loads(request.body)
             travel_id = data.get("travel_id")
             accompany = TravelGroup.objects.get(travel_id=travel_id)
-            
             # 중복 참가 방지
             if TravelParticipants.objects.filter(travel=accompany, user=request.user).exists():
                 return JsonResponse({"success": False, "message": "이미 참가 신청을 했습니다."}, status=400)
