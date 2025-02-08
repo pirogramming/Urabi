@@ -12,6 +12,16 @@
   overflow-y: auto;
   align-items: center;
   max-height: calc(100vh - 250px);
+  scrollbar-width: none;
+}
+
+.accommodation-list::-webkit-scrollbar {
+  display: none;
+}
+
+
+.accommodation-list {
+  -ms-overflow-style: none;
 }
 
 .accommodation-card {
@@ -20,7 +30,7 @@
   max-width: 550px; 
   margin: 0 auto 20px; 
   margin-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee;
   width: 100%;
 }
 
@@ -72,6 +82,13 @@
   height: 15px;
 }
 
+.hotel-content {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;  
+  align-items: flex-end;
+}
+
 .hotel-info {
   margin-top: 15px;
 }
@@ -88,11 +105,29 @@
   margin-bottom: 10px;
 }
 
-.review-info {
+.review-content {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+}
+
+.view-review-btn {
+  border: 2px solid #5a87a2; 
+  color: #5a87a2; 
+  cursor: pointer;
+  padding: 8px 12px; 
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out; 
+  text-align: center;
+  display: inline-block;
+}
+
+.view-review-btn:hover {
+  border-color: #5a87a2; 
+  transform: scale(1.05);
 }
 
 .price-rating {
