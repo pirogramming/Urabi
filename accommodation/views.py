@@ -126,7 +126,7 @@ def accommodation_review_detail(request, pk):
     # 같은 숙소의 리뷰들 중 is_parent=False인 것만 가져오기
     all_reviews = AccommodationReview.objects.select_related('user').filter(
         accommodation_name=review.accommodation_name,
-        is_parent=False  # 첫 리뷰가 아닌 것만 가져오기
+        #is_parent=False  # 첫 리뷰가 아닌 것만 가져오기
     ).order_by('-created_at')
     
     review_count = all_reviews.count()

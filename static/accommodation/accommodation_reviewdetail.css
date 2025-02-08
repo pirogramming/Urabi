@@ -126,7 +126,10 @@
     margin-bottom: 10px;
     color: #333;
 }
-
+.review-header>a{
+    display: flex;
+    align-items: center;
+}
 .review-profileimg img{
     border-radius: 50%;
     width: 40px;
