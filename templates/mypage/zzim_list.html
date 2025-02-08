@@ -83,10 +83,10 @@
         </p>
 
         {%if mkt_zzim_count %}
-          {% for market in mkt_zzims %}
+          {% for market in mkt_zzims_items %}
           <div class="activity-card" style="display: none;">
             {% if market.photo %}
-              <img src="{{market.photo.url}}" alt="마켓 게시글 이미지" onclick="location.href='{% url 'market:market_detail' market.item_id %}" style="cursor:poiner;">
+              <img src="{{market.photo.url}}" alt="마켓 게시글 이미지" class="mypage_marketZzim_img"onclick="location.href='{% url 'market:market_detail' market.item_id %}" style="cursor:poiner;">
             {% else %}
             {% endif %}
             <div class="activity-review">
@@ -115,7 +115,7 @@
           찜한 마켓 게시글이 없어요!
         </div>
         {% endif %}
-        <button id="load-more-market-btn" onclick="loadMoreMarkets()">더보기</button>
+        <button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
     </section>
   </section>
 </main>
