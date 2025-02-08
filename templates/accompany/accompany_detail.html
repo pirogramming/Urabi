@@ -74,8 +74,8 @@
   </div>
   <div class="participants">
     <div class="profile">
-      <img src="https://www.w3schools.com/w3images/lights.jpg" width="30" height="30" alt="profile">
-      <span class="writer">{{ object.created_by }}</span>
+      <img style="cursor:pointer;" onclick="window.location.href='{%url 'users:user_detail' user.id%}'" src="{%if user.profile_image%}{{user.profile_image.url}}{%else%}https://www.w3schools.com/w3images/lights.jpg{%endif%}" width="30" height="30" alt="profile">
+      <span style="cursor:pointer;" onclick="window.location.href='{%url 'users:user_detail' user.id%}'" class="writer">{{ object.created_by }}</span></a>
       <span class="temperature">36.5°C</span> 
       <span class="blue">&nbsp;|&nbsp;</span> 
       <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>

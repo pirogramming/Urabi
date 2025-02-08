@@ -192,40 +192,38 @@
       <h2 class="sub-title">나눔 마켓 이력</h2>
       <div id="market-cards-container">
         <p class="activity-header">
-          {{ user.nickname }} 님은 <span class="text-hilight">2</span>개의 글을 올렸어요!
+          {{ user.nickname }} 님은 <span class="text-hilight">{{mkt_self_count}}</span>개의 글을 올렸어요!
         </p>
-        <div class="activity-card" style="display: none;">
-          <div class="activity-review">
-            <div class="activity-review-header">
-              <span class="activity-review-type">🛒 구매해요</span>
-              <span class="activity-review-title">
-                멀미약 구해요
-              </span>
+        {%if mkt_self_count%}
+          {%for market in mkt_self_items%}
+            <div class="activity-card" style="display: none;">
+              <a href="{% url 'market:market_detail'  market.pk %}">
+              <div class="activity-review">
+                <div class="activity-review-header">
+                  <span class="activity-review-type">{{market.get_trade_type_display}}</span>
+                  <span class="activity-review-title mypage_mkt_title">
+                    {{market.title}}
+                  </span>
+                </div>
+                <p class="activity-date">
+                  {%if market.updated_at %}
+                    {{market.updated_at}}
+                  {% else %}
+                    {{market.created_at}}
+                  {% endif %}
+                </p>
+                <p class="schedule-location">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                  <span class="schedule-location-text">{{market.city}}</span>
+                </p>
+              </div>
             </div>
-            <p class="activity-date">2025/2/4</p>
-            <p class="schedule-location">
-              <img src="{% static 'img/location_icon.png' %}" alt="위치">
-              <span class="schedule-location-text">파리</span>
-            </p>
-          </div>
-        </div>
-        <div class="activity-card" style="display: none;">
-          <div class="activity-review">
-            <div class="activity-review-header">
-              <span class="activity-review-type">🎁 나눔해요</span>
-              <span class="activity-review-title">
-                여름 옷 가져가실 분 있나용
-              </span>
-            </div>
-            <p class="activity-date">2025/2/4</p>
-            <p class="schedule-location">
-              <img src="{% static 'img/location_icon.png' %}" alt="위치">
-              <span class="schedule-location-text">파리</span>
-            </p>
-          </div>
-        </div>
+            {% endfor %}
+        {% else %}
+          <div>작성한 마켓 게시글이 없습니다. </div>
+        {% endif %}
       </div>
-      <button id="load-more-market-btn" onclick="loadMoreMarkets()">더보기</button>
+      <button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
     </section>
   </section>
 </main>

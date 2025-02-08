@@ -11,14 +11,6 @@
         <h2>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></h2>
         <p> > 상세 정보</p>
     </div>
-    <div class="image-map">
-        {% if review.photo %}
-            <img src="{{ review.photo.url }}" alt="Accommodation Image" class="accommodation-image">
-        {% else %}
-            <img src="{% static 'img/room_ex1.png' %}" alt="Accommodation Image" class="accommodation-image">
-        {% endif %}
-        <img src="{% static 'img/Map_ex.png' %}" alt="" class="map-image">
-    </div>
     <div class="detail-info">
         <div class="detail-info-header">
             <div class="detail-info-title">{{ review.city }} {{ review.accommodation_name }}</div>
@@ -28,20 +20,20 @@
             </button>
         </div>
         <div class="search-container">
-            <p class="review-count">{{ review_count }}개의 리뷰</p>
-            <button>
+            {% comment %} <button>
                 <img src="{% static 'img/search-icon.svg' %}" alt="찾기" class="search-icon">
-            </button>
+            </button> {% endcomment %}
+            <p class="review-count">{{ review_count }}개의 리뷰</p>
         </div>
 
         <div class="reviews">
-            {% for review_item in all_reviews %}
+            {% for review_item in page.object_list %}
             <div class="review">
                 <div class="review-header">
-                    <span class="review-profileimg">
-                        <img src="{% static 'img/default-profile.png' %}" alt="">
-                    </span>
-                    <span class="review-author">{{ review_item.user.nickname }}</span>
+                    <a href="{%url 'users:user_detail' review_item.user.id%}">
+                        <span class="review-profileimg"><img src="{% static 'img/default-profile.png' %}" alt=""></span>
+                        <span class="review-author">{{ review_item.user.nickname }}</span>
+                    </a>
                     <span class="review-rating">⭐ {{ review_item.rating }}</span>
                     <button class="review-heart">
                         <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
@@ -51,7 +43,7 @@
                     <p class="review-text">{{ review_item.content }}</p>
                     {% if review_item.photo %}
                     <div class="review-image">
-                        <img src="{{ review_item.photo.url }}" alt="Review Image">
+                        <img style="max-height: 350px;"src="{{ review_item.photo.url }}" alt="Review Image">
                     </div>
                     {% endif %}
                 </div>
@@ -59,9 +51,26 @@
             </div>
             {% endfor %}
         </div>
+        <div class="pagination">
+            {% if page.object_list %}
+              <a href='?page=1';>&laquo; 처음으로</a>
+              {% for num in page.paginator.page_range %}
+                  {% if num >= page.number|add:'-2' and num <= page.number|add:'2' %}
+                      {% if page.number == num %}
+                          <button class="now">{{ num }}</button>
+                      {% else %}
+                          <button onclick="window.location.href='?page={{ num }}';">{{ num }}</button>
+                      {% endif %}
+                  {% endif %}
+              {% endfor %}
+              <a href='?page={{ page.paginator.num_pages }}';>마지막으로 &raquo;</a>
+            {% else %}
+                <button class="now">1</button>
+            {% endif %}
+          </div>
         
         <div class="action-buttons">
-            <button class="navigate-button" onclick="location.href='{% url 'accommodation:accommodation_location' %}'">숙소 페이지로 ></button>
+            <button class="navigate-button" onclick="location.href='{% url 'accommodation:filter' %}'">숙소 페이지로 ></button>
             <button class="write-review-button" onclick="location.href='{% url 'accommodation:accommodation_review_create' review.pk %}'">후기 작성하기 ></button>
         </div>
     </div>

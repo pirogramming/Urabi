@@ -24,6 +24,11 @@ class Market(models.Model):
         ('거래 완료', '거래 완료' ),
         ('예약', '예약' ),
     ]
+    CURRENCY_UNIT = [
+        ('₩','₩'),
+        ('$','$'),
+        ( '€','€'),
+    ]
 
     item_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, verbose_name=("작성자"), on_delete=models.CASCADE)
@@ -33,6 +38,7 @@ class Market(models.Model):
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
     explanation = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    currency_unit = models.CharField(choices=CURRENCY_UNIT, max_length=10)
     status = models.CharField(max_length=20, default='거래 가능', choices=TRADE_STATUS_CHOICES)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)

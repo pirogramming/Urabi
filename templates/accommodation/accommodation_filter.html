@@ -33,9 +33,10 @@
                 <img src="{% static 'img/search-icon.svg' %}" alt="검색">
             </button>
         </form>
+        <button onclick="window.location.href='{% url 'accommodation:accommodation_create' %}'">숙소 등록하기</button>
     </div>
 
-    <section class="main_accommodation">
+    <section class="main_accommodation"  style="display: none;">
         <div class="main_accommodation_container">
             <div class="main_accommodation_left">
                 <h2>방문했던 숙소의 솔직한 후기를 공유해주세요!</h2>
@@ -88,22 +89,31 @@
                     </a>
                 </div>
             </div>
-            {% empty %}
-            <div class="no-reviews">
-                <p>등록된 숙소 후기가 없습니다.</p>
-            </div>
             {% endfor %}        
         </div>
-
+        
         <div class="map-section">
-            <div id="map"></div>
-            <div class="search-container">
-                <input id="search-bar" 
-                       type="text" 
-                       placeholder="장소를 검색하세요"
-                       autocomplete="off">
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+            <div id="map">
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+{%block js%}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accommodationList = document.querySelector('.accommodation-list');
+        const mainAccommodation = document.querySelector('.main_accommodation');
+        const mapSection = document.querySelector('.map-section');
+
+        if (accommodationList.children.length === 0) {
+            mainAccommodation.style.display = 'block';
+            mapSection.style.display = 'none';
+        } else {
+            mainAccommodation.style.display = 'none';
+            mapSection.style.display = 'block';
+        }
+    });
+</script>
+{%endblock js%}

@@ -4,7 +4,6 @@
   align-items: center; 
   max-width: 1200px; 
   margin: 0 auto;
-  height: calc(100vh - 80px);
 }
 
 .accommodation-list {
@@ -12,7 +11,7 @@
   padding: 20px;
   overflow-y: auto;
   align-items: center;
-  max-height: calc(100vh - 80px);
+  max-height: calc(100vh - 250px);
 }
 
 .accommodation-card {
@@ -144,14 +143,13 @@
 .map-section {
   width: 600px;
   position: sticky;
-  height: 100vh;
+  height: 73vh;
   justify-content: center; 
   align-items: center; 
 }
 
 #map {
   width: 100%;
-  height: 80%;
+  height: 95%;
   object-fit: cover;
-  margin-top: 80px;
 }

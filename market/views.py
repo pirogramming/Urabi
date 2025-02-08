@@ -48,8 +48,8 @@ def market_create(request):
 
     return render(request, 'market/market_create.html', {'form': form})
 
-def market_detail(request,item_id):
-    market = Market.objects.get(pk=item_id)
+def market_detail(request,pk):
+    market = Market.objects.get(pk=pk)
     is_zzim = MarketZzim.objects.filter(user=request.user, market=market).exists()
     trust_score = market.user.trust_score
     return render(request, 'market/market_detail.html', {'market':market, 'is_zzim':is_zzim, 'trust_score':trust_score})

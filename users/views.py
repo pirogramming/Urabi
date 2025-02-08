@@ -25,6 +25,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from accommodation.models import AccommodationReview
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from market.models import Market,MarketZzim
 
 @csrf_exempt
 def get_csrf_token(request):
@@ -430,6 +431,10 @@ def user_detail(request, pk):
     
     # 처음 5개만 보이도록 슬라이싱 initial_reviews = accommodation_reviews[:5]
     
+    #나눔마켓
+    mkt_self_items = Market.objects.filter(user=user)
+    mkt_self_count = mkt_self_items.count()
+
     # 동행 태그 처리
     for accompany in user_accompany:
         accompany.tags = accompany.tags.split(',') if accompany.tags else []
@@ -443,6 +448,8 @@ def user_detail(request, pk):
         'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
         'review_count': review_count,  # 리뷰 개수 추가
         'has_more': review_count > 5,  # 더보기 버튼 표시 여부
+        'mkt_self_items' :mkt_self_items, #마켓 작성자 게시글
+        'mkt_self_count' :mkt_self_count
     })
     
     
@@ -523,10 +530,16 @@ def zzim_list(request):
     flash_zzims = FlashZzim.objects.filter(user=user).select_related("flash")
     flash_zzim_items = [zzim.flash for zzim in flash_zzims]
     flash_zzim_count = flash_zzims.count()
+    
+    mkt_zzims = MarketZzim.objects.filter(user=user)
+    mkt_zzims_items = [zzim.market for zzim in mkt_zzims]
+    mkt_zzim_count = mkt_zzims.count()
 
     return render(request, 'mypage/zzim_list.html', {
         'ac_zzims': ac_zzim_items,
         'ac_zzim_count': ac_zzim_count,
         'flash_zzims': flash_zzim_items,
         'flash_zzim_count': flash_zzim_count,
+        'mkt_zzims':mkt_zzims_items,
+        'mkt_zzim_count' : mkt_zzim_count,
     })
