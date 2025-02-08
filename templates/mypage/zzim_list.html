@@ -70,10 +70,34 @@
 
 
       <h2 class="sub-title">번개 모임</h2>
-      <div id="flash-cards-container"class="activity-box activity-none">
-        참여한 번개 모임이 없어요!
+      <div id="flash-activity-container" class="activity-box">
+          {% if flash_zzim_count > 0 %}
+              <p class="activity-header">
+                  {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_zzim_count }}</span>개의 번개를 찜했어요!
+              </p>
+              {% for flash in flash_zzims %}
+                  <div class="activity-card flash-card">
+                      <a href="{% url 'flash:flash_detail' flash.pk %}">
+                          <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+                              alt="번개 이미지" class="flash-img">
+                      </a>
+                      <div class="activity-info">
+                          <div class="activity-title">
+                              <a href="{% url 'flash:flash_detail' flash.pk %}">{{ flash.title }}</a>
+                          </div>
+                          <p class="activity-date">📅 {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                          <p class="schedule-location">
+                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                              <span class="schedule-location-text">{{ flash.city }}</span>
+                          </p>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% else %}
+              <p>찜한 번개 모임이 없어요!</p>
+          {% endif %}
       </div>
-      <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더보기</button>
+      <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
 
       <h2 class="sub-title">나눔 마켓</h2>
       <div id="market-cards-container">
@@ -120,12 +144,25 @@
 {% block js %}
 <script>
   const plansPerPage = 2;
+  console.log("flash_zzim_count:", "{{ flash_zzim_count }}");
+  console.log("flash_zzims:", {{ flash_zzims|safe }});
+  document.addEventListener("DOMContentLoaded", function () {
+    const flashContainer = document.getElementById("flash-activity-container");
+    const flashCards = flashContainer.querySelectorAll(".activity-card");
 
+    console.log("flash-activity-container 존재 여부:", flashContainer ? "있음" : "없음");
+    console.log("flash-activity-container 내 .activity-card 개수:", flashCards.length);
+
+    flashCards.forEach((card, index) => {
+      console.log(`Card ${index + 1}:`, card);
+    });
+  });
+  
   function loadMoreItems(containerId, buttonId) {
     let currentIndex = 0;
     const items = document.querySelectorAll(`#${containerId} .activity-card`);
 
-    return function() {
+    function showMore() {
       const nextIndex = currentIndex + plansPerPage;
       for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
         items[i].style.display = 'block';
@@ -135,12 +172,19 @@
       if (currentIndex >= items.length) {
         document.getElementById(buttonId).style.display = 'none';
       }
-    };
+    }
+
+    // 초기 숨기기 (첫 2개만 표시)
+    items.forEach((item, index) => {
+      item.style.display = index < plansPerPage ? 'block' : 'none';
+    });
+
+    return showMore;
   }
 
 
   const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
-  const loadMoreFlash = loadMoreItems('flash-cards-container', 'load-more-participation-btn');
+  const loadMoreFlash = loadMoreItems('flash-activity-container', 'load-more-flash-btn');
   const loadMoreMarkets = loadMoreItems('market-cards-container', 'load-more-market-btn');
 
   // 초기 로딩 시 처음 2개의 일정만 보이도록 설정

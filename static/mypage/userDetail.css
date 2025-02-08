@@ -235,6 +235,42 @@
     color: var(--red);
   }
 
+  #flash-activity-container {
+    background-color: var(--darkgray);
+    border-radius: 12px;
+    padding: 30px 16px;
+    margin-bottom: 20px;
+}
+.flash-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 40px;
+  margin-bottom: 12px;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #eee;
+}
+
+.flash-img {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 5%;
+}
+
+.flash-card .activity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flash-card .activity-title {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
   .activity-none{
     text-align: center;
   }

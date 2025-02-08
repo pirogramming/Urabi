@@ -18,7 +18,7 @@ window.initMap = async function() {
 
         // 마커 추가 및 검색 기능 초기화
         await addAccommodationMarkers(map, placesService, streetViewService, geocoder);
-        enableSearchBar(map, geocoder);
+        enableSearchBar(map);
         
         console.log("초기 지도 생성 성공");
     } catch (error) {
@@ -222,7 +222,7 @@ function updateInfoWindowImage(infoWindow, infoImageId, newImageUrl, title, url)
 
 }
 
-function enableSearchBar(map, geocoder) {
+function enableSearchBar(map) {
     const searchInput = document.getElementById("search-bar");
     
     
