@@ -13,7 +13,7 @@
     <div>
         <h1 class="main_companion_text">새로운 만남,<br>끝없는 이야기,<br>지금 <em>동행</em>을 찾아보세요</em></h1>
         <div class="main_companion_btn_container">
-            <a href="#" id="main_find_companion">장기 동행 찾기 ></a>
+            <a href="{% url 'accompany:accompany_list'%}" id="main_find_companion">장기 동행 찾기 ></a>
         </div>
     </div>
 </section>
@@ -26,11 +26,11 @@
         <div class="main_flash_btn_container">
             <div class="main_find_flash">
                 <p>지금, 내 주변</p>
-                <a class="main_find_flash_btn" href="#">번개 찾기</a>
+                <a class="main_find_flash_btn" href="{% url 'flash:flash_list'%}">번개 찾기</a>
             </div>
             <div class="main_enroll_flash">
                 <p>나만의 번개</p>
-                <a class="main_enroll_flash_btn" href="#">등록하기</a>
+                <a class="main_enroll_flash_btn" href="{% url 'flash:flash_register'%}">등록하기</a>
             </div>
         </div>
         <img src="{% static 'img/main_flash2.svg' %}" alt="Flash Icon">
@@ -59,7 +59,7 @@
 <section class="main_market">
     <div class="main_market_title">
         <h1>필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
-        <a href="#">전체 보기 ></a>
+        <a href="{% url 'market:market_list'%}">전체 보기 ></a>
     </div>
     <div class="main_market_body">
         <p class="main_market_body_title">대표 카테고리</p>

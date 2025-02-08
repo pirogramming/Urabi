@@ -67,6 +67,7 @@ zope.interface==7.2
 zope.proxy==6.1
 
 
+
 # 채팅으로 버전 내리기 전 
 # annotated-types==0.7.0
 # anyio==4.8.0

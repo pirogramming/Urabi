@@ -3,6 +3,9 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'flash/flash_register.css' %}">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script src="{% static 'flash/flash_map.js' %}" defer></script>
+<script src="{% static 'flash/flash_tag.js' %}" defer></script>
 {% endblock %}
 
 {% block header_content %}
@@ -16,7 +19,8 @@
     </section>
     
     <section class="flash_map">
-        <img src="{% static 'img/flash_map_sample.png' %}" alt="번개 모임 지도">
+        <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+        <div id="map"></div>
     </section>
 
     <form method="POST" class="flash_register_form">
@@ -71,60 +75,5 @@
         <button type="submit" class="flash_submit_btn">{% if edit_mode %}수정 완료{% else %}등록{% endif %}</button>
     </form>    
 </section>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const addTagBtn = document.getElementById("add_tag_btn");
-        const tagInput = document.getElementById("tag_input");
-        const tagList = document.querySelector(".tag_list");
-        const tagsHiddenInput = document.getElementById("tags_hidden");
-
-        let tagsArray = tagsHiddenInput.value ? tagsHiddenInput.value.split(",") :[];
-
-        addTagBtn.addEventListener("click", function() {
-            let tagValue = tagInput.value.trim();
-            if (tagValue !== "" && !tagsArray.includes(tagValue)) {
-                tagsArray.push(tagValue);
-                updateTagsDisplay();
-                tagInput.value = "";
-            }
-        });
-
-        function updateTagsDisplay() {
-            tagList.innerHTML = "";
-            tagsArray.forEach(tag => {
-                const tagItem = document.createElement("span");
-                tagItem.classList.add("tag_item");
-                tagItem.textContent = "#" + tag;
-
-                const removeBtn = document.createElement("button");
-                removeBtn.classList.add("tag_remove_btn");
-                removeBtn.textContent = "x";
-                removeBtn.addEventListener("click", function() {
-                    tagsArray = tagsArray.filter(t => t !== tag);
-                    updateTagsDisplay();
-                });
-
-                tagItem.appendChild(removeBtn);
-                tagList.appendChild(tagItem);
-            });
-
-            // 태그들을 쉼표로 연결하여 hidden input에 저장
-            tagsHiddenInput.value = tagsArray.join(",");
-        }
-        addTagBtn.addEventListener("click", function() {
-            let tagValue = tagInput.value.trim();
-            if (tagValue !== "" && !tagsArray.includes(tagValue)) {
-                tagsArray.push(tagValue);
-                updateTagsDisplay();
-                tagInput.value = "";
-            }
-        });
-
-        // 페이지 로드 시 기존 태그 렌더링
-        updateTagsDisplay();
-    });
-</script>
-
 
 {% endblock %}

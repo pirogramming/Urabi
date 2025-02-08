@@ -11,12 +11,12 @@ class Market(models.Model):
     ]
 
     CATEGORY_CHOICES = [
-        ('의약품', '의약품' ),
-        ('티켓', '티켓' ),
-        ('음식', '음식' ),
-        ('생활용품', '생활용품' ),
-        ('기념품', '기념품' ),
-        ('기타', '기타' ),
+        ('의약품', '#의약품' ),
+        ('티켓', '#티켓' ),
+        ('음식', '#음식' ),
+        ('생활용품', '#생활용품' ),
+        ('기념품', '#기념품' ),
+        ('기타', '#기타' ),
     ]
 
     TRADE_STATUS_CHOICES = [
@@ -39,12 +39,16 @@ class Market(models.Model):
     photo = models.ImageField('마켓_이미지', blank=True, upload_to='market/%Y%m%d')
 
     def __str__(self):
-        return self.get_trade_type_display()
+        return f"{self.get_trade_type_display()}-{self.title} ({self.city})"
     
 class MarketZzim(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     market = models.ForeignKey(Market, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("user", "market")  # 중복 찜 방지
+    
+    def __str__(self):
+        return f"{self.user} : {self.market.title}"
+
+

@@ -1,0 +1,72 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'mypage/myTrip.css' %}">
+  <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+{% endblock %}
+
+{% block content %}
+<main class="mypage-wrap">
+    <nav class="mypage-nav">
+      <ul>
+        <li><a href="{%url 'users:my_page'%}">프로필</a></li>
+        <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+        <li class="active"><a href="{%url 'users:user_list'%}">나의 여행 일정</a></li>
+        <li><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
+      </ul>
+    </nav>
+  
+    <section class="mypage-content">
+        <h1 class="main-title">여행 일정 상세</h1>
+        
+        <section class="profile-section">
+          <div class="profile-header">
+              <div class="section-title">여행 일정</div>
+              <a href="{% url 'users:user_list'%}">목록으로</a>
+          </div>
+          
+          <div class="map-container">
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요" disabled>
+            <div id="map"></div>
+          </div>
+          
+          <div class="trip-details">
+            <h2>{{ travel_plan.title }}</h2>
+            <p><strong>도시:</strong> {{ travel_plan.city }}</p>
+            <p><strong>기간:</strong> {{ travel_plan.start_date }} ~ {{ travel_plan.end_date }}</p>
+            <p><strong>설명:</strong> {{ travel_plan.explanation }}</p>
+            <p><strong>공개 여부:</strong> {{ travel_plan.is_public|yesno:"공개,비공개" }}</p>
+          </div>
+          
+          <div class="btns">
+            <button class="btn" onclick="window.location.href='{% url 'users:update_trip' travel_plan.plan_id %}'">수정</button>
+            <button class="btn" onclick="confirmDelete({{ travel_plan.plan_id }})">삭제</button>
+          </div>
+
+          <div class="trip-map-data">
+            <input type="hidden" id="latitude" value="{{ travel_plan.latitude }}">
+            <input type="hidden" id="longitude" value="{{ travel_plan.longitude }}">
+            <input type="hidden" id="markers" value="{{ travel_plan.markers }}">
+            <input type="hidden" id="polyline" value="{{ travel_plan.polyline }}">
+          </div>
+        </section>
+    </section>
+</main>
+{% endblock %}
+
+{% block js %}
+    <script>
+      function confirmDelete(planId) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          window.location.href = "{% url 'users:delete_trip' 0 %}".replace("0", planId);
+        }
+      }
+      const travelId = "{{ travel_plan.plan_id }}";
+      window.mapData = {
+        markers: {{ travel_plan.markers|safe }},
+        polyline: {{ travel_plan.polyline|safe }}
+      };
+    </script>
+    <script src="{%static 'accompany/show_map.js' %}"></script>
+{% endblock js %}

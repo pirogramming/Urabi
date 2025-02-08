@@ -10,10 +10,10 @@
     <!-- 왼쪽 사이드 카테고리 -->
     <nav class="mypage-nav">
       <ul>
-        <li class="active">프로필</li>
-        <li>찜 목록</li>
-        <li>나의 여행 일정</li>
-        <li>내 활동 관리</li>
+        <li class="active"><a href="{%url 'users:my_page'%}">프로필</a></li>
+        <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+        <li><a href="{%url 'users:user_list'%}">나의 여행 일정</a></li>
+        <li><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
       </ul>
     </nav>
   

@@ -218,3 +218,9 @@
   color: #ffffff;
   border-radius: 20px;
 }
+
+
+/*검색바*/
+.accompany_filterInput{
+  background-color: black;
+}

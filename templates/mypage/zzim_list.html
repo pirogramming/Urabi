@@ -1,0 +1,195 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+  <link rel="stylesheet" href="{%static 'mypage/myPage.css'%}">
+{% endblock %}
+
+{% block content %}
+<main class="mypage-wrap">
+  <!-- 왼쪽 사이드 카테고리 -->
+  <nav class="mypage-nav">
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li class="active"><a href="{%url 'users:zzim_list'%}">찜 목록</a></li>
+      <li><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
+      <li ><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+  </nav>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <section class="mypage-content">
+    <h1 class="main-title">찜 목록</h1>
+    <!-- 활동 이력 -->
+    <section class="activity-section">
+      <h2 class="sub-title">동행 모집</h2>
+      <div id="accompany-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{ ac_zzim_count }}</span>개의 동행 모집 글을 찜했어요!
+        </p>
+
+        {% if ac_zzim_count %}
+          {% for accompany in ac_zzims%}
+          <div class="activity-card" style="display: none;">
+            {% if accompany.photo %}
+            <img
+              src="{{ accompany.photo.url }}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+              onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+              style="cursor:pointer;"
+            />
+            {% else %}
+            <img
+              src="{% static 'img/banner.png' %}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+              onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+              style="cursor:pointer;"
+            />
+            {% endif %}
+            <div class="activity-info">
+              <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
+              <p class="activity-date">{{ accompany.start_date }} ~ {{ accompany.end_date }}</p>
+              {% for tag in accompany.tags %}
+              <p class="schedule-location">
+                <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                <span class="schedule-location-text">{{ tag }}</span>
+              </p>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+        <div class="activity-card">
+          동행한 번개 모임이 없어요!
+        </div>
+        {% endif %}
+      </div>
+      <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
+
+
+      <h2 class="sub-title">번개 모임</h2>
+      <div id="flash-activity-container" class="activity-box">
+          {% if flash_zzim_count > 0 %}
+              <p class="activity-header">
+                  {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_zzim_count }}</span>개의 번개를 찜했어요!
+              </p>
+              {% for flash in flash_zzims %}
+                  <div class="activity-card flash-card">
+                      <a href="{% url 'flash:flash_detail' flash.pk %}">
+                          <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+                              alt="번개 이미지" class="flash-img">
+                      </a>
+                      <div class="activity-info">
+                          <div class="activity-title">
+                              <a href="{% url 'flash:flash_detail' flash.pk %}">{{ flash.title }}</a>
+                          </div>
+                          <p class="activity-date">📅 {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                          <p class="schedule-location">
+                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                              <span class="schedule-location-text">{{ flash.city }}</span>
+                          </p>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% else %}
+              <p>찜한 번개 모임이 없어요!</p>
+          {% endif %}
+      </div>
+      <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
+
+      <h2 class="sub-title">나눔 마켓</h2>
+      <div id="market-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">2</span>개의 글을 올렸어요!
+        </p>
+        <div class="activity-card" style="display: none;">
+          <div class="activity-review">
+            <div class="activity-review-header">
+              <span class="activity-review-type">🛒 구매해요</span>
+              <span class="activity-review-title">
+                멀미약 구해요
+              </span>
+            </div>
+            <p class="activity-date">2025/2/4</p>
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">파리</span>
+            </p>
+          </div>
+        </div>
+        <div class="activity-card" style="display: none;">
+          <div class="activity-review">
+            <div class="activity-review-header">
+              <span class="activity-review-type">🎁 나눔해요</span>
+              <span class="activity-review-title">
+                여름 옷 가져가실 분 있나용
+              </span>
+            </div>
+            <p class="activity-date">2025/2/4</p>
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">파리</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <button id="load-more-market-btn" onclick="loadMoreMarkets()">더보기</button>
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block js %}
+<script>
+  const plansPerPage = 2;
+  console.log("flash_zzim_count:", "{{ flash_zzim_count }}");
+  console.log("flash_zzims:", {{ flash_zzims|safe }});
+  document.addEventListener("DOMContentLoaded", function () {
+    const flashContainer = document.getElementById("flash-activity-container");
+    const flashCards = flashContainer.querySelectorAll(".activity-card");
+
+    console.log("flash-activity-container 존재 여부:", flashContainer ? "있음" : "없음");
+    console.log("flash-activity-container 내 .activity-card 개수:", flashCards.length);
+
+    flashCards.forEach((card, index) => {
+      console.log(`Card ${index + 1}:`, card);
+    });
+  });
+  
+  function loadMoreItems(containerId, buttonId) {
+    let currentIndex = 0;
+    const items = document.querySelectorAll(`#${containerId} .activity-card`);
+
+    function showMore() {
+      const nextIndex = currentIndex + plansPerPage;
+      for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
+        items[i].style.display = 'block';
+      }
+      currentIndex = nextIndex;
+
+      if (currentIndex >= items.length) {
+        document.getElementById(buttonId).style.display = 'none';
+      }
+    }
+
+    // 초기 숨기기 (첫 2개만 표시)
+    items.forEach((item, index) => {
+      item.style.display = index < plansPerPage ? 'block' : 'none';
+    });
+
+    return showMore;
+  }
+
+
+  const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
+  const loadMoreFlash = loadMoreItems('flash-activity-container', 'load-more-flash-btn');
+  const loadMoreMarkets = loadMoreItems('market-cards-container', 'load-more-market-btn');
+
+  // 초기 로딩 시 처음 2개의 일정만 보이도록 설정
+  loadMoreAccompanies();
+  loadMoreFlash();
+  loadMoreMarkets();
+</script>
+{% endblock %}

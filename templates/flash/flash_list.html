@@ -3,6 +3,8 @@
 
 {% block head %} 
 <link rel="stylesheet" href="{% static 'flash/flash_list.css' %}">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap"></script>
+<script defer src="{% static 'flash/flash_map_list.js' %}"></script>
 {% endblock %}
 
 {% block header_content %}
@@ -12,14 +14,30 @@
 {% block content %}
 <!-- 지도 위 문구 -->
 <section class="flash_title">
-    <h2>여행 속 반짝이는 만남, <span class="highlight">번개 모임</span> > 번개 찾기</h2>
+    <h2>여행 속 반짝이는 만남, <a href="{% url 'flash:flash_list' %}" class="highlight">번개 모임</a></h2>
 </section>
-
+<div class="flash_searchBar">
+    <form method='GET' class="flash_filter">
+        {% csrf_token %}
+        <div class="flash_filter_content">
+            <div class="filter-group">
+                {{filterset.form.title}}
+            </div>
+            <div class="filter-group">
+                {{filterset.form.tags}}
+            </div>
+            <div class="filter-group">
+                {{filterset.form.date_time}}
+            </div>
+        </div>
+        <button type="submit">검색</button>
+    </form>
+</div>
 <div class="flash_container">
     <!-- 지도 -->
     <div class="flash_left">
         <section class="flash_list_header">
-            <h2 class="flash_list_title">12개의 모집중인 번 개</h2>
+            <h2 class="flash_list_title">12개의 모집중인 번개</h2>
             <div class="flash_list_controls">
                 <h2>나만의 번개</h2>
                 <a href="{% url 'flash:flash_register' %}" class="flash_register_btn">등록하기</a>
@@ -32,25 +50,14 @@
         <!-- 모집 중인 번개 리스트 -->        
         <section class="flash_list">
             <section class="flash_list_body">
-                <div class="flash_card">
-                    <a href="{% url 'flash:flash_detail' pk=1 %}" class="flash_card_link">
-                        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
-                        <div class="flash_card_info">
-                            <h3>토트넘 경기보면서 맥주 드실 분~</h3>
-                            <p class="flash_place">123 High Street,London, SW1A 1AA United Kingdom</p>
-                            <p class="flash_date">2025년 01월 11일 12:00</p>
-                            <div class="flash_card_tags">
-                                <span class="flash_tag">#남녀무관</span>
-                                <span class="flash_tag">#타팬환영</span>
-                                <span class="flash_capacity">1/4</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
                 {% for flash in flash_meetings %}
-                <div class="flash_card">
+                <div class="flash_card"
+                    data-lat="{{ flash.latitude }}"
+                    data-lng="{{ flash.longitude }}"
+                    data-date="{{ flash.date_time|date:'Y-m-d H:i' }}"
+                    data-place-address="{{ flash.city }}">
                     <a href="{% url 'flash:flash_detail' flash.meeting_id %}">
-                        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지">
+                        <img id="place-img-{{ flash.meeting_id }}" src="https://via.placeholder.com/300" alt="모임 이미지">
                     </a>
                     <div class="flash_card_info">
                         <h3><a href="{% url 'flash:flash_detail' flash.meeting_id %}">{{ flash.title }}</a></h3>
@@ -75,11 +82,10 @@
     </div>
 
     <section class="flash_map">
-        <img src="{% static 'img/flash_map_sample.png' %}" alt="번개 모임 지도">
+        <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+        <div id="map"></div>
     </section>
     
 </div>
-
-
 
 {% endblock %}

@@ -1,15 +1,58 @@
 /* 지도 위 문구 */
 .flash_title {
     text-align: left;
-    font-size: 22px;
-    font-weight: bold;
+    font-size: 32px;
+    font-weight: 400;
     color: #333;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .flash_title .highlight {
     color: var(--red);
+    font-weight: bold;
 }
+.flash_title .highlight:hover{
+    border-bottom: 3px solid var(--red);
+}
+.flash_searchBar{
+    height: 80px;
+    border: 1.5px solid black;
+    border-radius: 10px;
+}
+/*검색 필터*/
+.flash_filter{
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    height: 100%;
+}
+.flash_filter_content{
+    display: grid;
+    grid-template-columns: 5fr 3fr 2fr;
+    align-items: center;
+    gap:10px;
+    margin-left: 10px;
+}
+
+.filter-group input,
+.filter-group select {
+    background-color: var(--gray);
+    padding: 15px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.flash_filter button{
+    background-color: var(--blue);
+    width: 60px;
+    height: 50px;
+    margin: auto;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+}
+
 
 /* 제목 아래 영역 */
 .flash_container {
@@ -26,16 +69,19 @@
 }
 /* 지도 스타일 */
 .flash_map {
-    height: 800px;
-    border-radius: 10px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
 }
 
-.flash_map img {
+#map {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+}
+
+#search-bar{
+    height: 48px;
+    border-radius: 9px;
 }
 
 
@@ -46,12 +92,12 @@
     align-items: center;
     max-width: 1200px;
     margin: auto;
-    padding: 10px 0;
+    padding: 20px 0;
     font-size: 18px;
 }
 
 .flash_list_title {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 /* 나만의 번개 + 등록하기 버튼 */
@@ -63,14 +109,14 @@
 
 .flash_list_controls h2 {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .flash_register_btn {
     padding: 8px 16px;
     background: white;
     color: #007bff;
-    border: 2px solid #007bff;
+    border: 1.5px solid #007bff;
     border-radius: 8px;
     font-size: 14px;
     font-weight: bold;
@@ -88,7 +134,7 @@
     width: 100%;
     height: 1px;
     background: #ddd;
-    margin-bottom: 20px;
+    margin:0 0 20px 0;
 }
 
 /* 번개 리스트 */

@@ -9,23 +9,26 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.shortcuts import render
-from .models import User
+from django.shortcuts import render, get_object_or_404
+from .models import User, TravelPlan
+from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup
+from flash.models import FlashZzim
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm
+from .forms import UserUpdateForm, TravelPlanForm
 from django.core.files.base import ContentFile
-from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from accommodation.models import AccommodationReview
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 @csrf_exempt
 def get_csrf_token(request):
     return JsonResponse({"csrfToken": get_token(request)})
-
 
 def social_login(request):
     return render(request, 'users/social_login.html')
@@ -382,3 +385,148 @@ def get_token_for_logged_in_user(request):
 @permission_classes([IsAuthenticated])
 def some_protected_route(request):
     return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
+
+@login_required
+def my_trip(request): # 여행 계획 작성
+    if request.method == 'POST':
+        form = TravelPlanForm(request.POST)
+
+        if form.is_valid():
+            travel_plan = form.save(commit=False)
+            travel_plan.created_by = request.user
+
+            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+            travel_plan.polyline = request.POST.get('polyline', '')
+
+            travel_plan.save()  
+
+            return render(request, 'mypage/plan_detail.html', {
+                'travel_plan': travel_plan,
+            })
+    else:
+        form = TravelPlanForm()
+
+    return render(request, 'mypage/myTrip.html', {
+        'form': form,
+    })
+
+@login_required
+def user_detail(request, pk):
+    user = get_object_or_404(User, id=pk)
+    current_user = request.user  # 현재 로그인한 사용자
+    
+    # 여행 계획 및 동행 관련 쿼리 작성 
+    user_plans = TravelPlan.objects.filter(created_by=user)
+    user_accompany = TravelGroup.objects.filter(created_by=user)
+    accompany_count = user_accompany.count()
+    
+    # 숙소 리뷰 쿼리 수정 - is_parent=False인 리뷰만 가져오기
+    accommodation_reviews = AccommodationReview.objects.filter(
+        user=user,
+        is_parent=False
+    ).order_by('-created_at')
+    
+    review_count = accommodation_reviews.count()
+    
+    # 처음 5개만 보이도록 슬라이싱 initial_reviews = accommodation_reviews[:5]
+    
+    # 동행 태그 처리
+    for accompany in user_accompany:
+        accompany.tags = accompany.tags.split(',') if accompany.tags else []
+    
+    return render(request, 'mypage/userDetail.html', {
+        'user': user,
+        'current_user': current_user,
+        'plans': user_plans,
+        'accompanies': user_accompany,
+        'accompany_count': accompany_count,
+        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
+        'review_count': review_count,  # 리뷰 개수 추가
+        'has_more': review_count > 5,  # 더보기 버튼 표시 여부
+    })
+    
+    
+# def load_more_reviews(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    offset = int(request.GET.get('offset', 5))
+    limit = 5  # 한 번에 추가로 보여줄 리뷰 수
+    
+    # is_parent=False인 리뷰만 가져오기
+    accommodation_reviews = AccommodationReview.objects.filter(
+        user=user,
+        is_parent=False
+    ).order_by('-created_at')[offset:offset+limit]
+    
+    # 더 보여줄 리뷰가 있는지 확인
+    total_reviews = AccommodationReview.objects.filter(
+        user=user,
+        is_parent=False
+    ).count()
+    
+    has_more = total_reviews > (offset + limit)
+    
+    context = {
+        'accommodation_reviews': accommodation_reviews
+    }
+    
+    html = render_to_string('mypage/_review_cards.html', context)
+    
+    return JsonResponse({
+        'html': html,
+        'has_more': has_more
+    })
+
+@login_required
+def plan_detail(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    return render(request, 'mypage/plan_detail.html', {
+        'travel_plan': travel_plan,
+    })
+
+def delete_trip(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    travel_plan.delete()
+    return redirect('users:user_list')
+
+def update_trip(request, pk):
+    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    if request.method == 'POST':
+        form = TravelPlanForm(request.POST, instance=travel_plan)
+        if form.is_valid():
+            travel_plan = form.save(commit=False)
+            travel_plan.created_by = request.user
+            travel_plan.save()
+            return redirect('users:plan_detail', pk=travel_plan.plan_id)
+    else:
+        form = TravelPlanForm(instance=travel_plan)
+    return render(request, 'mypage/myTrip.html', {
+        'form': form,
+    })
+
+def user_list(request):
+    user = get_object_or_404(User, id=request.user.id)
+    user_plans = TravelPlan.objects.filter(created_by=user)
+    user_plan_count = user_plans.count()
+    return render(request, 'mypage/planlist.html', {
+        'plans': user_plans,
+        'plan_count': user_plan_count,
+    })
+
+def zzim_list(request):
+    user = get_object_or_404(User, id=request.user.id)
+
+    ac_zzims = Accompany_Zzim.objects.filter(user=user)
+    ac_zzim_items = [zzim.item for zzim in ac_zzims]
+    ac_zzim_count = ac_zzims.count()
+
+    # 사용자가 찜한 번개 목록 가져오기
+    flash_zzims = FlashZzim.objects.filter(user=user).select_related("flash")
+    flash_zzim_items = [zzim.flash for zzim in flash_zzims]
+    flash_zzim_count = flash_zzims.count()
+
+    return render(request, 'mypage/zzim_list.html', {
+        'ac_zzims': ac_zzim_items,
+        'ac_zzim_count': ac_zzim_count,
+        'flash_zzims': flash_zzim_items,
+        'flash_zzim_count': flash_zzim_count,
+    })

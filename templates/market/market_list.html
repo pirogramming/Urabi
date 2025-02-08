@@ -9,39 +9,34 @@
 {% block content%}
 <section id="market_search">
     <h1 class="market_title">필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
-    <div id="market_search_bar">
+    <form method="GET" id="market_search_bar">
+        {% csrf_token %}
         <div class="market_search_content">
             <div class="market_search_title">
                 <h1>거래 현황</h1>
-                <select name="market_trade" id="market_trade">
-                    <option>거래 중</option>
-                    <option>거래 완료</option>
-                </select>
+                {{filterset.form.status}}
             </div>
             <div class="market_search_title">
-                <h1>장소</h1>
-                <input type="text" name="market_location" id="market_location" placeholder="국가, 도시">
+                <h1>거래 유형</h1>
+                {{filterset.form.trade_type}}
             </div>
             <div class="market_search_title">
                 <h1>카테고리</h1>
-                <select name="market_category" id="market_category">
-                    <option>의약품</option>
-                    <option>티켓</option>
-                    <option>음식</option>
-                    <option>생활용품</option>
-                    <option>기념품</option>
-                    <option>기타</option>
-                </select>
+                {{filterset.form.category}}
+            </div>
+            <div class="market_search_title">
+                <h1>장소</h1>
+                {{filterset.form.city}}
             </div>
             <div class="market_search_title">
                 <h1>검색</h1>
-                <input type="text" name="market_search_text" id="market_search_text" placeholder="검색어를 입력하세요">
+                {{filterset.form.title}}
             </div>
         </div>
-        <button class="market_search_btn">
+        <button type="submit" class="market_search_btn">
             <img src="/static/img/search_icon.svg" width="60">
-        </button>
-    </div>
+        </button> 
+    </form>
 </section>
 
 <section id="market_body">
@@ -49,7 +44,15 @@
         <div class="market_list_total_title">
             <h1>전체 글 목록</h1>
             <div class="market_list_info">
-                <h3>"거래 중"인 <p>#태그</p> 관련 게시글입니다</h3>
+                {% if selected_status and selected_category %}
+                    <h3>"{{selected_status}}"인 <p>#{{selected_category}}</p> 관련 게시글입니다</h3>
+                {% elif selected_status %}
+                    <h3>"{{selected_status}}"인 <p>전체 태그</p> 관련 게시글입니다</h3>
+                {% elif selected_status %}
+                    <h3>"모든 거래 상태"의 <p>#{{selected_category}}</p> 관련 게시글입니다</h3>
+                {% else %}
+                    <h3>"모든 거래 상태"의 <p>전체 태그</p> 관련 게시글입니다</h3>
+                {% endif %}
                 <form method='GET' action="{% url 'market:market_list' %}">
                     <select name="items_per_page" id="market_list_count" onchange="this.form.submit()">
                         <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10개씩</option>
@@ -66,25 +69,48 @@
         <table class="market_list">
             <thead class="market_list_title">
                 <tr>
-                    <th>거래 유형</th>
-                    <th>제목</th>
-                    <th>작성일</th>
-                    <th>작성자</th>
+                    <th style="width: 10%;" >상태</th>
+                    <th style="width: 10%;">거래 유형</th>
+                    <th style="width: 46%;">제목</th>
+                    <th style="width: 13%;">작성일</th>
+                    <th style="width: 13%;">작성자</th>
+                    <th style ="width: 8%">찜</th>
                 </tr>
             </thead>
             <tbody >
                 {% for market_item in markets %}
-                
                     <tr class="market_list_section">
+                        <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.status}}</a></td>
                         <td class="market_icon_table"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.get_trade_type_display}}</a></td>
                         <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.title}}</a></td>
                         <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.created_at|date:"Y-m-d"}}</a></td>
                         <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.user}}</a></td>
+                        <td class="market_list_item">
+                            {% if request.user != market_item.user %}
+                                <button class="market_like" data-market-id="{{ market_item.item_id }}">
+                                    {% if market.is_zzim %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                        </svg>
+                                    {% endif %}
+                                </button>
+                            {% else %}
+                            {% endif %}
+                        </td>
                     </tr>
                 
                 {% empty %}
                 <tr>
-                    <td colspan="9">등록된 거래가 없습니다.</td>
+                    <td style="width: 10%;"></td>
+                    <td style="width: 10%;"></td>
+                    <td style="width: 46%;" id="maket_nothing"> 등록된 거래가 없습니다.</td>
+                    <td style="width: 13%;"></td>
+                    <td style="width: 13%;"></td>
+                    <td style="width: 8%;"></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -96,10 +122,70 @@
                 {% if num == markets.number %}
                     <strong class="active-page">{{ num }}</strong>
                 {% else %}
-                    <a href="?page={{num}}&items_per_page={{ items_per_page}}">{{num}}</a>
+                    <a href="?page={{num}}&items_per_page={{ items_per_page}}&{{request.GET.urlencode}}">{{num}}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}
     </div>
 </section>
 {% endblock %}
+
+
+
+{%block js%}
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const csrfToken = "{{ csrf_token }}";  
+
+        document.querySelectorAll(".market_like").forEach(button => {
+            button.addEventListener("click",function(){
+                let marketId = this.getAttribute("data-market-id");
+
+                fetch(`/market/zzim/${marketId}`,{
+                    method : "POST",
+                    headers: {
+                        "X-CSRFToken" : csrfToken,
+                        "Content-Type":"application/json"
+                    },
+                    credentials : "same-origin"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let is_zzim = data.zzim;
+                    document.querySelectorAll(`.market_like[data-market-id="${marketId}"]`).forEach(btn=>{
+                        if(is_zzim){
+                            btn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg>`;
+                            localStorage.setItem(`zzim_${marketId}`,"true");
+                        }else{
+                            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                            </svg>`;
+                            localStorage.setItem(`zzim_${marketId}`, "false");
+                        }
+                    });
+                })
+                .catch(error => console.error("Error: ",error));
+            })
+        })
+    
+
+    document.querySelectorAll(".market_like").forEach(button => {
+        let marketId = button.getAttribute("data-market-id");
+        let is_zzim = localStorage.getItem(`zzim_${marketId}`);
+
+        if(is_zzim === "true"){
+            button.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                </svg>`;
+        }else if(is_zzim === "false"){
+            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                </svg>`;
+        }
+    });
+});
+</script>
+
+{%endblock js%}

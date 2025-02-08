@@ -133,6 +133,18 @@
   top: 20px;
   right: 0;
 }
+#memberList li{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.request-btn, .request-cancel-btn, .ing{
+  padding: 8px 15px;
+  border: 1px solid var(--red);
+  margin-right: 10px;
+}
+
 .detail-content{
   margin: 10px 0;
 }
@@ -185,4 +197,39 @@
 .del-btn:hover{
   background-color: var(--red);
   color: #ffffff;
+}
+
+#add-participant{
+  border: var(--red) 1px solid;
+  padding: 8px 10px;
+  color: var(--red);
+}
+#add-participant:hover{
+  background-color: var(--red);
+  color: #ffffff;
+}
+.tippy-content{
+  max-height: 200px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  
+}
+#search-email{
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+#userList{
+  overflow-y: auto;
+  max-height: 150px;
+}
+#userList li{
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ccc;
 }

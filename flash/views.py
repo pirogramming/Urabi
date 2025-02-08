@@ -4,15 +4,21 @@ from .models import Flash, FlashZzim
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.timezone import now
+from django.db.models import F
+from .filters import FlashFilter
+
 
 def flash_list(request):
     flash_meetings = Flash.objects.all().order_by("-created_at")
+    filterset = FlashFilter(request.GET, queryset=flash_meetings)
 
     # 태그를 리스트로 변환하여 flash_meetings에 추가
     for flash in flash_meetings:
         flash.tag_list = flash.tags.split(",") if flash.tags else []
+        flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
 
-    return render(request, "flash/flash_list.html", {"flash_meetings": flash_meetings})
+    return render(request, "flash/flash_list.html", {"flash_meetings": filterset.qs, 'filterset':filterset})
+
 
 @login_required
 def flash_register(request):
@@ -85,11 +91,27 @@ def flash_detail(request, pk):
     # tags를 리스트로 변환 (flash.tags가 존재하는 경우만 split)
     tag_list = flash.tags.split(",") if flash.tags else []
 
+    # 찜 여부 확인
     is_zzimmed = False
     if request.user.is_authenticated:
         is_zzimmed = FlashZzim.objects.filter(user=request.user, flash=flash).exists()
 
-    return render(request, "flash/flash_detail.html", {"flash": flash, "tag_list": tag_list,"is_zzimmed": is_zzimmed})
+    # 현재 번개와 가장 가까운 2개의 번개 찾기 (pk 기준으로 가장 가까운 번개)
+    other_flash_meetings = Flash.objects.exclude(pk=pk).order_by(F('pk') - pk)[:2]
+
+    if flash.latitude and flash.longitude:
+        place_img_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+    else:
+        place_img_url = "https://via.placeholder.com/300"
+
+    # 다른 번개들도 이미지 URL 설정
+    for other_flash in other_flash_meetings:
+        if other_flash.latitude and other_flash.longitude:
+            other_flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={other_flash.latitude},{other_flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+        else:
+            other_flash.image_url = "https://via.placeholder.com/300"
+
+    return render(request, "flash/flash_detail.html", {"flash": flash, "tag_list": tag_list,"is_zzimmed": is_zzimmed,'place_img_url': place_img_url, "other_flash_meetings": other_flash_meetings})
 
 
 

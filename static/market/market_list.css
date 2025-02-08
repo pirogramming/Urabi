@@ -38,11 +38,18 @@
 
 .market_search_content{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 2fr;
+    grid-template-columns: 1fr 1fr 1fr 2fr 3fr;;
     justify-content: space-between;
     padding-left: 47px;
     height: 100%;
     align-items: center;
+}
+.market_filterInput {
+    border: none;
+    background-color: var(--gray);
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 10px;
 }
 .market_search_btn {
     background:none;
@@ -64,7 +71,7 @@
     margin-bottom: 10px;
 }
 .market_search_title h1{
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 #market_trade, #market_location, #market_category, #market_search_text {
     width: 80%;
@@ -95,7 +102,7 @@
 
 .market_list_info{
     display: grid;
-    grid-template-columns: 1.3fr 2fr 1fr;
+    grid-template-columns: 1.4fr 2fr 1fr;
 }
 
 .market_list_info h3, #market_list_count, .market_add_text{
@@ -177,6 +184,11 @@
     align-content: center;
 }
 
+#maket_nothing{
+    line-height: 50px;
+    text-align: center;
+}
+
 /*페이지 넘김*/
 .page_number{
     display: flex;
@@ -190,4 +202,9 @@
     border: 1.5px solid black;
     border-radius: 5px;
     padding: 7px 9px;
+}
+
+/*찜*/
+.bi-heart-fill{
+    fill:var(--red);
 }

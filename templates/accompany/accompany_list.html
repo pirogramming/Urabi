@@ -15,31 +15,27 @@
           </div>
           <div class="banner-filter">
             <p class="blue">취향 맞는 동행자를 골라보세요</p>
-            <form class="filter-form">
+            <form method='GET' class="filter-form">
+              {% csrf_token %}
               <div class="filter-group">
-                <input type="text" id="city" name="city" placeholder="도시">
+                {{filterset.form.city}}
               </div>
               <div class="filter-group">
-                <select id="gender" name="gender">
-                  <option value="">전체</option>
-                  <option value="mixed">혼성</option>
-                  <option value="male">남성만</option>
-                  <option value="female">여성만</option>
-                </select>
+                {{filterset.form.gender}}
               </div>
               <div class="filter-group">
-                <input type="date" id="start-date" name="start-date" placeholder="시작일">
+                {{filterset.form.start_date}}
               </div>
               <div class="filter-group">
-                <input type="date" id="end-date" name="end-date" placeholder="종료일">
+                {{filterset.form.end_date}}
               </div>
               <div class="filter-group">
-                <input type="number" id="age" name="age" placeholder="나이">
+                {{filterset.form.age}}
               </div>
               <button type="submit">검색</button>
             </form>
           </div>
-          <p class="create_accompany"><a href="">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
+          <p class="create_accompany"><a href="{% url 'users:my_trip'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
         </div>
       </section>
       <section class="accompany-list">
@@ -79,7 +75,7 @@
               </div>
               <div class="info-user">
                 <h3>{{post.created_by}}</h3>
-                <div class="max-member"> 1 / {{post.max_member}}</div>
+                <div class="max-member"> {{post.now_member }} / {{post.max_member}}</div>
               </div>
               <div class="info-date">
 
@@ -91,11 +87,12 @@
                   <p>{{ post.explanation }}</p>
                 {%endif%}
               </div>
+              {{group_tags}}
               <div class="tags">
                 {%if post.tags%}
-                  <div class="tag"># 태그1</div>
-                  <div class="tag"># 태그2</div>
-                  <div class="tag"># 태그2</div>
+                  {% for tag in post.tags %}
+                    <div class="tag"># {{tag}} </div>
+                  {% endfor %}
                 {%endif%}
               </div>
             </div>
@@ -122,6 +119,8 @@
         </div>
         <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
       </section>
+
+
   {%endblock%}
 {%block js%}
 <script src="{% static 'accompany/zzim.js' %}"></script>

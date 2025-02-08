@@ -19,7 +19,7 @@
     <hr class="flash_divider">
 
     <div class="flash_info">
-        <img src="{% static 'img/flash_meeting1.png' %}" alt="모임 이미지" class="flash_image">
+        <img src="{{ place_img_url }}" alt="모임 이미지" class="flash_image">
         <div class="flash_description">
             <div class="flash_title_star">
                 <h2 class="flash_title">{{ flash.title }}</h2>
@@ -76,14 +76,16 @@
             <a href="{% url 'flash:flash_list' %}" class="flash_list_btn">목록으로</a>
         </div>
         <div class="other_flash_list">
+            {% for other_flash in other_flash_meetings %}
             <div class="other_flash_card">
-                <img src="{% static 'img/flash_meeting2.png' %}" alt="다른 번개 이미지">
-                <p>저녁먹기 전까지만 대화하실 분?</p>
+                <a href="{% url 'flash:flash_detail' other_flash.pk %}">
+                    <img src="{{ other_flash.image_url }}" alt="다른 번개 이미지">
+                    <p>{{ other_flash.title }}</p>
+                </a>
             </div>
-            <div class="other_flash_card">
-                <img src="{% static 'img/flash_meeting1.png' %}" alt="다른 번개 이미지">
-                <p>바닷가로 당일치기 가실 분?</p>
-            </div>
+            {% empty %}
+            <p>다른 번개 모임이 없습니다.</p>
+            {% endfor %}
         </div>
     </section>
 </section>
@@ -92,6 +94,13 @@
     document.addEventListener("DOMContentLoaded", function() {
         const starIcon = document.getElementById("star_icon");
         const flashId = "{{ flash.pk }}";
+        const deleteBtn = document.querySelector(".flash_delete_btn");
+
+        if (deleteBtn) {
+            deleteBtn.addEventListener("click", function() {
+                deleteFlash(flashId);  // HTML의 `onclick` 대신 이벤트 리스너 사용 가능
+            });
+        }
 
         // 페이지 로드 시, 찜 상태 확인 후 아이콘 설정
         function updateStarIcon(isZzimmed) {

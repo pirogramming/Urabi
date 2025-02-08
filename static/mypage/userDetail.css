@@ -172,6 +172,15 @@
   /********************************
     "등록한 여행 일정" 섹션
   ********************************/
+  .load-more-btn{
+    background-color: var(--red);
+    width: 200px;
+    padding: 10px;
+    color: #ffffff;
+  }
+  .load-more-btn:hover{
+    background-color: var(--red-hover);
+  }
   .schedule-section {
     margin-bottom: 40px;
   }
@@ -226,6 +235,42 @@
     color: var(--red);
   }
 
+  #flash-activity-container {
+    background-color: var(--darkgray);
+    border-radius: 12px;
+    padding: 30px 16px;
+    margin-bottom: 20px;
+}
+.flash-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 40px;
+  margin-bottom: 12px;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #eee;
+}
+
+.flash-img {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 5%;
+}
+
+.flash-card .activity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flash-card .activity-title {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
   .activity-none{
     text-align: center;
   }
@@ -262,7 +307,22 @@
     margin-right: 5%;
   }
 
-
+  .schedule-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .schedule-header button{
+    background-color: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .schedule-header button:hover{
+    background-color: var(--red-hover);
+  }
   .activity-info .activity-title{
     font-size: 1.2rem;
     margin-bottom: 4px;

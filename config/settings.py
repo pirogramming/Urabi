@@ -32,6 +32,7 @@ KAKAO_API_KEY = get_secret("KAKAO_API_KEY")
 NAVER_CLIENT_ID = get_secret("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = get_secret("NAVER_CLIENT_SECRET")
 OPENAI_API_KEY = get_secret("OPENAI_API_KEY")
+GOOGLE_MAPS_API_KEY = get_secret("GOOGLE_MAPS_API_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
 
     'accompany',
     'chat',
@@ -72,6 +74,7 @@ INSTALLED_APPS = [
     'accommodation',
     'market',
     'chatbot',
+    'map',
 ]
 
 MIDDLEWARE = [
