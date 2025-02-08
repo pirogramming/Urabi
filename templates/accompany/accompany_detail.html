@@ -81,14 +81,14 @@
     </div>
     <div class="members">
       {% if user != object.created_by %}
-      {%if user in users%}
-        {%if user in participants%}
+      {%if user in participants%}
         <span class="ing">참여중</span>
-        {%else%}
-        <button class="request-cancel-btn">요청 취소</button>
-        {%endif%}
       {%else%}
-        <button class="request-btn">참여 요청</button>
+        {%if user in users%}
+          <button class="request-cancel-btn">요청 취소</button>
+        {%else%}
+          <button class="request-btn">참여 요청</button>
+        {%endif%}
       {%endif%}
       {% endif %}
       <span>{{ object.now_member }}/{{ object.max_member }}</span>
