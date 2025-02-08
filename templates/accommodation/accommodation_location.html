@@ -20,10 +20,28 @@
             </button>
         </form>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
+    
+    <section class="main_accommodation">
+        <div class="main_accommodation_container">
+            <div class="main_accommodation_left">
+                <h2>방문했던 숙소의 솔직한 후기를 공유해주세요!</h2>
+                <img src="{% static 'img/main_hotel_review.svg' %}" alt="accommodation review">
+                <a class="main_review_btn" href="{% url 'accommodation:accommodation_create' %}">직접 후기 추가하기</a>
+            </div>
+            <div class="main_accommodation_right">
+                <span class="main_tag">#치안</span>
+                <span class="main_tag">#친절</span>
+                <span class="main_tag">#와이파이</span>
+                <span class="main_tag">#에어컨</span>
+                <span class="main_tag">#접근성</span>
+                <span class="main_tag">#청결도</span>
+                <span class="main_tag">#소음</span>
+                <span class="main_tag">#가격</span>
+            </div>
+        </div>
+    </section>
+
+
     <div class="room-list">
         {% for review in reviews %}
         <div class="room-card">

@@ -4,6 +4,7 @@ from .models import AccommodationReview
 from django.contrib import messages
 from django.db.models import Subquery, OuterRef, Max
 from django.db.models import Avg
+from django.conf import settings
 
 def accommodation_filter(request):
     """메인페이지"""
@@ -86,27 +87,37 @@ def accommodation_location(request):
     
 @login_required
 def accommodation_create(request):
-    """숙소 후기 작성 페이지 (후기랑 리뷰는 다른것이기에 후기를 첫 리뷰로 놓고나서 다른것들은 is_parent=False로 다르게 두기)"""
     if request.method == "POST":
         try:
+            accommodation_name = request.POST.get('accommodation_name')
+            city = request.POST.get('city')
+            
             review = AccommodationReview(
                 user=request.user,
-                city=request.POST.get('city'),
-                accommodation_name=request.POST.get('accommodation_name'),
+                city=city,
+                accommodation_name=accommodation_name,
                 category=request.POST.get('category'),
                 rating=float(request.POST.get('rating')),
                 content=request.POST.get('content'),
-                is_parent=True  # 첫 리뷰임을 표시
+                is_parent=True,
+                latitude=request.POST.get('latitude'),
+                longitude=request.POST.get('longitude'),
+                place_id=request.POST.get('place_id')
             )
+            
             if 'photo' in request.FILES:
                 review.photo = request.FILES['photo']
+                
             review.save()
             messages.success(request, '후기가 성공적으로 등록되었습니다.')
             return redirect('accommodation:filter')
         except Exception as e:
             messages.error(request, f'후기 등록 중 오류가 발생했습니다: {str(e)}')
-    return render(request, "accommodation/accommodation_create.html")
-
+            
+    context = {
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
+    }
+    return render(request, "accommodation/accommodation_create.html", context)
 
 
 def accommodation_review_detail(request, pk):
