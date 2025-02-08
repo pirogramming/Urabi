@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Room {{ room }}</title>
+  <title>채팅방</title>
   <link rel="stylesheet" href="{% static 'chat/room_chat.css' %}">
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 </head>
@@ -12,11 +12,12 @@
 <div class="chat-container">
   <div class="chat-header">
     <a href="{% url 'chat:chat_main' %}">
-        <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000" style="width: 14px; height: 14px;"><title>arrow-left</title><path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></svg>
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                <path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path></g></svg>
+      <svg viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" style="width:14px; height:14px;">
+        <title>arrow-left</title>
+        <path d="M659.2 917.333333l66.133333-66.133333L386.133333 512 725.333333 172.8 659.2 106.666667 256 512z" fill="#ffffff"></path>
+      </svg>
     </a>
-    <div class="chat-header-title">{{ room }}</div>
+    <div class="chat-header-title">{{ other_user.nickname }}</div>
     <div></div>
   </div>
 
@@ -30,296 +31,319 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function(){
-    const chatMessages = document.getElementById("chat_messages");
-    const messageForm  = document.getElementById("message_form");
-    const messageInput = document.getElementById("message_input");
-    
-    const myUsername = "{{ request.user.username }}";
-    const roomId = "{{ room.id }}";
-    console.log("roomId:", roomId);
-    
-    let currentPage = 1;
-    let isLoading = false;
-    let historyLoaded = false;
-    let noMoreMessages = false;  
-    
-    let lastDate = null;
-    let lastMinute = null;
-    let lastSender = null;
-    
-    function getSenderNickname(msg) {
-      if (msg.sender_nickname) return msg.sender_nickname;
-      if (msg.sender && msg.sender.nickname) return msg.sender.nickname;
-      return "";
-    }
-    function getProfileImage(msg) {
-      if (msg.profile_image_url) return msg.profile_image_url;
-      if (msg.sender && msg.sender.profile_image) return msg.sender.profile_image;
-      return "{% static 'img/default_profile.png' %}";
-    }
-    chatMessages.addEventListener("scroll", function(){
-      if (chatMessages.scrollTop < 50 && !isLoading && !noMoreMessages) {
-        currentPage += 1;
-        loadMoreMessages(currentPage);
-      }
-    });
-    
-    function loadMoreMessages(page) {
-      console.log("Loading messages for page:", page);
-      isLoading = true;
-      fetch(`/chat/rooms/${roomId}/messages/?page=${page}`, { credentials: 'include' })
-        .then(res => {
-          if (!res.ok) {
-            if (res.status === 404) {
-              noMoreMessages = true;
-              return Promise.resolve({ results: [] });
-            }
-            throw new Error("HTTP " + res.status);
-          }
-          return res.json();
-        })
-        .then(data => {
-          const msgs = data.results || [];
-          if (msgs.length === 0) {
-            console.log("no more messages");
-            noMoreMessages = true;
-            return;
-          }
-          lastDate = null;
-          lastMinute = null;
-          lastSender = null;
-          msgs.reverse().forEach(msg => {
-            if (!msg.sender_nickname && msg.sender) {
-              msg.sender_nickname = msg.sender.nickname;
-            }
-            if (!msg.profile_image_url && msg.sender) {
-              msg.profile_image_url = msg.sender.profile_image;
-            }
-            if (!msg.message_id && msg.id) {
-              msg.message_id = msg.id;
-            }
-            prependMessage(msg);
-          });
-        })
-        .catch(err => {
-          if (!err.message.startsWith("HTTP 404")) {
-            console.error("Pagination error:", err);
-          }
-        })
-        .finally(() => { isLoading = false; });
-    }
-    
-    function prependMessage(msg) {
-      const senderNickname = getSenderNickname(msg);
-      const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
-      const dateObj = new Date(msg.timestamp);
-      const msgDiv = createMessageDiv(msg, dateObj, isMyMessage);
-      chatMessages.insertBefore(msgDiv, chatMessages.firstChild);
-    }
-    
-    function createMessageDiv(msg, dateObj, isMyMessage) {
-      const dateStr = getYmdString(dateObj);
-      const hmStr = getHmString(dateObj);
-      if (lastDate !== dateStr) {
+document.addEventListener("DOMContentLoaded", function(){
+  const chatMessages = document.getElementById("chat_messages");
+  const messageForm  = document.getElementById("message_form");
+  const messageInput = document.getElementById("message_input");
+
+  const myUsername = "{{ request.user.nickname }}";
+  const roomId = "{{ room.id }}";
+  console.log("roomId:", roomId);
+
+  // 날짜 구분선 관련 변수
+  let lastDate = null;
+  let lastMinute = null;
+  let lastSender = null;
+
+  function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+  // 헬퍼 함수: sender 정보 추출
+  function getSenderNickname(msg) {
+    if (msg.sender_nickname) return msg.sender_nickname;
+    if (msg.sender && msg.sender.nickname) return msg.sender.nickname;
+    return "";
+  }
+  function getProfileImage(msg) {
+    if (msg.profile_image_url) return msg.profile_image_url;
+    if (msg.sender && msg.sender.profile_image) return msg.sender.profile_image;
+    return "{% static 'img/default_profile.png' %}";
+  }
+
+  // 전체 메시지 한 번 불러오기
+  function loadAllMessages() {
+    fetch(`/chat/rooms/${roomId}/messages/`, { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(data => {
+        // data는 전체 메시지 배열 (오름차순)
+        data.forEach(msg => {
+          prependMessage(msg);
+        });
+      })
+      .catch(err => console.error("Error loading messages:", err));
+  }
+  
+  // prependMessage: 메시지를 상단에 삽입
+  function prependMessage(msg) {
+    const senderNickname = getSenderNickname(msg);
+    const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
+    const dateObj = new Date(msg.timestamp);
+    const msgDiv = createMessageDiv(msg, dateObj, isMyMessage);
+    chatMessages.appendChild(msgDiv);
+  }
+  
+  // createMessageDiv: 메시지 DOM 요소 생성
+  function createMessageDiv(msg, dateObj, isMyMessage) {
+    const dateStr = getYmdString(dateObj);
+    const hmStr = getHmString(dateObj);
+
+    // 날짜 구분선 추가
+    if (lastDate !== dateStr) {
         insertDateLine(dateStr);
         lastDate = dateStr;
-      }
-      const senderNickname = getSenderNickname(msg);
-      let hideProfile = false;
-      if (lastDate === dateStr && lastMinute === hmStr && lastSender === senderNickname) {
-        hideProfile = true;
-      }
-    
-      const msgDiv = document.createElement("div");
-      msgDiv.classList.add("message");
-      if (msg.message_id) {
+    }
+
+    const senderNickname = getSenderNickname(msg);
+    let hideProfile = false;
+
+    if (!isMyMessage) {  
+        if (lastDate === dateStr && lastMinute === hmStr && lastSender === senderNickname) {
+            hideProfile = true;
+        } else {
+            hideProfile = false;
+        }
+    } else {
+        if (lastDate === dateStr && lastMinute === hmStr && lastSender === senderNickname) {
+            hideProfile = true;
+        }
+    }
+
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("message");
+    if (msg.message_id) {
         msgDiv.dataset.messageId = msg.message_id;
-      }
-      msgDiv.classList.add(isMyMessage ? "user" : "other");
-    
-      const headerDiv = document.createElement("div");
-      headerDiv.classList.add("message-header");
-      if (!hideProfile) {
+    }
+    msgDiv.classList.add(isMyMessage ? "user" : "other");
+
+
+    const headerDiv = document.createElement("div");
+    headerDiv.classList.add("message-header");
+    if (!hideProfile) {
         const imgElem = document.createElement("img");
         imgElem.classList.add("profile-pic");
         imgElem.src = getProfileImage(msg);
         headerDiv.appendChild(imgElem);
+
         const nickSpan = document.createElement("span");
         nickSpan.classList.add("nickname");
         nickSpan.textContent = senderNickname;
         headerDiv.appendChild(nickSpan);
-      } else {
+    } else {
         headerDiv.style.display = "none";
-      }
-    
-      const messageContentDiv = document.createElement("div");
-      messageContentDiv.classList.add("message-content");
-      const bubbleDiv = document.createElement("div");
-      bubbleDiv.classList.add("bubble");
-      bubbleDiv.textContent = msg.content;
-      const timeDiv = document.createElement("div");
-      timeDiv.classList.add("message-time");
-      timeDiv.textContent = hmStr;
-      const readSpan = document.createElement("span");
-      readSpan.classList.add("read-mark");
-      readSpan.textContent = isMyMessage ? (msg.is_read_by_other ? "읽음" : "1") : "";
-    
-      messageContentDiv.appendChild(bubbleDiv);
-      messageContentDiv.appendChild(timeDiv);
-      messageContentDiv.appendChild(readSpan);
-    
-      msgDiv.appendChild(headerDiv);
-      msgDiv.appendChild(messageContentDiv);
-    
-      lastMinute = hmStr;
-      lastSender = senderNickname;
-    
-      return msgDiv;
     }
-    
-    // insertDateLine: 날짜 구분선 생성 및 삽입
-    function insertDateLine(dateStr) {
-      const divider = document.createElement("div");
-      divider.classList.add("date-divider");
-      divider.textContent = dateStr;
-      chatMessages.insertBefore(divider, chatMessages.firstChild);
+
+    // 메시지 내용
+    const messageContentDiv = document.createElement("div");
+    messageContentDiv.classList.add("message-content");
+
+    const bubbleDiv = document.createElement("div");
+    bubbleDiv.classList.add("bubble");
+    bubbleDiv.textContent = msg.content;
+
+    // 읽음 상태 (내 메시지에만 표시)
+    const readStatus = document.createElement("div");
+    readStatus.classList.add("read-status");
+    if (isMyMessage) {
+        readStatus.textContent = msg.is_read_by_other ? "" : "1";
+    } else {
+        readStatus.textContent = ""; // 상대방 메시지에는 표시 안 함
     }
-    
-    function getHmString(dt) {
-      const hh = String(dt.getHours()).padStart(2, '0');
-      const mm = String(dt.getMinutes()).padStart(2, '0');
-      return hh + ":" + mm;
+
+    // 시간 표시
+    const timeDiv = document.createElement("div");
+    timeDiv.classList.add("message-time");
+    timeDiv.textContent = hmStr;
+
+    // 읽음 -> 시간 -> 메시지 순서로 정렬
+    const timeWrapper = document.createElement("div");
+    timeWrapper.classList.add("time-wrapper");
+    timeWrapper.appendChild(readStatus);
+    timeWrapper.appendChild(timeDiv);
+
+    messageContentDiv.appendChild(bubbleDiv);
+    messageContentDiv.appendChild(timeWrapper);
+
+    msgDiv.appendChild(headerDiv);
+    msgDiv.appendChild(messageContentDiv);
+
+    lastMinute = hmStr;
+    lastSender = senderNickname;
+
+    return msgDiv;
+}
+
+  
+  // insertDateLine: 날짜 구분선 생성
+  function insertDateLine(dateStr) {
+    const divider = document.createElement("div");
+    divider.classList.add("date-divider");
+    divider.textContent = dateStr;
+    chatMessages.appendChild(divider);
+  }
+  
+  function getHmString(dt) {
+    const hh = String(dt.getHours()).padStart(2, '0');
+    const mm = String(dt.getMinutes()).padStart(2, '0');
+    return hh + ":" + mm;
+  }
+  function getYmdString(dt) {
+    const yyyy = dt.getFullYear();
+    const mm = String(dt.getMonth() + 1).padStart(2, '0');
+    const dd = String(dt.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  
+  // WebSocket 연결 
+  
+  const userId = "{{ request.user.id }}";
+  const wsUrl = ((location.protocol === 'https:') ? 'wss:' : 'ws:') + '//' + location.host + `/ws/chat/${roomId}/`;
+const chatSocket = new WebSocket(wsUrl);
+
+  
+  chatSocket.onopen = function(e) {
+    console.log("ChatConsumer connected");
+    chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
+    scrollToBottom();
+  };
+  
+  chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    console.log("chatSocket recv:", data);
+    if (data.type === "chat.history" && data.messages) {
+      chatMessages.innerHTML = "";
+      data.messages.forEach(msg => {
+        prependMessage(msg);
+        scrollToBottom();
+      });
+    } else if (data.type === "chat_message") {
+      const senderNickname = getSenderNickname(data);
+      const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
+      appendMessage(senderNickname, data.timestamp, data.content,
+                    isMyMessage, data.profile_image_url, data.message_id, data.is_read_by_other);
+                    scrollToBottom();
+    } else if (data.type === "chat.read_event") {
+      handleReadEvent(data.message_id, data.reader_id);
+      scrollToBottom();
     }
-    function getYmdString(dt) {
-      const yyyy = dt.getFullYear();
-      const mm = String(dt.getMonth() + 1).padStart(2, '0');
-      const dd = String(dt.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
-    }
-    
-    // WebSocket 연결
-    const protocol = (location.protocol === 'https:') ? 'wss:' : 'ws:';
-    const wsUrl = protocol + '//' + location.host + `/ws/chat/${roomId}/?token={{ access_token|default:'' }}`;
-    const chatSocket = new WebSocket(wsUrl);
-    
-    chatSocket.onopen = function(e) {
-      console.log("ChatConsumer connected");
-      if (!historyLoaded) {
-        chatSocket.send(JSON.stringify({ command: "fetch_messages" }));
-      }
-    };
-    
-    chatSocket.onmessage = function(e) {
-      const data = JSON.parse(e.data);
-      console.log("chatSocket recv:", data);
-      if (data.type === "chat.history" && data.messages && !historyLoaded) {
-        chatMessages.innerHTML = "";
-        data.messages.forEach(msg => {
-          const senderNickname = getSenderNickname(msg);
-          const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
-          appendMessage(senderNickname, msg.timestamp, msg.content,
-                        isMyMessage, msg.profile_image_url, msg.message_id, msg.is_read_by_other);
-        });
-        historyLoaded = true;
-      } else if (data.type === "chat_message") {
-        const senderNickname = getSenderNickname(data);
-        const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
-        appendMessage(senderNickname, data.timestamp, data.content,
-                      isMyMessage, data.profile_image_url, data.message_id, data.is_read_by_other);
-      } else if (data.type === "chat.read_event") {
-        handleReadEvent(data.message_id, data.reader_id);
-      }
-    };
-    
-    chatSocket.onerror = function(err) {
-      console.error("ChatConsumer error:", err);
-    };
-    chatSocket.onclose = function(ev) {
-      console.log("ChatConsumer closed:", ev);
-    };
-    
-    function appendMessage(sender, timestamp, content, isMyMessage, profileUrl, messageId, isReadByOther) {
-      const dateObj = new Date(timestamp);
-      const dateStr = getYmdString(dateObj);
-      const hmStr = getHmString(dateObj);
-      if (lastDate !== dateStr) {
+  };
+  
+  chatSocket.onerror = function(err) {
+    console.error("ChatConsumer error:", err);
+  };
+  chatSocket.onclose = function(ev) {
+    console.log("ChatConsumer closed:", ev);
+  };
+  
+  function appendMessage(sender, timestamp, content, isMyMessage, profileUrl, messageId, isReadByOther) {
+    const dateObj = new Date(timestamp);
+    const dateStr = getYmdString(dateObj);
+    const hmStr = getHmString(dateObj);
+
+    if (lastDate !== dateStr) {
         insertDateLine(dateStr);
         lastDate = dateStr;
-      }
-      let hideProfile = false;
-      if (lastDate === dateStr && lastMinute === hmStr && lastSender === sender) {
+    }
+
+    let hideProfile = false;
+    if (lastDate === dateStr && lastMinute === hmStr && lastSender === sender) {
         hideProfile = true;
-      }
-      const msgDiv = document.createElement("div");
-      msgDiv.classList.add("message");
-      if (messageId) {
-        msgDiv.dataset.messageId = messageId;
-      }
-      msgDiv.classList.add(isMyMessage ? "user" : "other");
-    
-      const headerDiv = document.createElement("div");
-      headerDiv.classList.add("message-header");
-      if (!hideProfile) {
+    }
+
+    let showHeader = true;
+    if (lastSender === sender && lastMinute === hmStr) {
+        showHeader = false;
+    }
+    const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message");
+        if (messageId) {
+            msgDiv.dataset.messageId = messageId;
+        }
+        msgDiv.classList.add(isMyMessage ? "user" : "other");
+
+    if (showHeader) {
+        const headerDiv = document.createElement("div");
+        headerDiv.classList.add("message-header");
+
         const imgElem = document.createElement("img");
         imgElem.classList.add("profile-pic");
+
         imgElem.src = profileUrl || "{% static 'img/default_profile.png' %}";
         headerDiv.appendChild(imgElem);
+
         const nickSpan = document.createElement("span");
         nickSpan.classList.add("nickname");
         nickSpan.textContent = sender;
         headerDiv.appendChild(nickSpan);
-      } else {
-        headerDiv.style.display = "none";
-      }
-    
-      const messageContentDiv = document.createElement("div");
-      messageContentDiv.classList.add("message-content");
-      const bubbleDiv = document.createElement("div");
-      bubbleDiv.classList.add("bubble");
-      bubbleDiv.textContent = content;
-      const timeDiv = document.createElement("div");
-      timeDiv.classList.add("message-time");
-      timeDiv.textContent = hmStr;
-      const readSpan = document.createElement("span");
-      readSpan.classList.add("read-mark");
-      readSpan.textContent = isMyMessage ? (isReadByOther ? "읽음" : "1") : "";
-    
-      messageContentDiv.appendChild(bubbleDiv);
-      messageContentDiv.appendChild(timeDiv);
-      messageContentDiv.appendChild(readSpan);
-    
-      msgDiv.appendChild(headerDiv);
-      msgDiv.appendChild(messageContentDiv);
-    
-      chatMessages.appendChild(msgDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-      lastMinute = hmStr;
-      lastSender = sender;
+
+        msgDiv.appendChild(headerDiv);
     }
+
     
-    function handleReadEvent(messageId, readerId) {
-      const msgElem = document.querySelector(`.message[data-message-id='${messageId}']`);
-      if (!msgElem) return;
-      if (!msgElem.classList.contains("user")) return;
-      const readMark = msgElem.querySelector(".read-mark");
-      if (readMark) {
-        readMark.textContent = "읽음";
-      }
+
+    const messageContentDiv = document.createElement("div");
+    messageContentDiv.classList.add("message-content");
+
+    const bubbleDiv = document.createElement("div");
+    bubbleDiv.classList.add("bubble");
+    bubbleDiv.textContent = content;
+
+    // 읽음 여부 (내가 보낸 메시지에서만 표시)
+    const readStatus = document.createElement("div");
+    readStatus.classList.add("read-status");
+    readStatus.textContent = isMyMessage ? (isReadByOther ? "" : "1") : "";
+
+    // 시간 표시
+    const timeDiv = document.createElement("div");
+    timeDiv.classList.add("message-time");
+    timeDiv.textContent = hmStr;
+
+    // 읽음 -> 시간 -> 메시지 순서 정렬
+    const timeWrapper = document.createElement("div");
+    timeWrapper.classList.add("time-wrapper");
+    timeWrapper.appendChild(readStatus);
+    timeWrapper.appendChild(timeDiv);
+
+    messageContentDiv.appendChild(bubbleDiv);
+    messageContentDiv.appendChild(timeWrapper);
+
+    msgDiv.appendChild(messageContentDiv);
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    lastMinute = hmStr;
+    lastSender = sender;
+}
+
+function handleReadEvent(messageId, readerId) {
+    const msgElem = document.querySelector(`.message[data-message-id='${messageId}']`);
+    if (!msgElem) return;
+
+    if (!msgElem.classList.contains("user")) return;
+
+    const readMark = msgElem.querySelector(".read-status");
+    if (readMark) {
+        readMark.textContent = "";
     }
-    
-    messageForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const message = messageInput.value.trim();
-      if (message) {
-        if (chatSocket.readyState === WebSocket.OPEN) {
-          chatSocket.send(JSON.stringify({ content: message }));
-        }
-        messageInput.value = "";
+}
+
+  
+  messageForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const message = messageInput.value.trim();
+    if (message) {
+      if (chatSocket.readyState === WebSocket.OPEN) {
+        chatSocket.send(JSON.stringify({ content: message }));
       }
-    });
+      messageInput.value = "";
+    }
   });
-  </script>
+  
+  loadAllMessages();
+});
+</script>
 </body>
 </html>

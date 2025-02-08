@@ -5,11 +5,13 @@
   <meta charset="UTF-8">
   <title>Chat Main</title>
   <link rel="stylesheet" href="{% static 'chat/chat_main.css' %}">
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+  <style>
+  </style>
 </head>
 <body>
-
 <div class="chat-header">
-  <div class="chat-header-title">채팅 목록</div>
+  <div class="chat-header-title">Chatting</div>
 </div>
 
 <!-- 이메일 검색 -->
@@ -32,31 +34,44 @@
       <!-- 클릭 시 채팅방 생성/이동 -->
       <a href="{% url 'chat:create_chat_room' su.id %}" class="user-link">
           <img class="profile-pic"
-          src="{{ su.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}"
-                    alt="프로필">
-                <div class="user-info">
-                    <div class="nickname">{{ su.nickname|default:su.username }}</div>
-                    <div class="email">{{ su.email }}</div>
-                </div>
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="chat-icon">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.9886 20.9463L12.88 19.9522L12.35 20.0101L12.1027 20.4825L12.9886 20.9463ZM6.45572 19.09L7.06966 19.8793L8.08109 19.0927L7.07226 18.3027L6.45572 19.09ZM4.23006 20.8211L3.61612 20.0317L3.61611 20.0317L4.23006 20.8211ZM20 12C20 16.1206 16.8838 19.5148 12.88 19.9522L13.0973 21.9404C18.1043 21.3933 22 17.1523 22 12H20ZM12 4C16.4183 4 20 7.58172 20 12H22C22 6.47715 17.5228 2 12 2V4ZM4 12C4 7.58172 7.58172 4 12 4V2C6.47715 2 2 6.47715 2 12H4ZM7.07226 18.3027C5.20015 16.8366 4 14.5587 4 12H2C2 15.1996 3.50381 18.0485 5.83917 19.8773L7.07226 18.3027ZM4.844 21.6104L7.06966 19.8793L5.84178 18.3006L3.61612 20.0317L4.844 21.6104ZM4.29145 20C5.1484 20 5.52041 21.0843 4.84401 21.6104L3.61611 20.0317C2.78939 20.6747 3.24408 22 4.29145 22V20ZM12 20H4.29145V22H12V20ZM12.9 20H12V22H12.9V20ZM12.1027 20.4825C12.2517 20.1979 12.5519 20 12.9 20V22C13.3252 22 13.6921 21.7586 13.8746 21.4102L12.1027 20.4825Z" fill="#1E88E5"></path> <path d="M9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12Z" fill="#1E88E5"></path>
-                        <path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#1E88E5"></path> <path d="M17 12C17 12.5523 16.5523 13 16 13C15.4477 13 15 12.5523 15 12C15 11.4477 15.4477 11 16 11C16.5523 11 17 11.4477 17 12Z" fill="#1E88E5"></path> </g></svg>
-            </a>
-        </li>
-    {% endfor %}
+               src="{{ su.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}"
+               alt="프로필">
+          <div class="user-info">
+              <div class="nickname">{{ su.nickname|default:su.username }}</div>
+              <div class="email">{{ su.email }}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="chat-icon">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.9886 20.9463L12.88 19.9522L12.35 20.0101L12.1027 20.4825L12.9886 20.9463ZM6.45572 19.09L7.06966 19.8793L8.08109 19.0927L7.07226 18.3027L6.45572 19.09ZM4.23006 20.8211L3.61612 20.0317L3.61611 20.0317L4.23006 20.8211ZM20 12C20 16.1206 16.8838 19.5148 12.88 19.9522L13.0973 21.9404C18.1043 21.3933 22 17.1523 22 12H20ZM12 4C16.4183 4 20 7.58172 20 12H22C22 6.47715 17.5228 2 12 2V4ZM4 12C4 7.58172 7.58172 4 12 4V2C6.47715 2 2 6.47715 2 12H4ZM7.07226 18.3027C5.20015 16.8366 4 14.5587 4 12H2C2 15.1996 3.50381 18.0485 5.83917 19.8773L7.07226 18.3027ZM4.844 21.6104L7.06966 19.8793L5.84178 18.3006L3.61612 20.0317L4.844 21.6104ZM4.29145 20C5.1484 20 5.52041 21.0843 4.84401 21.6104L3.61611 20.0317C2.78939 20.6747 3.24408 22 4.29145 22V20ZM12 20H4.29145V22H12V20ZM12.9 20H12V22H12.9V20ZM12.1027 20.4825C12.2517 20.1979 12.5519 20 12.9 20V22C13.3252 22 13.6921 21.7586 13.8746 21.4102L12.1027 20.4825Z" fill="#1E88E5"></path> <path d="M9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12Z" fill="#1E88E5"></path>
+                <path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#1E88E5"></path> <path d="M17 12C17 12.5523 16.5523 13 16 13C15.4477 13 15 12.5523 15 12C15 11.4477 15.4477 11 16 11C16.5523 11 17 11.4477 17 12Z" fill="#1E88E5"></path> </g></svg>
+      </a>
+    </li>
+  {% endfor %}
 </ul>
 {% endif %}
-<hr>
 
-<!-- 내 채팅방 목록 -->
+<!-- 채팅방 목록 제목 및 버튼 -->
+<div class="room-list-title-container">
+  <div class="room-list-title">채팅 목록</div>
+  <div class="room-list-buttons">
+    <!-- 편집 모드가 아닐 때 -->
+    <button id="edit-button">편집</button>
+    <!-- 편집 모드일 때 -->
+    <button id="delete-button" >삭제</button>
+    <button id="cancel-button" >취소</button>
+  </div>
+</div>
+
 <ul class="chat-room-list">
   {% for room in room_list %}
   <li class="chat-room-item" data-room-id="{{ room.id }}">
-    <a href="{% url 'chat:chat_room' room.id %}">
+    <input type="checkbox" class="room-checkbox" style="display: none;">
+    <a href="{% url 'chat:chat_room' room.id %}" class="room-link">
       <div class="room-wrapper">
+        <!-- 프로필 사진 -->
         <img class="profile-pic"
-          src="{{ room.other_user.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}">
+             src="{{ room.other_user.profile_image.url|default_if_none:'/media/profile_images/default-profile.png' }}">
 
+        <!-- 닉네임 + 마지막 메시지 -->
         <div class="room-text">
           <div class="nickname">
             {{ room.other_user.nickname|default:room.other_user.username }}
@@ -65,83 +80,193 @@
             <span class="last-message-text">
               {{ room.last_message|default:"(대화 없음)" }}
             </span>
-            {% if room.unread_count > 0 %}
-              <span class="unread-badge">{{ room.unread_count }}</span>
-            {% endif %}
           </div>
         </div>
+
+        <!-- 안 읽은 메시지 개수 -->
+        {% if room.unread_count > 0 %}
+          <span class="unread-badge">{{ room.unread_count }}</span>
+        {% endif %}
       </div>
     </a>
   </li>
   {% empty %}
-  <li>채팅방 없음</li>
+  <li class="empty" style="text-align: center; color: gray;">채팅방이 없습니다.</li>
   {% endfor %}
 </ul>
 
+
+
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  const userId = "{{ request.user.id }}";
+  document.addEventListener("DOMContentLoaded", function() {
+    const editButton = document.getElementById("edit-button");
+    const deleteButton = document.getElementById("delete-button");
+    const cancelButton = document.getElementById("cancel-button");
+    let isEditing = false;
 
-  const protocol = (location.protocol === 'https:')?'wss:':'ws:';
-  const userWsUrl = protocol + '//' + location.host + '/ws/user/' + userId + '/';
+    function enterEditingMode() {
+        document.body.classList.add("editing");
+        editButton.style.display = "none";
+        deleteButton.style.display = "inline-block";
+        cancelButton.style.display = "inline-block";  
+        document.querySelectorAll(".room-checkbox").forEach(cb => {
+            cb.style.display = "inline-block";
+        });
+        let links = document.querySelectorAll(".room-link");
+        for (let link of links) {
+            link.style.pointerEvents = "none"; // 편집 동안에는 채팅방으로 이동 안됨
+        }
 
-  const userSocket = new WebSocket(userWsUrl);
-
-  userSocket.onopen = function(e){
-    console.log("UserConsumer connected!");
-  };
-
-  userSocket.onmessage = function(e){
-    const data = JSON.parse(e.data);
-    console.log("UserConsumer msg:", data);
-
-    if(data.event === "message_read"){
-      console.log("내 메시지 #", data.message_id, "를 user#", data.reader_id, "가 읽음");
-      return;
+        
     }
 
-    if(data.type==="user_notification"){
-      const roomId = data.room_id;
-      const unreadCount = data.unread_count;
-      const lastMsg = data.last_message_content || "(대화 없음)";
+    function exitEditingMode() {
+        document.body.classList.remove("editing");
+        document.querySelectorAll(".room-checkbox").forEach(cb => cb.checked = false);
+        editButton.style.display = "inline-block";  
+        deleteButton.style.display = "none";
+        cancelButton.style.display = "none";
+        document.querySelectorAll(".room-checkbox").forEach(cb => {
+            cb.style.display = "none";
+        });
 
-      const li = document.querySelector(`.chat-room-item[data-room-id='${roomId}']`);
-      if(li){
-        const badge = li.querySelector(".unread-badge");
-        if(unreadCount>0){
-          if(!badge){
-            const newBadge = document.createElement("span");
-            newBadge.classList.add("unread-badge");
-            newBadge.textContent = unreadCount;
-            li.querySelector(".last-message").appendChild(newBadge);
-          } else {
-            badge.textContent = unreadCount;
-          }
-        } else {
-          if(badge) badge.remove(); 
+                let links = document.querySelectorAll(".room-link");
+        for (let link of links) {
+            link.style.pointerEvents = "auto";  // 원래 상태로 복구
         }
 
-        const lastSpan = li.querySelector(".last-message-text");
-        if(lastSpan) {
-          lastSpan.textContent = lastMsg;
+
+    }
+
+    // '편집' 버튼 클릭 
+    editButton.addEventListener("click", function() {
+        enterEditingMode();
+    });
+
+    // '취소' 버튼 클릭 
+    cancelButton.addEventListener("click", function() {
+        exitEditingMode();
+    });
+
+    // '삭제' 버튼 클릭 시 선택된 채팅방 삭제
+    deleteButton.addEventListener("click", function() {
+        const selectedCheckboxes = document.querySelectorAll(".room-checkbox:checked");
+        if (selectedCheckboxes.length === 0) {
+            alert("삭제할 채팅방을 선택하세요.");
+            return;
         }
 
-        li.parentNode.insertBefore(li, li.parentNode.firstChild);
+        if (!confirm("선택한 채팅방을 삭제하시겠습니까?")) {
+            return;
+        }
 
-      } else {
-        console.log("새 채팅방 or 목록에 없음");
+        const roomIds = Array.from(selectedCheckboxes)
+                            .map(cb => cb.closest(".chat-room-item").dataset.roomId);
+
+        fetch("/chat/api/delete_rooms/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ rooms: roomIds })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                roomIds.forEach(id => {
+                    const item = document.querySelector(`.chat-room-item[data-room-id='${id}']`);
+                    if (item) item.remove();
+                });
+                alert(data.message);
+                exitEditingMode();
+                window.location.reload();
+            } else {
+                alert("채팅방 삭제 중 오류 발생: " + data.message);
+            }
+        })
+        .catch(err => console.error("Error deleting rooms:", err));
+    });
+
+
+    // 실시간 업데이트 
+    const userId = "{{ request.user.id }}";
+    const protocol = (location.protocol === 'https:') ? 'wss:' : 'ws:';
+    const userWsUrl = protocol + '//' + location.host + '/ws/user/' + userId + '/';
+    const userSocket = new WebSocket(userWsUrl);
+
+    userSocket.onopen = function(e){
+      console.log("UserConsumer connected!");
+    };
+
+    userSocket.onmessage = function(e){
+      const data = JSON.parse(e.data);
+      console.log("UserConsumer msg:", data);
+      if(data.event === "message_read"){
+        console.log("내 메시지 #", data.message_id, "읽음");
+        return;
       }
-    }
-  };
+      if(data.type === "user_notification"){
+        const roomId = data.room_id;
+        const unreadCount = data.unread_count;
+        const lastMsg = data.last_message_content || "(대화 없음)";
+        let li = document.querySelector(`.chat-room-item[data-room-id='${roomId}']`);
+        if(li){
+          // 기존 채팅방 항목 업데이트
+          const badge = li.querySelector(".unread-badge");
+          if(unreadCount > 0){
+            if(!badge){
+              const newBadge = document.createElement("span");
+              newBadge.classList.add("unread-badge");
+              newBadge.textContent = unreadCount;
+              li.querySelector(".last-message").appendChild(newBadge);
+            } else {
+              badge.textContent = unreadCount;
+            }
+          } else {
+            if(badge) badge.remove();
+          }
+          const lastSpan = li.querySelector(".last-message-text");
+          if(lastSpan){
+            lastSpan.textContent = lastMsg;
+          }
+          // 최신 채팅방을 맨 위로 이동
+          li.parentNode.insertBefore(li, li.parentNode.firstChild);
+        } else {
+          const newLi = document.createElement("li");
+          newLi.classList.add("chat-room-item");
+          newLi.dataset.roomId = roomId;
+          let checkboxHTML = '<input type="checkbox" class="room-checkbox" style="display: ' + (isEditing ? 'inline-block' : 'none') + '; margin-right:10px;">';
+          let linkStyle = isEditing ? 'style="pointer-events:none;"' : '';
+          newLi.innerHTML = `
+            ${checkboxHTML}
+            <a href="/chat/room/${roomId}/" class="room-link" ${linkStyle}>
+              <div class="room-wrapper">
+                <img class="profile-pic" src="${data.other_user_profile_image || '/media/profile_images/default-profile.png'}">
+                <div class="room-text">
+                  <div class="nickname">${data.other_user_nickname}</div>
+                  <div class="last-message">
+                    <span class="last-message-text">${lastMsg}</span>
+                    ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ""}
+                  </div>
+                </div>
+              </div>
+            </a>
+          `;
+          document.querySelector(".chat-room-list").prepend(newLi);
+        }
+      }
+    };
 
-  userSocket.onerror = function(err){
-    console.error("UserConsumer error:", err);
-  };
+    userSocket.onerror = function(err){
+      console.error("UserConsumer error:", err);
+    };
 
-  userSocket.onclose = function(e){
-    console.log("UserConsumer closed:", e);
-  };
-});
+    userSocket.onclose = function(e){
+      console.log("UserConsumer closed:", e);
+    };
+
+  });
 </script>
 </body>
 </html>

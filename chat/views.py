@@ -18,6 +18,11 @@ from django.contrib.auth import get_user_model
 from rest_framework.authentication import SessionAuthentication
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.utils import timezone
+
 
 User = get_user_model()
 @login_required
@@ -38,26 +43,42 @@ def chat_main(request):
             if not searched_users.exists():
                 error_message = "해당 이메일을 가진 사용자를 찾을 수 없습니다."
 
-    # 채팅방 목록
+    # 모든 채팅방을 가져온 후, 내 삭제 시각(deletion_time)을 기준으로 필터링
     rooms = ChatRoom.objects.filter(Q(user1=user) | Q(user2=user)).order_by('-last_message_time')
+    active_rooms = []
     for room in rooms:
+        # 내 삭제 시각을 결정 (user1 또는 user2에 따라)
+        deletion_time = room.deleted_at_user1 if room.user1 == user else room.deleted_at_user2
+        # 채팅방에 메시지가 있고, 마지막 메시지 시각이 내 삭제 시각 이전이면 내 목록에서 제외
+        if deletion_time and room.last_message_time and room.last_message_time <= deletion_time:
+            continue
+
+        # unread_count 계산 시, deletion_time이 있는 경우와 없는 경우
+        if deletion_time:
+            unread_count = room.messages.filter(~Q(sender=user), timestamp__gt=deletion_time).exclude(read_by=user).count()
+        else:
+            unread_count = room.messages.filter(~Q(sender=user)).exclude(read_by=user).count()
+
+
+        # 상대방 정보 설정
         if room.user1 == user:
             room.other_user = room.user2
         else:
             room.other_user = room.user1
 
-        last_msg = room.messages.order_by('-timestamp').first()
-        room.last_message = last_msg.content if last_msg else None
-        
-        unread_count = room.messages.filter(~Q(sender=user), ~Q(read_by=user)).count()
         room.unread_count = unread_count
-        
+
+        last_msg = room.messages.order_by('-timestamp').first()
+        room.last_message = last_msg.content if last_msg else "(대화 없음)"
+        active_rooms.append(room)
+
     context = {
-        'room_list': rooms,
+        'room_list': active_rooms,
         'searched_users': searched_users,
         'error_message': error_message,
     }
     return render(request, 'chat/chat_main.html', context)
+
 
 
 @login_required
@@ -71,14 +92,21 @@ def create_chat_room(request, user_id):
 
     # 채팅방 중복 여부 확인
     room = ChatRoom.objects.filter(
-        (Q(user1=current_user) & Q(user2=other_user)) |
-        (Q(user1=other_user) & Q(user2=current_user))
+        Q(user1=current_user, user2=other_user) | Q(user1=other_user, user2=current_user)
     ).first()
 
-    if not room:
+    if room:
+        # 만약 내가 이전에 삭제한 상태였다면 삭제 시각을 초기화(= None)하여 다시 보이게
+        if room.user1 == current_user and room.deleted_at_user1:
+            room.deleted_at_user1 = None
+            room.save()
+        elif room.user2 == current_user and room.deleted_at_user2:
+            room.deleted_at_user2 = None
+            room.save()
+        return redirect('chat:chat_room', room_id=room.id)
+    else:
         room = ChatRoom.objects.create(user1=current_user, user2=other_user)
-
-    return redirect('chat:chat_room', room_id=room.id)
+        return redirect('chat:chat_room', room_id=room.id)
 
 # 채팅방 목록 페이지네이션 
 class ChatRoomPagination(PageNumberPagination):
@@ -94,7 +122,9 @@ class ChatRoomList(generics.ListCreateAPIView):
     def get_queryset(self):
         # 현재 사용자가 참여한 채팅방 목록 조회
         user = self.request.user
-        return ChatRoom.objects.filter(Q(user1=user) | Q(user2=user)).order_by('-last_message_time')
+        return ChatRoom.objects.filter(
+            (Q(user1=user) | Q(user2=user)) & ~Q(deleted_by=user)
+        ).order_by('-last_message_time')
 
     def create(self, request, *args, **kwargs):
         # 새로운 채팅방 생성 로직
@@ -209,25 +239,69 @@ def enter_chat_room(request, room_id):
     return Response(response_data, status=status.HTTP_200_OK)
 
 # 채팅 메시지 조회 API
+from datetime import timedelta
+import logging
+logger = logging.getLogger(__name__)
+
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
-@authentication_classes([JWTAuthentication])
+@authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def get_chat_messages(request, room_id):
     chat_room = get_object_or_404(ChatRoom, id=room_id)
     user = request.user
 
-    # 메시지 조회 권한 확인
     if user not in [chat_room.user1, chat_room.user2]:
         return Response({'error': '이 채팅방의 메시지를 볼 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
 
-    messages = Message.objects.filter(room=chat_room).order_by('-timestamp')
+    # 최신 상태 반영
+    chat_room.refresh_from_db()
+    deletion_time = chat_room.deleted_at_user1 if chat_room.user1 == user else chat_room.deleted_at_user2
+    logger.debug(f"Deletion time for user {user.id}: {deletion_time}")
+
+    if deletion_time:
+        messages = Message.objects.filter(
+            room=chat_room,
+            timestamp__gt=deletion_time + timedelta(seconds=1)
+        ).order_by('timestamp')
+    else:
+        messages = Message.objects.filter(room=chat_room).order_by('timestamp')
     
-    paginator = ChatRoomPagination()
-    paginated_messages = paginator.paginate_queryset(messages, request)
+    logger.debug("Returned message timestamps: " + ", ".join([str(msg.timestamp) for msg in messages]))
     
-    serializer = MessageSerializer(paginated_messages, many=True, context={'request': request})
-    return paginator.get_paginated_response(serializer.data)
+    serializer = MessageSerializer(messages, many=True, context={'request': request})
+    return Response(serializer.data)
+
+
+@csrf_exempt
+@login_required
+def delete_chat_rooms(request):
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.debug("delete_chat_rooms 뷰 호출됨")
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "message": "잘못된 JSON 형식입니다."}, status=400)
+
+        room_ids = data.get("rooms", [])
+        if not room_ids:
+            return JsonResponse({"success": False, "message": "삭제할 채팅방이 없습니다."}, status=400)
+
+        rooms = ChatRoom.objects.filter(
+            Q(id__in=room_ids) & (Q(user1=request.user) | Q(user2=request.user))
+        )
+        now = timezone.now()
+        for room in rooms:
+            if room.user1 == request.user:
+                room.deleted_at_user1 = now
+                room.save()
+            elif room.user2 == request.user:
+                room.deleted_at_user2 = now
+                room.save()
+
+        return JsonResponse({"success": True, "message": f"{rooms.count()}개의 채팅방이 삭제되었습니다."}, status=200)
+    return JsonResponse({"success": False, "message": "잘못된 요청 방식입니다."}, status=405)
 
 # 메시지 삭제 API
 @api_view(['DELETE'])
@@ -294,7 +368,7 @@ def chat_room(request, room_id):
 
     other_user = room.user2 if room.user1 == request.user else room.user1
     unread_msgs = room.messages.filter(sender=other_user).exclude(read_by=request.user)
-    
+
     channel_layer = get_channel_layer()
     for m in unread_msgs:
         m.read_by.add(request.user)
@@ -309,5 +383,6 @@ def chat_room(request, room_id):
 
     return render(request, 'chat/room_chat.html', {
         'room': room,
+        'other_user': other_user,
         'access_token': "",
     })

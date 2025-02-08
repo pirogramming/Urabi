@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     padding: 20px;
-    background: lightblue;
+    background: var(--blue);
     color: white;
     width: 100%;
 }
@@ -34,7 +34,7 @@
     padding: 15px;
     border-bottom: 1px solid #ddd;
     width: 100%;
-    max-width: 600px;
+    max-width: 350px;
     margin: 0 auto;
 }
 
@@ -66,6 +66,7 @@
     padding: 11px 16px;
     border-radius: 15px;
     border: none;
+    white-space: nowrap;
     cursor: pointer;
 }
 
@@ -80,17 +81,21 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     background: #fff;
-    max-width: 600px;
+    max-width: 350px;
     width: 100%;
 }
 
 /* 검색 결과 개별 항목 */
 .user-item {
     border-bottom: 1px solid #ddd;
+    max-width: 350px;
 }
 
 .user-item:last-child {
+    display: block;
     border-bottom: none;
+    max-width: 350px;
+    margin: 0 auto;
 }
 
 .user-link {
@@ -144,21 +149,37 @@
     margin: 20px 0;
 }
 
-/* 내 채팅방 목록 */
+.room-list-title-container{
+    display: flex;
+    max-width: 350px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+
+.room-list-title{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 5px;
+}
 .chat-room-list {
     list-style: none;
     padding: 0;
-    max-width: 600px;
+    max-width: 350px;
     width: 100%;
     margin: 20px auto;
 }
 
 .chat-room-item {
-    margin-bottom: 10px;
+    display: flex;
     border: 1px solid #ccc;
     border-radius: 8px;
-    background: #fff;
     transition: all 0.3s ease;
+    padding: 0;  /* 내부 패딩 없음 (a가 전체 영역을 차지하도록) */
+    margin-bottom: 10px;
+    overflow: hidden;
 }
 
 .chat-room-item:hover {
@@ -166,17 +187,30 @@
 }
 
 .chat-room-item a {
-    display: block;
+    display: flex;
+    width: 100%;
     text-decoration: none;
     color: #000;
 }
+
+
+.room-checkbox {
+    margin: auto 0;
+    margin-left: 20px;
+    appearance: checkbox;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
 
 /* 채팅방 정보 */
 .room-wrapper {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    width: 100%;
     padding: 12px;
-    position: relative;
 }
 
 .room-wrapper .profile-pic {
@@ -209,16 +243,32 @@
     gap: 6px;
 }
 
-/* 안 읽은 메시지 표시 */
 .unread-badge {
     background: var(--red);
-    color: #fff;
+    color: white;
     font-size: 12px;
     border-radius: 50%;
-    padding: 7px;
+    padding: 6px;
     text-align: center;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 22px;
+    height: 22px;
+    margin-right: 5px;
+    margin-left: auto;
+}
+
+#edit-button{
+    color: var(--yellow);
+}
+#delete-button{
+    display: none;
+    margin-right: 5px;
+    color: var(--red);
+}
+
+#cancel-button{
+    display: none;
+    margin-right: 5px;
 }

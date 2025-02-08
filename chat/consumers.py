@@ -53,6 +53,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         logger.debug(f"DISCONNECT: {close_code}")
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+    
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -64,7 +65,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "message_id": msg.id,
                 "content": msg.content,
                 "sender_id": self.user.id,
-                "sender_nickname": self.user.username,
+                "sender_nickname": self.user.nickname,
                 "timestamp": msg.timestamp.isoformat(),
                 "profile_image_url": (
                     msg.sender.profile_image.url 
@@ -109,11 +110,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
         
+   
     async def notify_room_users(self, new_msg):
-        """
-        채팅방의 user1, user2에게 각각 user_notification 전송
-        => unread_count, last_message, etc
-        """
         room = await self.get_room()
         user1_id, user2_id = room.user1_id, room.user2_id
 
@@ -122,7 +120,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         last_msg_content = new_msg.content
         last_msg_ts = new_msg.timestamp.isoformat()
 
-        # user1
+        # 동기 메서드 접근을 비동기 호출로 감싸기
+        other_user_nickname_user1 = await database_sync_to_async(lambda: room.user2.nickname)()
+        other_user_profile_image_user1 = await database_sync_to_async(
+            lambda: room.user2.profile_image.url if room.user2.profile_image else "/media/profile_images/default-profile.png"
+        )()
+
+        other_user_nickname_user2 = await database_sync_to_async(lambda: room.user1.nickname)()
+        other_user_profile_image_user2 = await database_sync_to_async(
+            lambda: room.user1.profile_image.url if room.user1.profile_image else "/media/profile_images/default-profile.png"
+        )()
+
+        # user1에게 전송: user1의 상대는 user2
         await self.channel_layer.group_send(
             f"user_{user1_id}",
             {
@@ -130,10 +139,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "room_id": room.id,
                 "unread_count": unread1,
                 "last_message_content": last_msg_content,
-                "last_message_timestamp": last_msg_ts
+                "last_message_timestamp": last_msg_ts,
+                "other_user_nickname": other_user_nickname_user1,
+                "other_user_profile_image": other_user_profile_image_user1
             }
         )
-        # user2
+
+        # user2에게 전송: user2의 상대는 user1
         await self.channel_layer.group_send(
             f"user_{user2_id}",
             {
@@ -141,7 +153,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "room_id": room.id,
                 "unread_count": unread2,
                 "last_message_content": last_msg_content,
-                "last_message_timestamp": last_msg_ts
+                "last_message_timestamp": last_msg_ts,
+                "other_user_nickname": other_user_nickname_user2,
+                "other_user_profile_image": other_user_profile_image_user2
             }
         )
 
@@ -195,7 +209,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "message_id": message.id,
                 "content": message.content,
                 "sender_id": message.sender.id,
-                "sender_nickname": message.sender.username,
+                "sender_nickname": message.sender.nickname,
                 "timestamp": message.timestamp.isoformat(),
                 "is_read": is_read_by_me,  
                 "is_read_by_other": is_read_by_other,

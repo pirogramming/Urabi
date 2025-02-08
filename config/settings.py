@@ -241,6 +241,10 @@ LOGGING = {
 # 웹소켓 URL 설정
 WEBSOCKET_URL = '/ws/'
 
+# Clickjacking 보호 설정 변경
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # 같은 도메인에서는 iframe 허용
+
+
 
 
 
