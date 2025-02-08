@@ -78,15 +78,18 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="hotel-info">
-                        <div class="hotel-title">{{ review.accommodation_name }}</div>
-                        <div class="hotel-address">{{ review.city }}</div>
-                        <p class="review-content">{{ review.content }}</p>
+                    <div class="hotel-content">
+                        <div class="hotel-info">
+                            <div class="hotel-title">{{ review.accommodation_name }}</div>
+                            <div class="hotel-address">{{ review.city }}</div>
+                            <p class="review-content">{{ review.content }}</p>
+                        </div>
+                        <button class="view-review-btn">
+                            <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}">
+                                후기 보기
+                            </a>
+                        </button>
                     </div>
-                    <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}" 
-                       class="view-review-btn">
-                        후기 보기
-                    </a>
                 </div>
             </div>
             {% endfor %}        
