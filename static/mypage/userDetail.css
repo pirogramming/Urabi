@@ -262,6 +262,10 @@
     gap: 16px;
     border: 1px solid #eee;
   }
+
+  .activity-card:hover{
+    box-shadow: 10px 10px 8px rgba(199, 198, 198, 0.5);
+  }
   .activity-img {
     width: 200px;
     height: 120px;
@@ -328,3 +332,6 @@
     white-space: nowrap;
   }
 
+  .mypage_mkt_title{
+    line-height: 26px;
+  }

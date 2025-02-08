@@ -85,10 +85,11 @@
         {%if mkt_zzim_count %}
           {% for market in mkt_zzims %}
           <div class="activity-card" style="display: none;">
+            <a href="{% url 'market:market_detail'  market.pk %}">
             <div class="activity-review">
               <div class="activity-review-header">
                 <span class="activity-review-type">{{market.get_trade_type_display}}</span>
-                <span class="activity-review-title">
+                <span class="activity-review-title mypage_mkt_title">
                   {{market.title}}
                 </span>
               </div>
