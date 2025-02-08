@@ -172,6 +172,7 @@
 
 .flash_card {
     display: flex;
+    height: 140px;
     background: #fff;
     border-radius: 10px;
     overflow: hidden;
@@ -193,18 +194,33 @@
 }
 
 .flash_card img {
-    width: 120px;
-    height: 120px;
+    padding: 10px;
+    width: 150px;
+    height: 100%;
     object-fit: cover;
+    border-radius: 20px;
+}
+
+.flash_card_content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .flash_card_info {
+    display: flex;
     width: 100%;
     padding: 10px;
     display: flex;
-    gap: 10px;
+    gap: 5px;
     flex-direction: column;
-    justify-content: center;
+}
+
+.flash_card_info h3 {
+    padding-top: 12px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .flash_place {
@@ -217,17 +233,13 @@
     color: #000000;        
 }
 
-.flash_card_info h3 {
-    font-size: 18px;
-    font-weight: bold;
-}
-
 
 
 /* 태그 스타일 */
 .flash_card_tags {
     display: flex;
     align-items: center;
+    padding-left: 10px;
     gap: 8px;
     margin-top: 5px;
 }
@@ -244,6 +256,7 @@
     font-weight: bold;
     color: var(--red);
     margin-left: auto;
+    padding-right: 25px;
 }
 
 

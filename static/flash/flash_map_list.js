@@ -1,4 +1,31 @@
-window.initMap = async function () {
+function isGoogleMapsLoaded() {
+    return typeof google !== "undefined" && typeof google.maps !== "undefined";
+}
+
+window.initMap = function () {
+    console.log("⚡ Google Maps API 로드됨: initMap 실행");
+
+    if (!isGoogleMapsLoaded()) {
+        console.error("🚨 Google Maps API가 아직 로드되지 않음!");
+        return;
+    }
+
+    // 실제 지도 초기화 함수 호출
+    if (typeof window.actualInitMap === "function") {
+        window.actualInitMap();
+    } else {
+        console.error("🚨 actualInitMap 함수가 정의되지 않음! 3초 후 다시 시도합니다.");
+        setTimeout(() => {
+            if (typeof window.actualInitMap === "function") {
+                window.actualInitMap();
+            } else {
+                console.error("❌ 여전히 actualInitMap이 정의되지 않음!");
+            }
+        }, 3000); // 3초 후 재시도
+    }
+};
+
+window.actualInitMap = async function () {
     console.log("⚡ 번개 지도 initMap 실행됨");
 
     try {
@@ -25,6 +52,12 @@ window.initMap = async function () {
         console.error("🚨 번개 지도 로드 실패:", error);
     }
 };
+
+
+if (isGoogleMapsLoaded()) {
+    console.log("🔄 Google Maps API가 이미 로드됨, 즉시 실행");
+    window.actualInitMap();
+}
 
 async function addFlashMeetingMarkers(map, placesService, streetViewService, geocoder) {
     try {

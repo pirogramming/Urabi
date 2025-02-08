@@ -5,7 +5,7 @@ from users.models import User
 # Create your models here.
 class TravelGroup(models.Model):
     GENDER_CHOICES = [
-    ('상관없음', '상관없음'),
+    ('전체', '전체'),
     ('남성만', '남성만'),
     ('여성만', '여성만'),
     ]

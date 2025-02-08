@@ -30,6 +30,7 @@
 
 /* 관심 번개(하트) 아이콘 */
 .flash_star img {
+    padding-right: 5px;
     width: 30px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
@@ -56,7 +57,7 @@
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 .flash_image {
@@ -66,10 +67,13 @@
 }
 
 .flash_description {
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding-top: 10px;
     flex-grow: 1;
+    justify-content: space-between;
 }
 /*제목 & 찜*/
 .flash_title_star {
@@ -82,7 +86,7 @@
 /* 태그 & 인원 */
 .flash_tags_capacity {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -90,6 +94,7 @@
 .flash_tags {
     display: flex;
     gap: 8px;
+    padding-right: 35px;
 }
 
 .flash_tag {
@@ -101,6 +106,7 @@
 }
 
 .flash_capacity {
+    padding-right: 15px;
     font-weight: bold;
     color: #d32f2f;
 }
@@ -109,18 +115,27 @@
 .flash_buttons {
     display: flex;
     gap: 10px;
-    margin-top: 15px;
+    margin-top: auto; 
+    align-self: flex-end;
 }
 
-.flash_edit_btn {
-    padding: 8px 12px;
-    border: 2px solid green;
-    border-radius: 5px;
+.flash_edit_btn,
+.flash_delete_btn,
+.flash_apply_btn {
+    padding: 8px 12px; 
+    border-radius: 5px; 
     cursor: pointer;
+    font-weight: bold; 
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+}
+
+/* 수정 버튼 */
+.flash_edit_btn {
+    border: 2px solid green;
     background: white;
     color: green;
-    font-weight: bold;
-    text-decoration: none;
 }
 
 .flash_edit_btn:hover {
@@ -128,15 +143,11 @@
     color: white;
 }
 
+/* 삭제 버튼 */
 .flash_delete_btn {
-    width: 100px;
-    padding: 8px 12px;
     border: 2px solid red;
-    border-radius: 5px;
-    cursor: pointer;
     background: white;
     color: red;
-    font-weight: bold;
 }
 
 .flash_delete_btn:hover {
@@ -144,14 +155,10 @@
     color: white;
 }
 
+/* 신청 버튼 */
 .flash_apply_btn {
-    width: 25%;
-    padding: 10px 15px;
     border: 2px solid var(--blue);
-    border-radius: 5px;
-    cursor: pointer;
-    background: #ffffff;
-    font-weight: bold;
+    background: white;
     color: var(--blue);
     align-self: flex-end;
 }
@@ -239,7 +246,7 @@
 
 
 .other_flash h3{
-    padding-left: 60px;
+    padding-left: 40px;
 }
 
 .other_flash_header {
