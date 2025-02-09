@@ -15,11 +15,31 @@
   font-weight: bold;
 }
 
+/*검색*/
 .search-section {
-  margin: 30px 0 30px 0 !important;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  font-weight: 500;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 16px;
+}
+.search-box {
+  margin: 10px 0;
+  display: grid;
+  flex-wrap: wrap;
+  gap: 10px;
+  grid-template-columns: 9fr 1fr;
+}
+.blue{
+  color: var(--blue);
+  padding-bottom: 5px;
+}
+.filter_contents{
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 25px;
 }
 #search-bar{
   width: 70%;
@@ -42,170 +62,29 @@
 .search-section > button:hover{
   background-color: #1565C0;
 }
-.search-box {
-  width: 950px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  border: 1px solid #ddd;
-  border-radius: 30px;
-  padding: 10px 20px;
-  background: white;
-}
 
 .location-input,
 .facility-input {
-  flex: 1;
-  border: none;
-  padding: 15px;
-  font-size: 16px;
-}
-
-.divider {
-  width: 1px;
-  height: 30px;
-  background-color: #ddd;
-  margin: 0 15px;
+  background-color: var(--gray);
+  padding: 15px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  font-family: 'Paperlogy', sans-serif;
 }
 
 .search-btn {
-  width: 40px;
-  height: 40px;
+  width: 80%;
+  margin-left: 15px;
+  padding: 10px 20px;
   border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  background-color: var(--blue);
+  color: #ffffff;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
+  font-size: 16px;
 }
-
-
-.main_accommodation{
-  padding: 30px;
-  min-height: 50vh;
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  gap:20px;
-  width: 100%;
-  margin: 0 auto;
-  max-width: 1150px; 
-  margin-bottom: -50px; 
-}
-.main_accommodation_title{
-  font-size: 40px;
-  font-weight: 300;
-  margin-bottom: 20px;
-}
-.main_accommodation_title em{
-  color: var(--red);
-  font-weight: 700;
-}
-
-.main_accommodation_container{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 1000px;
-  height: 350px;
-  max-width: 1200px;
-  border-radius: 20px;
-  position: relative;
-  border: 1.5px solid #191970;
-  background-image: url('/static/img/main_box_final.svg');
-  background-size: cover; 
-  background-position: left center;
-  margin-left: 30px;
-  margin-bottom: 50px;
-}
-.main_accommodation_left{
-  width: 50%;
-  color: white;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-
-}
-.main_accommodation_left h2{
-  text-align: center;
-  font-size: 20px;
-  margin :0;
-}
-.main_accommodation_left img{
-  margin :0 auto;
-  width: 56%;
-  max-width: 250px;
-  display: block;
-}
-.main_accommodation_left button{
-  font-weight: 500;
-  height: 40px;
-  color: white;
-  border: 2px solid white;
-  border-radius: 15px;
-  width: 104px;
-  margin-left: auto;
-  cursor: pointer;
-  position: absolute;
-  bottom: -23px;
-  right: 10px;
-  font-size: 15px;
-}
-.main_accommodation_left button:hover{
-  background: white;
-  color: #191970;
-}
-.main_accommodation_right{
-  width: 50%;
-  display: flex;
-  flex-wrap: wrap;
-  gap:20px;
-  position: relative;
-  padding: 30px;
-}
-
-.main_review_btn {
-  background-color: #FFD700;  
-  color: black !important;
-  width: 150px;  
-  font-weight: 700 !important;
-  height: 40px;
-  border: 2px solid #FFD700;
-  border-radius: 15px;
-  cursor: pointer;
-  position: absolute;
-  bottom: -33px;
-  right: 10px;
-  font-size: 15px;
-  white-space: nowrap;  
-  min-width: 150px;     
-  width: fit-content;   
-  transition: transform 0.2s ease;
-}
-
-.main_review_btn:hover {
-  background: #FFE44D; 
-  color: black;
-  transform: scale(1.05); 
-}
-
-.main_tag{
-  font-size: 20px;
-  font-weight: 400;
-  position : absolute;
-}
-
-.main_tag:nth-child(1) { top: -103px; left: 51px; }
-.main_tag:nth-child(3) { top: 38px; left: 135px; }
-.main_tag:nth-child(2) { top: -37px; right: 256px; }
-.main_tag:nth-child(4) { top: 98px; right: 198px; }
-.main_tag:nth-child(5) { top: 4px; left: 282px; }
-.main_tag:nth-child(6) { top: 132px; right: 81px; }
-.main_tag:nth-child(7) { top: 164px; left: 134px; }
-.main_tag:nth-child(8) { bottom: 134px; right: 50px; }
 
 
 .image-container {

@@ -14,11 +14,13 @@
 
 {% block content %}
 <!-- 지도 위 문구 -->
+
 <section class="flash_list">
     <section class="flash_title">
         <h2>여행 속 반짝이는 만남, <a href="{% url 'flash:flash_list' %}" class="highlight">번개 모임</a></h2>
     </section>
-    <div class="flash_searchBar">
+    <div class="banner-filter">
+        <p class="filter_sub">함께할 번개 모임을 찾아보세요</p>
         <form method='GET' class="flash_filter">
             {% csrf_token %}
             <div class="flash_filter_content">

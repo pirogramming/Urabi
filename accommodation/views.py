@@ -24,6 +24,8 @@ def accommodation_filter(request):
         )
     )
 
+    #리뷰 개수
+    total_reviews_count = AccommodationReview.objects.count()
     # 검색 필터링 적용
     if city_query:
         reviews = reviews.filter(city__icontains=city_query)
@@ -41,7 +43,8 @@ def accommodation_filter(request):
     context = {
         'reviews': reviews,
         'city_query': city_query,  
-        'rating_query': rating_query  
+        'rating_query': rating_query,
+        'total_reviews_count':total_reviews_count 
     }
     
     return render(request, "accommodation/accommodation_filter.html", context)

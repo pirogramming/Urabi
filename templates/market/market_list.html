@@ -9,34 +9,30 @@
 {% block content%}
 <section id="market_search">
     <h1 class="market_title">필요한 순간, 따뜻한 <em>나눔 마켓</em></h1>
-    <form method="GET" id="market_search_bar">
-        {% csrf_token %}
-        <div class="market_search_content">
-            <div class="market_search_title">
-                <h1>거래 현황</h1>
-                {{filterset.form.status}}
+    <div class="mkt_banner-filter">
+        <p class="mkt_blue">원하는 물건을 찾아보세요</p>
+        <form method="GET" id="market_search_bar">
+            {% csrf_token %}
+            <div class="market_search_content">
+                <div class="market_search_title">
+                    {{filterset.form.status}}
+                </div>
+                <div class="market_search_title">
+                    {{filterset.form.trade_type}}
+                </div>
+                <div class="market_search_title">
+                    {{filterset.form.category}}
+                </div>
+                <div class="market_search_title">
+                    {{filterset.form.city}}
+                </div>
+                <div class="market_search_title">
+                    {{filterset.form.title}}
+                </div>
             </div>
-            <div class="market_search_title">
-                <h1>거래 유형</h1>
-                {{filterset.form.trade_type}}
-            </div>
-            <div class="market_search_title">
-                <h1>카테고리</h1>
-                {{filterset.form.category}}
-            </div>
-            <div class="market_search_title">
-                <h1>장소</h1>
-                {{filterset.form.city}}
-            </div>
-            <div class="market_search_title">
-                <h1>검색</h1>
-                {{filterset.form.title}}
-            </div>
-        </div>
-        <button type="submit" class="market_search_btn">
-            <img src="/static/img/search_icon.svg" width="60">
-        </button> 
-    </form>
+            <button type="submit" class="market_search_btn">검색</button>
+        </form>
+    </div>
 </section>
 
 <section id="market_body">
@@ -60,7 +56,6 @@
                     </select>
                 </form>
                 <a href="{% url 'market:market_create' %}" class="market_add">
-                    <button><img src="/static/img/market_add_icon.svg" ></button>
                     <butoon class="market_add_text">등록하기</butoon>
                 </a>
 
