@@ -59,9 +59,9 @@
         {% for plan in plans %}
         <div class="schedule-card" style="display: none;">
           <img
-            src="{% static 'img/banner.png' %}"
+            src="{%if plan.photo%}{{plan.photo.url}}{%else%}{% static 'img/schedule_default_img.jpg' %}{%endif%}"
             alt="여행 이미지"
-            class="schedule-img"
+            width="250" height="180"
             onclick="location.href='{% url 'users:schedule_detail' plan.schedule_id %}'"
             style="cursor:pointer;"
           />

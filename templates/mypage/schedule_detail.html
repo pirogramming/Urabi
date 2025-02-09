@@ -22,8 +22,17 @@
       <section class="activity-section">
               <!--나눔 마켓-->
         <div class="activity-header-cms">
-          <h2 class="sub-title">{{schedule.title}}</h2>
+          <h2 class="sub-title">{{schedule.name}}</h2>
           <button class="new-plan-btn" onclick="window.location.href='{%url 'users:my_trip' schedule.schedule_id %}'">계획 생성</button>
+        </div>
+        <div class="photo-sec">
+          {% if schedule.photo %}
+          <img width="250" height="180" src="{{schedule.photo.url}}" alt="여행 이미지">
+          <button onclick="document.getElementById('photo-modal').style.display='block'">대표사진 수정</button>
+          {% else %}
+          <img width="250" height="180" src="{% static 'img/schedule_default_img.jpg' %}" alt="여행 이미지">
+          <button onclick="document.getElementById('photo-modal').style.display='block'">대표사진 등록</button>
+          {% endif %}
         </div>
         <div id="market-cards-container" class="market-cards-container-cms">
             <div class="activity-card activity-card-cms" style="display: none;">
@@ -49,6 +58,7 @@
                     <span class="schedule-location-text">{{plan.city}}</span>
                   </p>
                 </div>
+              </a>
               </div>
             {%endfor%}
             {%else%}
@@ -63,13 +73,30 @@
       
     </section>
   </main>
+
+  <div id="photo-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('photo-modal').style.display='none'">&times;</span>
+      <h2>대표사진 등록/수정</h2>
+      <form  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="photo" accept="image/*" required>
+        <button type="submit">업로드</button>
+      </form>
+    </div>
+  </div>
   {%endblock%}
   {%block js%}
   <script>
     function confirmDelete(event, scheduleId) {
-      event.preventDefault(); // 기본 동작 방지
       if (confirm('삭제하시겠습니까?')) {
         window.location.href = "{% url 'users:delete_schedule' %}?schedule_id=" + scheduleId;
+      }
+    }
+    window.onclick = function(event) {
+
+      if (event.target == document.getElementById('photo-modal')) {
+        document.getElementById('photo-modal').style.display = "none";
       }
     }
   </script>
