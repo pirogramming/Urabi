@@ -22,7 +22,7 @@
       <section class="activity-section">
               <!--나눔 마켓-->
         <div class="activity-header-cms">
-          <h2 class="sub-title">이탈리아 남부여행</h2>
+          <h2 class="sub-title">{{schedule.title}}</h2>
           <button class="new-plan-btn" onclick="window.location.href='{%url 'users:my_trip' schedule.schedule_id %}'">계획 생성</button>
         </div>
         <div id="market-cards-container" class="market-cards-container-cms">
@@ -57,11 +57,21 @@
         </div>
         
         <div class="cms-schedule-footer">
-          <button class="del-schedule-btn">여행 삭제</button>
+          <button class="del-schedule-btn" onclick="confirmDelete(event, {{schedule.schedule_id}})">여행 삭제</button>
         </div>
       </section>
       
     </section>
   </main>
   {%endblock%}
+  {%block js%}
+  <script>
+    function confirmDelete(event, scheduleId) {
+      event.preventDefault(); // 기본 동작 방지
+      if (confirm('삭제하시겠습니까?')) {
+        window.location.href = "{% url 'users:delete_schedule' %}?schedule_id=" + scheduleId;
+      }
+    }
+  </script>
+  {%endblock js%}
 

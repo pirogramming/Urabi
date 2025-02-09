@@ -581,3 +581,9 @@ def schedule_detail(request, pk):
         'schedule': schedule,
         'plans': plans,
     })
+
+def delete_schedule(request):
+    schedule_id = request.GET.get('schedule_id')
+    schedule = get_object_or_404(TravelSchedule, pk=schedule_id)
+    schedule.delete()
+    return redirect('users:user_list')
