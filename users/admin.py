@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import User, TravelPlan
+from .models import User, TravelPlan, TravelSchedule
 
 admin.site.register(TravelPlan)
+admin.site.register(TravelSchedule)
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):

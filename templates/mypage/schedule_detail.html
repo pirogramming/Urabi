@@ -1,0 +1,67 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+  <link rel="stylesheet" href="{%static 'mypage/myPage.css'%}">
+{%endblock%}
+
+ {%block content%}
+ <main class="mypage-wrap">
+
+    <nav class="mypage-nav">
+      <ul>
+        <li><a href="{%url 'users:my_page'%}">프로필</a></li>
+        <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+        <li class="active"><a href="{%url 'users:user_list'%}">나의 여행 일정</a></li>
+        <li><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
+      </ul>
+    </nav>
+  
+    <section class="mypage-content">
+      <h1 class="main-title">여행일정상세</h1>
+      <section class="activity-section">
+              <!--나눔 마켓-->
+        <div class="activity-header-cms">
+          <h2 class="sub-title">이탈리아 남부여행</h2>
+          <button class="new-plan-btn" onclick="window.location.href='{%url 'users:my_trip' schedule.schedule_id %}'">계획 생성</button>
+        </div>
+        <div id="market-cards-container" class="market-cards-container-cms">
+            <div class="activity-card activity-card-cms" style="display: none;">
+              <a href="#">
+              <div class="activity-review">
+              </div>
+            </div>
+            {%if plans%}
+            {%for plan in plans%}
+              <div class="activity-card activity-card-cms" >
+                <a href="{%url 'users:plan_detail' plan.plan_id%}">
+                <div class="activity-review">
+                  <div class="activity-review-header">
+                    <span class="activity-review-title mypage_mkt_title">
+                      {{plan.title}}
+                    </span>
+                  </div>
+                  <p class="activity-date">
+                      {{plan.start_date}} ~ {{plan.end_date}}
+                  </p>
+                  <p class="schedule-location">
+                    <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                    <span class="schedule-location-text">{{plan.city}}</span>
+                  </p>
+                </div>
+              </div>
+            {%endfor%}
+            {%else%}
+            {%endif%}
+            
+        </div>
+        
+        <div class="cms-schedule-footer">
+          <button class="del-schedule-btn">여행 삭제</button>
+        </div>
+      </section>
+      
+    </section>
+  </main>
+  {%endblock%}
+
