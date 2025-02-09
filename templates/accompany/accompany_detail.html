@@ -7,32 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="filter">
-  <div class="banner-filter">
-    <form class="filter-form" action="{%url 'accompany:accompany_list'%}">
-      <div class="filter-group">
-        <input type="text" id="city" name="city" placeholder="도시" value="{{ object.city }}">
-      </div>
-      <div class="filter-group">
-        <select id="gender" name="gender">
-          <option value="mixed">전체</option>
-          <option value="male">남성만</option>
-          <option value="female">여성만</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <input type="date" id="start-date" name="start-date" placeholder="시작일" value="{{ object.start_date|date:'Y-m-d' }}">
-      </div>
-      <div class="filter-group">
-        <input type="date" id="end-date" name="end-date" placeholder="종료일" value="{{ object.end_date|date:'Y-m-d' }}">
-      </div>
-      <div class="filter-group">
-        <input type="number" id="age" name="age" placeholder="나이">
-      </div>
-      <button type="submit">검색</button>
-    </form>
-  </div>
-</section>
+
 <section class="map">
   <div class="map-container">
     <div id="map"></div>
