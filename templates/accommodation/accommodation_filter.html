@@ -33,7 +33,6 @@
             </div>
             <button type="submit" class="search-btn">검색</button>
         </form>
-        {% comment %} <button onclick="window.location.href='{% url 'accommodation:accommodation_create' %}'">숙소 등록하기</button> {% endcomment %}
     </div>
 
     <section class="main_accommodation"  style="display: none;">
@@ -57,42 +56,54 @@
     </section>
 
     <div class="location-container">
-        <div class="accommodation-list">
-            {% for review in reviews %}
-            <div class="accommodation-card" 
-                 data-title="{{ review.accommodation_name }}" 
-                 data-city="{{ review.city }}" 
-                 data-review-id="{{ review.review_id }}">
-                <div class="card-left">
-                    <div class="hotel-image">
-                        <img id="place-img-{{ review.review_id }}" 
-                            src="{% static 'img/room_ex1.png' %}" 
-                            alt="숙소 이미지">
-                        <div class="rating">
-                            {% for i in "12345"|make_list %}
-                                {% if forloop.counter <= review.rating %}
-                                    <img src="{% static 'img/fill_star.png' %}" alt="별점">
-                                {% else %}
-                                    <img src="{% static 'img/empty_star.png' %}" alt="별점">
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="hotel-content">
-                        <div class="hotel-info">
-                            <div class="hotel-title">{{ review.accommodation_name }}</div>
-                            <div class="hotel-address">{{ review.city }}</div>
-                            <p class="review-content">{{ review.content }}</p>
-                        </div>
-                        <button class="view-review-btn">
-                            <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}">
-                                후기 보기
-                            </a>
-                        </button>
-                    </div>
+        <div class="accom_left_container">
+            <div class="accommodation_list_header">
+                <h2 class="accommodation_list_title">{{ total_reviews_count }}개의 숙소 후기</h2>
+                <div class="accommodation_list_controls">
+                    <h2>나만의 숙소</h2>
+                    <button onclick="window.location.href='{% url 'accommodation:accommodation_create' %}'">등록하기</button>
                 </div>
             </div>
-            {% endfor %}        
+            <!-- 구분선 -->
+            <hr class="accommodation_list_divider">
+            <!-- 숙소 후기 리스트 -->
+            <div class="accommodation-list">
+                {% for review in reviews %}
+                <div class="accommodation-card"
+                        data-title="{{ review.accommodation_name }}"
+                        data-city="{{ review.city }}"
+                        data-review-id="{{ review.review_id }}">
+                    <div class="card-left">
+                        <div class="hotel-image">
+                            <img id="place-img-{{ review.review_id }}"
+                                src="{% static 'img/room_ex1.png' %}"
+                                alt="숙소 이미지">
+                            <div class="rating">
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                                    {% else %}
+                                        <img src="{% static 'img/empty_star.png' %}" alt="별점">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="hotel-content">
+                            <div class="hotel-info">
+                                <div class="hotel-title">{{ review.accommodation_name }}</div>
+                                <div class="hotel-address">{{ review.city }}</div>
+                                <p class="review-content">{{ review.content }}</p>
+                            </div>
+                            <button class="view-review-btn">
+                                <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}">
+                                    후기 보기
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         
         <div class="map-section">
