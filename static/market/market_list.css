@@ -12,7 +12,6 @@
     justify-content: center;
     gap:40px;
     padding-top : 20px;
-    border-bottom: 1.5px solid var(--strong-gray);
 }
 .market_title{
     font-size: 32px;
@@ -24,59 +23,63 @@
     font-weight: 700;
     font-size: 45px;
 }
-
-#market_search_bar{
+/*필터*/
+.mkt_banner-filter{
+    font-weight: 500;
     width: 100%;
-    height: 12vh;
-    border-radius: 50px;
-    border: 2px solid black;
-    background-color: #FFFBFB;
-    display: grid;
-    grid-template-columns: 9fr 1fr;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
-
+.mkt_blue{
+    color: var(--blue);
+}
+#market_search_bar{
+    display: grid;
+    flex-wrap: wrap;
+    gap: 10px;
+    grid-template-columns: 9fr 1fr;
+    align-items: center;
+    margin: 0;
+    height: 75px;
+}
+.market_search_title input,
+.market_search_title select {
+    background-color: var(--gray);
+    padding: 15px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-family: 'Paperlogy', sans-serif;
+}
 .market_search_content{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 2fr 3fr;;
-    justify-content: space-between;
-    padding-left: 47px;
-    height: 100%;
-    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr 2fr 2.5fr;
+    gap: 10px;
 }
-.market_filterInput {
-    border: none;
-    background-color: var(--gray);
-    height: 35px;
-    margin-right: 10px;
-    border-radius: 10px;
-}
+
 .market_search_btn {
     background:none;
     width: 60px;
     height: 60px;
     margin: 19px 16px;
     padding: 5px;
+    height: 49px;
 }
 
-.market_search_title{
-    display: flex;
-    flex-direction: column;
-    font-size: 20px;
-    border-right: 2px solid black;
-    margin-left: 15px;
-}
 
 .market_search_btn{
-    margin-bottom: 10px;
-}
-.market_search_title h1{
-    margin-bottom: 8px;
-}
-#market_trade, #market_location, #market_category, #market_search_text {
     width: 80%;
-    border:2px solid black;
-    border-radius: 10px;
+    margin-left: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    background-color: var(--blue);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 /*목록 list*/

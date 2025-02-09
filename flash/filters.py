@@ -3,7 +3,7 @@ from .models import Flash
 from django import forms
 
 class FlashFilter(django_filters.FilterSet):
-    title = django_filters.CharFilter(lookup_expr="icontains", widget=forms.TextInput(attrs={'placeholder':'제목으로 번개를 찾아보세요'}))
+    title = django_filters.CharFilter(lookup_expr="icontains", widget=forms.TextInput(attrs={'placeholder':'제목으로 번개 찾기'}))
     tags = django_filters.CharFilter(lookup_expr="icontains",widget=forms.TextInput(attrs={'placeholder':'태그 검색'}))
     date_time = django_filters.DateFilter(lookup_expr='icontains', widget=forms.DateInput(attrs={'type':'date'}))
 
