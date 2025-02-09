@@ -1,3 +1,7 @@
+.red {
+    fill: red
+}
+
 /* 지도 위 문구 */
 .flash_title {
     text-align: left;
@@ -56,6 +60,7 @@
 
 /* 제목 아래 영역 */
 .flash_container {
+    min-height: 800px;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: 20px;
@@ -221,6 +226,13 @@
     padding-bottom: 10px;
     font-size: 18px;
     font-weight: bold;
+}
+
+.flash_title_zzim {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .flash_place {

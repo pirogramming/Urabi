@@ -3,6 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'flash/flash_detail.css' %}">
+<script defer src="{% static 'flash/flash_zzim.js' %}"></script>
 {% endblock %}
 
 {% block header_content %}
@@ -24,9 +25,17 @@
             <div class="flash_title_star">
                 <h2 class="flash_title">{{ flash.title }}</h2>
                 <div class="flash_star">
-                    <img id="star_icon" 
-                         src="{% if is_zzimmed %}{% static 'img/fill_star.png' %}{% else %}{% static 'img/empty_star.png' %}{% endif %}" 
-                         alt="관심 번개">
+                    <button class="zzim-btn" data-flash-id="{{ flash.pk }}">
+                        {% if is_zzimmed %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                            </svg>
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                            </svg>
+                        {% endif %}
+                    </button>
                 </div>
             </div>
             <div class="flash_details">
@@ -46,32 +55,34 @@
                 </div>
                 <span class="flash_capacity"><strong>{{ flash.max_people }}</strong></span>
             </div>
-            {% if request.user == flash.created_by %}
+            <div class="flash_host_buttons">
+                <a href="{% url 'users:user_detail' flash.created_by.id %}">
+                    <div class="flash_host">
+                        <img src="{{ flash.created_by.profile_image.url }}" alt="호스트 이미지" class="host_image">
+                        <div class="host_info">
+                            <p class="host_name">주최자: {{ flash.created_by.nickname|default:flash.created_by.username }}</p>
+                            <p class="host_rating">{{ flash.created_by.trust_score }}°C</p>
+                        </div>
+                    </div>
+                </a>
+                
                 <div class="flash_buttons">
-                    <button class="flash_edit_btn">
-                        <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
-                    </button>
-                    <button class="flash_delete_btn" onclick="deleteFlash({{ flash.pk }})">삭제하기</button>
+                    {% if request.user == flash.created_by %}
+                        <button class="flash_edit_btn">
+                            <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
+                        </button>
+                        <button class="flash_delete_btn" onclick="deleteFlash({{ flash.pk }})">삭제하기</button>
+                    {% else %}
+                        <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 메시지 보내기</button>
+                        <button class="flash_apply_btn">신청하기</button>
+                    {% endif %}
                 </div>
-            {% else %}
-                <button class="flash_apply_btn">신청하기</button>
-            {% endif %}
+            </div>
         </div>
     </div>
 
-    <hr class="flash_divider">
+    
 
-    <a href="{% url 'users:user_detail' flash.created_by.id %}">
-        <div class="flash_host">
-          <img src="{{ flash.created_by.profile_image.url }}" alt="호스트 이미지" class="host_image">
-          <div class="host_info">
-            <p class="host_name">주최자: {{ flash.created_by.nickname|default:flash.created_by.username }}</p>
-            <p class="host_rating">⭐ 34.5</p>
-          </div>
-          <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 메시지 보내기</button>
-        </div>
-      </a>
-      
 
     <hr class="flash_divider">
 
@@ -97,34 +108,12 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const starIcon = document.getElementById("star_icon");
-        const flashId = "{{ flash.pk }}";
         const deleteBtn = document.querySelector(".flash_delete_btn");
 
         if (deleteBtn) {
             deleteBtn.addEventListener("click", function() {
                 deleteFlash(flashId);  // HTML의 `onclick` 대신 이벤트 리스너 사용 가능
             });
-        }
-
-        // 페이지 로드 시, 찜 상태 확인 후 아이콘 설정
-        function updateStarIcon(isZzimmed) {
-            starIcon.src = isZzimmed ? "{% static 'img/fill_star.png' %}" : "{% static 'img/empty_star.png' %}";
-        }
-
-        // 찜 기능 토글
-        function toggleZzim(flashId) {
-            fetch(`/flash/${flashId}/zzim/`, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                updateStarIcon(data.zzimmed);
-            })
-            .catch(error => console.error("Error:", error));
         }
 
         // 삭제 기능
@@ -189,5 +178,7 @@
         });
     }
 </script>
+
+<input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 
 {% endblock %}
