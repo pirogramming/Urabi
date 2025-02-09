@@ -19,8 +19,10 @@
     </section>
     
     <section class="flash_map">
-        <input id="search-bar" type="text" placeholder="장소를 검색하세요">
-        <div id="map"></div>
+        <div class="map-container">
+            <div id="map"></div>
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+        </div>
     </section>
 
     <form method="POST" class="flash_register_form">
@@ -58,18 +60,18 @@
         </div>
     
         <div class="input_group">
+            <label for="description">내용 입력</label>
+            <textarea id="description" name="description" rows="4" placeholder="내용을 입력하세요">{{ flash.explanation|default:'' }}</textarea>
+        </div>
+
+        <div class="input_group">
             <span for="tag">태그 등록</span>
             <div class="tag_input_container">
-                <input type="text" id="tag_input" placeholder="#태그 입력">
+                <input type="text" id="tag_input" placeholder="#없이 입력">
                 <button type="button" id="add_tag_btn">+</button>
             </div>
             <div class="tag_list"></div>
             <input type="hidden" name="tags" id="tags_hidden" value="{{ flash.tags|default:'' }}">
-        </div>
-    
-        <div class="input_group">
-            <label for="description">내용 입력</label>
-            <textarea id="description" name="description" rows="4" placeholder="내용을 입력하세요">{{ flash.explanation|default:'' }}</textarea>
         </div>
     
         <button type="submit" class="flash_submit_btn">{% if edit_mode %}수정 완료{% else %}등록{% endif %}</button>

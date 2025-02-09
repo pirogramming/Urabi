@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan, TravelSchedule
 from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup, AccompanyRequest
-from flash.models import FlashZzim
+from flash.models import FlashZzim, Flash
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
@@ -438,6 +438,10 @@ def user_detail(request, pk):
     mkt_self_items = Market.objects.filter(user=user)
     mkt_self_count = mkt_self_items.count()
 
+    # 사용자가 등록한 번개 모임 가져오기
+    flash_meetings = Flash.objects.filter(created_by=user).order_by("-date_time")
+    flash_count = flash_meetings.count()
+
     # 동행 태그 처리
     for accompany in user_accompany:
         accompany.tags = accompany.tags.split(',') if accompany.tags else []
@@ -448,6 +452,8 @@ def user_detail(request, pk):
         'plans': user_plans,
         'accompanies': user_accompany,
         'accompany_count': accompany_count,
+        "flash_meetings": flash_meetings,
+        "flash_count": flash_count,
         'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
         'review_count': review_count,  # 리뷰 개수 추가
         'has_more': review_count > 5,  # 더보기 버튼 표시 여부
