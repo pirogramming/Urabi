@@ -20,17 +20,31 @@
     border-radius: 10px;
 }
 /*검색 필터*/
+.banner-filter{
+    font-weight: 500;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 16px;
+}
+.filter_sub{
+    color: var(--blue);
+    padding-bottom: 5px;
+}
 .flash_filter{
+    margin: 10px 0;
     display: grid;
+    flex-wrap: wrap;
+    gap: 10px;
     grid-template-columns: 9fr 1fr;
-    height: 100%;
 }
 .flash_filter_content{
     display: grid;
     grid-template-columns: 5fr 3fr 2fr;
     align-items: center;
     gap:10px;
-    margin-left: 10px;
 }
 
 .filter-group input,
@@ -40,6 +54,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
+    font-family: 'Paperlogy', sans-serif;
 }
 
 .flash_filter button{
