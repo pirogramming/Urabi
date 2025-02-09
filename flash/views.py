@@ -12,12 +12,18 @@ def flash_list(request):
     flash_meetings = Flash.objects.all().order_by("-created_at")
     filterset = FlashFilter(request.GET, queryset=flash_meetings)
 
-    # 태그를 리스트로 변환하여 flash_meetings에 추가
+    # 현재 로그인한 유저의 찜 목록 가져오기
+    zzim_items = set()
+    if request.user.is_authenticated:
+        zzim_items = set(FlashZzim.objects.filter(user=request.user).values_list("flash_id", flat=True))
+
+
     for flash in flash_meetings:
         flash.tag_list = flash.tags.split(",") if flash.tags else []
         flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+        flash.is_zzimmed = flash.pk in zzim_items  # 찜 여부 추가
 
-    return render(request, "flash/flash_list.html", {"flash_meetings": filterset.qs, 'filterset':filterset})
+    return render(request, "flash/flash_list.html", {"flash_meetings": flash_meetings, 'filterset': filterset})
 
 
 @login_required
@@ -117,7 +123,9 @@ def flash_detail(request, pk):
 
 @login_required
 def flash_zzim(request, pk):
-
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "로그인이 필요합니다."}, status=403)
+    
     flash = get_object_or_404(Flash, pk=pk)
     user = request.user
 
