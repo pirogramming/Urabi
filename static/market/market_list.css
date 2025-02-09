@@ -129,8 +129,9 @@
 }
 #market_list_count{
     margin-left: 15px;
-    width: 75px;
+    width: 82px;
     height: 50px;
+    padding-left: 10px;
 }
 
 .market_add{
@@ -148,10 +149,7 @@
     color:white;
     background-color: var(--blue);
 }
-.market_add img{
-    width: 40px;
-    margin:0;
-}
+
 .market_add img:hover{
     box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
     border-radius: 10px; 
