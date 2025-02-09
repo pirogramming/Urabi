@@ -79,12 +79,6 @@
   gap: 10px;
 }
 
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
 .filter-group input,
 .filter-group select {
   background-color: var(--gray);
