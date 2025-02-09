@@ -17,22 +17,24 @@
             <p class="blue">취향 맞는 동행자를 골라보세요</p>
             <form method='GET' class="filter-form">
               {% csrf_token %}
-              <div class="filter-group">
-                {{filterset.form.city}}
+              <div class="filter_contents filter_city">
+                <div class="filter-group">
+                  {{filterset.form.city}}
+                </div>
+                <div class="filter-group">
+                  {{filterset.form.gender}}
+                </div>
+                <div class="filter-group">
+                  {{filterset.form.start_date}}
+                </div>
+                <div class="filter-group">
+                  {{filterset.form.end_date}}
+                </div>
+                <div class="filter-group filter_age">
+                  {{filterset.form.age}}
+                </div>
               </div>
-              <div class="filter-group">
-                {{filterset.form.gender}}
-              </div>
-              <div class="filter-group">
-                {{filterset.form.start_date}}
-              </div>
-              <div class="filter-group">
-                {{filterset.form.end_date}}
-              </div>
-              <div class="filter-group">
-                {{filterset.form.age}}
-              </div>
-              <button type="submit">검색</button>
+              <button type="submit" class="filter_btn">검색</button>
             </form>
           </div>
           <p class="create_accompany"><a href="{% url 'users:my_trip'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>

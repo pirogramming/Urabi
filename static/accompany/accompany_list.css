@@ -3,6 +3,7 @@
 }
 .blue{
   color: var(--blue);
+  padding-bottom: 5px;
 }
 .banner-container{
   width: 1200px;
@@ -50,6 +51,7 @@
   background-color: #ffffff;
   padding: 20px;
   border-radius: 20px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 .banner-text h1{
   color: #ffffff;
@@ -63,14 +65,20 @@
   padding: 2px 0;
   font-weight: 600;
 }
-
+/*필터*/
 .filter-form {
   margin: 10px 0;
-  display: flex;
+  display: grid;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: flex-start;
+  grid-template-columns: 9fr 1fr;
 }
+.filter_contents{
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1.2fr 1.2fr 1fr;
+  gap: 10px;
+}
+
 .filter-group {
   display: flex;
   flex-direction: column;
@@ -83,9 +91,13 @@
   padding: 15px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 100%;
+  font-family: 'Paperlogy', sans-serif;
 }
 
 .filter-form button {
+  width: 80%;
+  margin-left: 15px;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -95,6 +107,9 @@
   cursor: pointer;
   font-size: 16px;
 }
+
+
+
 .create_accompany{
   text-align: right;
 }
