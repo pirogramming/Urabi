@@ -26,7 +26,7 @@
             
             <section class="profile-section">
               <div class="profile-header">
-                  <div class="section-title">여행 일정 생성</div>
+                  <div class="section-title">여행 계획 생성</div>
                   <a href="{%url 'users:user_list'%}">목록으로</a>
               </div>
 
@@ -34,7 +34,7 @@
                 <input id="search-bar" type="text" placeholder="장소를 검색하세요">
                 <div id="map"></div>
               </div>
-              <form method="POST">
+              <form method="POST" {%if form.instance%}{%else%}action="{% url 'users:my_trip' this_schedule.schedule_id%}"{%endif%}>
                 {% csrf_token %}
     
                 <input type="hidden" id="latitude" name="latitude">
@@ -76,7 +76,7 @@
 
     
                 <label for="explanation">설명</label>
-                <textarea id="explanation" name="explanation" required></textarea>
+                {{form.explanation}}
                 {% comment %} <div class="radio-group">
                   <input type="radio" id="public" name="is_public" value="True" {% if form.instance.is_public %}checked{% endif %}>
                   <label for="public">

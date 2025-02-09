@@ -23,13 +23,15 @@ urlpatterns = [
     path('api/some-protected-route/', views.some_protected_route, name='some_protected_route'),
 
     path('mypage/edit/', views.edit_profile, name='edit_profile'),
-    path('mypage/trip/', views.my_trip, name='my_trip'),
+    path('mypage/trip/<int:pk>', views.my_trip, name='my_trip'),
     path('mypage/trip/update/<int:pk>', views.update_trip, name='update_trip'),
     path('mypage/trip/delete/<int:pk>/', views.delete_trip, name='delete_trip'),
     path('mypage/detail/<int:pk>/', views.user_detail, name='user_detail'),
     path('mypage/plan/<int:pk>/', views.plan_detail, name='plan_detail'),
     path('mypage/list/', views.user_list, name='user_list'),
     path('mypage/zzim/', views.zzim_list, name='zzim_list'),
+    path('mypage/schedule/create/', views.schedule_create, name='schedule_create'),
+    path('mypage/schedule/detail/<int:pk>/', views.schedule_detail, name='schedule_detail'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

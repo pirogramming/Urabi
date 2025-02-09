@@ -23,7 +23,7 @@
         <section class="profile-section">
           <div class="profile-header">
               <div class="section-title">여행 일정</div>
-              <a href="{% url 'users:user_list'%}">목록으로</a>
+              <a href="{% url 'users:schedule_detail' travel_plan.schedule.schedule_id%}">목록으로</a>
           </div>
           
           <div class="map-container">

@@ -10,7 +10,7 @@ from rest_framework import status, generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
-from .models import User, TravelPlan
+from .models import User, TravelPlan, TravelSchedule
 from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup, AccompanyRequest
 from flash.models import FlashZzim
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
@@ -388,14 +388,16 @@ def some_protected_route(request):
     return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
 
 @login_required
-def my_trip(request): # 여행 계획 작성
+def my_trip(request, pk): # 여행 계획 작성, 여행일정 id
+    this_schedule = get_object_or_404(TravelSchedule, schedule_id=pk)
     if request.method == 'POST':
         form = TravelPlanForm(request.POST)
 
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
-
+            this_schedule = TravelSchedule.objects.get(schedule_id=pk)
+            travel_plan.schedule = this_schedule
             travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
             travel_plan.polyline = request.POST.get('polyline', '')
 
@@ -409,6 +411,7 @@ def my_trip(request): # 여행 계획 작성
 
     return render(request, 'mypage/myTrip.html', {
         'form': form,
+        'this_schedule': this_schedule,
     })
 
 @login_required
@@ -493,7 +496,7 @@ def plan_detail(request, pk):
 def delete_trip(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
     travel_plan.delete()
-    return redirect('users:user_list')
+    return redirect('users:schedule_detail', pk=travel_plan.schedule.schedule_id)
 
 def update_trip(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
@@ -502,6 +505,8 @@ def update_trip(request, pk):
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
+            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+            travel_plan.polyline = request.POST.get('polyline', '')
             travel_plan.save()
             return redirect('users:plan_detail', pk=travel_plan.plan_id)
     else:
@@ -512,7 +517,7 @@ def update_trip(request, pk):
 
 def user_list(request):
     user = get_object_or_404(User, id=request.user.id)
-    user_plans = TravelPlan.objects.filter(created_by=user)
+    user_plans = TravelSchedule.objects.filter(user=user)
     user_plan_count = user_plans.count()
     user_accompanies = TravelParticipants.objects.filter(user=user)
     user_accompany_count = user_accompanies.count()
@@ -553,4 +558,20 @@ def zzim_list(request):
         'flash_zzim_count': flash_zzim_count,
         'mkt_zzims':mkt_zzims_items,
         'mkt_zzim_count' : mkt_zzim_count,
+    })
+
+def schedule_create(request):
+    if request.method == 'POST':
+        schedule_name = request.POST.get('title')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        new_schedule = TravelSchedule.objects.create(name=schedule_name, user=request.user, start_date=start_date, end_date=end_date)
+        return redirect('users:schedule_detail', pk=new_schedule.schedule_id)
+
+def schedule_detail(request, pk):
+    schedule = TravelSchedule.objects.get(schedule_id=pk)
+    plans = TravelPlan.objects.filter(schedule=schedule)
+    return render(request, 'mypage/schedule_detail.html', {
+        'schedule': schedule,
+        'plans': plans,
     })

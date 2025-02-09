@@ -270,7 +270,16 @@
   font-size: 1.2rem;
   margin-bottom: 4px;
 }
-
+  .activity-header-cms{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .activity-card.activity-card-cms{
+    background-color: #FFE8AD;
+    margin: 20px;
+    padding: 30px 50px;
+  }
   .activity-none{
     text-align: center;
   }
@@ -298,9 +307,76 @@
     gap: 16px;
     border: 1px solid #eee;
   }
-
-  .activity-card:hover{
+  .new-plan-btn{
+    background-color: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  .new-plan-btn:hover{
+    background-color: var(--red-hover);
+  }
+  .del-schedule-btn{
+    background-color: var(--gray);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  .del-schedule-btn:hover{
+    background-color: var(--gray-hover);
+  }
+  /* .activity-card:hover{
     box-shadow: 10px 10px 8px rgba(199, 198, 198, 0.5);
+  } */
+
+  .modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 60px;
+    left: 400px;
+  }
+  
+  .modal-content {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  #schedule-modal h2{
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  #schedule-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #schedule-form #title,   #schedule-form #start_date,   #schedule-form #end_date{
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+  #schedule-form .btn{
+    width: 50%;
+    margin: 0 auto;
   }
   .activity-img {
     width: 200px;
@@ -315,6 +391,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
   }
   .schedule-header button{
     background-color: var(--red);

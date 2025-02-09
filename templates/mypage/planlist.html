@@ -26,10 +26,30 @@
 
     </section>
     <!-- 등록한 여행 일정 -->
+    
     <section class="schedule-section" id="upload-schedule">
       <div class="schedule-header">
         <h2 class="sub-title">등록한 여행 일정</h2>
-        <button class="btn" onclick="window.location.href='{% url 'users:my_trip' %}'">여행 일정 생성</button>
+        <button class="btn" id="open-schedule-modal">여행 일정 생성</button>
+        
+        <div id="schedule-modal" class="modal hidden">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>여행 일정 생성</h2>
+            <form id="schedule-form" action="{% url 'users:schedule_create' %}" method="POST">
+              {% csrf_token %}
+              <label for="title">일정 제목:
+              <input type="text" id="title" name="title" required></label>
+              <label for="start_date">시작 날짜:
+              <input type="date" id="start_date" name="start_date" required></label>
+              <label for="end_date">종료 날짜:
+              <input type="date" id="end_date" name="end_date" required></label>
+        
+              <button type="submit" class="btn">저장</button>
+            </form>
+          </div>
+        </div>
+
       </div>
       <div id="schedule-cards-container">
         <p class="activity-header">
@@ -42,12 +62,11 @@
             src="{% static 'img/banner.png' %}"
             alt="여행 이미지"
             class="schedule-img"
-            onclick="location.href='{% url 'users:plan_detail' plan.plan_id %}'"
+            onclick="location.href='{% url 'users:schedule_detail' plan.schedule_id %}'"
             style="cursor:pointer;"
           />
           <div class="schedule-info">
-            <h3 class="schedule-title"><a href="{% url 'users:plan_detail' plan.plan_id %}">{{ plan.title }}</a></h3>
-            <p class="schedule-period">{{ plan.start_date }} ~ {{ plan.end_date }}</p>
+            <h3 class="schedule-title"><a href="{% url 'users:schedule_detail' plan.schedule_id %}">{{ plan.name }}</a></h3>
           </div>
         </div>
         {% endfor %}
@@ -176,6 +195,23 @@
 {% endblock %}
 
 {% block js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const openModalBtn = document.getElementById("open-schedule-modal");
+    const modal = document.getElementById("schedule-modal");
+    const closeModalBtn = document.querySelector(".close");
+
+    // 모달 열기
+    openModalBtn.addEventListener("click", function () {
+      modal.style.display = "block";
+    });
+
+    // 모달 닫기 (X 버튼 클릭 시)
+    closeModalBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  });
+</script>
 <script>
   const plansPerPage = 2;
 
