@@ -1,3 +1,8 @@
+.red {
+    fill: red
+}
+
+
 /* 번개 상세 페이지 컨테이너 */
 .flash_detail {
     max-width: 900px;
@@ -102,7 +107,7 @@
     color: white;
     padding: 4px 8px;
     border-radius: 5px;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .flash_capacity {
@@ -111,12 +116,26 @@
     color: #d32f2f;
 }
 
+.flash_host_buttons {
+    display: flex;
+    justify-content: space-between; /* 양쪽 정렬 */
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; /* 상단 여백 */
+}
+
+.flash_host {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 이미지와 정보 사이 여백 */
+}
+
 /* 버튼 */
 .flash_buttons {
     display: flex;
     gap: 10px;
-    margin-top: auto; 
     align-self: flex-end;
+    padding-bottom: 5px;
 }
 
 .flash_edit_btn,
@@ -199,10 +218,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    background: #f9f9f9;
-    padding: 10px;
     border-radius: 10px;
-    margin-bottom: 20px;
 }
 
 .host_image {
