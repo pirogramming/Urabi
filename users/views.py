@@ -525,6 +525,9 @@ def user_list(request):
     user = get_object_or_404(User, id=request.user.id)
     user_plans = TravelSchedule.objects.filter(user=user)
     user_plan_count = user_plans.count()
+    for plan in user_plans:
+        plan.plans_count = TravelPlan.objects.filter(schedule=plan).count
+    
     user_accompanies = TravelParticipants.objects.filter(user=user)
     user_accompany_count = user_accompanies.count()
     for accompany in user_accompanies:

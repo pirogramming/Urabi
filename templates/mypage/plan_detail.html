@@ -3,7 +3,8 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'mypage/myTrip.css' %}">
   <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap&loading=async"></script>
+  <link rel="stylesheet" href="{% static 'mypage/cms-mypage.css' %}">
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap&loading=async"></script>
 {% endblock %}
 
 {% block content %}
@@ -18,12 +19,15 @@
     </nav>
   
     <section class="mypage-content">
-        <h1 class="main-title">여행 일정 상세</h1>
+        <h1 class="main-title">{{travel_plan.schedule.name}}</h1>
         
         <section class="profile-section">
           <div class="profile-header">
-              <div class="section-title">여행 일정</div>
-              <a href="{% url 'users:schedule_detail' travel_plan.schedule.schedule_id%}">목록으로</a>
+            <div>
+              <div class="section-title">{{travel_plan.title}} - {{travel_plan.city}}</div>
+              <p class="trip-detail-dates">{{ travel_plan.start_date }} ~ {{ travel_plan.end_date }}</p>
+            </div>
+            <a href="{% url 'users:schedule_detail' travel_plan.schedule.schedule_id%}">목록으로</a>
           </div>
           
           <div class="map-container">
@@ -32,10 +36,7 @@
           </div>
           
           <div class="trip-details">
-            <h2>{{ travel_plan.title }}</h2>
-            <p><strong>도시:</strong> {{ travel_plan.city }}</p>
-            <p><strong>기간:</strong> {{ travel_plan.start_date }} ~ {{ travel_plan.end_date }}</p>
-            <p><strong>설명:</strong> {{ travel_plan.explanation }}</p>
+            <p class="trip-detail-ex">{{ travel_plan.explanation|linebreaksbr }}</p>
             {% comment %} <p><strong>공개 여부:</strong> {{ travel_plan.is_public|yesno:"공개,비공개" }}</p> {% endcomment %}
           </div>
           
