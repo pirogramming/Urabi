@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import User
+from users.models import User, TravelPlan
 
 
 # Create your models here.
@@ -30,6 +30,9 @@ class TravelGroup(models.Model):
     markers = models.JSONField(null=True, blank=True)
     polyline = models.JSONField(null=True, blank=True)
     
+    this_plan_id = models.IntegerField(null=True, blank=True)
+    call_schedule = models.BooleanField(default=False)
+
     def __str__(self):
         return self.title
 

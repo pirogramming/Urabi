@@ -21,7 +21,12 @@
   /* background-color: aqua; */
   position: relative;
 }
-
+#call_schedule{
+  border: 1px solid #ccc;
+  width: 20px;
+  height: 20px;
+  appearance: auto;
+}
 #map {
   width: 100%;
   height: 400px; /* 적절한 높이 지정 */
