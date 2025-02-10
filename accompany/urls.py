@@ -15,4 +15,5 @@ urlpatterns = [
     path('remove_participant/', views.remove_participant, name='remove_participant'),
     path('request/', views.apply_participant, name='request'),
     path('cancel/', views.cancel_participant, name='request_cancel'),
+    path('load_plan_data/', views.load_plan_data, name='load_plan_data'),
 ]

@@ -190,6 +190,12 @@
   font-size: 14px;
   font-weight: 400;
 }
+.age-range{
+  font-size: 12px;
+  font-weight: 300;
+  padding: 3px;
+  border-bottom: 1px solid var(--blue);
+}
 .max-member{
   background-color: var(--strong-gray);
   font-size: 13px;

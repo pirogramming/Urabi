@@ -3,6 +3,7 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
   <link rel="stylesheet" href="{%static 'mypage/myPage.css'%}">
+  <link rel="stylesheet" href="{%static 'mypage/cms-mypage.css'%}">
 {%endblock%}
 
  {%block content%}
@@ -25,47 +26,43 @@
           <h2 class="sub-title">{{schedule.name}}</h2>
           <button class="new-plan-btn" onclick="window.location.href='{%url 'users:my_trip' schedule.schedule_id %}'">계획 생성</button>
         </div>
-        <div class="photo-sec">
-          {% if schedule.photo %}
-          <img width="250" height="180" src="{{schedule.photo.url}}" alt="여행 이미지">
-          <button onclick="document.getElementById('photo-modal').style.display='block'">대표사진 수정</button>
-          {% else %}
-          <img width="250" height="180" src="{% static 'img/schedule_default_img.jpg' %}" alt="여행 이미지">
-          <button onclick="document.getElementById('photo-modal').style.display='block'">대표사진 등록</button>
-          {% endif %}
-        </div>
-        <div id="market-cards-container" class="market-cards-container-cms">
-            <div class="activity-card activity-card-cms" style="display: none;">
-              <a href="#">
-              <div class="activity-review">
-              </div>
-            </div>
-            {%if plans%}
-            {%for plan in plans%}
-              <div class="activity-card activity-card-cms" >
-                <a href="{%url 'users:plan_detail' plan.plan_id%}">
-                <div class="activity-review">
-                  <div class="activity-review-header">
-                    <span class="activity-review-title mypage_mkt_title">
-                      {{plan.title}}
-                    </span>
+        <div class="activity-main-cms">
+          <div class="photo-sec">
+            {% if schedule.photo %}
+            <img width="250" height="180" src="{{schedule.photo.url}}" alt="여행 이미지">
+            <button onclick="document.getElementById('photo-modal').style.display='block'">대표사진 수정</button>
+            {% else %}
+            <img width="250" height="180" src="{% static 'img/schedule_default_img.jpg' %}" alt="여행 이미지">
+            <button onclick="document.getElementById('photo-modal').style.display='block'">대표사진 등록</button>
+            {% endif %}
+          </div>
+          <div id="market-cards-container" class="market-cards-container-cms">
+              {%if plans%}
+              {%for plan in plans%}
+                <div class="activity-card activity-card-cms" >
+                  <a href="{%url 'users:plan_detail' plan.plan_id%}">
+                  <div class="activity-review">
+                    <div class="activity-review-header">
+                      <span class="activity-review-title mypage_mkt_title">
+                        {{plan.title}}
+                      </span>
+                    </div>
+                    <p class="activity-date">
+                        {{plan.start_date}} ~ {{plan.end_date}}
+                    </p>
+                    <p class="schedule-location">
+                      <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                      <span class="schedule-location-text">{{plan.city}}</span>
+                    </p>
                   </div>
-                  <p class="activity-date">
-                      {{plan.start_date}} ~ {{plan.end_date}}
-                  </p>
-                  <p class="schedule-location">
-                    <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                    <span class="schedule-location-text">{{plan.city}}</span>
-                  </p>
+                </a>
                 </div>
-              </a>
-              </div>
-            {%endfor%}
-            {%else%}
-            {%endif%}
-            
+              {%endfor%}
+              {%else%}
+              {%endif%}
+              
+          </div>
         </div>
-        
         <div class="cms-schedule-footer">
           <button class="del-schedule-btn" onclick="confirmDelete(event, {{schedule.schedule_id}})">여행 삭제</button>
         </div>
