@@ -48,23 +48,23 @@
   </div>
   <div class="participants">
     <div class="profile">
-      <img style="cursor:pointer;" onclick="window.location.href='{%url 'users:user_detail' user.id%}'" src="{%if user.profile_image%}{{user.profile_image.url}}{%else%}https://www.w3schools.com/w3images/lights.jpg{%endif%}" width="30" height="30" alt="profile">
-      <span style="cursor:pointer;" onclick="window.location.href='{%url 'users:user_detail' user.id%}'" class="writer">{{ object.created_by }}</span></a>
+      <img style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://www.w3schools.com/w3images/lights.jpg{% endif %}" width="30" height="30" alt="profile">
+      <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by }}</span></a>
       <span class="temperature">36.5°C</span> 
       <span class="blue">&nbsp;|&nbsp;</span> 
       <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
     </div>
     <div class="members">
       {% if user != object.created_by %}
-      {%if user in participants%}
+      {% if user in participants %}
         <span class="ing">참여중</span>
-      {%else%}
-        {%if user in users%}
+      {% else %}
+        {% if user in users %}
           <button class="request-cancel-btn">요청 취소</button>
-        {%else%}
+        {% else %}
           <button class="request-btn">참여 요청</button>
-        {%endif%}
-      {%endif%}
+        {% endif %}
+      {% endif %}
       {% endif %}
       <span>{{ object.now_member }}/{{ object.max_member }}</span>
       <button id="toggleMembers">
@@ -73,12 +73,12 @@
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li><span><a href="{%url 'users:user_detail' object.travel_id%}">{{ object.created_by.email }}</a></span><span>🚩</span></li>
+        <li><span><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.email }}</a></span><span>🚩</span></li>
         {% for member in participants %}
-          <li data-user-id="{{ member.id }}"><span><a href="{%url 'users:user_detail' member.id%}">{{ member.email }}</a></span>
-            {% if user == object.created_by or member.id is user.id %}
+          <li data-user-id="{{ member.id }}"><span><a href="{% url 'users:user_detail' member.id %}">{{ member.email }}</a></span>
+            {% if user == object.created_by or member.id == user.id %}
               <button class="red part-del-btn">x</button>
-            {%endif%}
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -155,5 +155,5 @@
 <script src="{% static 'accompany/add_member_toggle.js' %}"></script>
 <script src="{% static 'accompany/add_participants.js' %}"></script>
 <script src="{% static 'accompany/zzim.js' %}"></script>
-<script src="{%static 'accompany/show_map.js' %}"></script>
+<script src="{% static 'accompany/show_map.js' %}"></script>
 {% endblock js %}
