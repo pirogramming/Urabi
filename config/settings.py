@@ -34,6 +34,12 @@ NAVER_CLIENT_SECRET = get_secret("NAVER_CLIENT_SECRET")
 OPENAI_API_KEY = get_secret("OPENAI_API_KEY")
 GOOGLE_MAPS_API_KEY = get_secret("GOOGLE_MAPS_API_KEY")
 
+# 네이버 클라우드 Object Storage(S3) 설정
+AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = get_secret("AWS_S3_ENDPOINT_URL")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -75,6 +81,7 @@ INSTALLED_APPS = [
     'market',
     'chatbot',
     'map',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -170,13 +177,31 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # 배포 환경에서 Nginx가 서빙
+if not DEBUG:
+    AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = get_secret("AWS_S3_ENDPOINT_URL")
 
+    # 정적 파일을 S3에서 서빙
+    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # 로컬 개발 중 Django가 사용 
-]
+    # 미디어 파일 설정 
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+else:
+    # 로컬 개발 환경에서는 기존 방식 유지
+    STATIC_URL = "/static/"
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static"),  # 로컬에서 사용하는 정적 파일 경로
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # 배포 시 collectstatic 대상
+
+    # 미디어 파일도 로컬에서 저장
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
