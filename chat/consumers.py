@@ -66,6 +66,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "content": msg.content,
                 "sender_id": self.user.id,
                 "sender_nickname": self.user.nickname,
+                "sender_email": self.user.email,
                 "timestamp": msg.timestamp.isoformat(),
                 "profile_image_url": (
                     msg.sender.profile_image.url 
@@ -200,23 +201,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 other_id = room.user2_id if room.user1_id == my_id else room.user1_id
                 is_read_by_other = message.read_by.filter(id=other_id).exists()
             else:
-                is_read_by_other = False  # 또는 None
+                is_read_by_other = False 
 
             msg_list.append({
                 "message_id": message.id,
                 "content": message.content,
                 "sender_id": message.sender.id,
                 "sender_nickname": message.sender.nickname,
+                "sender_email": message.sender.email, 
                 "timestamp": message.timestamp.isoformat(),
                 "is_read": is_read_by_me,  
                 "is_read_by_other": is_read_by_other,
                 "profile_image_url": (
                     message.sender.profile_image.url
-                    if getattr(message.sender, 'profile_image', None)
-                       and message.sender.profile_image
+                    if getattr(message.sender, 'profile_image', None) and message.sender.profile_image
                     else ""
                 ),
             })
+
         return msg_list
 
     @database_sync_to_async
