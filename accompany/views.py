@@ -51,7 +51,6 @@ class AccompanyDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
         if self.request.user.is_authenticated:
             user_zzims = Accompany_Zzim.objects.filter(user=self.request.user)
             zzim_items = [zzim.item for zzim in user_zzims]
@@ -66,6 +65,8 @@ class AccompanyDetailView(DetailView):
         if group.this_plan_id:
             this_plan = get_object_or_404(TravelPlan, pk=group.this_plan_id)
             context['this_plan'] = this_plan
+            this_schedule = this_plan.schedule
+            context['travel_plans'] = TravelPlan.objects.filter(schedule=this_schedule)
 
         context['users'] = requested_users
         context['participants'] = participant_users

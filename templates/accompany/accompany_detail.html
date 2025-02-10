@@ -8,11 +8,12 @@
 
 {% block content %}
 {%if object.call_schedule%}
+  <h2>{{this_plan.schedule.name}}</h2>
   <select id="plan-selector">
-  <option value="{{object.this_plan_id}}">{{this_plan.schedule.name}} - {{this_plan.title}}</option>
+  <option value="{{object.this_plan_id}}">{{this_plan.title}}</option>
   {% for plan in travel_plans %}
   {%if plan.plan_id is not this_plan.plan_id%}
-    <option value="{{ plan.plan_id }}">{{plan.schedule.name}} - {{ plan.title }}</option>
+    <option value="{{ plan.plan_id }}">{{ plan.title }}</option>
   {%endif%}
   {% endfor %}
   </select>
