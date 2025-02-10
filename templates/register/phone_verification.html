@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>휴대폰 본인인증</title>
+  <link rel="stylesheet" href="{% static 'register/phone_verification.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>휴대폰 본인인증</h1>
+        <p>모바일에서 아래 버튼을 클릭하면 SMS 앱이 실행되어 인증 메시지가 전송됩니다.</p>
+        
+        <a href="{{ sms_link }}" class="sms-button">인증 문자 보내기</a>
+        
+        <div class="qr-section">
+          <p>데스크톱을 사용 중이라면 <br>아래 QR 코드를 스캔하세요.</p>
+          <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR 코드">
+        </div>
+      </div>
+  
+  <script>
+    var checkInterval = setInterval(function(){
+        fetch("{% url 'users:verify_phone_status' %}", {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.result === 'verified') {
+                if (window.opener && typeof window.opener.updateVerificationStatus === "function") {
+                    window.opener.updateVerificationStatus(data.phone_number);
+                }
+                clearInterval(checkInterval);
+                window.close();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }, 5000);
+  </script>
+  
+</body>
+</html>

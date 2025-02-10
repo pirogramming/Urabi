@@ -26,6 +26,11 @@ from accommodation.models import AccommodationReview
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from market.models import Market,MarketZzim
+from django.utils import timezone
+from .models import PhoneVerification
+import qrcode
+import random, string, io, base64, re, imaplib, email
+from email.header import decode_header
 
 @csrf_exempt
 def get_csrf_token(request):
@@ -250,25 +255,42 @@ def signup_view(request):
 
             print(f"📢 회원가입 요청: email={email}, name={name}, nickname={nickname}")
 
-            # 🔹 이메일 중복 체크
             if User.objects.filter(email=email).exists():
-                return render(request, 'register/register.html', {'error': '이미 존재하는 이메일입니다.'})
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': '이미 존재하는 이메일입니다.'})
+                else:
+                    return render(request, 'register/register.html', {'error': '이미 존재하는 이메일입니다.'})
+            
+            # 전화번호 중복 체크
+            # 전화번호 중복 체크
+            if not phone:
+                # 전화번호 값이 없으면
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': '전화번호를 입력하세요.'})
+                else:
+                    return render(request, 'register/register.html', {'error': '전화번호를 입력하세요.'})
+            elif User.objects.filter(user_phone=phone).exists():
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': '이미 존재하는 전화번호입니다.'})
+                else:
+                    return render(request, 'register/register.html', {'error': '이미 존재하는 전화번호입니다.'})
 
-            # 🔹 성별 값 변환 (default: 'U' Unknown)
+
+            #  성별 값 변환 (default: 'U' Unknown)
             gender_map = {"male": "M", "female": "F"}
             user_gender = gender_map.get(gender, "U")
 
-            # 🔹 닉네임 기본값 설정
+            # 닉네임 기본값 설정
             if not nickname:
                 nickname = name or "사용자"
 
-            # 🔹 생년월일 설정
+            # 생년월일 설정
             if birth_year and birth_month and birth_day:
                 birth = f"{birth_year}-{birth_month}-{birth_day}"
             else:
                 birth = None  # 기본값 설정 가능
 
-            # 🔹 나이 계산 (예외 방지)
+            # 나이 계산 (예외 방지)
             try:
                 from datetime import datetime
                 current_year = datetime.now().year
@@ -277,7 +299,7 @@ def signup_view(request):
                 print(f"⚠️ 나이 계산 오류: {e}")
                 user_age = None
 
-            # 🔹 사용자 생성
+            # 사용자 생성
             user = User.objects.create_user(
                 email=email,
                 password=password,
@@ -289,7 +311,7 @@ def signup_view(request):
                 user_phone=phone
             )
 
-            # 🔹 프로필 이미지 저장
+            # 프로필 이미지 저장
             if profile_image:
                 user.profile_image = profile_image
             else:
@@ -298,15 +320,32 @@ def signup_view(request):
             user.save()
             print(f"✅ 회원가입 성공: {user.email}")
 
-            # 🔹 회원가입 후 자동 로그인
+            # 회원가입 후 자동 로그인
             login(request, user)
-            return redirect('main:home')
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'redirect_url': f"{request.build_absolute_uri('/')}"} )
+            else:
+                return redirect('main:home')
 
         except Exception as e:
             print(f"❌ 회원가입 중 오류 발생: {e}") 
-            return render(request, 'register/register.html', {'error': str(e)})
-
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': str(e)})
+            else:
+                context = {
+                    'error': str(e),
+                    'email': email,
+                    'name': name,
+                    'nickname': nickname,
+                    'birth-year': birth_year,
+                    'birth-month': birth_month,
+                    'birth-day': birth_day,
+                    'phone': phone,
+                    'gender': gender,
+                }
+                return render(request, 'register/register.html', context)
     return render(request, 'register/register.html')
+
 
 
 def user_logout(request):
@@ -327,8 +366,6 @@ def login_view(request):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
 
-            # 여기서 세션 쿠키가 설정되었으므로, 일반 페이지에서는 user가 인증된 상태로 나타납니다.
-            # API 요청 시 클라이언트는 발급된 JWT 토큰을 사용하면 됩니다.
             return redirect('main:home')
         else:
             return render(request, 'login/login.html', {'error': '로그인 실패'})
@@ -340,6 +377,113 @@ def login_view(request):
 def my_page(request):
     return render(request, 'mypage/myPage.html', {'user':request.user})
 
+# 랜덤 문자열 생성 함수
+def generate_random_string(length=10):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+
+def get_decoded_header(header_value):
+    decoded_parts = decode_header(header_value)
+    header_text = ""
+    for part, encoding in decoded_parts:
+        # 인코딩이 None이거나 'unknown-8bit'인 경우 대체 인코딩 사용
+        if encoding is None or (isinstance(encoding, str) and encoding.lower() == 'unknown-8bit'):
+            encoding = 'utf-8'
+        if isinstance(part, bytes):
+            try:
+                header_text += part.decode(encoding, errors="replace")
+            except Exception as e:
+                # 만약 여전히 에러가 난다면, 기본 utf-8로 디코딩
+                header_text += part.decode('utf-8', errors="replace")
+        else:
+            header_text += part
+    return header_text
+
+def phone_verification(request):
+    # 새로 인증 요청 시마다 새로운 랜덤 문자열을 생성
+    random_str = generate_random_string(10)
+    
+    # DB에 인증 요청 기록 저장
+    PhoneVerification.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        random_string=random_str
+    )
+    
+    # 세션에도 저장 (추후 인증 검증 시 사용)
+    request.session['phone_verification_code'] = random_str
+    
+    # SMS 전송 링크 생성  
+    # (참고: 통신사별 SMS 전송용 이메일 주소가 달라질 수 있음)
+    sms_link = f"sms:piro.urabi@gmail.com?body={random_str}"
+    
+    # QR 코드 생성 
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(sms_link)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG")
+    qr_code_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    
+    context = {
+        'random_str': random_str,
+        'sms_link': sms_link,
+        'qr_code_base64': qr_code_base64,
+    }
+    return render(request, 'register/phone_verification.html', context)
+
+
+def search_email_for_code(mail, random_str):
+    # 먼저 INBOX에서 검색
+    result, data = mail.search(None, f'(BODY "{random_str}")')
+    if data[0]:
+        return data[0].split()
+    # 만약 INBOX에 없으면, 스팸 폴더도 검색
+    mail.select('[Gmail]/Spam')  # Gmail의 스팸 폴더 이름은 보통 "[Gmail]/Spam"입니다.
+    result, data = mail.search(None, f'(BODY "{random_str}")')
+    if data[0]:
+        return data[0].split()
+    return None
+
+def verify_phone_status(request):
+    random_str = request.session.get('phone_verification_code')
+    if not random_str:
+        return JsonResponse({'result': 'unauthorized'})
+    
+    try:
+        mail = imaplib.IMAP4_SSL('imap.gmail.com')
+        mail.login(settings.IMAP_USER, settings.IMAP_PASSWORD)
+        mail.select('inbox')
+        result, data = mail.search(None, f'(BODY "{random_str}")')
+        if not data[0]:
+            return JsonResponse({'result': 'wait'})
+        
+        email_ids = data[0].split()
+        result, msg_data = mail.fetch(email_ids[-1], '(RFC822)')
+        raw_email = msg_data[0][1]
+        msg = email.message_from_bytes(raw_email)
+        
+        # 디코딩된 From 헤더 사용
+        raw_from_header = msg.get('From', '')
+        from_header = get_decoded_header(raw_from_header)
+        print("DECODED FROM HEADER:", from_header)
+        
+        # 전화번호 추출: 정규식을 사용하여 0으로 시작하는 10~11자리 숫자 추출
+        match = re.search(r'(0\d{9,10})', from_header)
+        if match:
+            phone_number = match.group(1)
+            verification_obj = PhoneVerification.objects.filter(random_string=random_str).latest('created_at')
+            verification_obj.verified = True
+            verification_obj.phone_number = phone_number
+            verification_obj.save()
+            if request.user.is_authenticated:
+                request.user.user_phone = phone_number
+                request.user.save()
+            return JsonResponse({'result': 'verified', 'phone_number': phone_number})
+        return JsonResponse({'result': 'wait'})
+    except Exception as e:
+        print("Verification error:", e)
+        return JsonResponse({'result': 'error'})
 
 
 # 정보 수정
@@ -380,6 +524,8 @@ def get_token_for_logged_in_user(request):
     return JsonResponse({
         "access": str(refresh.access_token)
     })
+
+    
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

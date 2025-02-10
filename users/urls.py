@@ -17,6 +17,9 @@ urlpatterns = [
     path('login/naver/callback/', views.naver_login_callback, name='naver-callback'),
     path('logout/', views.user_logout, name='logout'),
 
+     path('register/phone_verification/', views.phone_verification, name='phone_verification'),
+    path('register/verify_phone_status/', views.verify_phone_status, name='verify_phone_status'),
+
     path('mypage/', views.my_page, name='my_page'),
     path("csrf/", views.get_csrf_token, name="get_csrf_token"),
     path('api/get_token/', views.get_token_for_logged_in_user, name='get_token'),
@@ -33,6 +36,9 @@ urlpatterns = [
     path('mypage/schedule/create/', views.schedule_create, name='schedule_create'),
     path('mypage/schedule/detail/<int:pk>/', views.schedule_detail, name='schedule_detail'),
     path('delete_schedule/', views.delete_schedule, name='delete_schedule'),
+    path('phone-verification/', views.phone_verification, name='phone_verification'),
+    path('verify-phone-status/', views.verify_phone_status, name='verify_phone_status'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

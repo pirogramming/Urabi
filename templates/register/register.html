@@ -35,6 +35,12 @@
       </div>
     </header>
 
+    {% if error %}
+    <script>
+      alert("회원가입 중 오류 발생: {{ error }}");
+    </script>
+    {% endif %}
+
     <!-- Main -->
     <main class="main">
       <section class="register-section">
@@ -45,7 +51,7 @@
           </svg>
           <p>이미 회원이신가요?&nbsp;&nbsp;<a class="red" href="{%url 'users:login'%}">로그인</a></p>
         </div>
-        <form class="register-form" method="POST" action="{% url 'users:signup' %}" enctype="multipart/form-data">
+        <form id="signupForm" class="register-form" method="POST" action="{% url 'users:signup' %}" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="profile-picture-container">
             <img id="profile-picture-preview" class="profile-picture" src="{% static 'img/default-profile.png' %}" alt="Profile Picture">
@@ -83,7 +89,11 @@
           </label>
           <label>
             <span class="labelName">휴대폰</span>
-            <input placeholder="Phone" type="tel" id="phone" name="phone" required>
+            <input placeholder="Phone" type="tel" id="phone" name="phone" required readonly>
+            <span id="phoneVerificationStatus"></span>
+            <div class="phone-verification-button">
+              <button type="button" onclick="openPhoneVerification()" id="start-verification-Button">번호인증</button>
+            </div>
           </label>
           <label>
             <span class="labelName">성별</span>
@@ -92,6 +102,7 @@
               <option value="female">여성</option>
             </select>
           </label>
+          <div id="signupError"></div>
           <div class="button-container">
             <button type="submit">회원가입</button>
           </div>
@@ -133,6 +144,57 @@
         chatButton.style.bottom = '20px';
       }
     });
+
+    function updateVerificationStatus(phone) {
+      const statusSpan = document.getElementById('phoneVerificationStatus');
+      const verificationButton = document.querySelector('.phone-verification-button button');
+      if (statusSpan) {
+        statusSpan.innerText = "인증 완료";
+        statusSpan.style.color = "green";
+        statusSpan.style.fontSize = "13px";
+        statusSpan.style.marginLeft = "10px";
+        verificationButton.style.display = "none";
+      }
+      //  전화번호 입력란에 인증된 번호 채우기
+      const phoneInput = document.getElementById('phone');
+      if (phoneInput) {
+        phoneInput.value = phone;
+      }
+    }
+    // 팝업 창 열기 
+    function openPhoneVerification() {
+      window.open("{% url 'users:phone_verification' %}", "phoneVerificationWindow", "width=400,height=600");
+    }
+
+    // AJAX를 통한 회원가입 폼 제출 처리
+    document.addEventListener("DOMContentLoaded", function(){
+      const form = document.getElementById("signupForm");
+      form.addEventListener("submit", function(e){
+        e.preventDefault(); 
+        const formData = new FormData(form);
+        fetch(form.action, {
+          method: form.method,
+          body: formData,
+          credentials: 'same-origin',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = data.redirect_url;
+          } else {
+            document.getElementById("signupError").innerText = data.error;
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("signupError").innerText = "회원가입 중 오류 발생.";
+        });
+      });
+    });
+    
   </script>
 </body>
 </html>

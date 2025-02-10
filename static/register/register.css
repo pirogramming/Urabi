@@ -67,9 +67,9 @@
   background-repeat: no-repeat;
   background-position: center center;
 
-  position: absolute;
-  bottom: 0;
-  right: 120px;
+  position: relative;
+  bottom: 45px;
+  left: 30px;
 
   color: white;
   padding: 18px;
@@ -118,6 +118,25 @@
   width: 80px;
 }
 
+.phone-verification-container{
+  display: flex;
+}
+
+.phone-verification-button{
+  position: relative;
+}
+
+#start-verification-Button{
+  position: absolute;
+  right: -110px;
+  top: -10px;
+  color: var(--blue);
+  background-color: transparent;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+}
+
 .register-form input,
 .register-form select {
   padding: 10px;
@@ -129,6 +148,7 @@
   justify-content: center;
   width: 100%;
 }
+
 .register-form button {
   padding: 15px;
   border: none;
@@ -145,4 +165,10 @@
 
 input, select, input:placeholder-shown{
   font-family: 'Paperlogy';
+}
+
+#signupError{
+  font-size: 14px;
+  color: var(--red);
+  text-align: center;
 }
