@@ -26,7 +26,6 @@ from accommodation.models import AccommodationReview
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from market.models import Market,MarketZzim
-from django.utils import timezone
 from .models import PhoneVerification
 import qrcode
 import random, string, io, base64, re, imaplib, email
@@ -262,7 +261,6 @@ def signup_view(request):
                     return render(request, 'register/register.html', {'error': '이미 존재하는 이메일입니다.'})
             
             # 전화번호 중복 체크
-            # 전화번호 중복 체크
             if not phone:
                 # 전화번호 값이 없으면
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -413,7 +411,6 @@ def phone_verification(request):
     request.session['phone_verification_code'] = random_str
     
     # SMS 전송 링크 생성  
-    # (참고: 통신사별 SMS 전송용 이메일 주소가 달라질 수 있음)
     sms_link = f"sms:piro.urabi@gmail.com?body={random_str}"
     
     # QR 코드 생성 
@@ -438,8 +435,8 @@ def search_email_for_code(mail, random_str):
     result, data = mail.search(None, f'(BODY "{random_str}")')
     if data[0]:
         return data[0].split()
-    # 만약 INBOX에 없으면, 스팸 폴더도 검색
-    mail.select('[Gmail]/Spam')  # Gmail의 스팸 폴더 이름은 보통 "[Gmail]/Spam"입니다.
+    # 만약 INBOX에 없으면 스팸 폴더
+    mail.select('[Gmail]/Spam')  
     result, data = mail.search(None, f'(BODY "{random_str}")')
     if data[0]:
         return data[0].split()
@@ -468,7 +465,7 @@ def verify_phone_status(request):
         from_header = get_decoded_header(raw_from_header)
         print("DECODED FROM HEADER:", from_header)
         
-        # 전화번호 추출: 정규식을 사용하여 0으로 시작하는 10~11자리 숫자 추출
+        # 전화번호 추출
         match = re.search(r'(0\d{9,10})', from_header)
         if match:
             phone_number = match.group(1)
