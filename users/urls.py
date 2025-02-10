@@ -32,7 +32,7 @@ urlpatterns = [
     path('mypage/zzim/', views.zzim_list, name='zzim_list'),
     path('mypage/schedule/create/', views.schedule_create, name='schedule_create'),
     path('mypage/schedule/detail/<int:pk>/', views.schedule_detail, name='schedule_detail'),
-
+    path('delete_schedule/', views.delete_schedule, name='delete_schedule'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
