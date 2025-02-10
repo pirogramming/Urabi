@@ -113,7 +113,11 @@
           </div>
           <div class="account-row account-verification">
             <span class="label" id="verification-label">본인 인증</span>
-            <span class="value" id="verification-istrue">완료</span>
+            {% if user.user_phone == None %}
+              <span class="value" id="verification-istrue" style="color: var(--red);">미완료</span>
+            {% else %}
+              <span class="value" id="verification-istrue">완료</span>
+            {% endif %}
           </div>
         </div>
       </section>

@@ -82,7 +82,7 @@
     여권(프로필) 카드
   ********************************/
   .passport-card {
-    width: 90%;
+    width: 100%;
     height: 60%;
     position: relative;
     background: linear-gradient(
@@ -101,8 +101,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
     color: var(--blue);
+    margin: 0 20px 20px 20px;
   }
   .passport-label {
     font-size: 0.9rem;
@@ -118,6 +118,7 @@
     align-items: flex-start;
     gap: 24px;
     flex-wrap: nowrap;
+    margin: 0 20px;
   }
 
   .profile-photo {
