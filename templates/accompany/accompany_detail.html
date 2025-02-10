@@ -156,9 +156,14 @@
 />
 <script>
   window.mapData = {
-    markers: {{ object.markers|safe }},
-    polyline: {{ object.polyline|safe }}
+    markers: {{ object.markers|default:"[]"|safe }},
+    polyline: {{ object.polyline|default:"[]"|safe }}
   };
+
+  if (!window.mapData || !window.mapData.markers || !Array.isArray(window.mapData.markers)) {
+    console.warn("window.mapData가 올바르게 설정되지 않았습니다. 기본값을 적용합니다.");
+    window.mapData = { markers: [], polyline: [] };
+  }
   const addURL = "{% url 'accompany:add_participant' %}";
   const delURL = "{% url 'accompany:remove_participant' %}";
   const travelId = "{{ object.travel_id }}";
