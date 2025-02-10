@@ -57,7 +57,8 @@
             </div>
             <div class="card-info">
               <div class="info-header">
-                <h3 style="cursor: pointer;" onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">{{post.title}}</h3 >
+                <h3 style="cursor: pointer;" onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">{{post.title}}</h3>
+                <p class="age-range">{{post.min_age}} ~ {{post.max_age}}세</p>
                 {%if user != post.created_by%}
                 <button class="zzim-btn" data-travel-id="{{ post.travel_id }}">
                   {% if post in zzim_items %}
