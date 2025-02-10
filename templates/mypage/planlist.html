@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="{% static 'reset.css' %}">
   <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
   <link rel="stylesheet" href="{% static 'mypage/myPage.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/cms-mypage.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -61,12 +62,16 @@
           <img
             src="{%if plan.photo%}{{plan.photo.url}}{%else%}{% static 'img/schedule_default_img.jpg' %}{%endif%}"
             alt="여행 이미지"
-            width="250" height="180"
+            width="150" height="110"
             onclick="location.href='{% url 'users:schedule_detail' plan.schedule_id %}'"
             style="cursor:pointer;"
           />
           <div class="schedule-info">
-            <h3 class="schedule-title"><a href="{% url 'users:schedule_detail' plan.schedule_id %}">{{ plan.name }}</a></h3>
+            <h3 class="schedule-title"><a href="{% url 'users:schedule_detail' plan.schedule_id %}">{%if plan.name|length > 13%}{{ plan.name|slice:":13" }} ... {%else%}{{plan.name}}{%endif%}</a></h3>
+            <div>
+              <p>{{ plan.start_date|date:"Y-m-d" }} ~ {{ plan.end_date|date:"Y-m-d" }}</p>
+              <p>{{plan.plans_count}}개의 계획이 있어요!</p>
+            </div>
           </div>
         </div>
         {% endfor %}
@@ -222,7 +227,7 @@
     return function() {
       const nextIndex = currentIndex + plansPerPage;
       for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
-        items[i].style.display = 'block';
+        items[i].style.display = 'flex';
       }
       currentIndex = nextIndex;
 

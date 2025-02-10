@@ -1,0 +1,79 @@
+#schedule-cards-container{
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.schedule-card {
+  border-radius: 12px;
+  padding: 16px;
+  gap: 30px;
+  width: 500px;
+  background-color:beige;
+  margin: 16px; 
+}
+.schedule-card:hover{
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+.schedule-info{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: left;
+}
+.schedule-card img{
+  border-radius: 16px;
+}
+.schedule-title{
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+  /********************************
+    스케쥴 디테일일
+  ********************************/
+
+  .activity-main-cms{
+    display: flex;
+    align-items:start;
+    
+  }
+  .photo-sec{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+  }
+  .market-cards-container-cms{
+    width: 400px;
+    max-height: 550px;
+    overflow-y: auto;
+  }
+  .activity-card.activity-card-cms{
+    padding: 20px 30px;
+    background-color: moccasin;
+  }
+
+    /********************************
+    플랜 디테일
+  ********************************/
+  .trip-detail-dates{
+    font-size: 14px;
+    font-weight: 200;
+    margin-bottom: 8px;
+  }
+  .trip-detail-ex{
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .btns{
+    text-align: right;
+  }
+  .btns button{
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: 1px solid var(--red);
+    color: var(--red);
+  }
