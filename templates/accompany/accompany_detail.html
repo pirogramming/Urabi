@@ -3,8 +3,10 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'accompany/accompany_detail.css' %}">
   <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
+  {%if object.markers%}
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap&loading=async"></script>
-{% endblock %}
+  {%endif%}
+  {% endblock %}
 
 {% block content %}
 {%if object.call_schedule%}
@@ -24,11 +26,13 @@
     </svg>
   </button>
 {%endif%}
+{%if object.markers%}
 <section class="map">
   <div class="map-container">
     <div id="map"></div>
   </div>
 </section>
+{%endif%}
 
 <section class="detail">
   <div class="detail-header">
@@ -65,7 +69,7 @@
   <div class="participants">
     <div class="profile">
       <img style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://www.w3schools.com/w3images/lights.jpg{% endif %}" width="30" height="30" alt="profile">
-      <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by }}</span></a>
+      <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by.nickname }}</span></a>
       <span class="temperature">36.5°C</span> 
       <span class="blue">&nbsp;|&nbsp;</span> 
       <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
@@ -89,9 +93,9 @@
         </svg>
       </button>
       <ul id="memberList" style="display: none;">
-        <li><span><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.email }}</a></span><span>🚩</span></li>
+        <li><span><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.nickname }}</a></span><span>🚩</span></li>
         {% for member in participants %}
-          <li data-user-id="{{ member.id }}"><span><a href="{% url 'users:user_detail' member.id %}">{{ member.email }}</a></span>
+          <li data-user-id="{{ member.id }}"><span><a href="{% url 'users:user_detail' member.id %}">{{ member.nickname }}</a></span>
             {% if user == object.created_by or member.id == user.id %}
               <button class="red part-del-btn">x</button>
             {% endif %}
@@ -195,5 +199,7 @@
 <script src="{% static 'accompany/add_member_toggle.js' %}"></script>
 <script src="{% static 'accompany/add_participants.js' %}"></script>
 <script src="{% static 'accompany/zzim.js' %}"></script>
+{%if object.markers%}
 <script src="{% static 'accompany/show_map.js' %}"></script>
+{%endif%}
 {% endblock js %}
