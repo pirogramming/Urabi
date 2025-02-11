@@ -3,155 +3,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {%block title %}<title>Urabi</title>{%endblock title%}
-  <link rel="icon" type="image/x-icon" href="{% static 'img/Urabi_logo.svg' %}">
-  <link rel="stylesheet" href="{% static 'reset.css' %}">
-  <link rel="stylesheet" href="{% static 'base_css/base.css' %}">
-  <link rel="stylesheet" href="{% static 'main/mainbeforeLogin.css' %}">
-  {% block head %} {% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%block title %}<title>Urabi</title>{%endblock title%}
+    <link rel="icon" type="image/x-icon" href="{% static 'img/Urabi_logo.svg' %}">
+    <link rel="stylesheet" href="{% static 'reset.css' %}">
+    <link rel="stylesheet" href="{% static 'base_css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'main/mainbeforeLogin.css' %}">
+    {% block head %} {% endblock %}
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-container">
-      <div class="logo"><a href="{%url 'main:home' %}"><img width="150" src="{% static 'img/logo.png' %}"></a></div>
-      <nav class="nav">
-        {%block navBar%}
-          <a href="{%url 'accompany:accompany_list'%}">장기 동행</a>
-          <a href="{%url 'flash:flash_list'%}">번개 모임</a>
-          <a href="{%url 'accommodation:filter'%}">숙소 후기</a>
-          <a href="{%url 'market:market_list'%}" id="market_nav">나눔 마켓</a>
-        {%endblock navBar%}
-        {%if user.is_authenticated%}
-          <a id="myPage"href="{% url 'users:my_page' %}">My Page</a>
-          <a href="{% url 'users:logout' %}">로그아웃</a>
-        {%else%}
-          <a id="main_join" href="{% url 'users:signup' %}">회원가입</a>
-          <a id="main_LogIn" href="{% url 'users:login' %}">LogIn</a>
-        {%endif%}
-      </nav>
-      </div>
-    </header>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-container">
+                <div class="logo"><a href="{%url 'main:home' %}"><img width="150" src="{% static 'img/logo.png' %}" alt="Urabi Logo"></a></div>
+                <nav class="nav">
+                    <div class="nav-container">
+                        <button class="hamburger-btn">
+                            <img src="{% static 'img/menu-line.svg' %}" alt="Menu" width="30" height="30">
+                        </button>
+                        <div class="nav-links">
+                            {%block navBar%}
+                                <a href="{%url 'accompany:accompany_list'%}">장기 동행</a>
+                                <a href="{%url 'flash:flash_list'%}">번개 모임</a>
+                                <a href="{%url 'accommodation:filter'%}">숙소 후기</a>
+                                <a href="{%url 'market:market_list'%}" id="market_nav">나눔 마켓</a>
+                            {%endblock navBar%}
+                            {%if user.is_authenticated%}
+                                <a id="myPage" href="{% url 'users:my_page' %}">My Page</a>
+                                <a href="{% url 'users:logout' %}">로그아웃</a>
+                            {%else%}
+                                <a id="main_join" href="{% url 'users:signup' %}">회원가입</a>
+                                <a id="main_LogIn" href="{% url 'users:login' %}">LogIn</a>
+                            {%endif%}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
 
-    <!-- Main -->
-    <main class="main">
-      {% comment %} <section></section> {% endcomment %}
-      {% block content %}
-      {% endblock %}
-            
-      {% comment %} <section></section> {% endcomment %}
-    </main>
+        <!-- Main Content -->
+        <main class="main">
+            {% block content %}
+            {% endblock %}
+        </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-menu">
-        <a href="{%url 'accompany:accompany_list'%}">장기동행</a> | 
-        <a href="{%url 'flash:flash_list'%}">번개모임</a> | 
-        <a href="{%url 'accommodation:filter'%}">숙소후기</a> | 
-        <a href="{%url 'market:market_list'%}">나눔마켓</a> | 
-        {%if user.is_authenticated%}
-          <a href="{% url 'users:my_page' %}">My Page</a>
-        {%else%}
-          <a href="{% url 'users:login' %}">로그인</a> |
-          <a href="{% url 'users:signup' %}">회원가입</a> 
-        {%endif%}
-      </div>
-      <div class="copyright">
-        © 2025 Urabi. All rights reserved.
-      </div>
-    </footer>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-menu">
+                <a href="{%url 'accompany:accompany_list'%}">장기동행</a> |
+                <a href="{%url 'flash:flash_list'%}">번개모임</a> |
+                <a href="{%url 'accommodation:filter'%}">숙소후기</a> |
+                <a href="{%url 'market:market_list'%}">나눔마켓</a> |
+                {%if user.is_authenticated%}
+                    <a href="{% url 'users:my_page' %}">My Page</a>
+                {%else%}
+                    <a href="{% url 'users:login' %}">로그인</a> |
+                    <a href="{% url 'users:signup' %}">회원가입</a>
+                {%endif%}
+            </div>
+            <div class="copyright">
+                © 2025 Urabi. All rights reserved.
+            </div>
+            <div class="develop-by">
+                Developed by 민설아, 유승인, 최민석, 김재원, 이시은
+            </div>
+        </footer>
 
-  <!-- Chat Modal -->
-  <div id="chatModal" class="chat-modal">
-    <div class="chat-modal-content">
-      <span class="close-btn">&times;</span>
-      
-      {% if not user.is_authenticated %}
-      {% else %}
-        <iframe id="chatFrame" src="" frameborder="0"></iframe>
-      {% endif %}
+        <!-- Chat Modal -->
+        <div id="chatModal" class="chat-modal">
+            <div class="chat-modal-content">
+                <span class="close-btn">&times;</span>
+                {% if not user.is_authenticated %}
+                {% else %}
+                    <iframe id="chatFrame" src="" frameborder="0"></iframe>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Chat Button -->
+        <button id="baseChatBtn" class="chat-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4C9.373 4 4 9.373 4 16c0 2.165.572 4.193 1.573 5.945a1 1 0 0 1 .094.77l-1.439 5.059l5.061-1.44a1 1 0 0 1 .77.094A11.94 11.94 0 0 0 16 28c6.628 0 12-5.373 12-12S22.628 4 16 4M2 16C2 8.268 8.268 2 16 2s14 6.268 14 14s-6.268 14-14 14c-2.368 0-4.602-.589-6.56-1.629l-5.528 1.572A1.5 1.5 0 0 1 2.06 28.09l1.572-5.527A13.94 13.94 0 0 1 2 16m8-3a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H11a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2z"/></svg>
+        </button>
+
+        <!-- Chatbot Button -->
+        <a href="{% url 'chatbot:query_view' %}">
+            <button class="chat-btn chatbot" id="chatbotbtn">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path d="M9 15C8.44771 15 8 15.4477 8 16C8 16.5523 8.44771 17 9 17C9.55229 17 10 16.5523 10 16C10 15.4477 9.55229 15 9 15Z" fill="#FFFFFF"></path>
+                        <path d="M14 16C14 15.4477 14.4477 15 15 15C15.5523 15 16 15.4477 16 16C16 16.5523 15.5523 17 15 17C14.4477 17 14 16.5523 14 16Z" fill="#FFFFFF"></path>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1C10.8954 1 10 1.89543 10 3C10 3.74028 10.4022 4.38663 11 4.73244V7H6C4.34315 7 3 8.34315 3 10V20C3 21.6569 4.34315 23 6 23H18C19.6569 23 21 21.6569 21 20V10C21 8.34315 19.6569 7 18 7H13V4.73244C13.5978 4.38663 14 3.74028 14 3C14 1.89543 13.1046 1 12 1ZM5 10C5 9.44772 5.44772 9 6 9H7.38197L8.82918 11.8944C9.16796 12.572 9.86049 13 10.618 13H13.382C14.1395 13 14.832 12.572 15.1708 11.8944L16.618 9H18C18.5523 9 19 9.44772 19 10V20C19 20.5523 18.5523 21 18 21H6C5.44772 21 5 20.5523 5 20V10ZM13.382 11L14.382 9H9.61803L10.618 11H13.382Z" fill="#FFFFFF"></path>
+                        <path d="M1 14C0.447715 14 0 14.4477 0 15V17C0 17.5523 0.447715 18 1 18C1.55228 18 2 17.5523 2 17V15C2 14.4477 1.55228 14 1 14Z" fill="#FFFFFF"></path>
+                        <path d="M22 15C22 14.4477 22.4477 14 23 14C23.5523 14 24 14.4477 24 15V17C24 17.5523 23.5523 18 23 18C22.4477 18 22 17.5523 22 17V15Z" fill="#FFFFFF"></path>
+                    </g>
+                </svg>
+            </button>
+        </a>
     </div>
-  </div>
 
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatButton = document.getElementById("baseChatBtn");
+            const chatModal = document.getElementById("chatModal");
+            const chatFrame = document.getElementById("chatFrame");
+            const closeBtn = document.querySelector(".close-btn");
+            const chatButtonLeft = document.querySelector('#chatbotbtn');
+            const footer = document.querySelector('.footer');
 
-    <button id="baseChatBtn" class="chat-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4C9.373 4 4 9.373 4 16c0 2.165.572 4.193 1.573 5.945a1 1 0 0 1 .094.77l-1.439 5.059l5.061-1.44a1 1 0 0 1 .77.094A11.94 11.94 0 0 0 16 28c6.628 0 12-5.373 12-12S22.628 4 16 4M2 16C2 8.268 8.268 2 16 2s14 6.268 14 14s-6.268 14-14 14c-2.368 0-4.602-.589-6.56-1.629l-5.528 1.572A1.5 1.5 0 0 1 2.06 28.09l1.572-5.527A13.94 13.94 0 0 1 2 16m8-3a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H11a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2z"/></svg>
-    </button>
+            function setupHamburgerMenu() {
+                const hamburgerBtn = document.querySelector('.hamburger-btn');
+                const navLinks = document.querySelector('.nav-links');
 
-    <a href="{% url 'chatbot:query_view' %}">
-    <button class="chat-btn chatbot" id="chatbotbtn">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M9 15C8.44771 15 8 15.4477 8 16C8 16.5523 8.44771 17 9 17C9.55229 17 10 16.5523 10 16C10 15.4477 9.55229 15 9 15Z" fill="#FFFFFF"></path> <path d="M14 16C14 15.4477 14.4477 15 15 15C15.5523 15 16 15.4477 16 16C16 16.5523 15.5523 17 15 17C14.4477 17 14 16.5523 14 16Z" fill="#FFFFFF"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1C10.8954 1 10 1.89543 10 3C10 3.74028 10.4022 4.38663 11 4.73244V7H6C4.34315 7 3 8.34315 3 10V20C3 21.6569 4.34315 23 6 23H18C19.6569 23 21 21.6569 21 20V10C21 8.34315 19.6569 7 18 7H13V4.73244C13.5978 4.38663 14 3.74028 14 3C14 1.89543 13.1046 1 12 1ZM5 10C5 9.44772 5.44772 9 6 9H7.38197L8.82918 11.8944C9.16796 12.572 9.86049 13 10.618 13H13.382C14.1395 13 14.832 12.572 15.1708 11.8944L16.618 9H18C18.5523 9 19 9.44772 19 10V20C19 20.5523 18.5523 21 18 21H6C5.44772 21 5 20.5523 5 20V10ZM13.382 11L14.382 9H9.61803L10.618 11H13.382Z" fill="#FFFFFF"></path> <path d="M1 14C0.447715 14 0 14.4477 0 15V17C0 17.5523 0.447715 18 1 18C1.55228 18 2 17.5523 2 17V15C2 14.4477 1.55228 14 1 14Z" fill="#FFFFFF"></path> <path d="M22 15C22 14.4477 22.4477 14 23 14C23.5523 14 24 14.4477 24 15V17C24 17.5523 23.5523 18 23 18C22.4477 18 22 17.5523 22 17V15Z" fill="#FFFFFF"></path> </g></svg>
-    </button>
-  </div></a>
+                if (hamburgerBtn && navLinks) {
+                    hamburgerBtn.onclick = function(e) {
+                        e.preventDefault();
+                        navLinks.classList.toggle('active');
+                    };
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const chatButton = document.getElementById("baseChatBtn");
-      const chatModal = document.getElementById("chatModal");
-      const chatFrame = document.getElementById("chatFrame");
-      const closeBtn = document.querySelector(".close-btn");
-      const chatButtonLeft = document.querySelector('#chatbotbtn');
-      const footer = document.querySelector('.footer');
-  
-      if (!chatButton || !chatModal || !chatFrame || !closeBtn) {
-        console.error("Error: One or more required elements not found!");
-        return;
-    }
-  
-      chatButton.addEventListener("click", function() {
-          chatFrame.src = "{% url 'chat:chat_main' %}"; 
-          chatModal.style.display = "block";
-      });
-  
-      closeBtn.addEventListener("click", function() {
-          chatModal.style.display = "none";
-          chatFrame.src = "";  // 모달 닫힐 때 iframe 비우기
-      });
-  
-      // 스크롤 이벤트 수정 (chatButton이 null일 경우 오류 방지)
-      window.addEventListener('scroll', () => {
-          if (!chatButton || !chatButtonLeft || !footer) return;
-  
-          const footerTop = footer.getBoundingClientRect().top;
-          const windowHeight = window.innerHeight;
-          
-          if (footerTop < windowHeight) {
-              chatButton.style.bottom = `${windowHeight - footerTop + 20}px`;
-              chatButtonLeft.style.position = 'fixed';  
-              chatButtonLeft.style.bottom = `${windowHeight - footerTop + 20}px`; 
-          } else {
-              chatButton.style.position = 'fixed';
-              chatButton.style.bottom = '20px';
-  
-              chatButtonLeft.style.position = 'fixed';
-              chatButtonLeft.style.bottom = '20px';
-          }
-      });
+                    navLinks.onclick = function(e) {
+                        if (e.target.tagName === 'A') {
+                            navLinks.classList.remove('active');
+                        }
+                    };
+                } else {
+                    console.error("Hamburger button or nav links not found!");
+                }
+            }
+        
+            // 초기 메뉴 설정
+            setupHamburgerMenu();
 
-    window.addEventListener('scroll', () => {
-      const footerTop = footer.getBoundingClientRect().top;
-      const windowHeight = window.innerHeight;
-      
-      if (footerTop < windowHeight) {
-        chatButton.style.bottom = `${windowHeight - footerTop + 20}px`;
-        chatButtonLeft.style.position = 'fixed';  
-        chatButtonLeft.style.bottom = `${windowHeight - footerTop + 20}px`; 
-      } else {
-        chatButton.style.position = 'fixed';
-        chatButton.style.bottom = '20px';
+            chatButton.addEventListener("click", function() {
+              chatFrame.src = "{% url 'chat:chat_main' %}"; 
+              chatModal.style.display = "block";
+            });
 
-        chatButtonLeft.style.position = 'fixed';
-        chatButtonLeft.style.bottom = '20px';
-      }
-    });
-  });
-  </script>
-  
-  {%block js%}
-  {%endblock js%}
+            closeBtn.addEventListener("click", function() {
+              chatModal.style.display = "none";
+              chatFrame.src = "";
+            });
+
+            // 스크롤 이벤트 수정 (chatButton이 null일 경우 오류 방지)
+            window.addEventListener('scroll', () => {
+                if (!chatButton || !chatButtonLeft || !footer) return;
+
+                const footerTop = footer.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (footerTop < windowHeight) {
+                    chatButton.style.bottom = `${windowHeight - footerTop + 20}px`;
+                    chatButtonLeft.style.position = 'fixed';  
+                    chatButtonLeft.style.bottom = `${windowHeight - footerTop + 20}px`; 
+                } else {
+                    chatButton.style.position = 'fixed';
+                    chatButton.style.bottom = '20px';
+
+                    chatButtonLeft.style.position = 'fixed';
+                    chatButtonLeft.style.bottom = '20px';
+                }
+            });
+
+            window.addEventListener('scroll', () => {
+              const footerTop = footer.getBoundingClientRect().top;
+              const windowHeight = window.innerHeight;
+              
+              if (footerTop < windowHeight) {
+                chatButton.style.bottom = `${windowHeight - footerTop + 20}px`;
+                chatButtonLeft.style.position = 'fixed';  
+                chatButtonLeft.style.bottom = `${windowHeight - footerTop + 20}px`; 
+              } else {
+                chatButton.style.position = 'fixed';
+                chatButton.style.bottom = '20px';
+
+                chatButtonLeft.style.position = 'fixed';
+                chatButtonLeft.style.bottom = '20px';
+              }
+            });
+             // 감시할 요소가 동적으로 변경될 때 이벤트 다시 바인딩
+            const targetNode = document.querySelector('nav');
+            const config = { childList: true, subtree: true };
+
+            const callback = function(mutationsList, observer) {
+                 setupHamburgerMenu();
+            };
+
+            const observer = new MutationObserver(callback);
+
+             if(targetNode){
+            observer.observe(targetNode, config);
+             }
+        });
+    </script>
+
+    {% block js %}
+    {% endblock js %}
 </body>
 </html>
