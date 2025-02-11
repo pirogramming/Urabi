@@ -161,6 +161,9 @@
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
   border: var(--blue) 1px solid;
 }
+.card-image{
+  position: relative;
+}
 
 .card-image>img{
   border-radius: 12px;
@@ -191,10 +194,15 @@
   font-weight: 400;
 }
 .age-range{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
   font-size: 12px;
   font-weight: 300;
-  padding: 3px;
-  border-bottom: 1px solid var(--blue);
+  padding: 3px 5px;
+  background-color: var(--yellow);
+  border-radius: 8px;
 }
 .max-member{
   background-color: var(--strong-gray);
