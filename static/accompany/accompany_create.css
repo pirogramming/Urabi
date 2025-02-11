@@ -115,15 +115,22 @@
   padding: 0 2px;
   margin-right: 5px;
 }
-.filter-form button {
+.filter-form>button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  font-weight: 600;
-  background-color: var(--blue);
   color: #ffffff;
   cursor: pointer;
   font-size: 16px;
+  font-family: 'Paperlogy', sans-serif;
+  font-weight: 500;
+  align-self: flex-end;
+  width: 120px;
+  transition: background-color 0.3s;
+  background-color: var(--red);
+}
+.filter-form>button:hover{
+  background-color: var(--red-hover);
 }
 .description{
   border-bottom: solid 1px var(--blue);
@@ -144,15 +151,7 @@
   font-size: 18px;
   font-weight: 400;
 }
-.filter-form>button{
-  font-weight: 500;
-  align-self: flex-end;
-  width: 120px;
-  background-color: var(--red);
-}
-.filter-form>button:hover{
-  background-color: var(--red-hover);
-}
+
 .update-image>a, #photo-clear_id, .update-image #text{
   display: none;
 }

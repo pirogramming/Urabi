@@ -73,7 +73,7 @@
     <div class="members">
       {% if user != object.created_by %}
       {% if user in participants %}
-        <span class="ing">참여중</span>
+        <span class="ing">참여 중</span>
       {% else %}
         {% if user in users %}
           <button class="request-cancel-btn">요청 취소</button>
@@ -125,14 +125,14 @@
     {% if user == object.created_by %}
     <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
       {% csrf_token %}
-      <button class="del-btn" type="submit">삭제</button>
+      <button class="del-btn" type="submit">삭제하기</button>
     </form>
     {% endif %}
     <a href="{% url 'accompany:accompany_list' %}">
-    <button class="to-back">
-      <span>목록으로</span>
-    </button>
-      </a>
+      <button class="to-back">
+        <span>목록으로</span>
+      </button>
+    </a>
   </div>
   <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 </section>
