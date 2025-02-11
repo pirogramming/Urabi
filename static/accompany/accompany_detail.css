@@ -232,7 +232,7 @@
   border-radius: 8px;
   color:white;
   margin-right: 10px;
-  transition: background-color 0.3s;
+  border-radius: 8px;
   cursor: pointer;
 }
 .del-btn{
@@ -260,7 +260,4 @@
   transition: background-color 0.3s;
   cursor: pointer;
 }
-
-
-
 

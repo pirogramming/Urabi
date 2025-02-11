@@ -134,19 +134,19 @@
 
 .flash_register_btn {
     padding: 8px 16px;
-    background: white;
-    color: #007bff;
-    border: 1.5px solid #007bff;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-}
-
-.flash_register_btn:hover {
-    background: #007bff;
+    background-color: var(--blue);
     color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+.flash_register_btn:visited{
+    color: white
+}
+.flash_register_btn:hover {
+    filter: brightness(0.85);
 }
 
 /* 구분선 */
@@ -276,7 +276,7 @@
     padding: 4px 8px;
     border-radius: 5px;
     font-size: 12px;
-    background: #ffe600;
+    background: var(--yellow);
 }
 
 .flash_capacity {

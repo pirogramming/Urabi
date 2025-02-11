@@ -129,8 +129,7 @@
 }
 
 .tag_input_container button {
-    background: #007bff;
-    color: white;
+    background: var(--yellow);
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -138,10 +137,10 @@
     cursor: pointer;
     width: 40px;
     text-align: center;
+    transition: background-color 0.3s;
 }
-
 .tag_input_container button:hover {
-    background: #0056b3;
+    filter: brightness(0.85);
 }
 
 /* 태그 리스트 스타일 */
@@ -178,20 +177,22 @@
 
 /* 등록 버튼 스타일 */
 .flash_submit_btn {
-    width: 15%;
-    align-self: flex-end;
-    padding: 12px;
-    background: #007bff;
-    color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    color: #ffffff;
     cursor: pointer;
-    margin-top: 20px;
+    font-size: 16px;
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 500;
+    align-self: flex-end;
+    width: 120px;
+    transition: background-color 0.3s;
+    background-color: var(--red);
 }
 
-.flash_submit_btn:hover {
-    background: #0056b3;
+.flash_submit_btn:hover{
+    background-color: var(--red-hover);
 }
 
 /* 반응형 */
