@@ -30,7 +30,7 @@
             {% comment %} <button>
                 <img src="{% static 'img/search-icon.svg' %}" alt="찾기" class="search-icon">
             </button> {% endcomment %}
-            <p class="review-count">{{ review_count }}개의 리뷰</p>
+            <p class="review-count"><span class="strong">{{ review_count }}</span>개의 리뷰</p>
         </div>
 
         <div class="reviews">
@@ -38,7 +38,9 @@
             <div class="review">
                 <div class="review-header">
                     <a href="{%url 'users:user_detail' review_item.user.id%}">
-                        <span class="review-profileimg"><img src="{% static 'img/default-profile.png' %}" alt=""></span>
+                        <span class="review-profileimg">
+                            <img src="{% if review_item.user.profile_image %}{{ review_item.user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}" alt="">
+                        </span>
                         <span class="review-author">{{ review_item.user.nickname }}</span>
                     </a>
                     <span class="review-rating">⭐ {{ review_item.rating }}</span>
