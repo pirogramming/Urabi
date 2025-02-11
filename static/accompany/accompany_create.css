@@ -141,15 +141,17 @@
   width: auto;
 }
 
-
+#profile-picture-preview{
+  cursor: pointer;
+}
 .file-upload svg{
   right: 0;
 }
 .file-upload svg:hover{
   cursor: pointer;
 }
-#max-member{
-  width: 100px;
+#max_member{
+  width: 85px;
 }
 #image-name{
   right: 55px;
