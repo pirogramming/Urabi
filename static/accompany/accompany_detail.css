@@ -151,6 +151,7 @@
 .detail-content .texts{
   line-height: 1.5;
   font-size: 18px;
+  min-height: 250px;
 }
 .detail-content .tags ul{
   margin: 10px 0;

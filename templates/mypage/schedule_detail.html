@@ -19,7 +19,7 @@
     </nav>
   
     <section class="mypage-content">
-      <h1 class="main-title">여행일정상세</h1>
+      <h1 class="main-title">여행상세</h1>
       <section class="activity-section">
               <!--나눔 마켓-->
         <div class="activity-header-cms">
@@ -59,12 +59,18 @@
                 </div>
               {%endfor%}
               {%else%}
+                <div class="no-plan">
+                  <img width="150"src="{% static 'img/logo.png' %}" alt="기본 이미지">
+                  <p>아직 등록한 계획이 없으시네요!</p><br>
+                  <p>지금 계획을 등록해서 여행을 더 즐겁게 만들어보세요!</p>
+                </div>
               {%endif%}
               
           </div>
         </div>
         <div class="cms-schedule-footer">
           <button class="del-schedule-btn" onclick="confirmDelete(event, {{schedule.schedule_id}})">여행 삭제</button>
+          <button class="del-schedule-btn" onclick="window.location.href='{%url 'users:user_list'%}'">목록으로</button>
         </div>
       </section>
       
