@@ -51,10 +51,8 @@
             <div class="card-image" style="cursor: pointer;"onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">
               {%if post.photo %}
                 <img width="150" height="120" src="{{post.photo.url}}" alt="여행 이미지">
-              {%else%}
-                <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
+                <p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>
               {%endif%}
-              <p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>
             </div>
             <div class="card-info">
               <div class="info-header">
@@ -74,10 +72,15 @@
                 {%endif%}
               </div>
               <div class="info-date">
-                <p><p>{{ post.start_date|date:"Y-m-d" }} ~ {{ post.end_date|date:"Y-m-d" }}</p></p>
+                <p>{{ post.start_date|date:"Y-m-d" }} ~ {{ post.end_date|date:"Y-m-d" }}</p>
+                {%if not post.photo%}
+                <span class="age-range no-img">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</span>
+                {%endif%}
               </div>
               <div class="info-user">
-                <h3><a href="{%url 'users:user_detail' post.created_by.id%}">{{post.created_by.nickname}}</a></h3>
+                <h3><a href="{%url 'users:user_detail' post.created_by.id%}">
+                  <img class="profile-img" width="30" height="30"src="{{post.created_by.profile_image.url}}">{{post.created_by.nickname}}
+                </a></h3>
                 <div class="max-member"> {{post.now_member }} / {{post.max_member}}</div>
               </div>
               <div class="info-date">

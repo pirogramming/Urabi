@@ -188,10 +188,21 @@
   font-size: 12px;
   font-weight: 400;
   color: #ccc;
+  display: flex;
+  justify-content: space-between;
 }
 .info-user>h3{
   font-size: 14px;
   font-weight: 400;
+}
+.info-user>h3>a{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.info-user img{
+  border-radius: 50%;
 }
 .age-range{
   position: absolute;
@@ -203,6 +214,10 @@
   padding: 3px 5px;
   background-color: var(--light-red);
   border-radius: 8px;
+}
+.age-range.no-img{
+  position: inherit;
+  color: black;
 }
 .max-member{
   background-color: var(--strong-gray);
