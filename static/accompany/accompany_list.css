@@ -201,7 +201,7 @@
   font-size: 12px;
   font-weight: 300;
   padding: 3px 5px;
-  background-color: var(--yellow);
+  background-color: var(--light-red);
   border-radius: 8px;
 }
 .max-member{
