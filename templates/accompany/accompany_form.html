@@ -193,7 +193,7 @@ document.getElementById("profile-picture-preview").addEventListener("click", fun
     markers: {{ this_plan.markers|safe }},
     polyline: {{ this_plan.polyline|safe }}
   };
-  {% else %}
+  {% elif form.instance.markers %}
   window.mapData = {
     markers: {{ form.instance.markers|safe }},
     polyline: {{ form.instance.polyline|safe }}
