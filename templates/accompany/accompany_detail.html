@@ -29,7 +29,7 @@
   <section class="accompany_header">
     <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
   </section>
-  
+
   <hr class="flash_divider">
 
   <section class="map">
@@ -126,6 +126,9 @@
         {% endif %}
       </div>
     </div>
+
+    <hr class="flash_divider">
+
     <div class="detail-footer">
       {% if user == object.created_by %}
       <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">

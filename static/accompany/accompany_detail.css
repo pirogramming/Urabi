@@ -111,7 +111,7 @@
 }
 
 .participants{
-  border-bottom: 1px solid var(--blue);
+  border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   display: flex;
   justify-content: space-between;

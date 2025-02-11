@@ -11,16 +11,23 @@
 /* 페이지 타이틀 */
 .flash_register .flash_title {
     text-align: left;
-    font-size: 22px;
-    font-weight: bold;
+    font-size: 24px;
+    font-weight: 700;
     color: #333;
     margin-bottom: 20px;
 }
 
-.flash_register .flash_title .highlight {
+#highlight {
     color: var(--red);
+    cursor: pointer;
 }
-
+#highlight:hover{
+    border-bottom: 2.5px solid var(--red);
+}
+.sub{
+    font-size: 18px;
+    display: inline;
+}
 /* 지도 스타일 */
 .flash_map {
     position: relative;
@@ -54,6 +61,7 @@
 .flash_register_form {
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
 }
 
 /* 입력 필드 공통 스타일 */

@@ -5,10 +5,10 @@
 /* 지도 위 문구 */
 .flash_title {
     text-align: left;
-    font-size: 32px;
-    font-weight: 400;
+    font-size: 28px;
+    font-weight: 650;
     color: #333;
-    margin: 20px 0;
+    margin-bottom: 25px;
 }
 
 .flash_title .highlight {
