@@ -87,6 +87,7 @@ def load_plan_data(request):
         data = {
             'markers': travel_plan.markers,
             'polyline': travel_plan.polyline,
+            'title': travel_plan.title,
         }
         return JsonResponse(data)
     return JsonResponse({'error': 'Invalid plan_id'}, status=400)
