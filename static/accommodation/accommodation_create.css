@@ -6,33 +6,31 @@
     font-family: 'Paperlogy' !important; 
   }
 
-  .review-container {
+.review-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
+    background: white;
+    border-radius: 10px;
 }
-
+/*헤더*/
 .review-main-header{
-    display: flex;
-    align-items: center;
+    text-align: left;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
     margin-bottom: 20px;
 }
-.review-main-header:first-child{
-    font-size: 1.7rem;
-}
-
-.header-strong{
+#highlight {
     color: var(--red);
-    font-size: 2rem;
+    cursor: pointer;
 }
-
-.review-main-header p{
-    font-size: 1.3rem;
-    margin-left: 20px;
+#highlight:hover{
+    border-bottom: 2.5px solid var(--red);
 }
-
-.location-section {
-    margin-bottom: 20px;
+.sub{
+    font-size: 18px;
+    display: inline;
 }
 
 /*======================
@@ -108,16 +106,18 @@ input{
 }
 
 .submit-button {
-    background-color: var(--red);
-    color: white;
+    padding: 10px 20px;
     border: none;
-    padding: 10px;
-    border-radius: 4px;
+    border-radius: 5px;
+    color: #ffffff;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 500;
+    align-self: flex-end;
+    width: 120px;
     transition: background-color 0.3s;
-    width: 150px;
-    margin-left: auto;
+    background-color: var(--red);
 }
 
 .submit-button:hover {
