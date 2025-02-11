@@ -22,12 +22,12 @@
     <!-- 메인 콘텐츠 영역 -->
     <section class="mypage-content">
         <section class="mypage-content">
-            <h1 class="main-title">나의 여행 일정</h1>
+            <h1 class="main-title">{{this_schedule.name}}</h1>
             
             <section class="profile-section">
               <div class="profile-header">
                   <div class="section-title">여행 계획 생성</div>
-                  <a href="{%url 'users:user_list'%}">목록으로</a>
+                  <a href="{%url 'users:schedule_detail' this_schedule.schedule_id%}">목록으로</a>
               </div>
 
               <div class="map-container">
@@ -42,15 +42,15 @@
                 <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'> 
                 <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
       
-                <label for="title">계획 제목</label>
+                <label for="title"></label>
                 {{form.title}}
     
-                <label for="city">도시</label>
+                <label for="city"></label>
                 {{form.city}}
                 <div class="timeline">
                   <div class="timeline-item">
                     <div class="date">
-                      <label for="start_date">시작 날짜</label>
+                      <label for="start_date">시작일 </label>
                       {{form.start_date}}
                     </div>
                     <div class="location">
@@ -61,7 +61,7 @@
                   </div>
                   <div class="timeline-item">
                     <div class="date">
-                      <label for="end_date">종료 날짜</label>
+                      <label for="end_date">종료일 </label>
                       {{form.end_date}}
                     </div>
                   </div>
@@ -75,7 +75,7 @@
     
 
     
-                <label for="explanation">설명</label>
+                <label for="explanation"></label>
                 {{form.explanation}}
                 {% comment %} <div class="radio-group">
                   <input type="radio" id="public" name="is_public" value="True" {% if form.instance.is_public %}checked{% endif %}>

@@ -19,7 +19,7 @@
     </nav>
   
     <section class="mypage-content">
-      <h1 class="main-title">여행일정상세</h1>
+      <h1 class="main-title">여행상세</h1>
       <section class="activity-section">
               <!--나눔 마켓-->
         <div class="activity-header-cms">
@@ -65,6 +65,7 @@
         </div>
         <div class="cms-schedule-footer">
           <button class="del-schedule-btn" onclick="confirmDelete(event, {{schedule.schedule_id}})">여행 삭제</button>
+          <button class="del-schedule-btn" onclick="window.location.href='{%url 'users:user_list'%}'">목록으로</button>
         </div>
       </section>
       
