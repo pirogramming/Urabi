@@ -4,34 +4,45 @@ from users.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     profile_image = serializers.SerializerMethodField()
+    
     class Meta:
         model = User
-        fields = ['id', 'nickname', 'profile_image']
+        fields = ['id', 'nickname', 'email', 'profile_image']
     
     def get_profile_image(self, obj):
         request = self.context.get("request")
-        if request:
+        if request and obj.profile_image:
             return request.build_absolute_uri(obj.profile_image.url)
-        return obj.profile_image.url
-
+        return ""
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = UserSerializer(read_only=True)
+    sender_email = serializers.CharField(source="sender.email", read_only=True)
+    sender_nickname = serializers.CharField(source="sender.nickname", read_only=True)
+    profile_image_url = serializers.SerializerMethodField()
+    
     class Meta:
         model = Message
-        fields = ['id', 'room', 'sender', 'content', 'timestamp', 'read_by']
+        fields = [
+            'id',
+            'room',
+            'sender_email',
+            'sender_nickname',
+            'profile_image_url',
+            'content',
+            'timestamp',
+            'read_by',
+        ]
     
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret['sender_nickname'] = ret['sender']['nickname']
-        ret['profile_image_url'] = ret['sender']['profile_image']
-        ret['message_id'] = ret['id']
-        return ret
-
+    def get_profile_image_url(self, obj):
+        request = self.context.get("request")
+        if request and obj.sender.profile_image:
+            return request.build_absolute_uri(obj.sender.profile_image.url)
+        return ""
 
 class ChatRoomSerializer(serializers.ModelSerializer):
     user1 = UserSerializer(read_only=True)
     user2 = UserSerializer(read_only=True)
+    
     class Meta:
         model = ChatRoom
         fields = ['id', 'user1', 'user2', 'travel', 'created_at']
@@ -61,6 +72,7 @@ class ChatRoomDetailSerializer(serializers.ModelSerializer):
     user1 = UserSerializer(read_only=True)
     user2 = UserSerializer(read_only=True)
     messages = MessageSerializer(many=True, read_only=True)
+    
     class Meta:
         model = ChatRoom
         fields = [

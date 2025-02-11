@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+from django.conf import settings
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -45,8 +45,22 @@ class User(AbstractUser):
     
     objects = UserManager()
 
+class TravelSchedule(models.Model):
+    schedule_id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=100)  # 일정 이름
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='travel_schedules')  # 사용자
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    start_date = models.DateField()  # 시작 날짜
+    end_date = models.DateField()  # 종료 날짜
+    photo = models.ImageField(upload_to='schedule_images', null=True, blank=True)  # 일정 사진
+
+    def __str__(self):
+        return f"{self.name} - {self.user.username}"
+
 class TravelPlan(models.Model):
     plan_id = models.BigAutoField(primary_key=True)
+    schedule = models.ForeignKey(TravelSchedule, on_delete=models.CASCADE, related_name='plans')  # 일정
     title = models.CharField(max_length=100)  # 일정 제목
     city = models.CharField(max_length=50)  # 도시명
     explanation = models.TextField()  # 일정 설명
@@ -64,3 +78,13 @@ class TravelPlan(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.created_by.username}"
+    
+class PhoneVerification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    random_string = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return self.random_string

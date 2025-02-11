@@ -8,7 +8,7 @@ import json
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import TravelGroup, TravelParticipants, Accompany_Zzim, AccompanyRequest
 from .forms import TravelGroupForm
-from users.models import User, TravelPlan
+from users.models import User, TravelPlan, TravelSchedule
 from .filters import AccompanyFilter
 
 # Create your views here.
@@ -51,7 +51,6 @@ class AccompanyDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         if self.request.user.is_authenticated:
             user_zzims = Accompany_Zzim.objects.filter(user=self.request.user)
             zzim_items = [zzim.item for zzim in user_zzims]
@@ -63,7 +62,12 @@ class AccompanyDetailView(DetailView):
         participants = TravelParticipants.objects.filter(travel=group)
         participant_users = [participant.user for participant in participants]  # User 객체 리스트로 변환
         requested_users = User.objects.filter(user_requests__travel=group)
-        
+        if group.this_plan_id:
+            this_plan = get_object_or_404(TravelPlan, pk=group.this_plan_id)
+            context['this_plan'] = this_plan
+            this_schedule = this_plan.schedule
+            context['travel_plans'] = TravelPlan.objects.filter(schedule=this_schedule)
+
         context['users'] = requested_users
         context['participants'] = participant_users
         if group.tags:
@@ -75,6 +79,17 @@ class AccompanyDetailView(DetailView):
         context['polyline'] = group.polyline
 
         return context
+    
+def load_plan_data(request):
+    plan_id = request.GET.get('plan_id')
+    if plan_id:
+        travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
+        data = {
+            'markers': travel_plan.markers,
+            'polyline': travel_plan.polyline,
+        }
+        return JsonResponse(data)
+    return JsonResponse({'error': 'Invalid plan_id'}, status=400)
 
 class AccompanyCreateView(CreateView):
     model = TravelGroup
@@ -83,8 +98,7 @@ class AccompanyCreateView(CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        plan_id = self.request.GET.get('plan_id')  
-
+        plan_id = self.request.GET.get('plan_id')
         if plan_id:
             travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
             initial.update({
@@ -93,9 +107,9 @@ class AccompanyCreateView(CreateView):
                 'explanation': travel_plan.explanation,
                 'start_date': travel_plan.start_date,
                 'end_date': travel_plan.end_date,
+                'this_plan_id': travel_plan.plan_id,
             })
         return initial
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -103,6 +117,7 @@ class AccompanyCreateView(CreateView):
         if plan_id:
             travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
             context['this_plan'] = travel_plan
+        context['travel_schedules'] = TravelSchedule.objects.filter(user=self.request.user)
         context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
         return context
 
@@ -112,9 +127,13 @@ class AccompanyCreateView(CreateView):
         # 마커와 폴리라인 데이터를 처리
         markers_data = self.request.POST.get('markers')
         polyline_data = self.request.POST.get('polyline')
+        plan_id = self.request.GET.get('plan_id')
+        if plan_id:
+            form.instance.this_plan_id = plan_id
 
         form.instance.markers = markers_data
         form.instance.polyline = polyline_data
+        
 
         return super().form_valid(form)
 

@@ -76,32 +76,21 @@
           <div class="form-group birth-group">
             <label class="form-label">생일</label>
             <div class="birth-inputs">
-              <input
-                type="text"
-                name="birth_year"
-                class="birth-year"
-                value="{{ user.birth|date:'Y' }}"
-              /> 년
-              <input
-                type="text"
-                name="birth_month"
-                class="birth-month"
-                value="{{ user.birth|date:'m' }}"
-              /> 월
-              <input
-                type="text"
-                name="birth_day"
-                class="birth-day"
-                value="{{ user.birth|date:'d' }}"
-              /> 일
+              <input type="text" name="birth_year" class="birth-year" value="{{ user.birth|date:'Y' }}" placeholder="YYYY" /> 년
+              <input type="text" name="birth_month" class="birth-month" value="{{ user.birth|date:'m' }}" placeholder="MM"/> 월
+              <input type="text" name="birth_day" class="birth-day" value="{{ user.birth|date:'d' }}" placeholder="DD"/> 일
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="phone-group">
             <label for="userPhone" class="form-label">휴대폰 번호</label>
-            <input type="text" id="userPhone" name="user_phone" class="form-input" value="{{ user.user_phone }}" />
+            <input type="text" id="userPhone" name="user_phone" class="form-input" value="{{ user.user_phone }}" readonly />
+            <button type="button" onclick="openPhoneVerification()" id="start-verification-Button" class="phone-verification-button">
+                인증
+            </button>
         </div>
-  
+        <div id="phoneError" style="display:none; color:red;"></div>
+        
         <div class="form-group gender">
           <label for="userGender" class="form-label">성별</label>
           <select id="userGender" name="user_gender" class="form-input">
@@ -121,16 +110,78 @@
   </main>
 
   <script>
-    document.getElementById("profilePhotoInput").addEventListener("change", function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById("profile-picture-preview").src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+document.getElementById("profilePhotoInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("profile-picture-preview").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function openPhoneVerification() {
+    const verificationWindow = window.open(
+        "{% url 'users:phone_verification' %}",
+        "phoneVerificationWindow",
+        "width=400,height=600"
+    );
+
+    verificationWindow.addEventListener('beforeunload', checkPhoneVerification);
+}
+
+function checkPhoneVerification() {
+    fetch("{% url 'users:verify_phone_status' %}")
+        .then(res => res.json())
+        .then(data => data.result === "verified" && onPhoneVerificationSuccess(data.phone_number))
+        .catch(console.error);
+}
+
+async function checkPhoneDuplicate() {
+    const phoneInput = document.getElementById('userPhone');
+    const cleanNumber = phoneInput.value.replace(/\D/g, ''); // 숫자만 남기기
+
+    try {
+        const response = await fetch("{% url 'users:check_phone_duplicate' %}", {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{ csrf_token }}", "Content-Type": "application/json" },
+            body: JSON.stringify({ phone: cleanNumber })
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || '서버 응답 오류');
+
+        if (!result.success) {
+            phoneInput.value = '';  
+            phoneInput.setAttribute('disabled', true); 
+            updatePhoneError(result.error, 'red');
+        } else {
+            phoneInput.removeAttribute('disabled');
+            updatePhoneError("사용 가능한 번호입니다.", 'green');
         }
-    });
+
+    } catch (error) {
+        phoneInput.value = ''; 
+        showError(error.message || '서버 연결 실패');
+    }
+}
+
+function onPhoneVerificationSuccess(verifiedNumber) {
+    document.getElementById('userPhone').value = verifiedNumber;
+    checkPhoneDuplicate();
+}
+document.getElementById('userPhone').addEventListener('blur', function(event) {
+    if (!event.target.readOnly && event.target.value) checkPhoneDuplicate();
+});
+
+function updatePhoneError(message = '', color = 'red') {
+    const errorElement = document.getElementById('phoneError');
+    errorElement.textContent = message;
+    errorElement.style.color = color;
+    errorElement.style.display = message ? 'block' : 'none'; 
+}
+
   </script>
   
   

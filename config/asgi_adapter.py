@@ -10,3 +10,4 @@ class ASGI3toASGI2Adapter:
         async def asgi3_app(receive, send):
             await self.app(scope, receive, send)
         return asgi3_app
+

@@ -179,6 +179,19 @@
     width: 40%;
   }
 
+  #userPhone{
+    flex : 1;
+  }
+  #phone-group{
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  #start-verification-Button{
+    color: var(--blue);
+  }
+
   /********************************
     수정 완료 버튼
   ********************************/

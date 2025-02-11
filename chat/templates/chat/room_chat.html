@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function(){
   const messageInput = document.getElementById("message_input");
 
   const myUsername = "{{ request.user.nickname }}";
+  const myEmail = "{{ request.user.email }}";
   const roomId = "{{ room.id }}";
   console.log("roomId:", roomId);
 
@@ -54,6 +55,13 @@ document.addEventListener("DOMContentLoaded", function(){
     if (msg.sender && msg.sender.nickname) return msg.sender.nickname;
     return "Unknown";
   }
+
+  
+  function getSenderEmail(msg) {
+    if (msg.sender_email) return msg.sender_email;
+    if (msg.sender && msg.sender.email) return msg.sender.email;
+    return "";
+  }  
   function getProfileImage(msg) {
     if (msg.profile_image_url) return msg.profile_image_url;
     if (msg.sender && msg.sender.profile_image) return msg.sender.profile_image;
@@ -96,49 +104,53 @@ document.addEventListener("DOMContentLoaded", function(){
         lastSender = null;
         chatMessages.innerHTML = "";  // 기존 메시지 모두 지우기
 
-        data.forEach(msg => {
+        data.reverse().forEach(msg => {
           prependMessage(msg);
         });
+        
         scrollToBottom();
       })
       .catch(err => console.error("Error loading messages:", err));
   }
 
-  // 초기 메시지 삽입 (prepend)
   function prependMessage(msg) {
     const senderNickname = getSenderNickname(msg);
-    const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
+    const senderEmail = getSenderEmail(msg);
+    const isMyMessage = senderEmail && myEmail && senderEmail.toLowerCase() === myEmail.toLowerCase();
+
     const dateObj = new Date(msg.timestamp);
     const dateStr = getYmdString(dateObj);
-
-    // 날짜 구분선: 날짜가 바뀌었으면 삽입
+    console.log(senderEmail)
+  
     if (lastDate !== dateStr) {
-        insertDateLine(dateStr);
-        lastDate = dateStr;
-        lastMinute = null;
-        lastSender = null;
+      insertDateLine(dateStr);
+      lastDate = dateStr;
+      lastMinute = null;
+      lastSender = null;
     }
+    const msgDiv = createMessageDiv(msg, dateObj, isMyMessage, senderNickname, senderEmail);
     
-    const msgDiv = createMessageDiv(msg, dateObj, isMyMessage);
+    
     chatMessages.appendChild(msgDiv);
   }
+  
 
   // 메시지 DOM 생성 함수
-  function createMessageDiv(msg, dateObj, isMyMessage) {
+  function createMessageDiv(msg, dateObj, isMyMessage, senderNickname, senderEmail) {
     const hmStr = getHmString(dateObj);
-    const senderNickname = getSenderNickname(msg);
 
     // 헤더를 숨길 조건: 이전 메시지 같은 분, 같은 보낸 사람이면 헤더 숨김
     let hideHeader = false;
-    if (lastMinute === hmStr && lastSender === senderNickname) {
+    if (lastMinute === hmStr && lastSender === senderEmail) {
       hideHeader = true;
     }
 
     const msgDiv = document.createElement("div");
     msgDiv.classList.add("message");
-    if (msg.message_id) {
-      msgDiv.dataset.messageId = msg.message_id;
+    if (msg.message_id || msg.id) {
+      msgDiv.dataset.messageId = msg.message_id || msg.id;
     }
+    
     msgDiv.classList.add(isMyMessage ? "user" : "other");
 
     if (!hideHeader) {
@@ -150,10 +162,10 @@ document.addEventListener("DOMContentLoaded", function(){
       imgElem.src = getProfileImage(msg);
       headerDiv.appendChild(imgElem);
 
-      const nickSpan = document.createElement("span");
-      nickSpan.classList.add("nickname");
-      nickSpan.textContent = senderNickname;
-      headerDiv.appendChild(nickSpan);
+    const nickSpan = document.createElement("span");
+    nickSpan.classList.add("nickname");
+    nickSpan.textContent = senderNickname;
+    headerDiv.appendChild(nickSpan);
 
       msgDiv.appendChild(headerDiv);
     }
@@ -189,13 +201,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     // 업데이트: 메시지 추가 후 현재 시간과 보낸 사람 기록
     lastMinute = hmStr;
-    lastSender = senderNickname;
-
+    lastSender = senderEmail;
     return msgDiv;
   }
 
-  // 새 메시지 추가 (append)
-  function appendMessage(sender, timestamp, content, isMyMessage, profileUrl, messageId, isReadByOther) {
+  function appendMessage(senderEmail, timestamp, content, isMyMessage, profileUrl, messageId, isReadByOther, senderNickname) {
     const dateObj = new Date(timestamp);
     const dateStr = getYmdString(dateObj);
     const hmStr = getHmString(dateObj);
@@ -208,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     let hideHeader = false;
-    if (lastMinute === hmStr && lastSender === sender) {
+    if (lastMinute === hmStr && lastSender === senderEmail) {
       hideHeader = true;
     }
 
@@ -230,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
       const nickSpan = document.createElement("span");
       nickSpan.classList.add("nickname");
-      nickSpan.textContent = sender;
+      nickSpan.textContent = senderNickname;
       headerDiv.appendChild(nickSpan);
 
       msgDiv.appendChild(headerDiv);
@@ -264,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function(){
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     lastMinute = hmStr;
-    lastSender = sender;
+    lastSender = senderEmail;
 
     return msgDiv;
   }
@@ -306,7 +316,6 @@ document.addEventListener("DOMContentLoaded", function(){
     console.log("chatSocket recv:", data);
     if (data.type === "chat.history" && data.messages) {
       chatMessages.innerHTML = "";
-      // 초기화
       lastDate = null;
       lastMinute = null;
       lastSender = null;
@@ -315,16 +324,19 @@ document.addEventListener("DOMContentLoaded", function(){
       });
       scrollToBottom();
     } else if (data.type === "chat_message") {
+      const senderEmail = getSenderEmail(data);
       const senderNickname = getSenderNickname(data);
-      const isMyMessage = (senderNickname.toLowerCase() === myUsername.toLowerCase());
-      appendMessage(senderNickname, data.timestamp, data.content,
-                    isMyMessage, data.profile_image_url, data.message_id, data.is_read_by_other);
+      const isMyMessage = (senderEmail.toLowerCase() === myEmail.toLowerCase());
+      // senderEmail (비교용)와 senderNickname (표시용)을 모두 전달
+      appendMessage(senderEmail, data.timestamp, data.content,
+                    isMyMessage, data.profile_image_url, data.message_id, data.is_read_by_other, senderNickname);
       scrollToBottom();
     } else if (data.type === "chat.read_event") {
       handleReadEvent(data.message_id, data.reader_id);
       scrollToBottom();
     }
   };
+  
 
   chatSocket.onerror = function(err) {
     console.error("ChatConsumer error:", err);

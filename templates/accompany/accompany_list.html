@@ -37,7 +37,7 @@
               <button type="submit" class="filter_btn">검색</button>
             </form>
           </div>
-          <p class="create_accompany"><a href="{% url 'users:my_trip'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
+          <p class="create_accompany"><a href="{% url 'users:user_list'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
         </div>
       </section>
       <section class="accompany-list">
@@ -57,7 +57,8 @@
             </div>
             <div class="card-info">
               <div class="info-header">
-                <h3 style="cursor: pointer;" onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">{{post.title}}</h3 >
+                <h3 style="cursor: pointer;" onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">{{post.title}}</h3>
+                <p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>
                 {%if user != post.created_by%}
                 <button class="zzim-btn" data-travel-id="{{ post.travel_id }}">
                   {% if post in zzim_items %}

@@ -4,6 +4,11 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'flash/flash_detail.css' %}">
 <script defer src="{% static 'flash/flash_zzim.js' %}"></script>
+<script defer src="{% static 'flash/flash_participants.js' %}"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
 {% endblock %}
 
 {% block header_content %}
@@ -56,6 +61,7 @@
                 <span class="flash_capacity"><strong>{{ flash.max_people }}</strong></span>
             </div>
             <div class="flash_host_buttons">
+                
                 <a href="{% url 'users:user_detail' flash.created_by.id %}">
                     <div class="flash_host">
                         <img src="{{ flash.created_by.profile_image.url }}" alt="호스트 이미지" class="host_image">
@@ -71,12 +77,62 @@
                         <button class="flash_edit_btn">
                             <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
                         </button>
-                        <button class="flash_delete_btn" onclick="deleteFlash({{ flash.pk }})">삭제하기</button>
+                        <button class="flash_delete_btn" data-flash-id="{{ flash.pk }}">삭제하기</button>
                     {% else %}
                         <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 메시지 보내기</button>
-                        <button class="flash_apply_btn">신청하기</button>
                     {% endif %}
                 </div>
+                
+                <div class="members">
+                    {% if request.user != flash.created_by %}
+                        {% if request.user.id in participant_ids %}
+                            <span class="ing">참여중</span>
+                        {% else %}
+                            {% if request.user.id in pending_requests %}
+                                <button class="request-cancel-btn flash_apply_btn" data-flash-id="{{ flash.meeting_id }}">요청 취소</button>
+                            {% else %}
+                                <button class="request-btn flash_apply_btn" data-flash-id="{{ flash.meeting_id }}">참여 요청</button>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <span id="add-participant" href=""> + </span>
+                        <div id="request-modal" style="display: none;">
+                            <input type="text" id="search-email" placeholder="이메일 검색">
+                            <ul id="userList">
+                                {% for user_id in pending_requests %}
+                                    <li data-user-id="{{ user_id }}" class="user-item">
+                                        <span>사용자 ID: {{ user_id }}</span>
+                                        <button class="add-btn">+</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                
+                    <span>{{ flash.now_member }}/{{ flash.max_people }}</span>
+                    
+                    <button id="toggleMembers">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                    </button>
+                    
+                    <ul id="memberList" style="display: none;">
+                        <li>
+                            <span><a href="{% url 'users:user_detail' flash.created_by.id %}">{{ flash.created_by.email }}</a></span>
+                            <span>🚩</span>
+            
+                        </li>
+                        {% for participant in participant_data %}
+                            <li data-user-id="{{ participant.id }}">
+                                <span><a href="{% url 'users:user_detail' participant.id %}">{{ participant.email }}</a></span>
+                                {% if request.user.id == flash.created_by.id or participant.id == request.user.id %}
+                                    <button class="red part-del-btn">x</button>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>             
             </div>
         </div>
     </div>
@@ -106,12 +162,15 @@
     </section>
 </section>
 
+<!-- meeting_id를 저장하는 숨겨진 요소 -->
+<span id="flash-data" data-flash-id="{{ flash.meeting_id }}" style="display: none;"></span>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const deleteBtn = document.querySelector(".flash_delete_btn");
 
         if (deleteBtn) {
             deleteBtn.addEventListener("click", function() {
+                const flashId = this.dataset.flashId;
                 deleteFlash(flashId);  // HTML의 `onclick` 대신 이벤트 리스너 사용 가능
             });
         }
@@ -136,12 +195,21 @@
                 .catch(error => console.error("Error:", error));
             }
         }
-
-        // 이벤트 리스너 설정
-        starIcon.addEventListener("click", function() {
-            toggleZzim(flashId);
-        });
     });
+
+    const modal = `
+    <div id="add-participant-modal">
+        <input type="text" id="search-email" placeholder="이메일 검색" />
+        <ul id="userList">
+            {% for user in pending_requests %}
+                <li data-user-email="{{ user.email }}" class="user-item">
+                    {{ user.email }}
+                    <button class="add-btn">+</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+`;
 
     const hostChatBtn = document.querySelector(".host_chat_btn");
     if (hostChatBtn) {
