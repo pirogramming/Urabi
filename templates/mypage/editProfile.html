@@ -76,22 +76,21 @@
           <div class="form-group birth-group">
             <label class="form-label">생일</label>
             <div class="birth-inputs">
-              <input type="text" name="birth_year" class="birth-year" value="{{ user.birth|date:'Y' }}" /> 년
-              <input type="text" name="birth_month" class="birth-month" value="{{ user.birth|date:'m' }}" /> 월
-              <input type="text" name="birth_day" class="birth-day" value="{{ user.birth|date:'d' }}" /> 일
+              <input type="text" name="birth_year" class="birth-year" value="{{ user.birth|date:'Y' }}" placeholder="YYYY" /> 년
+              <input type="text" name="birth_month" class="birth-month" value="{{ user.birth|date:'m' }}" placeholder="MM"/> 월
+              <input type="text" name="birth_day" class="birth-day" value="{{ user.birth|date:'d' }}" placeholder="DD"/> 일
             </div>
           </div>
 
           <div class="form-group" id="phone-group">
             <label for="userPhone" class="form-label">휴대폰 번호</label>
             <input type="text" id="userPhone" name="user_phone" class="form-input" value="{{ user.user_phone }}" readonly />
-            <span id="phoneVerificationStatus"></span>
-            <div class="phone-verification-button">
-              <button type="button" onclick="openPhoneVerification()" id="start-verification-Button">번호 인증</button>
-            </div>
-            <div id="phoneError" style="display:none; color:red;"></div>
-          </div>
-  
+            <button type="button" onclick="openPhoneVerification()" id="start-verification-Button" class="phone-verification-button">
+                인증
+            </button>
+        </div>
+        <div id="phoneError" style="display:none; color:red;"></div>
+        
         <div class="form-group gender">
           <label for="userGender" class="form-label">성별</label>
           <select id="userGender" name="user_gender" class="form-input">
@@ -142,8 +141,6 @@ function checkPhoneVerification() {
 async function checkPhoneDuplicate() {
     const phoneInput = document.getElementById('userPhone');
     const cleanNumber = phoneInput.value.replace(/\D/g, ''); // 숫자만 남기기
-    
-    clearError();
 
     try {
         const response = await fetch("{% url 'users:check_phone_duplicate' %}", {
@@ -157,10 +154,13 @@ async function checkPhoneDuplicate() {
 
         if (!result.success) {
             phoneInput.value = '';  
-            showError(result.error);
+            phoneInput.setAttribute('disabled', true); 
+            updatePhoneError(result.error, 'red');
         } else {
-            showError("사용 가능한 번호입니다.", '#28a745'); 
+            phoneInput.removeAttribute('disabled');
+            updatePhoneError("사용 가능한 번호입니다.", 'green');
         }
+
     } catch (error) {
         phoneInput.value = ''; 
         showError(error.message || '서버 연결 실패');
@@ -175,15 +175,13 @@ document.getElementById('userPhone').addEventListener('blur', function(event) {
     if (!event.target.readOnly && event.target.value) checkPhoneDuplicate();
 });
 
-function showError(message, color = 'red') {
-    Object.assign(document.getElementById('phoneError'), {
-        textContent: message, style: { color, display: 'block' }
-    });
+function updatePhoneError(message = '', color = 'red') {
+    const errorElement = document.getElementById('phoneError');
+    errorElement.textContent = message;
+    errorElement.style.color = color;
+    errorElement.style.display = message ? 'block' : 'none'; 
 }
 
-function clearError() {
-    document.getElementById('phoneError').style.display = 'none';
-}
   </script>
   
   

@@ -530,6 +530,8 @@ def check_phone_duplicate(request):
         existing_user = User.objects.filter(user_phone__isnull=False).exclude(user_phone="").exclude(id=request.user.id).filter(user_phone=clean_phone).first()
         
         if existing_user:
+            request.user.user_phone = None
+            request.user.save()
             print(f"[DEBUG] 중복된 전화번호 발견: {existing_user.user_phone}")
             print(f"[DEBUG] 중복된 전화번호 발견: {existing_user.email}")
             return JsonResponse({
