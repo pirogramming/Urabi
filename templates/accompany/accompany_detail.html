@@ -64,9 +64,9 @@
       <h2>{{ object.title }}</h2>
       <div class="header-btns">
         {% if user != object.created_by %}
-          <button class="btn ask">
-              <span>💬 문의하기</span>
-          </button>
+        <button class="btn ask host_chat_btn" data-other-user-id="{{ object.created_by.id }}">
+          <span>💬 문의하기</span>
+        </button>        
           <button class="zzim-btn" data-travel-id="{{ object.travel_id }}">
             {% if object in zzim_items %}
                 <svg class="heart-icon filled red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -90,7 +90,10 @@
     </div>
     <div class="participants">
       <div class="profile">
-        <img style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://www.w3schools.com/w3images/lights.jpg{% endif %}" width="30" height="30" alt="profile">
+        <img class="profile-img"
+     onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" 
+     src="{% if object.created_by.profile_image %}{{ object.created_by.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"  
+     alt="profile">
         <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by.nickname }}</span></a>
         <span class="temperature">36.5°C</span> 
         <span class="blue">&nbsp;|&nbsp;</span> 
@@ -223,6 +226,44 @@
       })
       .catch(error => console.error('Error loading plan data:', error));
   }
+
+  const hostChatBtn = document.querySelector(".host_chat_btn");
+if (hostChatBtn) {
+    hostChatBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const otherUserId = hostChatBtn.dataset.otherUserId;
+        console.log("otherUserId:", otherUserId);  // 올바른 ID가 출력되는지 확인
+        
+        const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+        console.log("createRoomUrl:", createRoomUrl);  // 생성된 URL 확인
+
+        fetch(createRoomUrl, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "include"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.chat_room_url) {
+                const chatFrame = document.getElementById("chatFrame");
+                chatFrame.src = data.chat_room_url;
+                const chatModal = document.getElementById("chatModal");
+                chatModal.style.display = "block";
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error creating chat room:", error);
+        });
+    });
+}
+
+
 </script>
 <script src="{% static 'accompany/add_member_toggle.js' %}"></script>
 <script src="{% static 'accompany/add_participants.js' %}"></script>

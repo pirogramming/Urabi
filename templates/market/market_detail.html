@@ -165,21 +165,22 @@
     if(marketChatBtn) {
         marketChatBtn.addEventListener("click", function(e) {
             e.preventDefault();
+            // data-other-user-id에 담긴 판매자(문의 대상) ID를 가져옴
             const otherUserId = marketChatBtn.dataset.otherUserId;
-            // create_chat_room 뷰 URL 생성 (판매자 ID 사용)
+            // create_chat_room 뷰 URL 생성: 0을 otherUserId로 대체
             const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
             
             fetch(createRoomUrl, {
                 method: "GET",
                 headers: {
-                    "X-Requested-With": "XMLHttpRequest"  // AJAX 요청임을 표시
+                    "X-Requested-With": "XMLHttpRequest"
                 },
                 credentials: "include"
             })
             .then(response => response.json())
             .then(data => {
                 if(data.chat_room_url) {
-                    // base.html에 정의된 채팅 모달 사용 (iframe에 채팅방 URL 할당)
+                    // 채팅 모달에 채팅방 URL을 설정
                     const chatFrame = document.getElementById("chatFrame");
                     chatFrame.src = data.chat_room_url;
                     const chatModal = document.getElementById("chatModal");
@@ -193,6 +194,6 @@
             });
         });
     }
-
+    
     </script>
     {%endblock js%}

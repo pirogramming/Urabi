@@ -80,7 +80,7 @@
                             <td class="market_icon_table"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.get_trade_type_display}}</a></td>
                             <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.title}}</a></td>
                             <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.created_at|date:"Y-m-d"}}</a></td>
-                            <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.user}}</a></td>
+                            <td class="market_list_item"><a href="{% url 'market:market_detail' market_item.pk %}">{{market_item.user.nickname}}</a></td>
                             <td class="market_list_item">
                                 {% if request.user != market_item.user %}
                                     <button class="market_like" data-market-id="{{ market_item.item_id }}">

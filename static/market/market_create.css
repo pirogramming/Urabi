@@ -74,10 +74,25 @@ input, select{
 .market_register_small select, 
 .market_register_small input,
 .market_register_form input{
+    font-family: 'Paperlogy', sans-serif;
     border: 1px solid #ddd;
     height: 43px;
     border-radius: 10px;
     width: 120px;
+    padding: 5px 10px;
+    margin: 5px 0;
+}
+
+textarea{
+    font-family: 'Paperlogy', sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 15px;
+}
+
+textarea:placeholder-shown{
+    font-family: 'Paperlogy', sans-serif;
 }
 .market_register_small input{
     width: 150px;
@@ -87,7 +102,7 @@ input, select{
     gap:10px;
 }
 .mkt_price_tag select{
-    width: 50px;
+    width: 60px;
     padding-left: 10px;
 }
 .market_form_sub{
@@ -117,6 +132,22 @@ input, select{
     gap:10px;
     align-items: center;
 }
+
+.hidden {
+    display: none;
+}
+
+.image-preview {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+}
+
+/* 나머지 스타일은 기존대로 유지 */
+
 
 #mkt_explanation{
     border: none;

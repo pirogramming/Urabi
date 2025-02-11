@@ -218,11 +218,9 @@
     const hostChatBtn = document.querySelector(".host_chat_btn");
     if (hostChatBtn) {
         hostChatBtn.addEventListener("click", function(e) {
-            // 부모 <a> 태그의 링크로 이동하지 않도록 처리
             e.preventDefault();
             e.stopPropagation();
             const otherUserId = hostChatBtn.dataset.otherUserId;
-            // create_chat_room 뷰 URL 생성: '0'을 실제 id로 교체
             const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
 
             fetch(createRoomUrl, {
@@ -235,7 +233,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.chat_room_url) {
-                    // base.html에 정의된 채팅 모달을 사용함 (iframe에 채팅방 URL 설정)
                     const chatFrame = document.getElementById("chatFrame");
                     chatFrame.src = data.chat_room_url;
                     const chatModal = document.getElementById("chatModal");
