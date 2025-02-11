@@ -31,6 +31,7 @@
     background: #ddd;
     margin: 15px 0;
 }
+
 .accommodation_bar{
     margin-top: 40px;
 }
@@ -167,7 +168,7 @@
 }
 
 .review-image img {
-    width: 50%;
+    object-fit: contain;
     border-radius: 4px;
     margin-top: 10px;
 }
