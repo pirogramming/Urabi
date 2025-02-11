@@ -6,10 +6,12 @@
     font-family: 'Paperlogy' !important; 
   }
 
-  .review-container {
+.review-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
+    background: white;
+    border-radius: 10px;
 }
 
 .review-main-header{
@@ -108,16 +110,18 @@ input{
 }
 
 .submit-button {
-    background-color: var(--red);
-    color: white;
+    padding: 10px 20px;
     border: none;
-    padding: 10px;
-    border-radius: 4px;
+    border-radius: 5px;
+    color: #ffffff;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 500;
+    align-self: flex-end;
+    width: 120px;
     transition: background-color 0.3s;
-    width: 150px;
-    margin-left: auto;
+    background-color: var(--red);
 }
 
 .submit-button:hover {

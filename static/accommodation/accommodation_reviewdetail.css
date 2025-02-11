@@ -160,19 +160,18 @@
 }
 
 .reply-button {
-    background-color: var(--blue);
+    font-weight: 500;
+    background: var(--red);
     margin-left: 85%;
     color: white;
-    border: none;
     padding: 10px 15px;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 0.9rem;
+    transition: all 0.3s ease;
 }
 
 .reply-button:hover {
-    background-color: #0056b3;
-    transition: all 0.3s ease;
+    background-color: var(--red-hover);
 }
 
 .pagination {
@@ -200,16 +199,21 @@
 .navigate-button, .write-review-button {
     background-color: var(--blue);
     color: white;
-    border: none;
     padding: 15px;
-    border-radius: 10px;
-    font-size: 1.1rem;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.3s;
 }
-
-.navigate-button:hover, .write-review-button:hover {
-    background-color: #0056b3;
-    transition: all 0.3s ease;
+.write-review-button{
+    background-color: var(--red);
+}
+.write-review-button:hover{
+    background-color: var(--red-hover);
+}
+.navigate-button:hover{
+    filter: brightness(0.85);
 }
 .pagination{
     margin: 40px 0 30px;
