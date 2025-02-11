@@ -6,64 +6,66 @@
 {% endblock %}
 
 {% block content%}
-<section id="market_register_head">
-    <h3><em>나눔 마켓</em> 물건 등록하기</h3>
-</section>
-<section id="market_register_body">
-    <form method="POST" action="{% url 'market:market_create' %}" class="mkt_form" enctype="multipart/form-data">
-        {% csrf_token %} 
-
-        <div class="mkt_form_title">
-            {{ form.title}}
-        </div>
-        <div class="market_register_small">
-            <div class="market_form_sub">
-                <h3>거래 상태</h3>
-                {{ form.status}}
+<section class="market_create">
+    <section class="market_register_head">
+        <h2>필요한 순간, 따뜻한 <a href="{%url 'market:market_list'%}" id="highlight">나눔 마켓</a> <p class="sub">> 물품 등록</p></h2>
+    </section>
+    <section id="market_register_body">
+        <form method="POST" action="{% url 'market:market_create' %}" class="mkt_form" enctype="multipart/form-data">
+            {% csrf_token %}
+    
+            <div class="mkt_form_title">
+                {{ form.title}}
             </div>
-            <div class="market_form_sub">
-                <h3>거래 방식</h3>
-                {{ form.trade_type}}
-            </div>
-            <div class="market_form_sub">
-                <h3>카테고리</h3>
-                {{ form.category}}
-            </div>
-            <div class="market_form_sub">
-                <h3>가격</h3>
-                <div class="mkt_price_tag">
-                    {{form.price}}
-                    {{form.currency_unit}}
+            <div class="market_register_small">
+                <div class="market_form_sub">
+                    <h3>거래 상태</h3>
+                    {{ form.status}}
+                </div>
+                <div class="market_form_sub">
+                    <h3>거래 방식</h3>
+                    {{ form.trade_type}}
+                </div>
+                <div class="market_form_sub">
+                    <h3>카테고리</h3>
+                    {{ form.category}}
+                </div>
+                <div class="market_form_sub">
+                    <h3>가격</h3>
+                    <div class="mkt_price_tag">
+                        {{form.price}}
+                        {{form.currency_unit}}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="market_register_form mkt_loca_img">
-            <h3>거래 장소</h3>
-            {{ form.city}}
-        </div>
-
-        <div class="market_register_form mkt_loca_img">
-            <h3>사진</h3>
-            <div class="mkt_form_img">
-                <input type="text" id="image-name" name="image-name" placeholder="사진을 추가해주세요">
-                <label for="image-upload" class="file-upload">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="currentColor" d="M5 3h13a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3m0 1a2 2 0 0 0-2 2v11.59l4.29-4.3l2.5 2.5l5-5L20 16V6a2 2 0 0 0-2-2zm4.79 13.21l-2.5-2.5L3 19a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-1.59l-5.21-5.2zM7.5 6A2.5 2.5 0 0 1 10 8.5A2.5 2.5 0 0 1 7.5 11A2.5 2.5 0 0 1 5 8.5A2.5 2.5 0 0 1 7.5 6m0 1A1.5 1.5 0 0 0 6 8.5A1.5 1.5 0 0 0 7.5 10A1.5 1.5 0 0 0 9 8.5A1.5 1.5 0 0 0 7.5 7"/></svg>
-                </label>
-                {%if not form.form.instance.pk%}
-                    {{form.photo}}
-                {%else%}
-                    {% comment %} <input type="file" id="image-upload" name="photo" accept="image/*"> {% endcomment %}
-                {%endif%}
+            <div class="market_register_form mkt_loca_img">
+                <h3>거래 장소</h3>
+                {{ form.city}}
             </div>
-        </div>
-        <div class="market_register_form" id="market_register_description_container">
-            <h3>설명 추가</h3>
-            {{ form.explanation }}
-        </div>
-        <div class="market_register_bottom">
-            <button type="submit" class="market_register_enroll_btn">등록하기</button>
-        </div>
-    </form>
+    
+            <div class="market_register_form mkt_loca_img">
+                <h3>사진</h3>
+                <div class="mkt_form_img">
+                    <input type="text" id="image-name" name="image-name" placeholder="사진을 추가해주세요">
+                    <label for="image-upload" class="file-upload">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="currentColor" d="M5 3h13a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3m0 1a2 2 0 0 0-2 2v11.59l4.29-4.3l2.5 2.5l5-5L20 16V6a2 2 0 0 0-2-2zm4.79 13.21l-2.5-2.5L3 19a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-1.59l-5.21-5.2zM7.5 6A2.5 2.5 0 0 1 10 8.5A2.5 2.5 0 0 1 7.5 11A2.5 2.5 0 0 1 5 8.5A2.5 2.5 0 0 1 7.5 6m0 1A1.5 1.5 0 0 0 6 8.5A1.5 1.5 0 0 0 7.5 10A1.5 1.5 0 0 0 9 8.5A1.5 1.5 0 0 0 7.5 7"/></svg>
+                    </label>
+                    {%if not form.form.instance.pk%}
+                        {{form.photo}}
+                    {%else%}
+                        {% comment %} <input type="file" id="image-upload" name="photo" accept="image/*"> {% endcomment %}
+                    {%endif%}
+                </div>
+            </div>
+            <div class="market_register_form" id="market_register_description_container">
+                <h3>설명 추가</h3>
+                {{ form.explanation }}
+            </div>
+            <div class="market_register_bottom">
+                <button type="submit" class="market_register_enroll_btn">등록하기</button>
+            </div>
+        </form>
+    </section>
 </section>
 {% endblock %}
 

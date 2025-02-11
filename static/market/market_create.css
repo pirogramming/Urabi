@@ -1,37 +1,43 @@
-.main{
-    margin: 0 auto;
-    width: 860px;
+.market_create{
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 input, select{
     font-family: 'Paperlogy', sans-serif;
 
 }
 /*제목 부분*/
+.market_register_head {
+    text-align: left;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+#highlight {
+    color: var(--red);
+    cursor: pointer;
+}
+#highlight:hover{
+    border-bottom: 2.5px solid var(--red);
+}
+.sub{
+    font-size: 18px;
+    display: inline;
+}
+
+/* 
 #market_register_head, #market_register_body, #market_register_bottom{
     width: 100%;
     margin: 0 auto;
     max-width: 1200px; 
-}
-
-#market_register_head{
-    height: 7vh;
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-
-#market_register_head h3{
-    font-size: 30px;
-    margin: auto 0;
-}
-
-#market_register_head em{
-    color: var(--red);
-    font-size: 45px;
-    font-weight: 500;
-    margin-right: 10px;
-}
+} */
 
 /*form*/
 #market_register_body{
@@ -47,25 +53,22 @@ input, select{
     padding:10px;
 }
 .mkt_form_title{
-    border-bottom: 1px solid var(--blue);
-    line-height: 60px;
-    margin-top:10px;
+    border-bottom: 1.5px solid #ddd;
+    line-height: 45px;
 }
 .mkt_form_title input{
     border:none;
     font-size: 20px;
     width: 100%;
     background: transparent;
-    padding-left: 10px;
+    padding-left: 5px;
 }
 /*두번째 줄*/
 .market_register_small{
-    /* border-bottom: 1px solid var(--blue); */
     display: flex;
     gap: 20px;
     height: 80px;
     align-items: center;
-    padding: 0 10px;
     font-weight: 500;
 }
 .market_register_small select, 
