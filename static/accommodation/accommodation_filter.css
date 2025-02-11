@@ -70,9 +70,7 @@
   padding: 10px 20px;
   border-radius: 8px;
 }
-.search-section > button:hover{
-  background-color: #1565C0;
-}
+
 
 .location-input,
 .facility-input {
@@ -85,6 +83,7 @@
 }
 
 .search-btn {
+  font-family: 'Paperlogy', sans-serif;
   width: 80%;
   margin-left: 15px;
   padding: 10px 20px;
@@ -95,6 +94,16 @@
   color: #ffffff;
   cursor: pointer;
   font-size: 16px;
+}
+
+.search-btn:hover {
+  filter: brightness(0.85);
+  transition: all 0.3s ease;  
+}
+
+.accommodation_list_controls button:hover{
+  filter: brightness(0.85);
+  transition: all 0.3s ease;
 }
 
 
@@ -111,6 +120,12 @@
     position: relative;
     /*padding-top: 200px !important; 강제로 상단 패딩 적용 */
     /* margin-top: 100px !important; 강제로 상단 마진 적용 */
+}
+
+.strong{
+  color: var(--red);
+  margin-right: 5px;
+  margin-left: 10px;
 }
 
 .room-card {
@@ -282,6 +297,7 @@
 .review-view-btn:hover {
   transform: scale(1.05); 
   color: #4169E1;
+  transition: all 0.3s ease;
 }
 
 .card-content {

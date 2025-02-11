@@ -30,10 +30,11 @@
   border: 2px solid var(--blue);
 }
 #plan-selector{
-  font-family: 'paperlogy';
+  font-family: 'Paperlogy', sans-serif;
   min-width: 100px;
   max-width: fit-content;
 }
+
 .membertoggle{
   width: max-content;
 }
@@ -146,6 +147,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: 'Paperlogy', sans-serif;
 }
 
 .participants{
@@ -272,6 +274,7 @@
   font-size: 16px;
   font-weight: 500;
   transition: background-color 0.3s;
+  font-family: 'Paperlogy', sans-serif;
 }
 .to-back{
   background-color: var(--blue);
@@ -316,6 +319,7 @@
   font-weight: 500;
   align-self: flex-end;
   transition: background-color 0.3s;
+  font-family: 'Paperlogy', sans-serif;
 }
 .del-btn:hover{
   background-color: var(--red-hover);

@@ -88,6 +88,7 @@
   border: none;
   border-bottom: 1px solid var(--blue);
   padding-left: 5px;
+  font-family: 'Paperlogy', sans-serif;
 }
 .info{
   display: flex;
@@ -120,6 +121,13 @@
   gap: 10px;
   align-items: center;
 }
+
+#profile-picture-preview{
+  height: 40px;
+  width: auto;
+}
+
+
 .file-upload svg{
   right: 0;
 }

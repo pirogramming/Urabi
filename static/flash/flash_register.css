@@ -80,6 +80,7 @@
 
 .input_group input,
 .input_group textarea {
+    font-family: 'Paperlogy', sans-serif;
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -89,6 +90,11 @@
 
 .input_group input {
     width: 80%;
+}
+
+.input_group input:placeholder-shown {
+    font-family: 'Paperlogy', sans-serif;
+
 }
 
 .input_group textarea {

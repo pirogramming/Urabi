@@ -50,11 +50,11 @@
             <div class="review-header-right">
                 <div id="rating" class="stars">
                     <input type="hidden" name="rating" id="rating-value" value="0">
-                    <img src="{% static 'img/empty_star2.png' %}" alt="별점" data-rating="1">
-                    <img src="{% static 'img/empty_star2.png' %}" alt="별점" data-rating="2">
-                    <img src="{% static 'img/empty_star2.png' %}" alt="별점" data-rating="3">
-                    <img src="{% static 'img/empty_star2.png' %}" alt="별점" data-rating="4">
-                    <img src="{% static 'img/empty_star2.png' %}" alt="별점" data-rating="5">
+                    <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="1">
+                    <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="2">
+                    <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="3">
+                    <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="4">
+                    <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="5">
                 </div>
                 <div id="add-img">
                     <label for="accommodation-img">
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (s.dataset.rating <= rating) {
                     s.src = "{% static 'img/fill_star.png' %}";
                 } else {
-                    s.src = "{% static 'img/empty_star2.png' %}";
+                    s.src = "{% static 'img/empty_star.png' %}";
                 }
             });
         });
