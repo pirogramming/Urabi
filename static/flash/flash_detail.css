@@ -103,7 +103,7 @@
 }
 
 .flash_tag {
-    background: #007bff;
+    background: var(--yellow);
     color: white;
     padding: 4px 8px;
     border-radius: 5px;
@@ -129,62 +129,69 @@
     align-items: center;
     gap: 10px; /* 이미지와 정보 사이 여백 */
 }
-
+#add-participant{
+    margin: auto;
+    cursor: pointer;
+}
 /* 버튼 */
-.flash_buttons {
+.flash_btn_container{
     display: flex;
     gap: 10px;
-    align-self: flex-end;
-    padding-bottom: 5px;
+    font-family: 'Paperlogy';
+
+}
+.flash_buttons {
+    display: flex;
+    gap: 5px;
 }
 
 .flash_edit_btn,
 .flash_delete_btn,
 .flash_apply_btn {
-    padding: 8px 12px; 
-    border-radius: 5px; 
+    padding: 9px 12px; 
+    border-radius: 8px; 
     cursor: pointer;
-    font-weight: bold; 
+    font-weight: 500; 
     text-decoration: none;
     display: inline-block;
-    font-size: 13px;
-}
+    font-size: 16px;
+    font-family: 'Paperlogy';
+    color: white;
 
+}
+.members{
+    display: flex;
+    align-items: center;
+}
 /* 수정 버튼 */
 .flash_edit_btn {
-    border: 2px solid green;
-    background: white;
-    color: green;
+    background-color: var(--red);
+    transition: background-color 0.3s;
 }
 
 .flash_edit_btn:hover {
-    background: green;
-    color: white;
+    background-color: var(--red-hover);
 }
 
 /* 삭제 버튼 */
 .flash_delete_btn {
-    border: 2px solid red;
-    background: white;
-    color: red;
+    background-color: var(--blue);
+    transition: background-color 0.3s;
 }
 
 .flash_delete_btn:hover {
-    background: red;
-    color: white;
+    filter: brightness(0.85);
 }
 
 /* 신청 버튼 */
 .flash_apply_btn {
-    border: 2px solid var(--blue);
-    background: white;
-    color: var(--blue);
+    transition: background-color 0.3s;
+    background-color: var(--blue);
     align-self: flex-end;
 }
 
 .flash_apply_btn:hover {
-    background: var(--blue);
-    color: white;
+    filter:brightness(0.85);
 }
 
 /* 날짜 & 위치 */
@@ -222,8 +229,8 @@
 }
 
 .host_image {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 
@@ -244,15 +251,19 @@
 
 .host_chat_btn {
     padding: 8px 12px;
-    background: #007bff;
     color: white;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
+    background-color: var(--red);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    font-family: 'Paperlogy';
+
 }
 
 .host_chat_btn:hover {
-    background: #0056b3;
+    background-color: var(--red-hover);
 }
 
 /* 다른 번개 */
@@ -273,12 +284,21 @@
 }
 
 .flash_list_btn {
-    padding: 5px 10px;
-    border: 1px solid var(--blue);
-    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: var(--blue);
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 16px;
+    font-family: 'Paperlogy';
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+.flash_list_btn:visited{
+    color:white;
     text-decoration: none;
-    font-size: 14px;
+}
+.flash_list_btn:hover{
+    filter: brightness(0.85);
 }
 
 .other_flash_list {

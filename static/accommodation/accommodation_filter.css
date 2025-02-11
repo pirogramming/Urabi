@@ -1,20 +1,31 @@
 .accommodation-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  background: #fff;
   padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: auto;
+  max-height: 800px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  margin-top:10px;
 }
 
 .title {
-  text-align: center;
+  text-align: left;
   font-size: 28px;
-  margin: 40px 0;
+  font-weight: 550;
+  color: #333;
+  margin: 15px 0 25px 0;
 }
 
 .title .highlight {
-  color: #FF4B4B;
+  color: var(--red);
   font-weight: bold;
 }
-
+.title .highlight:hover{
+  border-bottom: 3px solid var(--red);
+}
 /*검색*/
 .search-section {
   font-weight: 500;

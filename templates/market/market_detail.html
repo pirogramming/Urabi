@@ -6,91 +6,101 @@
 {% endblock %}
 
 {% block content%}
-<div class="market_detail_head">
-    <div class="market_detail_head_group">
-        <a class="market_link" href="{% url 'market:market_list' %}">나눔 마켓 ></a>
-        <a class="market_detail_link" href="#">상세 정보 </a>
+<section class="market_detail">
+    <div class="market_detail_head">
+        <p class="header_comment">나눔 마켓 > &gt; 상세 정보</p>
     </div>
-    <div class="market_detail_title">
-        <div class="market_detail_title_info">
-            <h1>{{market.title}}</h1>
+
+    <hr class="flash_divider">
+
+    <div class="market_detail_head">
+        <div class="market_detail_title">
+            <h1 class="market_detail_title_info">{{market.title}}</h1>
+            {% if request.user != market.user %}
+                <button class="market_like" data-market-id="{{market.item_id}}">
+                    {% if is_zzim %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                        </svg>
+                    {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                        </svg>
+                    {% endif %}
+                </button>
+            {% else %}
+            {% endif %}
+        </div>
+        <div class="market_detail_mid_title">
+            <div class="market_detail_profile">
+                <p>{{market.user.nickname}} </p>
+                <p class="market_detail_temp">{{trust_score}}</p>
+            </div>
+            <div class="market_detail_tradeWay">
+                <p>{{market.get_trade_type_display}}</p>
+            </div>
+            <p class="market_deatil_date">
+                {% if market.updated_at and market.updated_at != market.created_at %}
+                    {{market.updated_at|date:"Y-m-d"}}
+                {% else %}
+                    {{market.created_at|date:"Y-m-d"}}
+                {%endif%}
+            </p>
             <div class="market_detail_tag">
                 <p id="market_detail_cate">{{market.category}}</p>
                 <p id="market_detail_loca">{{market.city}}</p>
-                <p>{{market.status}}</p>
+                <p id="market_detail_status">{{market.status}}</p>
             </div>
         </div>
-        {% if request.user != market.user %}
-            <button class="market_like" data-market-id="{{market.item_id}}">
-                {% if is_zzim %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                    </svg>
-                {% else %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                    </svg>
-                {% endif %}
-            </button>
+    </div>
+
+    <hr class="flash_divider">
+
+    <div class="market_detail_body">
+        {% if market.photo %}
+            <img src="{{ market.photo.url }}" alt="거래 이미지">
         {% else %}
+            <p>이미지가 없습니다.</p>
         {% endif %}
-    </div>
-    <div class="market_detail_mid_title">
-        <div class="market_detail_profile">
-            <p>{{market.user}} </p>
-            <p class="market_detail_temp">{{trust_score}}</p>
-        </div> 
-        <div class="market_detail_tradeWay">
-            <p>{{market.get_trade_type_display}}</p>
-        </div>
-        <p class="market_deatil_date">
-            {% if market.updated_at and market.updated_at != market.created_at %}
-                {{market.updated_at|date:"Y-m-d"}}
-            {% else %}
-                {{market.created_at|date:"Y-m-d"}}
-            {%endif%}
-        </p>
-    </div>
-</div>
-<div class="market_detail_body">
-    {% if market.photo %}
-        <img src="{{ market.photo.url }}" alt="거래 이미지">
-    {% else %}
-        <p>이미지가 없습니다.</p>
-    {% endif %}
-    <div class="market_detail_body_right">
-        <div class="market_detail_trade_location">
-            <h3>거래 장소</h3>
-            <p>{{market.city}}</p>
-        </div>
-        <div class="market_detail_price">
-            <h3>가격</h3>
-            <p>{{market.price}}</p>
-            <p>{{market.currency_unit}}</p>
-        </div>
-        <div class="market_detail_description">
-            <h3>본문</h3>
-            <p>{{market.explanation}}</p>
+        <div class="market_detail_body_right">
+            <div class="market_detail_trade_location">
+                <h3>거래 장소</h3>
+                <p>{{market.city}}</p>
+            </div>
+            <div class="market_detail_price">
+                <h3>가격</h3>
+                <p>{{market.price}}</p>
+                <p>{{market.currency_unit}}</p>
+            </div>
+            <div class="market_detail_description">
+                <h3>본문</h3>
+                <p>{{market.explanation}}</p>
+            </div>
         </div>
     </div>
-</div>
-    {% if request.user == market.user %}
-        <div class="market_detail_bottom">
-            <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_edit_btn">
-                <p>삭제하기</p>
-            </a>
-            <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
-                <p>수정하기</p>
-            </a>
-        </div>
-    {% else %}
-        <div class="market_detail_bottom">
-            <a href="#" class="market_detail_chat_btn" data-other-user-id="{{ market.user.id }}">
-                <img src="/static/img/chat_icon.svg">
-                <p>채팅하기</p>
-            </a>
-        </div>
-    {%endif%}
+
+    <hr class="flash_divider">
+
+        {% if request.user == market.user %}
+            <div class="market_detail_bottom">
+                <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
+                    <p>수정하기</p>
+                </a>
+                <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_del_btn">
+                    <p>삭제하기</p>
+                </a>
+            </div>
+        {% else %}
+            <div class="market_detail_bottom">
+                <a href="#" class="market_detail_chat_btn" data-other-user-id="{{ market.user.id }}">
+                    <p>💬  문의하기</p>
+                </a>
+                <a href="{% url 'market:market_list' %}" class="market_backToList">
+                    <p>목록으로</p>
+                </a>
+            </div>
+        {%endif%}
+</section>
     {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> {% endcomment %}
 {% endblock %}
 

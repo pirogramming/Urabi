@@ -10,7 +10,7 @@ from users.models import User
 from django.views.decorators.csrf import csrf_exempt
 
 def market_list(request):
-    queryset = Market.objects.all() 
+    queryset = Market.objects.all().order_by('-created_at') 
     filterset = MarketFilter(request.GET, queryset=queryset)  #필터 검색
 
     filtered_queryset = filterset.qs

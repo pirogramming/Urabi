@@ -108,24 +108,26 @@
     margin-bottom: 10px;
 }
 .main_find_flash>a,.main_enroll_flash>a{
-    border: 1.5px solid black;
     width: 100px;
     height: 40px;
     border-radius: 10px;
     text-align: center;
     line-height: 40px;
     font-weight: 500;
-    font-size: 22px;
-    box-shadow: 5px 5px 8px rgba(0, 0,0, 0.3);
+    font-size: 21px;
+    color:white;
 }
 .main_find_flash>a{
-    color:var(--red);
+    background-color: var(--red);
 }
 .main_enroll_flash>a{
-    color:var(--blue);
+    background-color: var(--blue);
 }
 .main_find_flash:hover,.main_enroll_flash:hover{
     transform:scale(1.1);
+}
+.main_find_flash>a:hover, .main_enroll_flash>a:hover{
+    box-shadow: 5px 5px 8px rgba(0, 0,0, 0.3);
 }
 .main_find_flash>a:hover{
     background-color: var(--red);
@@ -201,11 +203,11 @@
     max-width: 250px;
     display: block;
 }
-.main_accommodation_left button{
+.main_review_btn{
     font-weight: 700;
     height: 42px;
-    color: white;
-    border: 2px solid white;
+    background-color: white;
+    color:#224265;
     border-radius: 15px;
     width: 122px;
     margin-left: auto;
@@ -214,10 +216,10 @@
     bottom: -12px;
     right: 10px;
     font-size: 16px;
+    transition: background-color 0.3s;
 }
-.main_accommodation_left button:hover{
-    background: white;
-    color: #191970;
+.main_review_btn:hover{
+    filter: brightness(0.85);
 }
 .main_accommodation_right{
     width: 50%;
