@@ -9,7 +9,14 @@
   {% endblock %}
 
 {% block content %}
-{%if object.call_schedule%}
+<section id="accompany_detail">
+
+  <section class="accompany_header">
+    <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
+  </section>
+
+  <hr class="flash_divider">
+  {%if object.call_schedule%}
 <div class="detail-header">
   <h2 id="schedule_name">
     {{this_plan.schedule.name}}    
@@ -39,14 +46,6 @@
 </div>
 {%endif%}
 {%if object.markers%}
-<section id="accompany_detail">
-
-  <section class="accompany_header">
-    <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
-  </section>
-
-  <hr class="flash_divider">
-
 <section class="map">
   <div class="map-container">
     <div id="map"></div>

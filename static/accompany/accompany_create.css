@@ -31,6 +31,16 @@
 .banner h2{
   margin-bottom: 20px;
 }
+.call-schedule-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+#plan-selector{
+  font-family: 'paperlogy';
+  padding: 5px;
+}
 .plan-selection{
   font-size: 20px;
   font-weight: 600;
@@ -54,10 +64,14 @@
   /* background-color: aqua; */
   position: relative;
 }
+.call-schedule-text{
+  font-size: 13px;
+  font-weight: 300;
+}
 #call_schedule{
   border: 1px solid #ccc;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   appearance: auto;
 }
 #map {

@@ -11,11 +11,19 @@
   <section class="banner">
     <h2>함께 쌓는 추억, <a href="{%url 'accompany:accompany_list' %}" class="red accompany_header_link"><em class="red">장기 동행</em></a> <p class="sub">> 동행 모집</p></h2>
     <div class="plan-selection">
-      <label for="plan-selector">대표 계획 불러오기</label>
+      <label for="plan-selector">
+        대표계획 불러오기
+      </label>
       <select id="plan-selector">
-        <option value="">대표 계획 불러오기</option>
+        {% if not this_plan %}
+        <option value="">대표계획 선택</option>
+        {%else%}
+        <option value="">{{ this_plan.schedule.name }} - {{ this_plan.title }}</option>
+        {% endif %}
         {% for plan in travel_plans %}
+        {%if this_plan.plan_id is not plan.plan_id%}
         <option value="{{ plan.plan_id }}">{{ plan.schedule.name }} - {{ plan.title }}</option>
+        {%endif%}
         {% endfor %}
       </select>
       <button type="button" onclick="loadSelectedPlan()">
@@ -25,11 +33,10 @@
         </svg>
       </button>
       {% if request.GET.plan_loaded %}
-      <div class="form-group">
-        <label for="call_schedule">모든 일정 불러오기</label>
+      <div class="form-group call-schedule-group">
+        <label for="call_schedule" class="call-schedule-text">모든 일정</label>
         {{ form.call_schedule }}
       </div>
-      <br><br>
       {% endif %}
     </div>
   </section>
