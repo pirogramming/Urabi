@@ -13,28 +13,24 @@
     background: white;
     border-radius: 10px;
 }
-
+/*헤더*/
 .review-main-header{
-    display: flex;
-    align-items: center;
+    text-align: left;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
     margin-bottom: 20px;
 }
-.review-main-header:first-child{
-    font-size: 1.7rem;
-}
-
-.header-strong{
+#highlight {
     color: var(--red);
-    font-size: 2rem;
+    cursor: pointer;
 }
-
-.review-main-header p{
-    font-size: 1.3rem;
-    margin-left: 20px;
+#highlight:hover{
+    border-bottom: 2.5px solid var(--red);
 }
-
-.location-section {
-    margin-bottom: 20px;
+.sub{
+    font-size: 18px;
+    display: inline;
 }
 
 /*======================

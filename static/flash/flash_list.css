@@ -6,9 +6,9 @@
 .flash_title {
     text-align: left;
     font-size: 28px;
-    font-weight: 650;
+    font-weight: 550;
     color: #333;
-    margin-bottom: 25px;
+    margin: 15px 0 25px 0;
 }
 
 .flash_title .highlight {
@@ -117,7 +117,7 @@
 }
 
 .flash_list_title {
-    font-weight: 600;
+    font-weight: 500;
 }
 
 /* 나만의 번개 + 등록하기 버튼 */
@@ -129,7 +129,7 @@
 
 .flash_list_controls h2 {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .flash_register_btn {
