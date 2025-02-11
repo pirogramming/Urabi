@@ -48,6 +48,10 @@
     width: 40%;
 }
 
+.strong{
+    color: var(--red);
+}
+
 /*==================
     사진 아래 제목 & 평점 & 하트 & 검색
 ====================*/
@@ -112,8 +116,7 @@
 ====================*/
 
 .review-count {
-    margin: 15px 0 20px 0;
-    text-decoration: underline;
+    margin: 0 20px;
 }
 
 .reviews {
@@ -144,6 +147,7 @@
     width: 40px;
     height: 40px;
     margin-right: 10px;
+    object-fit: cover;
 }
 
 .review-author{
