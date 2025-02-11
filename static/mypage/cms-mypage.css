@@ -2,13 +2,16 @@
   border-radius: 12px;
   padding: 16px;
 }
-
+.sub-title{
+  margin: 0;
+}
 .schedule-card {
   border-radius: 12px;
   padding: 16px;
   gap: 30px;
   width: 500px;
-  background-color:beige;
+  background-color:skyblue;
+  border: 3px solid var(--blue);
   margin: 16px; 
 }
 .schedule-card:hover{
@@ -36,7 +39,7 @@
   .activity-main-cms{
     display: flex;
     align-items:start;
-    
+    height: 550px;
   }
   .photo-sec{
     display: flex;
@@ -51,7 +54,21 @@
   }
   .activity-card.activity-card-cms{
     padding: 20px 30px;
-    background-color: moccasin;
+    background-color: skyblue;
+  }
+  .no-plan{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 30px;
+    margin: 20px;
+    font-size: 18px;
+  }
+  .no-plan img{
+    margin: 10px auto;
+  }
+  .activity-card.activity-card-cms:hover{
+    border: 3px solid var(--blue);
   }
 
     /********************************

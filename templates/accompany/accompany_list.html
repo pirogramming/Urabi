@@ -54,11 +54,11 @@
               {%else%}
                 <img width="150" height="120" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDM3M3wwfDF8c2VhcmNofDF8fHRyYXZlbHxlbnwwfHx8fDE2NTQ2MjQ4Njc&ixlib=rb-1.2.1&q=80&w=400" alt="여행 이미지">
               {%endif%}
+              <p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>
             </div>
             <div class="card-info">
               <div class="info-header">
                 <h3 style="cursor: pointer;" onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">{{post.title}}</h3>
-                <p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>
                 {%if user != post.created_by%}
                 <button class="zzim-btn" data-travel-id="{{ post.travel_id }}">
                   {% if post in zzim_items %}
@@ -77,7 +77,7 @@
                 <p><p>{{ post.start_date|date:"Y-m-d" }} ~ {{ post.end_date|date:"Y-m-d" }}</p></p>
               </div>
               <div class="info-user">
-                <h3>{{post.created_by}}</h3>
+                <h3><a href="{%url 'users:user_detail' post.created_by.id%}">{{post.created_by.nickname}}</a></h3>
                 <div class="max-member"> {{post.now_member }} / {{post.max_member}}</div>
               </div>
               <div class="info-date">

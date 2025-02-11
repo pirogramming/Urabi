@@ -30,16 +30,16 @@
     
     <section class="schedule-section" id="upload-schedule">
       <div class="schedule-header">
-        <h2 class="sub-title">등록한 여행 일정</h2>
-        <button class="btn" id="open-schedule-modal">여행 일정 생성</button>
+        <h2 class="sub-title">등록한 여행</h2>
+        <button class="btn" id="open-schedule-modal">여행 생성</button>
         
         <div id="schedule-modal" class="modal hidden">
           <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>여행 일정 생성</h2>
+            <h2>여행 생성</h2>
             <form id="schedule-form" action="{% url 'users:schedule_create' %}" method="POST">
               {% csrf_token %}
-              <label for="title">일정 제목:
+              <label for="title">여행 이름:
               <input type="text" id="title" name="title" required></label>
               <label for="start_date">시작 날짜:
               <input type="date" id="start_date" name="start_date" required></label>
