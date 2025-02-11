@@ -72,18 +72,19 @@
                     </div>
                 </a>
                 
-                <div class="flash_buttons">
-                    {% if request.user == flash.created_by %}
-                        <button class="flash_edit_btn">
-                            <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
-                        </button>
-                        <button class="flash_delete_btn" data-flash-id="{{ flash.pk }}">삭제하기</button>
-                    {% else %}
-                        <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 메시지 보내기</button>
-                    {% endif %}
-                </div>
-                
-                <div class="members">
+                <div class="flash_btn_container">
+                    <div class="flash_buttons">
+                        {% if request.user == flash.created_by %}
+                            <button class="flash_edit_btn">
+                                <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
+                            </button>
+                            <button class="flash_delete_btn" data-flash-id="{{ flash.pk }}">삭제하기</button>
+                        {% else %}
+                            <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 문의하기</button>
+                        {% endif %}
+                    </div>
+                    
+                    
                     {% if request.user != flash.created_by %}
                         {% if request.user.id in participant_ids %}
                             <span class="ing">참여중</span>
@@ -95,6 +96,7 @@
                             {% endif %}
                         {% endif %}
                     {% else %}
+                        
                         <span id="add-participant" href=""> + </span>
                         <div id="request-modal" style="display: none;">
                             <input type="text" id="search-email" placeholder="이메일 검색">
@@ -107,21 +109,22 @@
                                 {% endfor %}
                             </ul>
                         </div>
+                        
                     {% endif %}
                 
-                    <span>{{ flash.now_member }}/{{ flash.max_people }}</span>
-                    
-                    <button id="toggleMembers">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                    </button>
-                    
+                    <div class="members">
+                        <span>{{ flash.now_member }}/{{ flash.max_people }}</span>
+                        <button id="toggleMembers">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                            </svg>
+                        </button>
+                    </div>
+                
                     <ul id="memberList" style="display: none;">
                         <li>
                             <span><a href="{% url 'users:user_detail' flash.created_by.id %}">{{ flash.created_by.email }}</a></span>
                             <span>🚩</span>
-            
                         </li>
                         {% for participant in participant_data %}
                             <li data-user-id="{{ participant.id }}">
@@ -132,7 +135,8 @@
                             </li>
                         {% endfor %}
                     </ul>
-                </div>             
+                    
+                </div>      
             </div>
         </div>
     </div>

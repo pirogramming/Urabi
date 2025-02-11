@@ -1,41 +1,53 @@
-.main{
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1200px; 
+/*배경*/
+.market_detail{
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.market_detail_head_group{
+/*헤더*/
+.market_detail_head{
     display: flex;
     align-items: center;
-    gap: 7px;
-    border-bottom: 1.5px solid var(--blue);
-    padding-bottom: 10px;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 15px;
 }
-.market_detail_head{
-    height: 25vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.market_link{
-    font-size: 20px;
-    line-height: 40px;
-    cursor: pointer;
-}
-.market_detail_link{
-    font-weight: 400;
-    cursor: pointer;
-}
-.market_detail_head a:hover{
-    font-weight: 500;
+.header_comment {
+    font-size: 14px;
+    color: #666;
 }
 
-.market_detail_head_group, .market_detail_title,.market_detail_mid_title{
-    border-bottom: 1.5px solid var(--blue);
+.flash_title {
+    font-size: 24px;
+    font-weight: bold;
+    flex-grow: 1;
 }
+
+/* 구분선 */
+.flash_divider {
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+    margin: 15px 0;
+}
+.market_detail_head{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+
+
+/*본문*/
 .market_detail_title{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
 }
 
 .market_detail_title_info{
@@ -43,30 +55,10 @@
 }
 
 .market_detail_title h1{
-    font-size: 40px;
-    line-height: 60px;
-    padding: 10px 0;
-}
-
-.market_detail_tag{
-    display: flex;
-    gap: 20px;
-    margin: 0 20px;
-    align-items: end;
-}
-.market_detail_tag p{
-    border: 1.5px solid black;
-    border-radius: 18px;
-    padding: 6px 12px;
-    margin-bottom: 15px;
-}
-#market_detail_cate{
-    background-color: var(--red);
-    color:white
-}
-#market_detail_loca{
-    background-color: var(--blue);
-    color:white
+    font-size: 35px;
+    word-break: keep-all;
+    font-weight: 500;
+    line-height: 50px;
 }
 
 .bi-heart{
@@ -103,6 +95,7 @@
 .market_detail_profile, .market_detail_tradeWay, .market_deatil_date {
     border-right: 1.5px solid var(--blue);
     padding-right: 20px;
+    text-wrap: nowrap;
 }
 .market_detail_tradeWay{
     display: flex;
@@ -115,7 +108,29 @@
 .market_deatil_date{
     color:#808080;
 }
-
+.market_detail_tag{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    text-align: center;
+}
+.market_detail_tag p{
+    border: 1.5px solid black;
+    border-radius: 18px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    text-wrap: nowrap;
+    color:white;
+}
+#market_detail_cate{
+    background-color: var(--yellow);
+}
+#market_detail_loca{
+    background-color: var(--red);
+}
+#market_detail_status{
+    background-color: var(--blue);
+}
 /*body*/
 .market_detail_body{
     display: grid;
@@ -181,39 +196,40 @@
 .market_detail_bottom{
     display: flex;
     justify-content: flex-end;
-    gap:20px;
 }
 .market_detail_chat_btn, .market_detail_edit_btn{
+    background-color: var(--red);
+    padding: 10px 25px;
     display: flex;
     gap: 5px;
-    border: 1.5px solid var(--blue);
-    border-radius: 10px;
-    width: 170px;
-    height: 45px;
+    border-radius: 8px;
     align-items: center;
     justify-content: center;
-    color: var(--blue);
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+.market_detail_chat_btn p, .market_detail_edit_btn p, .market_detail_del_btn p, .market_backToList p{ 
+    color: white;
+    font-weight: 500;
+
+}
+.market_detail_chat_btn:hover, .market_detail_edit_btn:hover{
+    background-color: var(--red-hover);
 }
 
-.market_detail_chat_btn img{
-    width: 30px;
-}
-.market_detail_chat_btn:hover{
+.market_detail_del_btn, .market_backToList{
     background-color: var(--blue);
-    color:white
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
-.market_detail_chat_btn:hover img {
-    filter: invert(60%) brightness(220%);
-}
-
-.market_detail_edit_btn{
-    border: 1.5px solid var(--red);
-    color: var(--red);
+.market_detail_del_btn:hover, .market_backToList:hover{
+    filter:brightness(0.85);
 }
 
-.market_detail_edit_btn:hover{
-    background-color: var(--red);
-    color:white
+.market_detail_bottom{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
-

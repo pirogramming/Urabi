@@ -42,7 +42,7 @@
         <div class="main_accommodation_left">
             <h2>방문했던 숙소의 솔직한 후기를 공유해주세요!</h2>
             <img src="{% static 'img/main_hotel_review.svg' %}" alt="accommodation reivew">
-            <a><button class="main_review_btn">후기 보기 ></button></a>
+            <a  href="{% url 'accommodation:filter' %}"><button class="main_review_btn">후기 보기</button></a>
         </div>
         <div class="main_accommodation_right">
             <span class="main_tag">#치안</span>

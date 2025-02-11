@@ -27,118 +27,127 @@
   </button>
 {%endif%}
 {%if object.markers%}
-<section class="map">
-  <div class="map-container">
-    <div id="map"></div>
-  </div>
-</section>
+<section id="accompany_detail">
+
+  <section class="accompany_header">
+    <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
+  </section>
+
+  <hr class="flash_divider">
+
+  <section class="map">
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </section>
 {%endif%}
 
-<section class="detail">
-  <div class="detail-header">
-    <h2>{{ object.title }}</h2>
-    <div class="header-btns">
-      {% if user != object.created_by %}
-        <button class="btn ask">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"  class="bi bi-chat-square-fill">
-              <path fill="currentColor" d="m6 18l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"/>
-            </svg>
-          <span>문의하기</span>
-        </button>
-        <button class="zzim-btn" data-travel-id="{{ object.travel_id }}">
-          {% if object in zzim_items %}
-              <svg class="heart-icon filled red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-              </svg>
-          {% else %}
-              <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-              </svg>
-          {% endif %}
-        </button>
-      {% else %}
-      <a href="{% url 'accompany:accompany_update' object.travel_id %}">
-      <button class="btn ask" type="submit">
-        <span>수정하기</span>
-      </button>
-      </a>
-      <span id="add-participant" href=""> + </span>
-      {% endif %}
-    </div>
-  </div>
-  <div class="participants">
-    <div class="profile">
-      <img style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://www.w3schools.com/w3images/lights.jpg{% endif %}" width="30" height="30" alt="profile">
-      <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by.nickname }}</span></a>
-      <span class="temperature">36.5°C</span> 
-      <span class="blue">&nbsp;|&nbsp;</span> 
-      <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
-    </div>
-    <div class="members">
-      {% if user != object.created_by %}
-      {% if user in participants %}
-        <span class="ing">참여중</span>
-      {% else %}
-        {% if user in users %}
-          <button class="request-cancel-btn">요청 취소</button>
-        {% else %}
-          <button class="request-btn">참여 요청</button>
-        {% endif %}
-      {% endif %}
-      {% endif %}
-      <span>{{ object.now_member }}/{{ object.max_member }}</span>
-      <button id="toggleMembers">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-          <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-        </svg>
-      </button>
-      <ul id="memberList" style="display: none;">
-        <li><span><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.nickname }}</a></span><span>🚩</span></li>
-        {% for member in participants %}
-          <li data-user-id="{{ member.id }}"><span><a href="{% url 'users:user_detail' member.id %}">{{ member.nickname }}</a></span>
-            {% if user == object.created_by or member.id == user.id %}
-              <button class="red part-del-btn">x</button>
+  <section class="detail">
+    <div class="detail-header">
+      <h2>{{ object.title }}</h2>
+      <div class="header-btns">
+        {% if user != object.created_by %}
+          <button class="btn ask">
+              <span>💬 문의하기</span>
+          </button>
+          <button class="zzim-btn" data-travel-id="{{ object.travel_id }}">
+            {% if object in zzim_items %}
+                <svg class="heart-icon filled red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                </svg>
+            {% else %}
+                <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                </svg>
             {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-  <div class="detail-content">
-    <div class="texts">
-      <p>
-        {{ object.explanation|linebreaksbr }}
-      </p>
-    </div>
-    <div class="tags">
-      <ul>
-        {% if object.tags %}
-        {% for tag in tags %}
-          <li>#{{ tag }}</li>
-        {% endfor %}
+          </button>
+        {% else %}
+        <a href="{% url 'accompany:accompany_update' object.travel_id %}">
+        <button class="btn ask" type="submit">
+          <span>수정하기</span>
+        </button>
+        </a>
+        <span id="add-participant" href=""> + </span>
         {% endif %}
-      </ul>
+      </div>
     </div>
-    <div class="imgs">
-      {% if object.photo %}
-      <img src="{{ object.photo.url }}" alt="photo">
+    <div class="participants">
+      <div class="profile">
+        <img style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://www.w3schools.com/w3images/lights.jpg{% endif %}" width="30" height="30" alt="profile">
+        <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by.nickname }}</span></a>
+        <span class="temperature">36.5°C</span> 
+        <span class="blue">&nbsp;|&nbsp;</span> 
+        <span class="created_at">{{ object.created_at|date:'Y-m-d' }}</span>
+      </div>
+      <div class="members">
+        {% if user != object.created_by %}
+        {% if user in participants %}
+          <span class="ing">참여중</span>
+        {% else %}
+          {% if user in users %}
+            <button class="request-cancel-btn">요청 취소</button>
+          {% else %}
+            <button class="request-btn">참여 요청</button>
+          {% endif %}
+        {% endif %}
+        {% endif %}
+        <span>{{ object.now_member }}/{{ object.max_member }}</span>
+        <button id="toggleMembers">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+          </svg>
+        </button>
+        <ul id="memberList" style="display: none;">
+          <li><span><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.nickname }}</a></span><span>🚩</span></li>
+          {% for member in participants %}
+            <li data-user-id="{{ member.id }}"><span><a href="{% url 'users:user_detail' member.id %}">{{ member.nickname }}</a></span>
+              {% if user == object.created_by or member.id == user.id %}
+                <button class="red part-del-btn">x</button>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="detail-content">
+      <div class="texts">
+        <p>
+          {{ object.explanation|linebreaksbr }}
+        </p>
+      </div>
+      <div class="tags">
+        <ul>
+          {% if object.tags %}
+          {% for tag in tags %}
+            <li>#{{ tag }}</li>
+          {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+      <div class="imgs">
+        {% if object.photo %}
+        <img src="{{ object.photo.url }}" alt="photo">
+        {% endif %}
+      </div>
+    </div>
+
+    <hr class="flash_divider">
+
+    <div class="detail-footer">
+      {% if user == object.created_by %}
+      <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        {% csrf_token %}
+        <button class="del-btn" type="submit">삭제하기</button>
+      </form>
       {% endif %}
+      <a href="{% url 'accompany:accompany_list' %}">
+      <button class="to-back">
+        <span>목록으로</span>
+      </button>
+        </a>
     </div>
-  </div>
-  <div class="detail-footer">
-    {% if user == object.created_by %}
-    <form action="{% url 'accompany:accompany_delete' object.travel_id %}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-      {% csrf_token %}
-      <button class="del-btn" type="submit">삭제</button>
-    </form>
-    {% endif %}
-    <a href="{% url 'accompany:accompany_list' %}">
-    <button class="to-back">
-      <span>목록으로</span>
-    </button>
-      </a>
-  </div>
-  <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+  </section>
 </section>
 {% endblock %}
 

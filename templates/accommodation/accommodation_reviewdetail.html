@@ -8,17 +8,24 @@
 {% block content %}
 <div class="accommodation-detail-container">
     <div class="detail-header">
-        <h2>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></h2>
-        <p> > 상세 정보</p>
+        <p class="header_comment">숙소 후기 &gt; 상세 정보</p>
     </div>
+
+    <hr class="flash_divider">
+
     <div class="detail-info">
         <div class="detail-info-header">
-            <div class="detail-info-title">{{ review.city }} {{ review.accommodation_name }}</div>
-            <span class="rating">⭐ {{ average_rating }}</span> 
-            <button>
-                <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
-            </button>
+            <div class="detail-info-title">{{ review.city }} <br>{{ review.accommodation_name }}</div>
+            <div class="rateAndzzim">
+                <span class="rating">⭐ {{ average_rating }}</span>
+                <button>
+                    <img src="{% static 'img/heart_icon.png' %}" alt="Favorite" class="favorite-icon">
+                </button>
+            </div>
         </div>
+
+        <hr class="flash_divider">
+
         <div class="search-container">
             {% comment %} <button>
                 <img src="{% static 'img/search-icon.svg' %}" alt="찾기" class="search-icon">
@@ -51,6 +58,9 @@
             </div>
             {% endfor %}
         </div>
+
+        <hr class="flash_divider accommodation_bar">
+
         <div class="pagination">
             {% if page.object_list %}
               <a href='?page=1';>&laquo; 처음으로</a>
@@ -70,8 +80,8 @@
           </div>
         
         <div class="action-buttons">
-            <button class="navigate-button" onclick="location.href='{% url 'accommodation:filter' %}'">숙소 페이지로 ></button>
-            <button class="write-review-button" onclick="location.href='{% url 'accommodation:accommodation_review_create' review.pk %}'">후기 작성하기 ></button>
+            <button class="write-review-button" onclick="location.href='{% url 'accommodation:accommodation_review_create' review.pk %}'">후기 작성하기</button>
+            <button class="navigate-button" onclick="location.href='{% url 'accommodation:filter' %}'">목록으로</button>
         </div>
     </div>
 </div>
