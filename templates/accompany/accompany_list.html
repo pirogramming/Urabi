@@ -51,7 +51,7 @@
             <div class="card-image" style="cursor: pointer;"onclick="location.href='{% url 'accompany:accompany_detail' post.travel_id %}'">
               {%if post.photo %}
                 <img width="150" height="120" src="{{post.photo.url}}" alt="여행 이미지">
-                <p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>
+                {%if post.max_age or post.min_age%}<p class="age-range">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</p>{%endif%}
               {%endif%}
             </div>
             <div class="card-info">
@@ -74,7 +74,7 @@
               <div class="info-date">
                 <p>{{ post.start_date|date:"Y-m-d" }} ~ {{ post.end_date|date:"Y-m-d" }}</p>
                 {%if not post.photo%}
-                <span class="age-range no-img">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</span>
+                {%if post.max_age or post.min_age%}<span class="age-range no-img">{%if post.min_age%}{{post.min_age}}{%endif%} ~ {%if post.max_age%}{{post.max_age}}{%endif%}{%if post.max_age or post.min_age%}세{%endif%}</span>{%endif%}
                 {%endif%}
               </div>
               <div class="info-user">
