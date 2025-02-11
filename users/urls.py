@@ -38,6 +38,7 @@ urlpatterns = [
     path('delete_schedule/', views.delete_schedule, name='delete_schedule'),
     path('phone-verification/', views.phone_verification, name='phone_verification'),
     path('verify-phone-status/', views.verify_phone_status, name='verify_phone_status'),
+    path('check-phone/', views.check_phone_duplicate, name='check_phone_duplicate'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

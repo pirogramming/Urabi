@@ -483,6 +483,7 @@ def verify_phone_status(request):
         return JsonResponse({'result': 'error'})
 
 
+
 # 정보 수정
 @login_required
 def edit_profile(request):
@@ -513,6 +514,35 @@ def edit_profile(request):
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
+
+
+
+def check_phone_duplicate(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        phone = data.get("phone")
+
+        # 전화번호에서 공백과 특수 문자 제거
+        clean_phone = re.sub(r'\D', '', phone)
+
+        print(f"📢 [DEBUG] 중복 검사 요청 받은 전화번호: {clean_phone}")
+
+        existing_user = User.objects.filter(user_phone__isnull=False).exclude(user_phone="").exclude(id=request.user.id).filter(user_phone=clean_phone).first()
+        
+        if existing_user:
+            print(f"[DEBUG] 중복된 전화번호 발견: {existing_user.user_phone}")
+            print(f"[DEBUG] 중복된 전화번호 발견: {existing_user.email}")
+            return JsonResponse({
+                "success": False, 
+                "error": "이미 존재하는 전화번호입니다.",
+                "server_phone": existing_user.user_phone
+            })
+
+        print(f"[DEBUG] 사용 가능한 전화번호: {clean_phone}")
+        return JsonResponse({
+            "success": True,
+            "phone": clean_phone
+        })
 
 # 채팅 : 토큰 발급
 @login_required

@@ -179,6 +179,14 @@
     width: 40%;
   }
 
+  #phone-group{
+    display: flex;
+  }
+
+  .phone-verification-button button{
+    color: var(--blue);
+  }
+
   /********************************
     수정 완료 버튼
   ********************************/
