@@ -9,7 +9,14 @@
   {% endblock %}
 
 {% block content %}
-{%if object.call_schedule%}
+<section id="accompany_detail">
+
+  <section class="accompany_header">
+    <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
+  </section>
+
+  <hr class="flash_divider">
+  {%if object.call_schedule%}
 <div class="detail-header">
   <h2 id="schedule_name">
     {{this_plan.schedule.name}}    
@@ -39,14 +46,6 @@
 </div>
 {%endif%}
 {%if object.markers%}
-<section id="accompany_detail">
-
-  <section class="accompany_header">
-    <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
-  </section>
-
-  <hr class="flash_divider">
-
 <section class="map">
   <div class="map-container">
     <div id="map"></div>
@@ -112,7 +111,7 @@
         {% endif %}
         {% endif %}
         <span>인원 {{ object.now_member }}/{{ object.max_member }}</span>
-              <button id="toggleMembers">
+      <button id="toggleMembers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
           <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
         </svg>
@@ -227,6 +226,19 @@
       .catch(error => console.error('Error loading plan data:', error));
   }
 
+  {%if object.call_schedule%}
+  document.getElementById('togglePlans').addEventListener('click', function() {
+    var memberList = document.getElementById('planList');
+    if (memberList.style.display === 'none') {
+        memberList.style.display = 'block';
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>';
+    } else {
+        memberList.style.display = 'none';
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>';
+    }
+  });
+  {%endif%}
+
   const hostChatBtn = document.querySelector(".host_chat_btn");
 if (hostChatBtn) {
     hostChatBtn.addEventListener("click", function(e) {
@@ -262,8 +274,6 @@ if (hostChatBtn) {
         });
     });
 }
-
-
 </script>
 <script src="{% static 'accompany/add_member_toggle.js' %}"></script>
 <script src="{% static 'accompany/add_participants.js' %}"></script>
