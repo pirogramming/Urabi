@@ -108,20 +108,20 @@
     grid-template-columns: 1.4fr 2fr 1fr;
 }
 
-.market_list_info h3, #market_list_count, .market_add_text{
-    border:2px solid black;
+.market_list_info h3, #market_list_count{
+    border:1.5px solid black;
     border-radius: 10px;  
-    line-height: 2rem;
+    line-height: 16px;
 }
 
 .market_list_info h3{
-    padding: 7px 6px;  
+    padding: 15px 6px;  
     text-align: center;
     margin-right: 15px;
 }
 .market_list_info p {
     display: inline-block;
-    background-color: var(--red);
+    background-color: var(--yellow);
     color : white;
     border-radius: 10px;
     margin: 0 5px;
@@ -141,13 +141,15 @@
     justify-content: end;
 }
 .market_add_text{
-    padding: 7px 25px;
-    font-size: 18px;
-    color:var(--blue); 
+    padding: 16px 25px;
+    background-color: var(--blue);
+    color:white;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
 }
 .market_add_text:hover{
-    color:white;
-    background-color: var(--blue);
+    filter:brightness(0.85);
 }
 
 .market_add img:hover{
@@ -156,14 +158,14 @@
 }
 
 .market_list_title{
-    border-top : 2px solid black;
-    border-bottom : 2px solid black;
+    border-top : 1.5px solid black;
+    border-bottom : 1.5px solid black;
     font-size: 22px;
     line-height: 55px;
 }
 
 .market_list_section{
-    border-bottom : 2px solid var(--strong-gray);
+    border-bottom : 1.5px solid var(--strong-gray);
     text-align: center;
     line-height: 60px;
     font-size: 15px;

@@ -44,6 +44,7 @@ input, select{
     gap: 20px;
     background-color: white;
     border-radius: 10px;
+    padding:10px;
 }
 .mkt_form_title{
     border-bottom: 1px solid var(--blue);
@@ -99,7 +100,6 @@ input, select{
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding: 0 10px
 }
 .market_register_form h3{
     font-size: 14px;
@@ -125,35 +125,22 @@ input, select{
 }
 
 .market_register_bottom{
-    display: flex;
-    justify-content: center;
-    gap:20px;
-    height: 10vh;
-    align-items: center;
+    align-self: flex-end;
     margin-top: 20px;
 }
 
-.market_register_enroll_btn, .market_register_list_btn {
-    width: 150px;
-    height: 40px;
-    border-radius: 10px;
-    color: white;
-}
-
 .market_register_enroll_btn{
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 25px;
     background-color: var(--red);
+    transition: background-color 0.3s;
 }
 
-.market_register_list_btn{
-    background-color: var(--blue);
-}
-.market_register_list_btn >p {
-    line-height: 40px;
-    font-weight: 300;
-    color:white;
-    text-align: center;
-}
-.market_register_enroll_btn:hover, .market_register_list_btn:hover{
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+.market_register_enroll_btn:hover{
+    background-color: var(--red-hover);
 }
 

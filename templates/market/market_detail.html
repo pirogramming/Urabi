@@ -76,18 +76,20 @@
 </div>
     {% if request.user == market.user %}
         <div class="market_detail_bottom">
-            <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_edit_btn">
-                <p>삭제하기</p>
-            </a>
             <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
                 <p>수정하기</p>
+            </a>
+            <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_del_btn">
+                <p>삭제하기</p>
             </a>
         </div>
     {% else %}
         <div class="market_detail_bottom">
             <a href="#" class="market_detail_chat_btn" data-other-user-id="{{ market.user.id }}">
-                <img src="/static/img/chat_icon.svg">
-                <p>채팅하기</p>
+                <p>💬  문의하기</p>
+            </a>
+            <a href="{% url 'market:market_list' %}" class="market_backToList">
+                <p>목록으로</p>
             </a>
         </div>
     {%endif%}
