@@ -217,6 +217,7 @@
     });
   });
 </script>
+
 <script>
   const plansPerPage = 2;
 
@@ -232,7 +233,8 @@
       currentIndex = nextIndex;
 
       if (currentIndex >= items.length) {
-        document.getElementById(buttonId).style.display = 'none';
+        if (document.getElementById(buttonId))
+          document.getElementById(buttonId).style.display = 'none';
       }
     };
   }
