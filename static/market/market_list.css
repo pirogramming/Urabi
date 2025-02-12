@@ -229,9 +229,10 @@
     align-items: center;
 }
 .active-page{
-    border: 1.5px solid black;
-    border-radius: 5px;
+    border-radius: 50%;
     padding: 7px 9px;
+    background-color: var(--blue);
+    color: white;
 }
 
 /*찜*/

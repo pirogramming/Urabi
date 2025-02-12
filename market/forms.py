@@ -9,7 +9,7 @@ class MarketForm(forms.ModelForm):
         widgets = {
             'city': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': '도시명을 입력하세요'
+                'placeholder': '희망 거래 장소를 입력하세요'
             }),
             'title': forms.TextInput(attrs={
                 'class': 'form-control',

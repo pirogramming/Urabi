@@ -118,7 +118,8 @@
                     {% if num == markets.number %}
                         <strong class="active-page">{{ num }}</strong>
                     {% else %}
-                        <a href="?page={{num}}&items_per_page={{ items_per_page}}&{{request.GET.urlencode}}">{{num}}</a>
+                    <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+
                     {% endif %}
                 {% endfor %}
             {% endif %}
