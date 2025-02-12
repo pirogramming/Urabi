@@ -743,7 +743,6 @@ def zzim_list(request):
         if item.markers:
             try:
                 markers = json.loads(item.markers)
-                # title이 존재하는 마커만 필터링
                 item.markers = [marker for marker in markers if marker.get("title")][:3]
             except json.JSONDecodeError:
                 item.markers = []
@@ -757,6 +756,9 @@ def zzim_list(request):
     flash_zzims = FlashZzim.objects.filter(user=user).select_related("flash")
     flash_zzim_items = [zzim.flash for zzim in flash_zzims]
     flash_zzim_count = flash_zzims.count()
+
+    acc_zzims = AccommodationReview.objects.filter(favorites=user)
+    acc_zzim_count = acc_zzims.count()
     
     mkt_zzims = MarketZzim.objects.filter(user=user)
     mkt_zzims_items = [zzim.market for zzim in mkt_zzims]
@@ -768,7 +770,9 @@ def zzim_list(request):
         'flash_zzims': flash_zzim_items,
         'flash_zzim_count': flash_zzim_count,
         'mkt_zzims': mkt_zzims_items,
-        'mkt_zzim_count': mkt_zzim_count,
+        'mkt_zzim_count' : mkt_zzim_count,
+        'acc_zzims': acc_zzims,
+        'acc_zzim_count': acc_zzim_count,
     })
 
 

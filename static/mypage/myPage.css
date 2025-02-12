@@ -45,6 +45,8 @@
   }
   
   .main-title {
+    display: flex;
+    align-items: center;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 24px;
@@ -76,6 +78,12 @@
   .edit-btn:hover {
     background-color: var(--red-hover);
     transition: all 0.3s ease;
+  }
+
+  #title-icon{
+    width: 35px;
+    height: 35px;
+    margin-left: 10px;
   }
   
   /********************************
@@ -205,6 +213,13 @@
     margin-left: 5px;
   }
 
+  .empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+  }
+
   
   /********************************
     로그아웃 버튼
@@ -225,6 +240,13 @@
   .logout-btn:hover {
     background-color: var(--red-hover);
     transition: all 0.3s ease;
+  }
+
+  #accompany-cards-container, #market-cards-container, #accommodation-cards-container{
+    background-color: var(--darkgray);
+    border-radius: 12px;
+    padding: 30px 16px;
+    margin-bottom: 20px;
   }
   
 

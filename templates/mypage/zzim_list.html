@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+
 <main class="mypage-wrap">
   <!-- 왼쪽 사이드 카테고리 -->
   <nav class="mypage-nav">
@@ -19,7 +20,9 @@
 
   <!-- 메인 콘텐츠 영역 -->
   <section class="mypage-content">
-    <h1 class="main-title">찜 목록</h1>
+    <h1 class="main-title">찜 목록
+      <img src="{% static 'img/mypage-zzim-icon.png' %}" alt="찜 아이콘" id="title-icon"/>
+    </h1>
     <!-- 활동 이력 -->
     <section class="activity-section">
       <h2 class="sub-title">동행 모집</h2>
@@ -63,7 +66,7 @@
           {% endfor %}
         {% else %}
         <div class="activity-card">
-          동행한 번개 모임이 없어요!
+          <p class="empty">찜한 동행이 없어요!</p>
         </div>
         {% endif %}
       </div>
@@ -86,7 +89,7 @@
                           <div class="activity-title">
                               <a href="{% url 'flash:flash_detail' flash.pk %}">{{ flash.title }}</a>
                           </div>
-                          <p class="activity-date">📅 {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                          <p class="activity-date">{{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
                           <p class="schedule-location">
                               <img src="{% static 'img/location_icon.png' %}" alt="위치">
                               <span class="schedule-location-text">{{ flash.city }}</span>
@@ -95,10 +98,42 @@
                   </div>
               {% endfor %}
           {% else %}
-              <p>찜한 번개 모임이 없어요!</p>
+              <p class="empty">찜한 번개 모임이 없어요!</p>
           {% endif %}
       </div>
       <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
+
+      <!-- 숙소 섹션 (추가) -->
+      <h2 class="sub-title">숙소</h2>
+      <div id="accommodation-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{ acc_zzim_count }}</span>개의 숙소를 찜했어요!
+        </p>
+        {% if acc_zzim_count %}
+          {% for review in acc_zzims %}
+          <div>{{ review.latitude }},{{ review.longitude }}</div>
+            <div class="activity-card" style="display: none;">
+              <div class="activity-info">
+                <div class="activity-title">
+                  <a href="{% url 'accommodation:accommodation_review_detail' review.pk %}">
+                    {{ review.accommodation_name }}
+                  </a>
+                </div>
+                <p class="activity-date">{{ review.created_at|date:"Y년 m월 d일" }}</p>
+                <p class="schedule-location">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                  <span class="schedule-location-text">{{ review.city }}</span>
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="activity-card">
+            <p class="empty">찜한 숙소 후기가 없어요!</p>
+          </div>
+        {% endif %}
+      </div>
+      <button id="load-more-accommodation-btn" class="load-more-btn" onclick="loadMoreAccommodations()">더보기</button>
 
       <!--나눔 마켓-->
       <h2 class="sub-title">나눔 마켓</h2>
@@ -134,7 +169,7 @@
           {% endfor %}
         {% else %}
         <div class="activity-card">
-          찜한 마켓 게시글이 없어요!
+          <p class="empty">찜한 마켓 게시글이 없어요!</p> 
         </div>
         {% endif %}
       </div>
@@ -168,7 +203,7 @@
     function showMore() {
       const nextIndex = currentIndex + plansPerPage;
       for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
-        items[i].style.display = 'block';
+        items[i].style.display = 'flex';
       }
       currentIndex = nextIndex;
 
@@ -179,7 +214,7 @@
 
     // 초기 숨기기 (첫 2개만 표시)
     items.forEach((item, index) => {
-      item.style.display = index < plansPerPage ? 'block' : 'none';
+      item.style.display = index < plansPerPage ? 'flex' : 'none';
     });
 
     return showMore;
@@ -189,10 +224,12 @@
   const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
   const loadMoreFlash = loadMoreItems('flash-activity-container', 'load-more-flash-btn');
   const loadMoreMarkets = loadMoreItems('market-cards-container', 'load-more-market-btn');
+  const loadMoreAccommodations = loadMoreItems('accommodation-cards-container', 'load-more-accommodation-btn');
 
   // 초기 로딩 시 처음 2개의 일정만 보이도록 설정
   loadMoreAccompanies();
   loadMoreFlash();
   loadMoreMarkets();
+  loadMoreAccommodations();
 </script>
 {% endblock %}
