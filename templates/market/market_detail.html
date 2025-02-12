@@ -60,7 +60,7 @@
         {% if market.photo %}
             <img src="{{ market.photo.url }}" alt="거래 이미지">
         {% else %}
-            <p>이미지가 없습니다.</p>
+            <img src="{% static 'img/schedule_default_img.jpg'%}">
         {% endif %}
         <div class="market_detail_body_right">
             <div class="market_detail_trade_location">

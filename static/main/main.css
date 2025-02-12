@@ -204,7 +204,6 @@
     display: block;
 }
 .main_review_btn{
-    font-weight: 700;
     height: 42px;
     background-color: white;
     color:#224265;
@@ -217,6 +216,8 @@
     right: 10px;
     font-size: 16px;
     transition: background-color 0.3s;
+    font-family: 'Paperlogy';
+    font-weight: 600;
 }
 .main_review_btn:hover{
     filter: brightness(0.85);
