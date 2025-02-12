@@ -241,3 +241,71 @@
   height: 95%;
   object-fit: cover;
 }
+
+@media (max-width: 800px) {
+  .location-container {
+      grid-template-columns: 1fr;
+  }
+
+  .map-section {
+      order: -1;
+      height: 300px;
+      width: 100%;
+  }
+
+  .accommodation-list {
+      width: 100%;
+      max-height: none;
+  }
+
+  .accommodation-card {
+      max-width: 100%;
+  }
+
+  .accom_left_container {
+      width: 100%;
+      max-width: 100%;
+  }
+
+  .accommodation_list_header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between; 
+  }
+  .accommodation_list_controls {
+      display: flex;
+      justify-content: flex-end; 
+      align-items: center;
+      width: 100%; 
+      margin-top: 10px; 
+  }
+
+  .accommodation_list_controls h2 {
+      font-size: 18px;
+      font-weight: 500;
+      margin-right: auto; 
+  }
+
+  .accommodation_list_controls button {
+      margin-left: 10px; 
+  }
+}
+
+@media (max-width: 680px) {
+    .accommodation_list_header {
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+}
+
+@media (max-width: 400px) {
+    .accommodation_list_controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .accommodation_list_controls h2{
+        font-size: 1.3rem;
+    }
+}
