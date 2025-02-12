@@ -146,13 +146,33 @@ class AccompanyUpdateView(UpdateView):
     form_class = TravelGroupForm
     template_name = 'accompany/accompany_form.html'
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        self._original_this_plan_id = obj.this_plan_id
+        self._original_call_schedule = obj.call_schedule
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        plan_id = self.request.GET.get('plan_id')
+        if plan_id:
+            travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
+            context['this_plan'] = travel_plan
+        context['travel_schedules'] = TravelSchedule.objects.filter(user=self.request.user)
+        context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
+        return context
+
     def form_valid(self, form):
+        form.instance.created_by = self.request.user
+
         markers_data = self.request.POST.get('markers')
         polyline_data = self.request.POST.get('polyline')
 
+        form.instance.this_plan_id = self._original_this_plan_id
+        form.instance.call_schedule = self._original_call_schedule
+
         form.instance.markers = markers_data
         form.instance.polyline = polyline_data
-
         return super().form_valid(form)
 
     def get_success_url(self):

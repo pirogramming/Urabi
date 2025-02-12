@@ -563,24 +563,37 @@ def some_protected_route(request):
     return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
 
 @login_required
-def my_trip(request, pk): # 여행 계획 작성, 여행일정 id
+def my_trip(request, pk):
     this_schedule = get_object_or_404(TravelSchedule, schedule_id=pk)
+
     if request.method == 'POST':
         form = TravelPlanForm(request.POST)
 
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
-            this_schedule = TravelSchedule.objects.get(schedule_id=pk)
             travel_plan.schedule = this_schedule
-            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
-            travel_plan.polyline = request.POST.get('polyline', '')
 
-            travel_plan.save()  
+            # markers 데이터 처리
+            markers_json = request.POST.get('markers', '[]')
+            try:
+                markers_data = json.loads(markers_json)
+                for marker in markers_data:
+                    marker["customName"] = marker.get("customName", "이름 없음")
+                    marker["address"] = marker.get("address", "알 수 없는 위치")
+                    marker["title"] = marker["customName"]  # title도 customName으로 업데이트
+                
+                travel_plan.markers = json.dumps(markers_data)
+            except json.JSONDecodeError:
+                travel_plan.markers = '[]'
+
+            travel_plan.polyline = request.POST.get('polyline', '')
+            travel_plan.save()
 
             return render(request, 'mypage/plan_detail.html', {
                 'travel_plan': travel_plan,
             })
+
     else:
         form = TravelPlanForm()
 
@@ -636,36 +649,6 @@ def user_detail(request, pk):
         'mkt_self_count' :mkt_self_count
     })
     
-    
-# # def load_more_reviews(request, user_id):
-#     user = get_object_or_404(User, id=user_id)
-#     offset = int(request.GET.get('offset', 5))
-#     limit = 5  # 한 번에 추가로 보여줄 리뷰 수
-    
-#     # is_parent=False인 리뷰만 가져오기
-#     accommodation_reviews = AccommodationReview.objects.filter(
-#         user=user,
-#         is_parent=False
-#     ).order_by('-created_at')[offset:offset+limit]
-    
-#     # 더 보여줄 리뷰가 있는지 확인
-#     total_reviews = AccommodationReview.objects.filter(
-#         user=user,
-#         is_parent=False
-#     ).count()
-    
-#     has_more = total_reviews > (offset + limit)
-    
-#     context = {
-#         'accommodation_reviews': accommodation_reviews
-#     }
-    
-#     html = render_to_string('mypage/_review_cards.html', context)
-    
-#     return JsonResponse({
-#         'html': html,
-#         'has_more': has_more
-#     })
 
 @login_required
 def plan_detail(request, pk):
@@ -681,19 +664,48 @@ def delete_trip(request, pk):
 
 def update_trip(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
+    this_schedule = travel_plan.schedule
+
     if request.method == 'POST':
         form = TravelPlanForm(request.POST, instance=travel_plan)
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
-            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+            
+            # markers 데이터 처리
+            markers_json = request.POST.get('markers', '[]')
+            try:
+                markers_data = json.loads(markers_json)
+                for marker in markers_data:
+                    marker["customName"] = marker.get("customName", "이름 없음")
+                    marker["address"] = marker.get("address", "알 수 없는 위치")
+                    marker["title"] = marker["customName"]  # title도 customName으로 업데이트
+                
+                travel_plan.markers = json.dumps(markers_data)
+            except json.JSONDecodeError:
+                travel_plan.markers = '[]'
+
             travel_plan.polyline = request.POST.get('polyline', '')
             travel_plan.save()
+            
             return redirect('users:plan_detail', pk=travel_plan.plan_id)
     else:
         form = TravelPlanForm(instance=travel_plan)
+        
+        # 기존 마커 데이터가 있다면 JSON으로 파싱하여 customName 포함
+        try:
+            existing_markers = json.loads(travel_plan.markers)
+            # customName이 없는 마커에 대해 title이나 주소를 customName으로 설정
+            for marker in existing_markers:
+                if not marker.get("customName"):
+                    marker["customName"] = marker.get("title") or marker.get("address", "알 수 없는 위치")
+            travel_plan.markers = json.dumps(existing_markers)
+        except (json.JSONDecodeError, AttributeError):
+            travel_plan.markers = '[]'
+
     return render(request, 'mypage/myTrip.html', {
         'form': form,
+        'this_schedule': this_schedule,
     })
 
 def user_list(request):
