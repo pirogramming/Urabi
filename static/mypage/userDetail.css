@@ -476,3 +476,135 @@
   .mypage_mkt_title{
     line-height: 26px;
   }
+
+
+/* 반응형 추가 (등록한 여행 카드 크기 조정) */
+  @media (max-width: 600px) {
+    .mypage-wrap {
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .mypage-nav {
+      width: 90%;
+      max-width: none;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .mypage-nav ul {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mypage-nav li {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      width: auto;
+      text-align: center;
+    }
+
+    #schedule-cards-container {
+      width: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      padding: 0 !important; 
+      box-sizing: border-box;
+    }
+
+    .schedule-card {
+    width: 95% !important; 
+    height: auto !important;
+    max-width: none !important; 
+    flex-direction: column; 
+    align-items: center !important; 
+    text-align: center !important; 
+    padding: 15px !important; 
+    box-sizing: border-box !important;
+    margin: 10px 0 !important; 
+    overflow: hidden !important; 
+    }
+
+  .schedule-img {
+    width: 90% !important; 
+    max-width: 100% !important; 
+    height: auto !important; 
+  }
+
+  .schedule-title{
+    text-align: center;
+    margin-bottom: 5px;
+    font-size: 1rem !important; 
+  }
+  #schedule-cards-container{
+    padding: 10px !important;
+  }
+
+  .activity-box {
+      padding: 15px !important;
+      box-sizing: border-box;
+  }
+
+  .activity-card {
+    flex-direction: column;
+    align-items: center !important; 
+    text-align: center !important; 
+    padding: 15px !important;
+    box-sizing: border-box;
+    width: 90% !important; 
+    max-width: none !important; 
+  }
+
+  .activity-img {
+    width: 90% !important; 
+    max-width: 100% !important; 
+    height: auto !important; 
+    margin: 0 !important; 
+  }
+}
+
+  @media (max-width: 500px) {
+    .schedule-card {
+      width: 98% !important;
+      max-width: none !important; 
+      padding: 10px !important; 
+    }
+
+    .activity-card {
+      width: 98% !important; 
+      max-width: none !important; 
+        padding: 10px !important; 
+    }
+  }
+
+/* 440px 이하 */
+@media (max-width: 440px) {
+  .mypage-content > h2 {
+    font-size: 1.3rem !important; 
+  }
+
+
+  .mypage-content > div > p {
+    margin-top: 20px !important;
+    font-size: 0.8rem !important; 
+  }
+
+  .schedule-card {
+    width: 98% !important; 
+    height: auto !important;
+    max-width: none !important; 
+    flex-direction: column !important; 
+    align-items: center !important; 
+    text-align: center !important; 
+    padding: 10px !important; 
+    box-sizing: border-box !important;
+    margin: 5px 0 !important; 
+    overflow: hidden !important; 
+  }
+}
+
