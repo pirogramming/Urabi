@@ -85,27 +85,19 @@
     gap: 10px;
 }
 
-.market_search_btn {
-    background:none;
-    width: 60px;
-    height: 60px;
-    margin: 19px 16px;
-    padding: 5px;
-    height: 49px;
-}
-
-
 .market_search_btn{
     width: 80%;
     margin-left: 15px;
     padding: 10px 20px;
-    border: none;
     border-radius: 5px;
     font-weight: 600;
     background-color: var(--blue);
     color: #ffffff;
     cursor: pointer;
     font-size: 16px;
+    margin: 19px 16px;
+    white-space: nowrap;
+    height: 61%;
 }
 
 /*목록 list*/
@@ -132,9 +124,12 @@
 
 .market_list_info{
     display: grid;
-    grid-template-columns: 1.4fr 2fr 1fr;
+    grid-template-columns: 3fr 1fr;
 }
-
+.market_info_set{
+    display: flex;
+    gap: 15px;
+}
 .market_list_info h3, #market_list_count{
     border:1.5px solid black;
     border-radius: 10px;  
@@ -184,6 +179,9 @@
     border-radius: 10px; 
 }
 
+.market_list{
+    white-space: nowrap;
+}
 .market_list_title{
     border-top : 1.5px solid black;
     border-bottom : 1.5px solid black;
@@ -218,6 +216,9 @@
     line-height: 50px;
     text-align: center;
 }
+.list_sub{
+    font-size: 13px;
+}
 
 /*페이지 넘김*/
 .page_number{
@@ -229,12 +230,23 @@
     align-items: center;
 }
 .active-page{
-    border: 1.5px solid black;
-    border-radius: 5px;
+    border-radius: 50%;
     padding: 7px 9px;
+    background-color: var(--blue);
+    color: white;
 }
 
 /*찜*/
 .bi-heart-fill{
     fill:var(--red);
 }
+
+
+
+/*반응형*/
+@media screen and (max-width: 850px) {
+    .market_search {
+        width:100%;
+    }
+}
+

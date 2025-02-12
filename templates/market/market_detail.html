@@ -32,20 +32,22 @@
             {% endif %}
         </div>
         <div class="market_detail_mid_title">
-            <div class="market_detail_profile">
-                <p>{{market.user.nickname}} </p>
-                <p class="market_detail_temp">{{trust_score}}</p>
+            <div class="detail_set">
+                <div class="market_detail_profile">
+                    <p>{{market.user.nickname}} </p>
+                    <p class="market_detail_temp">{{trust_score}}</p>
+                </div>
+                <div class="market_detail_tradeWay">
+                    <p>{{market.get_trade_type_display}}</p>
+                </div>
+                <p class="market_deatil_date">
+                    {% if market.updated_at and market.updated_at != market.created_at %}
+                        {{market.updated_at|date:"Y-m-d"}}
+                    {% else %}
+                        {{market.created_at|date:"Y-m-d"}}
+                    {%endif%}
+                </p>
             </div>
-            <div class="market_detail_tradeWay">
-                <p>{{market.get_trade_type_display}}</p>
-            </div>
-            <p class="market_deatil_date">
-                {% if market.updated_at and market.updated_at != market.created_at %}
-                    {{market.updated_at|date:"Y-m-d"}}
-                {% else %}
-                    {{market.created_at|date:"Y-m-d"}}
-                {%endif%}
-            </p>
             <div class="market_detail_tag">
                 <p id="market_detail_cate">{{market.category}}</p>
                 <p id="market_detail_loca">{{market.city}}</p>
@@ -60,7 +62,7 @@
         {% if market.photo %}
             <img src="{{ market.photo.url }}" alt="거래 이미지">
         {% else %}
-            <p>이미지가 없습니다.</p>
+            <img src="{% static 'img/schedule_default_img.jpg'%}">
         {% endif %}
         <div class="market_detail_body_right">
             <div class="market_detail_trade_location">

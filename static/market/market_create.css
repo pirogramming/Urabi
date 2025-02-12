@@ -67,9 +67,12 @@ input, select{
 .market_register_small{
     display: flex;
     gap: 20px;
-    height: 80px;
-    align-items: center;
+    align-items: space-between;
     font-weight: 500;
+}
+.market_set{
+    display: flex;
+    gap:20px;
 }
 .market_register_small select, 
 .market_register_small input,
@@ -176,5 +179,12 @@ textarea:placeholder-shown{
 
 .market_register_enroll_btn:hover{
     background-color: var(--red-hover);
+}
+
+/*반응형*/
+@media screen and (max-width: 720px) {
+    .market_register_small{
+        flex-direction: column;
+    }
 }
 
