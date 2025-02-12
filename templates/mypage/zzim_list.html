@@ -51,12 +51,13 @@
             <div class="activity-info">
               <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
               <p class="activity-date">{{ accompany.start_date }} ~ {{ accompany.end_date }}</p>
-              {% for tag in accompany.tags %}
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">{{ tag }}</span>
-              </p>
+              {% for marker in accompany.markers %}
+                <div class="marker-info">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치 아이콘" class="location-icon">
+                  <span class="schedule-location-text">{{ marker.title }}</span>
+                </div>
               {% endfor %}
+
             </div>
           </div>
           {% endfor %}

@@ -679,7 +679,7 @@ def update_trip(request, pk):
                 for marker in markers_data:
                     marker["customName"] = marker.get("customName", "이름 없음")
                     marker["address"] = marker.get("address", "알 수 없는 위치")
-                    marker["title"] = marker["customName"]  # title도 customName으로 업데이트
+                    marker["title"] = marker["customName"] 
                 
                 travel_plan.markers = json.dumps(markers_data)
             except json.JSONDecodeError:
@@ -691,11 +691,8 @@ def update_trip(request, pk):
             return redirect('users:plan_detail', pk=travel_plan.plan_id)
     else:
         form = TravelPlanForm(instance=travel_plan)
-        
-        # 기존 마커 데이터가 있다면 JSON으로 파싱하여 customName 포함
         try:
             existing_markers = json.loads(travel_plan.markers)
-            # customName이 없는 마커에 대해 title이나 주소를 customName으로 설정
             for marker in existing_markers:
                 if not marker.get("customName"):
                     marker["customName"] = marker.get("title") or marker.get("address", "알 수 없는 위치")
@@ -740,10 +737,23 @@ def zzim_list(request):
     user = get_object_or_404(User, id=request.user.id)
 
     ac_zzims = Accompany_Zzim.objects.filter(user=user)
-    ac_zzim_items = [zzim.item for zzim in ac_zzims]
-    ac_zzim_count = ac_zzims.count()
+    ac_zzim_items = []
+    for zzim in ac_zzims:
+        item = zzim.item  # 동행 글 객체
+        if item.markers:
+            try:
+                markers = json.loads(item.markers)
+                # title이 존재하는 마커만 필터링
+                item.markers = [marker for marker in markers if marker.get("title")][:3]
+            except json.JSONDecodeError:
+                item.markers = []
+        else:
+            item.markers = []
+        ac_zzim_items.append(item)
 
-    # 사용자가 찜한 번개 목록 가져오기
+            
+        ac_zzim_count = ac_zzims.count()
+
     flash_zzims = FlashZzim.objects.filter(user=user).select_related("flash")
     flash_zzim_items = [zzim.flash for zzim in flash_zzims]
     flash_zzim_count = flash_zzims.count()
@@ -757,9 +767,10 @@ def zzim_list(request):
         'ac_zzim_count': ac_zzim_count,
         'flash_zzims': flash_zzim_items,
         'flash_zzim_count': flash_zzim_count,
-        'mkt_zzims':mkt_zzims_items,
-        'mkt_zzim_count' : mkt_zzim_count,
+        'mkt_zzims': mkt_zzims_items,
+        'mkt_zzim_count': mkt_zzim_count,
     })
+
 
 def schedule_create(request):
     if request.method == 'POST':
