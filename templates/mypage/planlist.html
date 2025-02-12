@@ -167,11 +167,11 @@
  
     <h2 class="sub-title">참여한 번개</h2>
     <div id="flash-activity-container" class="activity-box">
-        {% if flash_zzim_count > 0 %}
+        {% if flash_participant_count > 0 %}
             <p class="activity-header">
-                {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_zzim_count }}</span>개의 번개를 찜했어요!
+                {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_participant_count }}</span>개의 번개에 참여했어요!
             </p>
-            {% for flash in flash_zzims %}
+            {% for flash in flash_participants %}
                 <div class="activity-card flash-card">
                     <a href="{% url 'flash:flash_detail' flash.pk %}">
                         <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
@@ -190,7 +190,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p>찜한 번개 모임이 없어요!</p>
+            <p>참여한 번개 모임이 없어요!</p>
         {% endif %}
     </div>
     <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>

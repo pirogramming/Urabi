@@ -1,3 +1,5 @@
+const DEFAULT_IMAGE_URL = "/static/img/default_map_image.jpg";
+
 // Google Maps API 로드 여부 확인 함수
 function isGoogleMapsLoaded() {
     return typeof google !== "undefined" && typeof google.maps !== "undefined";
@@ -225,13 +227,11 @@ async function getPlaceDetails(placeId, service) {
 
         console.log("🏨 가게 정보:", place);
 
-        let photoUrl = "https://via.placeholder.com/500";
+        let photoUrl = DEFAULT_IMAGE_URL;
         if (place.photos && place.photos.length > 0) {
             photoUrl = place.photos[0].getUrl({ maxWidth: 500, maxHeight: 500 });
         }
 
-        document.getElementById("place-name").innerText = place.name;
-        document.getElementById("place-img").src = photoUrl;
     } catch (error) {
         console.error("🚨 장소 상세 정보 조회 중 오류:", error);
     }

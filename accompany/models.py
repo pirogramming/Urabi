@@ -24,8 +24,8 @@ class TravelGroup(models.Model):
     tags = models.TextField(null=True, blank=True)
     photo = models.ImageField(upload_to='static/travel_photos/', null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='상관없음')
-    min_age = models.IntegerField() 
-    max_age = models.IntegerField()
+    min_age = models.IntegerField(null=True, blank=True) 
+    max_age = models.IntegerField(null=True, blank=True)
     # 마커와 폴리라인 데이터를 저장할 필드를 추가
     markers = models.JSONField(null=True, blank=True)
     polyline = models.JSONField(null=True, blank=True)
