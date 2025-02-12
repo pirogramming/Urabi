@@ -79,25 +79,20 @@ function addMarker(position, title, isDraggable) {
         position: position,
         map: map,
         title: title,
-        draggable: isDraggable,   // 드래그 가능 여부
-        id: markerIdCounter++ // 고유 ID 할당
+        draggable: isDraggable,
+        id: markerIdCounter++
     });
     
-    markers.push(marker); // 새롭게 찍은 마커 배열에 추가
-    updatePolyline(); // 선 업데이트
+    markers.push(marker);
+    updatePolyline();
     const latLng = new google.maps.LatLng(position.lat, position.lng);
-    updateLocation(latLng, marker); // 주소 업데이트
+    updateLocation(latLng, marker);
 
-    // 마커 정보창
-    const infoWindow = new google.maps.InfoWindow({
-        content: `<b>${title}</b>`,
-    });
-
+    // 마커 클릭 이벤트 수정
     marker.addListener("click", () => {
-        removeMarker(marker);  // 삭제 기능 안 쓸거면 정보창 띄우면 됨
+        removeMarker(marker);  // 마커 객체만 전달
     });
 
-    // 드래그 기능
     if (isDraggable) {
         marker.addListener("dragend", function(event) {
             updateLocation(event.latLng, marker);
@@ -106,6 +101,7 @@ function addMarker(position, title, isDraggable) {
 
     return marker;
 }
+
 function createMarkerInputs(marker, address, customName) {
     const addressContainer = document.getElementById("address_container");
     const wrapper = document.createElement("div");
@@ -118,7 +114,7 @@ function createMarkerInputs(marker, address, customName) {
     nameInput.className = "marker_name_input";
     nameInput.placeholder = "장소 이름을 입력하세요";
     nameInput.dataset.markerId = marker.id;
-    nameInput.value = customName || ''; // customName이 있으면 설정
+    nameInput.value = customName || '';
 
     // 주소 표시 input
     const addressInput = document.createElement("input");
@@ -128,18 +124,18 @@ function createMarkerInputs(marker, address, customName) {
     addressInput.readOnly = true;
     addressInput.style.display = "none";
     
-    // 이름이 변경될 때마다 마커 타이틀 업데이트
     nameInput.addEventListener('change', function() {
         marker.customName = this.value;
         marker.setTitle(this.value);
     });
 
-    // 삭제 버튼
+    // 삭제 버튼 수정
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "-";
     deleteBtn.className = "address_delete_btn";
-    deleteBtn.onclick = function() {
-        removeMarker(marker, wrapper);
+    deleteBtn.onclick = function(e) {
+        e.preventDefault(); // 폼 제출 방지
+        removeMarker(marker, wrapper); // wrapper를 직접 전달
     };
 
     wrapper.appendChild(nameInput);
@@ -148,23 +144,23 @@ function createMarkerInputs(marker, address, customName) {
     addressContainer.appendChild(wrapper);
 }
 
-// 마커 삭제 함수
-function removeMarker(marker, addressInput) {
+function removeMarker(marker, wrapper) {
     marker.setMap(null);
     markers = markers.filter((m) => m !== marker);
     updatePolyline(); // 선 업데이트
-    if (addressInput) {
-        addressInput.parentNode.remove();
+
+    // wrapper가 직접 전달된 경우 (삭제 버튼 클릭 시)
+    if (wrapper) {
+        wrapper.remove();
     } else {
-        // 주소 입력칸도 함께 삭제
-        const addressInputs = document.querySelectorAll('.address_input');
-        addressInputs.forEach(input => {
-            if (input.dataset.markerId == marker.id) {
-                input.parentNode.remove();
-            }
-        });
+        // 마커 클릭으로 삭제할 경우
+        const wrapper = document.querySelector(`.address_wrapper[data-marker-id="${marker.id}"]`);
+        if (wrapper) {
+            wrapper.remove();
+        }
     }
 }
+
 
 // 마커 클릭 시 추가 또는 삭제
 function toggleMarker(position, title) {
