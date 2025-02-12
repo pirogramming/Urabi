@@ -563,24 +563,37 @@ def some_protected_route(request):
     return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
 
 @login_required
-def my_trip(request, pk): # 여행 계획 작성, 여행일정 id
+def my_trip(request, pk):  # 여행 계획 작성, 여행 일정 id
     this_schedule = get_object_or_404(TravelSchedule, schedule_id=pk)
+
     if request.method == 'POST':
         form = TravelPlanForm(request.POST)
 
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
-            this_schedule = TravelSchedule.objects.get(schedule_id=pk)
             travel_plan.schedule = this_schedule
-            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+
+            # markers 데이터 처리
+            markers_json = request.POST.get('markers', '[]')  # 기본값 '[]' (빈 리스트)
+            try:
+                markers_data = json.loads(markers_json)  # JSON 파싱
+                for marker in markers_data:
+                    if not marker.get("customName"):  # 사용자가 이름을 입력하지 않았을 경우
+                        marker["customName"] = marker.get("address", "알 수 없는 위치")  # 주소를 기본값으로 사용
+                travel_plan.markers = json.dumps(markers_data)  # 변환된 데이터 저장
+            except json.JSONDecodeError:
+                travel_plan.markers = '[]'  # JSON 오류 시 빈 리스트로 저장
+
+            # 폴리라인 데이터 저장
             travel_plan.polyline = request.POST.get('polyline', '')
 
-            travel_plan.save()  
+            travel_plan.save()
 
             return render(request, 'mypage/plan_detail.html', {
                 'travel_plan': travel_plan,
             })
+
     else:
         form = TravelPlanForm()
 
@@ -681,19 +694,23 @@ def delete_trip(request, pk):
 
 def update_trip(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
+    this_schedule = travel_plan.schedule  # TravelPlan과 Schedule이 연결되어 있다고 가정
+
     if request.method == 'POST':
         form = TravelPlanForm(request.POST, instance=travel_plan)
         if form.is_valid():
             travel_plan = form.save(commit=False)
             travel_plan.created_by = request.user
-            travel_plan.markers = request.POST.get('markers', '')  # 기본값 ''
+            travel_plan.markers = request.POST.get('markers', '')
             travel_plan.polyline = request.POST.get('polyline', '')
             travel_plan.save()
             return redirect('users:plan_detail', pk=travel_plan.plan_id)
     else:
         form = TravelPlanForm(instance=travel_plan)
+
     return render(request, 'mypage/myTrip.html', {
         'form': form,
+        'this_schedule': this_schedule,  # this_schedule 전달
     })
 
 def user_list(request):
