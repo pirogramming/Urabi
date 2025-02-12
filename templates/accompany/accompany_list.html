@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{%static 'accompany/accompany_list.css'%}">
 {%endblock%}
 
- {%block content%}
+{%block content%}
 
       <section class="banner-container">
         <div class="banner">
@@ -13,7 +13,8 @@
             <p>새로운 만남, 끝없는 이야기</p>
             <p>지금 <span class="red">동행</span>을 찾아보세요.</p>
           </div>
-          <div class="banner-filter">
+          <button id="filterToggleBtn" class="toggle-btn">검색하기</button>
+          <div class="banner-filter" id="filterSection">
             <p class="blue">취향 맞는 동행자를 골라보세요</p>
             <form method='GET' class="filter-form">
               {% csrf_token %}
@@ -34,7 +35,7 @@
                   {{filterset.form.age}}
                 </div>
               </div>
-              <button type="submit" class="filter_btn">검색</button>
+              <button type="submit" class="filter_btn" id="showFilter">검색</button>
             </form>
           </div>
           <p class="create_accompany"><a href="{% url 'users:user_list'%}">내 여정을 등록하고 함께할 친구를 찾아보세요</a></p>
@@ -126,8 +127,23 @@
         <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
       </section>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterSection = document.getElementById('filterSection');
+        const filterToggleBtn = document.getElementById('filterToggleBtn');
 
-  {%endblock%}
-{%block js%}
-<script src="{% static 'accompany/zzim.js' %}"></script>
+        filterToggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (filterSection.style.display === 'none' || filterSection.style.display === '') {
+                filterSection.style.display = 'block';
+            } else {
+                filterSection.style.display = 'none';
+            }
+        });
+    });
+  </script>
+
+  {% block js %}
+      <script src="{% static 'accompany/zzim.js' %}"></script>
+  {% endblock js %}
 {%endblock%}
