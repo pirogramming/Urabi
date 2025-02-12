@@ -17,7 +17,8 @@ function initMap() {
         const marker = new google.maps.Marker({
             position: { lat: markerData.lat, lng: markerData.lng },
             map: map,
-            title: markerData.customName // "title" 대신 "customName" 사용
+            title: markerData.customName,
+            icon: markerData.customName ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png': 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
         });
   
         // 인포윈도우 추가
