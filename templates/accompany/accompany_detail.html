@@ -10,56 +10,58 @@
 
 {% block content %}
 <section id="accompany_detail">
-{% comment %} 
+
   <section class="accompany_header">
     <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
-  </section> {% endcomment %}
-{% comment %} 
-  <hr class="flash_divider"> {% endcomment %}
-  {%if object.call_schedule%}
-<div class="detail-header">
-  <h2 id="schedule_name">
-    {{this_plan.schedule.name}}    
-    <button id="togglePlans">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-      <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-      </svg>
-    </button>
-  </h2>
+  </section> 
 
-  <div id="planList"class="another-plan" style="display: none;">
-    <p>다른 일정 조회</p>
-    <select id="plan-selector">
-    <option value="{{object.this_plan_id}}">{{this_plan.title}}</option>
-    {% for plan in travel_plans %}
-    {%if plan.plan_id is not this_plan.plan_id%}
-      <option value="{{ plan.plan_id }}">{{ plan.title }}</option>
-    {%endif%}
-    {% endfor %}
-    </select>
-    <button type="button" onclick="loadSelectedPlan()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-      </svg>
-    </button>
-  </div>
-</div>
-{%endif%}
+  <hr class="flash_divider"> 
 {%if object.markers%}
 <section id="accompany_detail">
-
+{% comment %} 
   <section class="accompany_header">
     <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
   </section>
 
-  <hr class="flash_divider">
+  <hr class="flash_divider"> {% endcomment %}
 
   <section class="map">
     <div class="map-container">
       <div id="map"></div>
       {%if object.call_schedule%}
         <div class="this-plan-info">
-          <h3 id="this-plan-title">계획-{{this_plan.title}}</h3>
+          <div class="detail-header">
+            <h2 id="schedule_name">
+              {{this_plan.schedule.name}}    
+              <button id="togglePlans">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+              </button>
+            </h2>
+          
+            <div id="planList"class="another-plan" style="display: none;">
+              <p>다른 일정 조회</p>
+              <div class="plan-list-selector">
+                <select id="plan-selector">
+                <option value="{{object.this_plan_id}}">{{this_plan.title}}</option>
+                {% for plan in travel_plans %}
+                {%if plan.plan_id is not this_plan.plan_id%}
+                  <option value="{{ plan.plan_id }}">{{ plan.title }}</option>
+                {%endif%}
+                {% endfor %}
+                </select>
+                <button type="button" onclick="loadSelectedPlan()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="this-plan-name">
+            <h3 id="this-plan-title">계획-{{this_plan.title}}</h3>
+          </div>
         </div>
       {%endif%}
     </div>
