@@ -579,6 +579,7 @@ def my_trip(request, pk):
             try:
                 markers_data = json.loads(markers_json)
                 for marker in markers_data:
+                    marker["customName"] = marker.get("customName", "이름 없음")
                     marker["address"] = marker.get("address", "알 수 없는 위치")
                     marker["title"] = marker["customName"]  # title도 customName으로 업데이트
                 
@@ -676,6 +677,7 @@ def update_trip(request, pk):
             try:
                 markers_data = json.loads(markers_json)
                 for marker in markers_data:
+                    marker["customName"] = marker.get("customName", "이름 없음")
                     marker["address"] = marker.get("address", "알 수 없는 위치")
                     marker["title"] = marker["customName"]  # title도 customName으로 업데이트
                 

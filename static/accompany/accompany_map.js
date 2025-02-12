@@ -258,14 +258,11 @@ function searchBarLocationer() {
     });
 }
 document.addEventListener('DOMContentLoaded', function() {
-    // form 내의 모든 input 요소를 찾습니다
     const formInputs = document.querySelectorAll('form input:not([type="hidden"])');
     
     formInputs.forEach(input => {
         input.addEventListener('keydown', function(e) {
-            // 엔터 키가 눌렸을 때
             if (e.key === 'Enter') {
-                // textarea나 submit 버튼이 아닌 경우 기본 동작 방지
                 if (input.type !== 'textarea' && input.type !== 'submit') {
                     e.preventDefault();
                 }
@@ -273,16 +270,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // form 제출은 submit 버튼을 통해서만 가능하도록 설정
     const form = document.querySelector('form');
     form.addEventListener('submit', function(event) {
-        // submit 버튼을 통한 제출이 아닌 경우 기본 동작 방지
         if (event.submitter === null || event.submitter.type !== 'submit') {
             event.preventDefault();
         }
     });
 });
-// 폼 제출 시 마커와 폴리라인 데이터를 저장
+
 function saveMapData(event) {
     if (event.submitter && event.submitter.type === 'submit') {
         const markersData = markers.map(marker => ({
