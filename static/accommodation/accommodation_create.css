@@ -19,8 +19,20 @@
     font-size: 24px;
     font-weight: 700;
     color: #333;
+    line-height: 1.7;
     margin-bottom: 20px;
 }
+
+.review-main-header p{
+    font-weight: normal;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.header-strong{
+    color: var(--red);
+}
+
 #highlight {
     color: var(--red);
     cursor: pointer;

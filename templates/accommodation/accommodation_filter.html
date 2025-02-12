@@ -27,18 +27,19 @@
         <p class="blue">찾고 싶은 숙소를 검색해보세요</p>
         <form class="search-box" method="GET" action="{% url 'accommodation:filter' %}">
             <div class="filter_contents">
-                <input type="text" name="city" placeholder="여행지로 숙소 찾기" class="location-input" value="{{ city_query }}">
+                <input type="text" name="city" placeholder="여행 도시로 숙소 검색" class="location-input" value="{{ city_query }}">
                 <input type="number" name="rating" placeholder="이용자 평점" class="facility-input"
                         min="0" max="5" step="0.5" value="{{ rating_query }}">
             </div>
             <button type="submit" class="search-btn">검색</button>
         </form>
     </div>
+    
 
     <div class="location-container">
         <div class="accom_left_container">
             <div class="accommodation_list_header">
-                <h2 class="accommodation_list_title"><span class="strong">{{ total_reviews_count }}</span>개의 숙소 후기</h2>
+                <h2 class="accommodation_list_title"><span class="strong">{{ reviews|length }}</span>개의 숙소</h2>
                 <div class="accommodation_list_controls">
                     <h2>나만의 숙소</h2>
                     <button onclick="window.location.href='{% url 'accommodation:accommodation_create' %}'">등록하기</button>
@@ -48,6 +49,9 @@
             <hr class="accommodation_list_divider">
             <!-- 숙소 후기 리스트 -->
             <div class="accommodation-list">
+                <div class="main_accommodation" style="display: none;">
+                    <p>검색 결과가 없습니다.</p>
+                </div>                
                 {% for review in reviews %}
                 <div class="accommodation-card"
                         data-title="{{ review.accommodation_name }}"
@@ -100,14 +104,15 @@
         const accommodationList = document.querySelector('.accommodation-list');
         const mainAccommodation = document.querySelector('.main_accommodation');
         const mapSection = document.querySelector('.map-section');
-
-        if (accommodationList.children.length === 0) {
+    
+        const accommodationCards = accommodationList.querySelectorAll('.accommodation-card');
+    
+        if (accommodationCards.length === 0) {
             mainAccommodation.style.display = 'block';
-            mapSection.style.display = 'none';
         } else {
             mainAccommodation.style.display = 'none';
-            mapSection.style.display = 'block';
         }
     });
+    
 </script>
 {%endblock js%}
