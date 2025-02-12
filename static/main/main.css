@@ -308,3 +308,261 @@
     border-radius: 50%;
     box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5)
 }
+
+
+/* 장기 동행 섹션 (980px 이하) */
+@media (max-width: 550px) {
+    .main_companion_text {
+        font-size: 40px; 
+        line-height: 1.2; /* 줄 간격 조정 */
+        text-align: center; 
+    }
+
+    .main_companion_text br {
+        display: block; 
+    }
+
+    .main_companion_text em {
+        color: var(--red);
+        font-weight: 700;
+        display: inline; 
+    }
+
+    #main_find_companion {
+        font-size: 25px;
+    }
+}
+
+
+
+
+/* 번개 모임 섹션 (980px 이하) */
+@media (max-width: 980px) {
+    .main_flash_body img {
+        display: none;
+    }
+
+    .main_flash_btn_container {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        gap: 20px; 
+        flex-direction: row; 
+    }
+
+    .main_find_flash,
+    .main_enroll_flash {
+        width: 250px; 
+        height: 200px; 
+        max-width: none; 
+        margin: 0 10px; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
+        text-align: center; 
+    }
+    
+    .main_find_flash p,
+    .main_enroll_flash p {
+        font-size: 25px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .main_find_flash .main_find_flash_btn,
+    .main_enroll_flash .main_enroll_flash_btn {
+        width: 100px;
+        height: 40px;
+        border-radius: 10px;
+        text-align: center;
+        line-height: 40px;
+        font-weight: 500;
+        font-size: 21px;
+        color: white;
+    }
+}
+
+/* 830px 이하: 번개 모임 텍스트 줄바꿈 */
+@media (max-width: 830px) {
+    .main_flash_text h3 {
+        display: flex;
+        flex-direction: column; 
+        line-height: 1.5; 
+    }
+}
+
+/* 700px 이하: 번개 모임 버튼 재배치 */
+@media (max-width: 700px) {
+    .main_flash_btn_container {
+        flex-direction: column; 
+        align-items: center; 
+        gap: 20px; 
+    }
+
+    .main_find_flash,
+    .main_enroll_flash {
+        width: 250px; 
+        height: 200px; 
+        max-width: none;
+        margin: 0 auto; 
+    }
+}
+
+
+/* 숙소 후기 섹션 */
+@media (max-width: 950px) {
+    .main_accommodation_container {
+        flex-direction: column; 
+        align-items: center; 
+        height: auto;
+        min-height: 400px; 
+        padding: 20px; 
+        background-image: none; 
+        background-color: skyblue; 
+        border: 2px solid #007BFF; 
+        color: white; 
+        text-align: center; 
+        position: relative; 
+    }
+
+    .main_accommodation_left {
+        width: 100%;
+        text-align: center; 
+    }
+
+    .main_accommodation_left h2 {
+        font-size: 1.5em; 
+    }
+
+    .main_accommodation_left img {
+        max-width: 70%; 
+        height: auto; 
+        margin: 20px auto; 
+    }
+
+    .main_accommodation_right {
+        display: none; 
+    }
+
+    .main_review_btn {
+        position: absolute;
+        bottom: 20px; 
+        right: 20px; 
+        margin: 0; 
+    }
+
+    .main_accommodation_title {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+}
+
+/* 660px 이하: 버튼 위치 조정 */
+@media (max-width: 660px) {
+    .main_review_btn {
+        position: absolute;
+        bottom: 20px; 
+        right: 20px; 
+    }
+}
+
+/* 450px 이하: 섹션 크기 줄이기 */
+@media (max-width: 450px) {
+    .main_accommodation_container {
+        min-height: 300px; 
+        padding: 10px; 
+    }
+
+    .main_accommodation_left h2 {
+        font-size: 1.2em; 
+    }
+
+    .main_accommodation_left img {
+        max-width: 60%; 
+    }
+    
+    .main_accommodation_title {
+        font-size: 1.6em; 
+        margin-bottom: 10px; 
+    }
+
+    .main_review_btn {
+        bottom: 10px; 
+        right: 10px; 
+        font-size: 0.8em; 
+        padding: 5px 10px; 
+    }
+}
+
+/* 440px 이하: "후기 보기" 버튼 크기 더 줄이기 */
+@media (max-width: 440px) {
+    .main_review_btn {
+        font-size: 0.7em; 
+        padding: 4px 8px; 
+        height: 30px; 
+        width: 90px; 
+    }
+}
+
+
+/* 나눔 마켓 섹션 (940px 이하) */
+@media (max-width: 940px) {
+    .main_market_title {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        gap: 10px; 
+    }
+
+    .main_market_title a {
+        margin-top: 0; 
+        font-size: 16px; 
+    }
+
+    .main_market_category {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        gap: 20px; 
+    }
+
+    .main_market_category li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%; 
+        text-align: center; 
+    }
+
+    .main_market_category img {
+        max-width: 150px; 
+        height: auto;
+        margin-bottom: 10px; 
+    }
+
+    .main_market_category p {
+        font-size: 18px; 
+        font-weight: 500;
+    }
+}
+
+/* 440px 이하: 제목 및 텍스트 크기 줄이기 */
+@media (max-width: 440px) {
+    .main_flash_text h1 {
+        font-size: 1.6em; /* 번개 모임 제목 크기 줄이기 */
+    }
+
+    .main_flash_text h3 {
+        font-size: 1.1em; /* 번개 모임 설명 크기 줄이기 */
+    }
+
+    .main_market_title h1 {
+        font-size: 1.6em; /* 나눔 마켓 제목 크기 줄이기 */
+    }
+
+    .main_market_body_title {
+        font-size: 1.0em; /* 나눔 마켓 카테고리 제목 크기 줄이기 */
+    }
+}
