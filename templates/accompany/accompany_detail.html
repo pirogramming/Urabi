@@ -218,7 +218,10 @@
   function loadSelectedPlan() {
     const planSelector = document.getElementById('plan-selector');
     const selectedOption = planSelector.value;
-
+    if (planSelector.value == {{object.this_plan_id}}) {
+      window.location.href = "{%url 'accompany:accompany_detail' object.travel_id%}";
+      return;
+    }
     fetch(`{% url 'accompany:load_plan_data' %}?plan_id=${selectedOption}`)
       .then(response => response.json())
       .then(data => {

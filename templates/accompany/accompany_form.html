@@ -10,6 +10,7 @@
 <section id="accompany_form_page">
   <section class="banner">
     <h2>함께 쌓는 추억, <a href="{%url 'accompany:accompany_list' %}" class="red accompany_header_link"><em class="red">장기 동행</em></a> <p class="sub">> 동행 모집</p></h2>
+    {%if not form.instance.markers%}
     <div class="plan-selection">
       <label for="plan-selector">
         대표계획 불러오기
@@ -39,6 +40,7 @@
       </div>
       {% endif %}
     </div>
+    {% endif %}
   </section>
   <section class="map">
     <div class="map-container">
