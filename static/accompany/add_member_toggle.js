@@ -1,5 +1,5 @@
 {
-  
+
     document.getElementById('toggleMembers').addEventListener('click', function() {
       var memberList = document.getElementById('memberList');
       if (memberList.style.display === 'none') {

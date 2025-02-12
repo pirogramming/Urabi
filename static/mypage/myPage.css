@@ -227,3 +227,212 @@
     transition: all 0.3s ease;
   }
   
+
+
+  @media (max-width: 800px) {
+    .mypage-wrap {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 0; 
+    }
+
+    .mypage-nav {
+        width: 100%;
+        max-width: 400px;
+        margin: 0; 
+        text-align: center;
+        position: relative; 
+        top: 0; 
+        
+    }
+
+    .mypage-nav ul {
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: space-around;
+        padding: 0;
+        margin-bottom: 50px;
+    }
+
+    .mypage-nav li {
+        font-size: 1.2rem;
+        margin-bottom: 0;
+        padding: 8px 12px;
+        border-radius: 20px;
+    }
+
+    .mypage-content {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .passport-card-top {
+      text-align: center;
+    }
+
+    .passport-label {
+      font-size: 1.5rem; 
+      font-weight: bold; 
+    }
+
+    .passport-country {
+      font-size: 1rem; 
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .passport-card {
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .passport-card-body {
+      flex-direction: column;
+      align-items: center;
+    }
+    .profile-photo {
+      width: 120px;
+      height: 160px;
+    }
+    .info-area {
+      width: 100%;
+    }
+    .info-row {
+      grid-template-columns: 1fr;
+    }
+    .info-item {
+      margin-left: 0;
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 800px) {
+    .passport-card-top {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .passport-label {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+  
+    .passport-country {
+      font-size: 1.0rem;
+    }
+  
+    .info-row {
+      margin-bottom: 15px; 
+    }
+  
+    
+    .mypage-nav {
+      margin-top: 20px;
+    }
+    .mypage-wrap {
+      flex-direction: column;
+    }
+    .mypage-nav {
+      width: 100%;
+      max-width: 100%;
+      margin: 20px 0;
+      padding: 0 10px;
+    }
+    
+    .mypage-nav ul {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0;
+    }
+    
+    .mypage-nav li {
+      font-size: 14px;
+      margin: 0;
+      padding: 5px;
+      border-radius: 5px;
+      text-align: center;
+      width: auto;
+    }
+  }
+
+
+  @media (max-width: 700px) {
+    .main-title {
+        font-size: 1.5rem; 
+    }
+
+    .section-title {
+        font-size: 1.2rem; 
+    }
+
+    .profile-header {
+        align-items: center; 
+    }
+
+    .edit-btn {
+        font-size: 0.8rem; 
+        padding: 5px 10px; 
+    }
+    .account-section-title {
+      font-size: 1.4rem;
+    }
+  }   
+
+  @media (max-width: 680px) {
+    .profile-photo {
+      width: 100px;
+      height: 130px;
+    }
+    .passport-label {
+      font-size: 0.8rem;
+    }
+    .passport-country {
+      font-size: 1.0rem;
+    }
+    .value {
+      font-size: 1.0rem;
+    }
+    .passport-label {
+      font-size: 1.2rem; 
+      font-weight: bold; 
+    }
+
+    .passport-country {
+      font-size: 0.9rem; 
+    }
+  }
+  
+  @media (max-width: 450px) {
+    .passport-card {
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .profile-photo {
+      width: 80px;
+      height: 100px;
+    }
+    .label {
+      font-size: 0.7rem;
+    }
+    .value {
+      font-size: 0.8rem;
+    }
+    .edit-btn {
+      width: 50px;
+      height: 30px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .travel-score{
+      font-size: 0.8rem;
+    }
+    .passport-label {
+      font-size: 1.0rem; 
+      font-weight: bold; 
+    }
+
+    .passport-country {
+      font-size: 0.8rem; 
+    }
+  }

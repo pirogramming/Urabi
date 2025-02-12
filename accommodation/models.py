@@ -18,6 +18,8 @@ class AccommodationReview(models.Model):
     latitude = models.FloatField(null=True, blank=True)  # 위도
     longitude = models.FloatField(null=True, blank=True)  # 경도
     location_view = models.ImageField(upload_to="accommodation_views/", null=True, blank=True)  # 위치 뷰 이미지
+    favorites = models.ManyToManyField(User, related_name="favorite_reviews", blank=True) # 숙소 찜
+    likes = models.ManyToManyField(User, related_name="liked_reviews", blank=True) # 리뷰 공감
     
     def __str__(self):
         return f"{self.accommodation_name} ({self.rating}⭐)"

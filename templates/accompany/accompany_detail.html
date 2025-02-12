@@ -9,22 +9,41 @@
   {% endblock %}
 
 {% block content %}
-{%if object.call_schedule%}
-  <h2>{{this_plan.schedule.name}}</h2>
-  <select id="plan-selector">
-  <option value="{{object.this_plan_id}}">{{this_plan.title}}</option>
-  {% for plan in travel_plans %}
-  {%if plan.plan_id is not this_plan.plan_id%}
-    <option value="{{ plan.plan_id }}">{{ plan.title }}</option>
-  {%endif%}
-  {% endfor %}
-  </select>
-  <button type="button" onclick="loadSelectedPlan()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
-    <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
-    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-    </svg>
-  </button>
+<section id="accompany_detail">
+
+  <section class="accompany_header">
+    <p class="header_comment">장기 동행 &gt; 장기 동행 상세</p>
+  </section>
+
+  <hr class="flash_divider">
+  {%if object.call_schedule%}
+<div class="detail-header">
+  <h2 id="schedule_name">
+    {{this_plan.schedule.name}}    
+    <button id="togglePlans">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+      <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+      </svg>
+    </button>
+  </h2>
+
+  <div id="planList"class="another-plan" style="display: none;">
+    <p>다른 일정 조회</p>
+    <select id="plan-selector">
+    <option value="{{object.this_plan_id}}">{{this_plan.title}}</option>
+    {% for plan in travel_plans %}
+    {%if plan.plan_id is not this_plan.plan_id%}
+      <option value="{{ plan.plan_id }}">{{ plan.title }}</option>
+    {%endif%}
+    {% endfor %}
+    </select>
+    <button type="button" onclick="loadSelectedPlan()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+      </svg>
+    </button>
+  </div>
+</div>
 {%endif%}
 {%if object.markers%}
 <section id="accompany_detail">
@@ -38,6 +57,11 @@
   <section class="map">
     <div class="map-container">
       <div id="map"></div>
+      {%if object.call_schedule%}
+        <div class="this-plan-info">
+          <h3 id="this-plan-title">계획-{{this_plan.title}}</h3>
+        </div>
+      {%endif%}
     </div>
   </section>
 {%endif%}
@@ -47,9 +71,9 @@
       <h2>{{ object.title }}</h2>
       <div class="header-btns">
         {% if user != object.created_by %}
-          <button class="btn ask">
-              <span>💬 문의하기</span>
-          </button>
+        <button class="btn ask host_chat_btn" data-other-user-id="{{ object.created_by.id }}">
+          <span>💬 문의하기</span>
+        </button>        
           <button class="zzim-btn" data-travel-id="{{ object.travel_id }}">
             {% if object in zzim_items %}
                 <svg class="heart-icon filled red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -73,7 +97,10 @@
     </div>
     <div class="participants">
       <div class="profile">
-        <img style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://www.w3schools.com/w3images/lights.jpg{% endif %}" width="30" height="30" alt="profile">
+        <img class="profile-img"
+     onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" 
+     src="{% if object.created_by.profile_image %}{{ object.created_by.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"  
+     alt="profile">
         <span style="cursor:pointer;" onclick="window.location.href='{% url 'users:user_detail' object.created_by.id %}'" class="writer">{{ object.created_by.nickname }}</span></a>
         <span class="temperature">36.5°C</span> 
         <span class="blue">&nbsp;|&nbsp;</span> 
@@ -91,22 +118,22 @@
           {% endif %}
         {% endif %}
         {% endif %}
-        <span>{{ object.now_member }}/{{ object.max_member }}</span>
-        <button id="toggleMembers">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-          </svg>
-        </button>
-        <ul id="memberList" style="display: none;">
-          <li><span><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.nickname }}</a></span><span>🚩</span></li>
-          {% for member in participants %}
-            <li data-user-id="{{ member.id }}"><span><a href="{% url 'users:user_detail' member.id %}">{{ member.nickname }}</a></span>
-              {% if user == object.created_by or member.id == user.id %}
-                <button class="red part-del-btn">x</button>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
+        <span>인원 {{ object.now_member }}/{{ object.max_member }}</span>
+      <button id="toggleMembers">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+          <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+        </svg>
+      </button>
+      <ul id="memberList" style="display: none;">
+        <li><span class="membertoggle"><a href="{% url 'users:user_detail' object.created_by.id %}">{{ object.created_by.nickname }}</a></span><span>🚩</span></li>
+        {% for member in participants %}
+          <li data-user-id="{{ member.id }}"><span class="membertoggle"><a href="{% url 'users:user_detail' member.id %}">{{ member.nickname }}</a></span>
+            {% if user == object.created_by or member.id == user.id %}
+              <button class="red part-del-btn">x</button>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
       </div>
     </div>
     <div class="detail-content">
@@ -200,10 +227,61 @@
           };
           console.log(data.markers, data.polyline);
           initMap();
+          const thisPlanTitle = document.getElementById('this-plan-title');
+          thisPlanTitle.innerText = data.title;
         }
       })
       .catch(error => console.error('Error loading plan data:', error));
   }
+
+  {%if object.call_schedule%}
+  document.getElementById('togglePlans').addEventListener('click', function() {
+    var memberList = document.getElementById('planList');
+    if (memberList.style.display === 'none') {
+        memberList.style.display = 'block';
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>';
+    } else {
+        memberList.style.display = 'none';
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>';
+    }
+  });
+  {%endif%}
+
+  const hostChatBtn = document.querySelector(".host_chat_btn");
+if (hostChatBtn) {
+    hostChatBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const otherUserId = hostChatBtn.dataset.otherUserId;
+        console.log("otherUserId:", otherUserId);  // 올바른 ID가 출력되는지 확인
+        
+        const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+        console.log("createRoomUrl:", createRoomUrl);  // 생성된 URL 확인
+
+        fetch(createRoomUrl, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "include"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.chat_room_url) {
+                const chatFrame = document.getElementById("chatFrame");
+                chatFrame.src = data.chat_room_url;
+                const chatModal = document.getElementById("chatModal");
+                chatModal.style.display = "block";
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error creating chat room:", error);
+        });
+    });
+}
 </script>
 <script src="{% static 'accompany/add_member_toggle.js' %}"></script>
 <script src="{% static 'accompany/add_participants.js' %}"></script>

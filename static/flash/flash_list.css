@@ -62,6 +62,7 @@
 }
 
 .flash_filter button{
+    font-family: 'Paperlogy', sans-serif;
     background-color: var(--blue);
     width: 60px;
     height: 50px;
@@ -72,6 +73,10 @@
     font-weight: 500;
 }
 
+.flash_filter button:hover {
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
+}
 
 /* 제목 아래 영역 */
 .flash_container {
@@ -102,7 +107,15 @@
 #search-bar{
     height: 48px;
     border-radius: 9px;
+    margin-bottom: 5px;
+    border: 1px solid #bbb;
+    padding: 5px;
 }
+
+#search-bar:placeholder-shown{
+    font-family: 'Paperlogy', sans-serif;
+}
+
 
 
 /* 모집 중인 번개 및 버튼 */
@@ -118,8 +131,13 @@
 
 .flash_list_title {
     font-weight: 500;
+    margin-left: 20px;
 }
 
+.strong{
+    color: var(--red);
+    margin-right: 5px;
+}
 /* 나만의 번개 + 등록하기 버튼 */
 .flash_list_controls {
     display: flex;
@@ -147,6 +165,7 @@
 }
 .flash_register_btn:hover {
     filter: brightness(0.85);
+    transition: all 0.3s ease;
 }
 
 /* 구분선 */

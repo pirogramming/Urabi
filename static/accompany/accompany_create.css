@@ -31,6 +31,16 @@
 .banner h2{
   margin-bottom: 20px;
 }
+.call-schedule-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+#plan-selector{
+  font-family: 'paperlogy';
+  padding: 5px;
+}
 .plan-selection{
   font-size: 20px;
   font-weight: 600;
@@ -54,10 +64,14 @@
   /* background-color: aqua; */
   position: relative;
 }
+.call-schedule-text{
+  font-size: 13px;
+  font-weight: 300;
+}
 #call_schedule{
   border: 1px solid #ccc;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   appearance: auto;
 }
 #map {
@@ -88,6 +102,7 @@
   border: none;
   border-bottom: 1px solid var(--blue);
   padding-left: 5px;
+  font-family: 'Paperlogy', sans-serif;
 }
 .info{
   display: flex;
@@ -120,14 +135,23 @@
   gap: 10px;
   align-items: center;
 }
+
+#profile-picture-preview{
+  height: 40px;
+  width: auto;
+}
+
+#profile-picture-preview{
+  cursor: pointer;
+}
 .file-upload svg{
   right: 0;
 }
 .file-upload svg:hover{
   cursor: pointer;
 }
-#max-member{
-  width: 100px;
+#max_member{
+  width: 85px;
 }
 #image-name{
   right: 55px;

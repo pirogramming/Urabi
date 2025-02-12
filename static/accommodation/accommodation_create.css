@@ -19,8 +19,20 @@
     font-size: 24px;
     font-weight: 700;
     color: #333;
+    line-height: 1.7;
     margin-bottom: 20px;
 }
+
+.review-main-header p{
+    font-weight: normal;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.header-strong{
+    color: var(--red);
+}
+
 #highlight {
     color: var(--red);
     cursor: pointer;
@@ -36,6 +48,21 @@
 /*======================
     숙소 이름 입력 & 지도
 ========================*/
+
+.user-info{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0 10px;
+}
+
+.user-info img{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;    
+    object-fit: cover;
+}
+
 input{
     border: none;
     background-color: transparent;
@@ -49,6 +76,7 @@ input{
     font-size: 1.5rem;
 }
 
+
 .map-placeholder {
     width: 100%;
     height: 300px;
@@ -60,6 +88,14 @@ input{
     width: 100%;
     height: 100%;
     overflow: hidden;
+}
+
+.preview-img {
+    height: 80px !important;
+    width: auto !important;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .review-form {
@@ -77,6 +113,7 @@ input{
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-right: 20px;
 }
 
 
@@ -93,15 +130,35 @@ input{
 }
 
 #rating img, #add-img img {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
+}
+
+#add-img {
+    position: relative;
+    display: flex;
+    align-items: center;  /* 높이 유지 */
+    gap: 10px;  /* 버튼과 이미지 사이 간격 */
+}
+
+/* 🔥 라벨을 부모 안에서 정렬 */
+#add-img label {
+    position: relative; /* absolute 제거 */
+    display: flex;
+    align-items: center; /* 가운데 정렬 */
+    justify-content: center;
+    cursor: pointer;
+    width: 40px;  /* 아이콘 크기 고정 */
+    height: 40px; /* 아이콘 크기 고정 */
 }
 
 
 .textarea-section textarea {
+    border: 1px solid #bbb !important;
+    border-radius: 5px;
     width: 100%;
     padding: 10px;
-    font-size: 16px;
+    font-size: 14px;
     border: none;
 }
 
@@ -115,9 +172,9 @@ input{
     font-family: 'Paperlogy', sans-serif;
     font-weight: 500;
     align-self: flex-end;
-    width: 120px;
     transition: background-color 0.3s;
     background-color: var(--red);
+    white-space: nowrap;
 }
 
 .submit-button:hover {

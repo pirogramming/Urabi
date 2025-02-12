@@ -135,7 +135,6 @@
 .market_detail_body{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 50vh;
 }
 
 .market_detail_body img{

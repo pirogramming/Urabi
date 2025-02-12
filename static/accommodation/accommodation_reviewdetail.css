@@ -31,6 +31,7 @@
     background: #ddd;
     margin: 15px 0;
 }
+
 .accommodation_bar{
     margin-top: 40px;
 }
@@ -48,6 +49,10 @@
     width: 40%;
 }
 
+.strong{
+    color: var(--red);
+}
+
 /*==================
     사진 아래 제목 & 평점 & 하트 & 검색
 ====================*/
@@ -59,16 +64,23 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
+    margin: 0 20px 20px 20px;
     justify-content: space-between;
 }
 
-.detail-info-title {
+.detail-info-title p:first-child {
     font-size: 35px;
     word-break: keep-all;
     font-weight: 500;
     line-height: 50px;
+    margin-bottom: 10px;
 }
+
+.detail-info-title p:last-child {
+    font-weight: normal;
+    font-size: 20px;
+}
+
 .rateAndzzim{
     display: flex;
     align-items: center;
@@ -86,8 +98,9 @@
 
 .search-container {
     position: relative;
-    width: 100%;
-    margin: 15px 0;
+    margin: 20px 30px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .review-search {
@@ -107,14 +120,34 @@
     height: 30px;
 }
 
+.review-button-container{
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+}
+
+.edit-review-button, .delete-review-button{
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.edit-review-button{
+    background-color: var(--yellow);
+}
+
+.delete-review-button{
+    background-color: var(--red);
+}
+
+.delete-review-button:hover, .edit-review-button:hover{
+    transition: all 0.3s ease;
+    filter: brightness(0.85);
+}
+
 /*==================
    리뷰시작
 ====================*/
-
-.review-count {
-    margin: 15px 0 20px 0;
-    text-decoration: underline;
-}
 
 .reviews {
     display: flex;
@@ -144,6 +177,7 @@
     width: 40px;
     height: 40px;
     margin-right: 10px;
+    object-fit: cover;
 }
 
 .review-author{
@@ -152,7 +186,7 @@
 
 .review-heart{
     margin-left: auto;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 /* 리뷰 내용 시작*/
@@ -163,7 +197,7 @@
 }
 
 .review-image img {
-    width: 50%;
+    object-fit: contain;
     border-radius: 4px;
     margin-top: 10px;
 }
@@ -194,6 +228,10 @@
     color: #555;
 }
 
+.like-count{
+    font-size: 20px;
+    margin-bottom: 5px;
+}
 /*==================
     아래 버튼
 ====================*/
@@ -245,3 +283,53 @@
     color: #ffffff;
     border-radius: 20px;
   }
+
+  /* 삭제 모달 */
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+  }
+  .modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .modal-buttons .confirm-btn {
+    background-color: var(--red);
+    color: #fff;
+  }
+  .modal-buttons .cancel-btn {
+    background-color: #ccc;
+
+  }.red {
+    color: var(--red); 
+  }
+  
+  .sort-options a.active {
+    color: var(--red); 
+    font-weight: bold; 
+  }
+  
