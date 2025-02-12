@@ -7,83 +7,89 @@
 
 {% block content %}
 <div class="review-container">
-    <div class="review-main-header">
-        <div>다음 여행자를 위한 작은 안내서, <span class="header-strong">숙소 후기</span></div>
-        <p> <span class="header-strong">{{ parent_review.accommodation_name }}</span>  후기 작성</p>
+  <div class="review-main-header">
+    {% if review %}
+      <p>수정하기 - <span class="header-strong">{{ review.accommodation_name }}</span> 후기</p>
+    {% else %}
+      <p><span class="header-strong">새 후기 작성</span></p>
+    {% endif %}
+  </div>
+  <form class="review-form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="review-header">
+      <div class="user-info">
+        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}" alt="프로필">
+        <span>{{ request.user.nickname }}</span>
+      </div>
+      <div class="review-header-right">
+        <div id="rating" class="stars">
+            <input type="hidden" name="rating" id="rating-value" value="{% if review %}{{ review.rating }}{% else %}0{% endif %}">
+            {% for i in "12345"|make_list %}
+              {% if review %}
+                {% if forloop.counter <= review.rating %}
+                  <img src="{% static 'img/fill_star.png' %}" alt="별점" data-rating="{{ forloop.counter }}">
+                {% else %}
+                  <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="{{ forloop.counter }}">
+                {% endif %}
+              {% else %}
+                <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="{{ forloop.counter }}">
+              {% endif %}
+            {% endfor %}
+          </div>
+          
+        <div id="add-img">
+          <label for="accommodation-img">
+            <img src="{% static 'img/addimg_icon.png' %}" alt="이미지 추가">
+          </label>
+          <input type="file" id="accommodation-img" name="photo" accept="image/*" style="display: none;">
+          {% if review and review.photo %}
+            <img src="{{ review.photo.url }}" alt="기존 사진" class="preview-img">
+          {% endif %}
+        </div>
+      </div>
     </div>
-
-    <form class="review-form" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="review-header">
-            <div class="user-info">
-                <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}" alt="">
-                <span>{{ request.user.nickname }}</span>
-            </div>
-            <div class="review-header-right">
-                <div id="rating" class="stars">
-                    <input type="hidden" name="rating" id="rating-value" value="0">
-                    {% for i in "12345"|make_list %}
-                    <img src="{% static 'img/empty_star.png' %}" alt="별점" data-rating="{{ forloop.counter }}">
-                    {% endfor %}
-                </div>
-                <div id="add-img">
-                    <label for="accommodation-img">
-                        <img src="{% static 'img/addimg_icon.png' %}" alt="Add Image">
-                    </label>
-                    <input type="file" id="accommodation-img" name="photo" accept="image/*" style="display: none;">
-                </div>
-            </div>
-        </div>
-        <div class="textarea-section">
-            <textarea name="content" id="review" rows="5" placeholder="후기를 작성해주세요!" required></textarea>
-        </div>
-        <button type="submit" class="submit-button">후기 등록하기</button>
-    </form>
+    <div class="textarea-section">
+      <textarea name="content" id="review" rows="5" placeholder="후기를 작성해주세요!" required>{% if review %}{{ review.content }}{% endif %}</textarea>
+    </div>
+    <button type="submit" class="submit-button">{% if review %}수정 완료{% else %}후기 등록하기{% endif %}</button>
+  </form>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 별점 기능
-    const stars = document.querySelectorAll('#rating img');
-    const ratingInput = document.getElementById('rating-value');
-    
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            const rating = this.dataset.rating;
-            ratingInput.value = rating;
-            
-            stars.forEach(s => {
-                if (s.dataset.rating <= rating) {
-                    s.src = "{% static 'img/fill_star.png' %}";
-                } else {
-                    s.src = "{% static 'img/empty_star.png' %}";
-                }
-            });
-        });
-    });
-
-    document.getElementById('accommodation-img').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const newPreview = document.createElement('img');
-        newPreview.classList.add('preview-img');
-        
-        const container = document.getElementById('add-img');
-        const existingPreview = container.querySelector('.preview-img');
-    
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                newPreview.src = e.target.result;
-                if (existingPreview) {
-                    existingPreview.replaceWith(newPreview);
-                } else {
-                    container.appendChild(newPreview);
-                }
-            };
-            reader.readAsDataURL(file);
+  // 별점 기능
+  const stars = document.querySelectorAll('#rating img');
+  const ratingInput = document.getElementById('rating-value');
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      const rating = this.dataset.rating;
+      ratingInput.value = rating;
+      stars.forEach(s => {
+        if (s.dataset.rating <= rating) {
+          s.src = "{% static 'img/fill_star.png' %}";
+        } else {
+          s.src = "{% static 'img/empty_star.png' %}";
         }
+      });
     });
-})
-
+  });
+  // 이미지 미리보기
+  document.getElementById('accommodation-img').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const container = document.getElementById('add-img');
+    let preview = container.querySelector('.preview-img');
+    if (!preview) {
+      preview = document.createElement('img');
+      preview.classList.add('preview-img');
+      container.appendChild(preview);
+    }
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+});
 </script>
 {% endblock %}
