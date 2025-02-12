@@ -75,12 +75,15 @@
 /*중간 title*/
 .market_detail_mid_title{
     display: flex;
-    height: 50px;
     align-items: center;
     gap: 25px;
     font-size: 17px;
 }
-
+.detail_set{
+    display: flex;
+    gap:25px;
+    align-items: center;
+}
 .market_detail_temp{
     border: 1.5px solid black;
     border-radius: 18px;
@@ -227,3 +230,20 @@
     justify-content: flex-end;
     gap: 10px;
 }
+
+/*반응형*/
+@media screen and (max-width: 880px) {
+    .market_detail_mid_title{
+        flex-direction: column;
+        align-items: start;
+    }
+    .market_detail_body{
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+    }
+    .market_detail_body img{
+        width: 65%;
+    }
+}
+
