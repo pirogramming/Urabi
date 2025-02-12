@@ -8,10 +8,10 @@
 {% block content %}
 <section class="market_create">
     <section class="market_register_head">
-        <h2>필요한 순간, 따뜻한 <a href="{% url 'market:market_list' %}" id="highlight">나눔 마켓</a> <p class="sub">> 물품 등록</p></h2>
+        <h2>필요한 순간, 따뜻한 <a href="{% url 'market:market_list' %}" id="highlight">나눔 마켓</a> <p class="sub">{% if is_update%}>게시글 수정 {%else %}> 물품 등록{%endif%}</p></h2>
     </section>
     <section id="market_register_body">
-        <form method="POST" action="{% url 'market:market_create' %}" class="mkt_form" enctype="multipart/form-data">
+        <form method="POST" action="{%if is_update %}{% url 'market:market_update' pk=form.instance.pk%}{% else %}{% url 'market:market_create' %}{%endif%}" class="mkt_form" enctype="multipart/form-data">
             {% csrf_token %}
     
             <div class="mkt_form_title">
@@ -65,7 +65,7 @@
                 {{ form.explanation }}
             </div>
             <div class="market_register_bottom">
-                <button type="submit" class="market_register_enroll_btn">등록하기</button>
+                <button type="submit" class="market_register_enroll_btn">{%if is_update %}수정하기{%else%}등록하기{%endif%}</button>
             </div>
         </form>
     </section>

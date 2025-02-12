@@ -56,16 +56,13 @@ def market_detail(request,pk):
 
 
 def market_update(request,pk):
-    market = Market.objects.get(item_id=pk)
-    if request.method == 'GET':
-        form = MarketForm(instance=market)    
-        return render(request, 'market/market_update.html', {'form':form, 'market':market})
-    else:
-        form = MarketForm(request.POST, request.FILES, instance=market)
-        if form.is_valid():      
-            form.save()
-            return redirect(reverse('market:market_detail', kwargs={'pk': market.item_id}))
-    return render(request, 'market/market_update.html', {'form':form, 'market':market})
+    instance= Market.objects.get(item_id=pk)
+    form = MarketForm(request.POST or None, request.FILES or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect('market:market_list')
+    return render(request, 'market/market_create.html', {'form':form, 'is_update':True})
+
 
 
 def market_delete(request, pk):
