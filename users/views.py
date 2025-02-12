@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from .models import User, TravelPlan, TravelSchedule
 from accompany.models import Accompany_Zzim, TravelParticipants, TravelGroup, AccompanyRequest
-from flash.models import FlashZzim, Flash
+from flash.models import FlashZzim, Flash, FlashParticipants
 from .serializers import SignupSerializer, UserSerializer, LoginSerializer
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, TravelPlanForm
@@ -711,12 +711,17 @@ def user_list(request):
     user_request = AccompanyRequest.objects.filter(user=user)
     user_request_count = user_request.count()
 
+    flash_participants = FlashParticipants.objects.filter(user=user).select_related('flash')
+    flash_participant_count = flash_participants.count()
+
     return render(request, 'mypage/planlist.html', {
         'plans': user_plans,
         'plan_count': user_plan_count,
         'accompanies': user_accompanies,
         'accompany_count': user_accompany_count+user_request_count,
         'ac_requests': user_request,
+        'flash_participants': [fp.flash for fp in flash_participants],  # 참가한 번개 목록
+        'flash_participant_count': flash_participant_count,
     })
 
 def zzim_list(request):
