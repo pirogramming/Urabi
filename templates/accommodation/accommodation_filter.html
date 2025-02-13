@@ -27,7 +27,8 @@
         <p class="blue">찾고 싶은 숙소를 검색해보세요</p>
         <form class="search-box" method="GET" action="{% url 'accommodation:filter' %}">
             <div class="filter_contents">
-                <input type="text" name="city" placeholder="여행 도시로 숙소 검색" class="location-input" value="{{ city_query }}">
+                <input type="text" name="city" placeholder="여행 도시" class="location-input" value="{{ city_query }}">
+                <input type="text" name="accommodation_name" placeholder="숙소 이름" class="name-input" value="{{ accommodation_name_query }}">
                 <input type="number" name="rating" placeholder="이용자 평점" class="facility-input"
                         min="0" max="5" step="0.5" value="{{ rating_query }}">
             </div>
