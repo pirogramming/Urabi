@@ -20,3 +20,27 @@
 .gmnoprint, .gm-style-mtc-bbw, .gm-style-mtc{
   display: none;
 }
+
+@media (max-width: 850px) {
+  .map-container, #map {
+    height: 350px;
+  }
+}
+
+@media (max-width: 600px) {
+  .map-container, #map {
+    height: 300px;
+  }
+}
+
+@media (max-width: 450px) {
+  .map-container, #map {
+    height: 250px;
+  }
+  
+  #search-bar {
+    width: calc(100% - 40px);
+    margin: 10px;
+  }
+}
+
