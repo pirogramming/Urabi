@@ -452,6 +452,7 @@
 
   .activity-review-header{
     display: flex;
+    align-items: center;
     max-width: 500px;
   }
 
@@ -462,6 +463,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
 
   .activity-review-type{
     background-color: var(--yellow);

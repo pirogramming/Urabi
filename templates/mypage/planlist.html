@@ -21,7 +21,9 @@
 
   <!-- 메인 콘텐츠 영역 -->
   <section class="mypage-content">
-    <h1 class="main-title">나의 여행 일정</h1>
+    <h1 class="main-title">나의 여행 일정
+      <img src="{% static 'img/mypage-plan-icon.png' %}" alt="여행 일정 아이콘" id="title-icon">
+    </h1>
     <!-- 프로필 섹션 -->
     <section class="profile-section">
 
@@ -58,7 +60,7 @@
         </p>
         {% if plans %}
         {% for plan in plans %}
-        <div class="schedule-card" style="display: none;">
+        <div class="activity-card" style="display: none;">
           <img
             src="{%if plan.photo%}{{plan.photo.url}}{%else%}{% static 'img/schedule_default_img.jpg' %}{%endif%}"
             alt="여행 이미지"
@@ -69,14 +71,14 @@
           <div class="schedule-info">
             <h3 class="schedule-title"><a href="{% url 'users:schedule_detail' plan.schedule_id %}">{%if plan.name|length > 13%}{{ plan.name|slice:":13" }} ... {%else%}{{plan.name}}{%endif%}</a></h3>
             <div>
-              <p>{{ plan.start_date|date:"Y-m-d" }} ~ {{ plan.end_date|date:"Y-m-d" }}</p>
-              <p>{{plan.plans_count}}개의 계획이 있어요!</p>
+              <p class="activity-date">{{ plan.start_date|date:"Y-m-d" }} ~ {{ plan.end_date|date:"Y-m-d" }}</p>
+              <p> <span class="text-hilight">{{plan.plans_count}}</span>개의 계획이 있어요!</p>
             </div>
           </div>
         </div>
         {% endfor %}
         {% else %}
-        <div class="schedule-card">
+        <div class="activity-card empty">
           등록한 여행 일정이 없어요!
         </div>
         {% endif %}
@@ -98,7 +100,7 @@
           <div class="activity-card" style="display: none;">
             {% if accompany.photo %}
             <img
-              src="{{ accompany.travel.photo.url }}"
+              src="{{ accompany.photo.url }}"
               alt="프랑스 파리 이미지"
               class="activity-img"
               onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
@@ -115,50 +117,19 @@
             {% endif %}
             <div class="activity-info">
               <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
-              <p class="activity-date">{{ accompany.travel.start_date }} ~ {{ accompany.travel.end_date }}</p>
-              {% for tag in accompany.tags %}
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">{{ tag }}</span>
-              </p>
+              <p class="activity-date">{{ accompany.start_date }} ~ {{ accompany.end_date }}</p>
+              {% for marker in accompany.markers %}
+                <p class="schedule-location">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                  <span class="schedule-location-text">{{ marker.title }}</span>
+                </p>
               {% endfor %}
-            </div>
-          </div>
-          {% endfor %}
-          {% for accompany in ac_requests %}
-          <p>참여 신청한 동행</p>
-          <div class="activity-card" style="display: none;">
-            {% if accompany.photo %}
-            <img
-              src="{{ accompany.travel.photo.url }}"
-              alt="프랑스 파리 이미지"
-              class="activity-img"
-              onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
-              style="cursor:pointer;"
-            />
-            {% else %}
-            <img
-              src="{% static 'img/banner.png' %}"
-              alt="프랑스 파리 이미지"
-              class="activity-img"
-              onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
-              style="cursor:pointer;"
-            />
-            {% endif %}
-            <div class="activity-info">
-              <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
-              <p class="activity-date">{{ accompany.travel.start_date }} ~ {{ accompany.travel.end_date }}</p>
-              {% for tag in accompany.tags %}
-              <p class="schedule-location">
-                <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                <span class="schedule-location-text">{{ tag }}</span>
-              </p>
-              {% endfor %}
+
             </div>
           </div>
           {% endfor %}
         {% else %}
-        <div class="activity-card">
+        <div class="activity-card empty">
           동행한 번개 모임이 없어요!
         </div>
         {% endif %}
@@ -172,6 +143,7 @@
                 {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_participant_count }}</span>개의 번개에 참여했어요!
             </p>
             {% for flash in flash_participants %}
+            
                 <div class="activity-card flash-card">
                     <a href="{% url 'flash:flash_detail' flash.pk %}">
                         <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
@@ -190,7 +162,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p>참여한 번개 모임이 없어요!</p>
+            <p class="activity-card empty">참여한 번개 모임이 없어요!</p>
         {% endif %}
     </div>
     <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
