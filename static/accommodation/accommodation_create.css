@@ -200,3 +200,24 @@ input{
 .submit-button:hover {
     background-color: var(--red-hover);
 }
+
+@media (max-width: 450px) {
+    .review-header {
+        flex-direction: column;
+    }
+    
+    .review-header-right {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 10px;
+    }
+    
+    #rating {
+        order: 1;
+        margin-top: 10px;
+    }
+    
+    #add-img {
+        order: 2;
+    }
+}
