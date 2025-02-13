@@ -122,23 +122,25 @@ def flash_detail(request, pk):
     # 현재 번개와 가장 가까운 2개의 번개 찾기 (pk 기준으로 가장 가까운 번개)
     other_flash_meetings = Flash.objects.exclude(pk=pk).order_by(F('pk') - pk)[:2]
 
-    if flash.latitude and flash.longitude:
-        place_img_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
-    else:
-        place_img_url = "https://via.placeholder.com/300"
+    flash_img = None
+    if f'flash_img_{pk}' in request.session:
+        flash_img = request.session[f'flash_img_{pk}']
 
     # 다른 번개들도 이미지 URL 설정
     for other_flash in other_flash_meetings:
-        if other_flash.latitude and other_flash.longitude:
+        session_img_key = f'flash_img_{other_flash.pk}'
+        if session_img_key in request.session:
+            other_flash.image_url = request.session[session_img_key]  # 세션에서 이미지 가져오기
+        elif other_flash.latitude and other_flash.longitude:
             other_flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={other_flash.latitude},{other_flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
         else:
-            other_flash.image_url = "https://via.placeholder.com/300"
+            other_flash.image_url = "/static/img/default_map_image.jpg"
 
     return render(request, "flash/flash_detail.html", {
         "flash": flash, 
         "tag_list": tag_list,
         "is_zzimmed": is_zzimmed,
-        'place_img_url': place_img_url, 
+        "flash_img": flash_img,
         "other_flash_meetings": other_flash_meetings,
         "participants": participants,
         "pending_requests": pending_requests,
@@ -146,6 +148,26 @@ def flash_detail(request, pk):
         "participant_data": participant_data,
         }
     )
+
+def save_flash_img(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            flash_id = data.get("flash_id")
+            img_src = data.get("img_src")
+
+            print("🔄 flash_id:", flash_id)  # 디버깅
+            print("🖼 img_src:", img_src)  # 디버깅
+
+            if flash_id and img_src:
+                request.session[f'flash_img_{flash_id}'] = img_src
+                request.session.save()
+                return JsonResponse({"message": "이미지 저장 완료"}, status=200)
+            else:
+                return JsonResponse({"error": "flash_id 또는 img_src 없음"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "잘못된 요청"}, status=400)
 
 
 

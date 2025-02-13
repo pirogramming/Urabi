@@ -51,13 +51,14 @@ async function addFlashMeetingMarkers(map, placesService, streetViewService) {
 
         const marker = new google.maps.Marker({ position: { lat, lng }, map, title });
         const infoWindow = new google.maps.InfoWindow({ content: createInfoWindowContent(DEFAULT_IMAGE_URL, title, url, date, infoImageId) });
+        const flashId = card.dataset.flashId;
         marker.addListener("click", () => infoWindow.open(map, marker));
 
-        await loadPlaceImage(placesService, streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date);
+        await loadPlaceImage(placesService, streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date, flashId);
     }));
 }
 
-async function loadPlaceImage(placesService, streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date) {
+async function loadPlaceImage(placesService, streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date, flashId) {
     if (!placeAddress) return setImage(imgElement, DEFAULT_IMAGE_URL);
     
     try {
@@ -65,24 +66,29 @@ async function loadPlaceImage(placesService, streetViewService, placeAddress, im
         const photoUrl = results[0]?.photos?.[0]?.getUrl({ maxWidth: 500, maxHeight: 500 }) || null;
 
         if (photoUrl) {
-            return setImage(imgElement, photoUrl, infoWindow, infoImageId, title, url, date);
+            setImage(imgElement, photoUrl, infoWindow, infoImageId, title, url, date);
+            updateImageAndSession(flashId, photoUrl);
+            return;
         }
         
         console.warn(`'${placeAddress}'의 장소 이미지 없음. Street View 시도`);
-        await loadStreetViewImage(streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date);
+        await loadStreetViewImage(streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date, flashId);
     } catch (error) {
         console.error(`🚨 이미지 로드 실패: ${placeAddress}`, error);
-        setImage(imgElement, DEFAULT_IMAGE_URL);
+        setImage(imgElement, DEFAULT_IMAGE_URL, infoWindow, infoImageId, title, url, date);
+        updateImageAndSession(flashId, DEFAULT_IMAGE_URL);
     }
 }
 
-async function loadStreetViewImage(streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date) {
+async function loadStreetViewImage(streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date, flashid) {
     try {
         const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${placeAddress}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k`;
         setImage(imgElement, streetViewUrl, infoWindow, infoImageId, title, url, date);
+        updateImageAndSession(flashid, streetViewUrl);
     } catch (error) {
         console.error("🚨 Street View 이미지 로드 실패:", error);
-        setImage(imgElement, DEFAULT_IMAGE_URL);
+        setImage(imgElement, DEFAULT_IMAGE_URL, infoWindow, infoImageId, title, url, date);
+        updateImageAndSession(flashid, DEFAULT_IMAGE_URL);
     }
 }
 
@@ -140,5 +146,19 @@ function getCurrentLocation(map) {
             console.warn("🚨 위치 정보를 가져올 수 없음:", error);
         }
     );
+}
+
+function updateImageAndSession(flashId, updatedImageUrl) {
+    fetch("/flash/save_flash_img/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.getElementById("csrf_token").value
+        },
+        body: JSON.stringify({ flash_id: flashId, img_src: updatedImageUrl })
+    })
+    .then(response => response.json())
+    .then(data => console.log("✅ 세션에 업데이트된 이미지 저장 완료:", data))
+    .catch(error => console.error("🚨 세션 이미지 저장 실패:", error));
 }
 

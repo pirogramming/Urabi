@@ -60,9 +60,10 @@
                         data-lat="{{ flash.latitude }}"
                         data-lng="{{ flash.longitude }}"
                         data-date="{{ flash.date_time|date:'Y-m-d H:i' }}"
-                        data-place-address="{{ flash.city }}">
+                        data-place-address="{{ flash.city }}"
+                        data-flash-id="{{ flash.pk }}">
                         <a href="{% url 'flash:flash_detail' flash.meeting_id %}">
-                            <img id="place-img-{{ flash.meeting_id }}" src="https://via.placeholder.com/300" alt="모임 이미지">
+                            <img id="place-img-{{ flash.meeting_id }}" src="/static/img/default_map_image.jpg" alt="모임 이미지">
                         </a>
                         <div class ="flash_card_content">
                             <div class="flash_card_info">
@@ -118,6 +119,7 @@
             console.error("🚨 actualInitMap 함수가 정의되지 않음!");
         }
     };
+    
 </script>
 
 <input type="hidden" id="csrf_token" value="{{ csrf_token }}">

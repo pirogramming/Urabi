@@ -80,7 +80,8 @@
 
 /* 제목 아래 영역 */
 .flash_container {
-    min-height: 800px;
+    width: 100%;
+    min-height: 1200px;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: 20px;
@@ -312,8 +313,8 @@
 .main {
     width: 100%;
     padding: 30px;
-    padding-left: 140px;
-    padding-right: 140px;
+    max-width: 1200px;
+    margin: auto;
 }
 
 @media screen and (max-width: 850px) {
@@ -327,5 +328,93 @@
 
     .flash_left, .flash_map {
         width: 100%; 
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .flash_title {
+        text-align: center;
+        font-size: 22px;
+    }
+
+    .flash_title h2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .flash_title .highlight {
+        margin-top: 5px;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .banner-filter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .flash_filter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .flash_filter_content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .flash_filter button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #id-date_time {
+        order: 3;
+    }
+
+    /* flash_card를 세로로 길게 조정하여 정보가 잘리더라도 모두 표시되도록 수정 */
+    .flash_card {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+
+    .flash_card img {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+    }
+
+    .flash_card_content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .flash_card_info {
+        width: 100%;
+        text-align: center;
+    }
+
+    .flash_card_tags {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .flash_place {
+        display: block;
+        text-align: center;
+        font-size: 14px;
     }
 }

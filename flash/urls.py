@@ -15,4 +15,5 @@ urlpatterns = [
     path('apply_participant/', apply_flash_participant, name="apply_flash_participant"),
     path('cancel_participant/', cancel_flash_participant, name="cancel_flash_participant"),
     path('<int:flash_id>/requests/', get_flash_requests, name="get_flash_requests"),
+    path("save_flash_img/", save_flash_img, name="save_flash_img"),
 ]
