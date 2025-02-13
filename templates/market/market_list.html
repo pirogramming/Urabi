@@ -9,21 +9,25 @@
 {% block content%}
 <section class="market">
     <section id="market_search">
-        <h1 class="title">필요한 순간, 따뜻한 <a class="highlight" href="{% url 'market:market_list' %}">나눔 마켓</a></h1>
+        <h1 class="title">필요한 순간, 따뜻한 
+            <a class="highlight" href="{% url 'market:market_list' %}">나눔 마켓</a>
+        </h1>
         <button id="filterToggleButton" class="filter-toggle-btn">검색 필터 보기</button>
         <div class="mkt_banner-filter">
             <p class="mkt_blue">원하는 물건을 찾아보세요</p>
             <form method="GET" id="market_search_bar">
                 {% csrf_token %}
                 <div class="market_search_content">
-                    <div class="market_search_title">
-                        {{filterset.form.status}}
-                    </div>
-                    <div class="market_search_title">
-                        {{filterset.form.trade_type}}
-                    </div>
-                    <div class="market_search_title">
-                        {{filterset.form.category}}
+                    <div class="mkt_matching">
+                        <div class="market_search_title">
+                            {{filterset.form.status}}
+                        </div>
+                        <div class="market_search_title">
+                            {{filterset.form.trade_type}}
+                        </div>
+                        <div class="market_search_title">
+                            {{filterset.form.category}}
+                        </div>
                     </div>
                     <div class="market_search_title">
                         {{filterset.form.city}}
@@ -46,7 +50,7 @@
                         {% if selected_status and selected_category %}
                             <h3>"{{selected_status}}"인 <p>#{{selected_category}}</p> 관련 게시글입니다</h3>
                         {% elif selected_status %}
-                            <h3>"{{selected_status}}"인 <p>전체 태그</p> 관련 게시글입니다</h3>
+                            <h3>"{{selected_status}}"인 <p>전체 태그</p> <p class="unvisible">관련 게시글입니다</p>/h3>
                         {% elif selected_category %}
                             <h3>"모든 거래 상태"의 <p>#{{selected_category}}</p> 관련 게시글입니다</h3>
                         {% else %}
@@ -72,7 +76,7 @@
                         <th style="width: 10%;">거래 유형</th>
                         <th style="width: 46%;">제목</th>
                         <th style="width: 13%;">작성일</th>
-                        <th style="width: 13%;">작성자</th>
+                        <th style="width: 13%;" >작성자</th>
                         <th style ="width: 8%">찜</th>
                     </tr>
                 </thead>
