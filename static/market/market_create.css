@@ -188,3 +188,19 @@ textarea:placeholder-shown{
     }
 }
 
+
+@media (max-width: 500px) {
+    .market_set {
+        flex-direction: column; 
+    }
+
+    .market_form_sub {
+        width: 100%; 
+    }
+
+    .market_register_small select,
+    .market_register_small input,
+    .market_register_form input {
+        width: 100%; 
+    }
+}
