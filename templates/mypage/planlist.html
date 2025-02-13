@@ -153,7 +153,7 @@
                         <div class="activity-title">
                             <a href="{% url 'flash:flash_detail' flash.pk %}">{{ flash.title }}</a>
                         </div>
-                        <p class="activity-date">📅 {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                        <p class="activity-date"> {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
                         <p class="schedule-location">
                             <img src="{% static 'img/location_icon.png' %}" alt="위치">
                             <span class="schedule-location-text">{{ flash.city }}</span>

@@ -258,6 +258,11 @@
     padding: 30px 16px;
     margin-bottom: 20px;
 }
+
+#flash-cards-container .activity-card {
+  text-align: left;  
+}
+
 .flash-card {
   display: flex;
   background-color: #fff;
@@ -323,6 +328,9 @@
     align-items: center;
     gap: 16px;
     border: 1px solid #eee;
+  }
+  .review-rating{
+    font-weight: normal;
   }
   .new-plan-btn{
     background-color: var(--red);
@@ -431,14 +439,15 @@
   .schedule-header button:hover{
     background-color: var(--red-hover);
   }
-  .activity-info .activity-title{
+  .activity-info .activity-title, .activity-review-title{
     font-size: 1.2rem;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     text-overflow: ellipsis;
     font-weight: bold;
   }
+  
   .activity-date {
     font-size: 14px;
     margin-bottom: 15px;
@@ -464,7 +473,6 @@
     text-overflow: ellipsis;
   }
 
-
   .activity-review-type{
     background-color: var(--yellow);
     color: white;
@@ -477,6 +485,10 @@
 
   .mypage_mkt_title{
     line-height: 26px;
+  }
+
+  .review-content{
+    margin: 20px 0;
   }
 
 
