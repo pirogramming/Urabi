@@ -242,11 +242,129 @@
 }
 
 
-
 /*반응형*/
 @media screen and (max-width: 850px) {
     .market_search {
         width:100%;
     }
+}
+
+/* 미디어 쿼리: 700px 이하 */
+@media (max-width: 700px) {
+    .mkt_banner-filter {
+        display: none;
+    }
+
+    .filter-toggle-btn {
+        display: block !important;
+        width: 100% !important;
+        padding: 10px !important;
+        background-color: var(--blue) !important;
+        color: white !important;
+        text-align: center !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+    }
+
+    .market_list_info_container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+        .market_add {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 600px) {
+    .market_list_info h3,
+    .market_list_info form,
+    .market_add{
+        width: 100%;
+    }
+    
+    .market_list_info_container {
+        padding: 15px;
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    .market_list_info h3 {
+        font-size: 16px !important;
+    }
+
+    #market_list_count {
+        font-size: 14px !important;
+    }
+
+    .market_add_text {
+        font-size: 14px !important;
+    }
+
+    .market_list_total_title h1 {
+        font-size: 24px !important;
+    }
+}
+/*680px 이하*/
+@media (max-width: 680px) {
+    .market_list_info {
+        grid-template-columns: 1fr; /* 세로로 배치 */
+        gap: 10px;
+        align-items: start;
+    }
+
+    .market_info_set {
+        flex-direction: column; 
+        align-items: flex-start;
+    }
+
+    .market_add {
+        justify-content: flex-end; 
+    }
+}
+
+/* 400px 이하 */
+@media (max-width: 400px) {
+    .market_list_info h3{
+        font-size:1rem;
+    }
+    #market_list_count{
+        width: auto; 
+        height: auto; 
+    }
+
+    .market_add {
+        justify-content: center; 
+    }
+}
+
+/* 430px 이하 */
+@media (max-width: 430px) {
+    .market_list th,
+    .market_list td {
+        font-size: 12px !important; 
+        padding: 5px !important; 
+        white-space: nowrap; 
+    }
+    .market_icon_table img {
+        width: 30px !important; 
+        height: auto;
+    }
+}
+
+/* 500px 이하 */
+@media (max-width: 500px) {
+    .market_list_section td {
+        font-size: 14px; 
+        padding: 8px 5px; 
+    }
+    .market_icon_table img {
+        width: 30px; 
+        height: auto;
+    }
+}
+
+.filter-toggle-btn {
+    display: none; /* 기본적으로 검색 필터 보기 버튼은 숨김 (700px 이하에서 나타남) */
 }
 

@@ -10,6 +10,7 @@
 <section class="market">
     <section id="market_search">
         <h1 class="title">필요한 순간, 따뜻한 <a class="highlight" href="{% url 'market:market_list' %}">나눔 마켓</a></h1>
+        <button id="filterToggleButton" class="filter-toggle-btn">검색 필터 보기</button>
         <div class="mkt_banner-filter">
             <p class="mkt_blue">원하는 물건을 찾아보세요</p>
             <form method="GET" id="market_search_bar">
@@ -136,6 +137,33 @@
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         const csrfToken = "{{ csrf_token }}";  
+        const filterSection = document.querySelector('.mkt_banner-filter');
+        const filterToggleButton = document.querySelector('#filterToggleButton');
+
+        if (filterToggleButton) {
+            filterToggleButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (filterSection.style.display === 'none') {
+                    filterSection.style.display = 'block';
+                } else {
+                    filterSection.style.display = 'none';
+                }
+            });
+
+            function adjustFilterVisibility() {
+                if (window.innerWidth <= 700) {
+                    filterSection.style.display = 'none';
+                    filterToggleButton.style.display = 'block';
+                } else {
+                    filterSection.style.display = 'block';
+                    filterToggleButton.style.display = 'none';
+                }
+            }
+
+            adjustFilterVisibility();
+            window.addEventListener('resize', adjustFilterVisibility);
+        }
+
 
         document.querySelectorAll(".market_like").forEach(button => {
             button.addEventListener("click",function(){
