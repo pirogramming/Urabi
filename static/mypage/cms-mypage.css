@@ -46,26 +46,16 @@
   /********************************
     스케쥴 디테일일
   ********************************/
-
-  .activity-main-cms{
-    display: flex;
-    align-items:start;
-    height: 550px;
-  }
   .photo-sec{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 40px;
+    margin: 30px 0;
   }
   .market-cards-container-cms{
     width: 400px;
     max-height: 550px;
     overflow-y: auto;
-  }
-  .activity-card.activity-card-cms{
-    padding: 20px 30px;
-    background-color: skyblue;
   }
   .no-plan{
     display: flex;
@@ -102,4 +92,27 @@
     padding: 10px 20px;
     border: 1px solid var(--red);
     color: var(--red);
+  }
+
+  .cms-schedule-footer{
+    text-align: center;
+  }
+  
+  .del-schedule-btn{
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  .del-schedule-btn:first-child{
+    background-color: var(--red);
+  }
+  .del-schedule-btn:last-child{
+    background-color: var(--blue);
+  }
+  .del-schedule-btn:hover{
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
   }

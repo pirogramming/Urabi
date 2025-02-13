@@ -342,21 +342,8 @@
   }
   .new-plan-btn:hover{
     background-color: var(--red-hover);
+    transition: all 0.3s ease;
   }
-  .del-schedule-btn{
-    background-color: var(--gray);
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-left: 15px;
-  }
-  .del-schedule-btn:hover{
-    background-color: var(--gray-hover);
-  }
-  /* .activity-card:hover{
-    box-shadow: 10px 10px 8px rgba(199, 198, 198, 0.5);
-  } */
 
   .modal {
     display: flex;
@@ -411,7 +398,10 @@
   }
   .photo-sec img{
     border-radius: 8px;
-    
+    width: 300px;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
   }
   .activity-img {
     width: 200px;
