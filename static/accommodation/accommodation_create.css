@@ -89,7 +89,27 @@ input{
     height: 100%;
     overflow: hidden;
 }
-
+.location-section{
+    position: relative; 
+}
+#map{
+    width: 100%; 
+    height: 300px; 
+    border-radius: 10px;
+}
+#search-bar{
+    position: absolute;
+    left: 10px;
+    top: 56px;
+    padding: 10px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    background-color: white;
+}
+.gm-svpc, .gm-control-active, .gmnoprint{
+    display: none;
+}
 .preview-img {
     height: 80px !important;
     width: auto !important;

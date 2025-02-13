@@ -693,9 +693,6 @@ def update_trip(request, pk):
         form = TravelPlanForm(instance=travel_plan)
         try:
             existing_markers = json.loads(travel_plan.markers)
-            for marker in existing_markers:
-                if not marker.get("customName"):
-                    marker["customName"] = marker.get("title") or marker.get("address", "알 수 없는 위치")
             travel_plan.markers = json.dumps(existing_markers)
         except (json.JSONDecodeError, AttributeError):
             travel_plan.markers = '[]'
