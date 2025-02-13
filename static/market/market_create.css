@@ -204,3 +204,11 @@ textarea:placeholder-shown{
         width: 100%; 
     }
 }
+
+@media (max-width: 400px) {
+    .mkt_ment{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
