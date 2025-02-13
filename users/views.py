@@ -729,7 +729,6 @@ def user_list(request):
         # 만약 제목이나 markers가 없으면 승인되지 않은 것
         if travel_group.title and travel_group.markers:
             accompany_items.append(travel_group)
-    # 최종 승인된 동행 개수는 accompany_items의 길이로 계산
     accompany_count = len(accompany_items)
     
     user_request = AccompanyRequest.objects.filter(user=user)

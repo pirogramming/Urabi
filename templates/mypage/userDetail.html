@@ -95,6 +95,10 @@
           </div>
         </div>
       </div>
+      {% else %}
+      <h2 class="main-title">내 활동 관리
+        <img src="{% static 'img/mypage-manage-icon.png' %}" alt="관리 아이콘" id="title-icon">
+      </h2>
       {% endif %}
     </section>
 
@@ -139,7 +143,7 @@
         </div>
         {% endfor %}
         {% else %}
-        <div class="activity-card">
+        <div class="activity-card empty">
           동행한 번개 모임이 없어요!
         </div>
         {% endif %}
@@ -147,7 +151,7 @@
       <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
 
       <!-- 번개 이력 -->
-      <h2 class="sub-title">내가 등록한 번개 모임</h2>
+      <h2 class="sub-title">등록한 번개 모임</h2>
       <div id="flash-cards-container" class="activity-box activity-none">
           <p class="activity-header">
               {{ user.nickname }} 님은 <span class="text-hilight">{{ flash_count }}</span>개의 번개 모임을 등록했어요!
@@ -155,7 +159,7 @@
 
           {% if flash_meetings %}
               {% for flash in flash_meetings %}
-                  <div class="activity-card" style="display: none;">
+                  <div class="activity-card" style="display: none; ">
                       <a href="{% url 'flash:flash_detail' flash.pk %}">
                         <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
                             alt="번개 이미지" class="flash-img">
@@ -171,7 +175,7 @@
                   </div>
               {% endfor %}
           {% else %}
-              <div class="activity-card">
+              <div class="activity-card empty">
                   내가 등록한 번개 모임이 없어요!
               </div>
           {% endif %}
@@ -179,7 +183,7 @@
       <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlashes()">더보기</button>
 
       <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
-      <h2 class="sub-title">숙소 리뷰 이력</h2>
+      <h2 class="sub-title">작성한 숙소 리뷰</h2>
       <div id="review-cards-container" class="activity-box">
         <p class="activity-header">
             {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
@@ -188,35 +192,33 @@
         {% if accommodation_reviews %}
               {% for review in accommodation_reviews %}
                   <div class="activity-card" style="display: none;">
+                    <a href="{% url 'accommodation:accommodation_review_detail' review.pk %}">
                       <div class="activity-review">
                           <p class="activity-review-title">
                               {{ review.accommodation_name }}
+                              <span class="review-rating" >⭐ {{ review.rating }}</span>
                           </p>
-                          <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
                           <p class="schedule-location">
                               <img src="{% static 'img/location_icon.png' %}" alt="위치">
                               <span class="schedule-location-text">{{ review.city }}</span>
                           </p>
-                          <p class="review-rating">⭐ {{ review.rating }}</p>
                           <p class="review-content">{{ review.content }}</p>
+                          <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
                       </div>
+                      </a>
                   </div>
               {% endfor %}
           {% else %}
               <div class="activity-card">
                   <div class="activity-review">
-                      <p class="activity-review-title">작성한 숙소 리뷰가 없어요!</p>
+                      <p class="empty">작성한 숙소 리뷰가 없어요!</p>
                   </div>
               </div>
           {% endif %}
           <button id="load-more-review-btn" class="load-more-btn" onclick="loadMoreReviews()">더보기</button>
       </div>
       
-        
-
-    
-
-      <h2 class="sub-title">나눔 마켓 이력</h2>
+      <h2 class="sub-title">작성한 마켓 글</h2>
       <div id="market-cards-container">
         <p class="activity-header">
           {{ user.nickname }} 님은 <span class="text-hilight">{{mkt_self_count}}</span>개의 글을 올렸어요!
@@ -247,7 +249,7 @@
             </div>
             {% endfor %}
         {% else %}
-          <div>작성한 마켓 게시글이 없습니다. </div>
+          <div class="activity-card empty">작성한 마켓 게시글이 없습니다. </div>
         {% endif %}
       </div>
       <button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
@@ -267,7 +269,7 @@
     return function() {
       const nextIndex = currentIndex + plansPerPage;
       for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
-        items[i].style.display = 'block';
+        items[i].style.display = 'flex';
       }
       currentIndex = nextIndex;
 
