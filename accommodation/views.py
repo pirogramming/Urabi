@@ -12,6 +12,7 @@ def accommodation_filter(request):
     """메인 페이지 (리스트) – 최신순 또는 공감순 정렬 지원"""
     city_query = request.GET.get('city', '')
     rating_query = request.GET.get('rating', '')
+    accommodation_name_query = request.GET.get('accommodation_name', '')
     sort = request.GET.get('sort', 'latest')  # sort 값: 'latest' 또는 'like'
 
     # 각 숙소별 최신 리뷰를 가져오는 서브쿼리
@@ -29,6 +30,8 @@ def accommodation_filter(request):
 
     if city_query:
         reviews = reviews.filter(city__icontains=city_query)
+    if accommodation_name_query:
+        reviews = reviews.filter(accommodation_name__icontains=accommodation_name_query)
     if rating_query:
         try:
             min_rating = float(rating_query)
@@ -45,6 +48,7 @@ def accommodation_filter(request):
         'reviews': reviews,
         'city_query': city_query,
         'rating_query': rating_query,
+        'accommodation_name_query': accommodation_name_query,
         'total_reviews_count': total_reviews_count,
         'sort': sort,
     }
