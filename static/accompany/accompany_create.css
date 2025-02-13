@@ -1,6 +1,8 @@
-.main{
+.main {
   margin: 0 auto;
-  width: 860px;
+  max-width: 860px;  
+  width: 100%;       
+  box-sizing: border-box; 
 }
 .blue{
   color: var(--blue);
@@ -111,7 +113,9 @@
 }
 .filter-group-first{
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+  justify-content: space-between;
 }
 .filter-group-second{
   display: flex;
@@ -121,7 +125,8 @@
   border-bottom: 1px solid var(--blue);
 }
 .filter_age input{
-  width: 86px;
+  width: 100%; 
+  box-sizing: border-box;
 }
 
 .filter-group input, .filter-group select{
@@ -313,9 +318,9 @@
 
 @media (max-width: 850px) {
   .filter-group input, .filter-group select, #max_member, #image-name {
-    width: 40%;
-    margin-bottom: 10px;
-    margin-right: 600px;
+    width: 100%;
+    margin-bottom: 8px;       
+    box-sizing: border-box;
   }
 }
 
