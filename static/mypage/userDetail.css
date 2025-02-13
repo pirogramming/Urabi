@@ -338,6 +338,7 @@
     border: none;
     border-radius: 10px;
     padding: 10px 20px;
+    margin-top: 10px;
     cursor: pointer;
   }
   .new-plan-btn:hover{
@@ -392,9 +393,11 @@
   }
   .photo-sec{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     gap: 10px;
-    align-items: baseline;
+    align-items: center;
+    margin: 30px 0;
   }
   .photo-sec img{
     border-radius: 8px;

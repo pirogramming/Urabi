@@ -17,9 +17,6 @@
   transition: all  0.3s ease;
 }
 
-.sub-title{
-  margin-bottom: 20px;;
-}
 .schedule-card {
   border-radius: 12px;
   padding: 16px;
@@ -43,22 +40,21 @@
   font-weight: 500;
 }
 
+.edit-button-container {
+  text-align: center;
+  margin-top: 10px; 
+}
+
+#photo-button {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
   /********************************
     스케쥴 디테일일
   ********************************/
-  .activity-main-cms{
-    display: flex;
-    align-items:start;
-    height: 550px;
-    gap: 16px;
-  }
-
-  .photo-sec{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 30px 0;
-  }
   .market-cards-container-cms{
     width: 400px;
     max-height: 550px;
@@ -75,7 +71,6 @@
   .no-plan img{
     margin: 10px auto;
   }
-
 
     /********************************
     플랜 디테일
@@ -104,7 +99,7 @@
   .cms-schedule-footer{
     text-align: center;
   }
-  
+
   .del-schedule-btn{
     color: white;
     border: 1px solid #ccc;

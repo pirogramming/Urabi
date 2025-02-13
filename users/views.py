@@ -815,3 +815,15 @@ def delete_schedule(request):
     schedule = get_object_or_404(TravelSchedule, pk=schedule_id)
     schedule.delete()
     return redirect('users:user_list')
+
+
+def update_schedule_photo(request):
+    if request.method == 'POST':
+        schedule_id = request.POST.get('schedule_id')
+        photo_file  = request.FILES.get('photo')
+        schedule = get_object_or_404(TravelSchedule, pk=schedule_id)
+        if photo_file:
+            schedule.photo = photo_file
+            schedule.save()
+        return redirect('users:schedule_detail', pk=schedule_id)
+    return redirect('users:my_page')
