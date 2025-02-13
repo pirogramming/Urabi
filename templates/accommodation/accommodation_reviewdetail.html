@@ -32,6 +32,22 @@
         </button>
       </div>
     </div>
+    {%if photos%}
+    <div class="photos">
+      <button class="photo-next">❯</button>
+      <button class="photo-prev">❮</button>
+      <div class="photo-container">
+        {% for photo in photos %}
+          <img src="{{ photo }}" class="photo {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+        {% endfor %}
+      </div>
+      <div class="photo-thumbnails">
+        {% for photo in photos %}
+        <img src="{{ photo }}" class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
     <hr class="flash_divider">
     <div class="search-container">
       <p class="review-count"><span class="strong">{{ review_count }}</span>개의 리뷰</p>
@@ -219,5 +235,40 @@ document.getElementById('confirm-delete-btn').addEventListener('click', function
   document.body.appendChild(form);
   form.submit();
 });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let photos = document.querySelectorAll(".photo");
+    let thumbnails = document.querySelectorAll(".thumbnail");
+    let prevButton = document.querySelector(".photo-prev");
+    let nextButton = document.querySelector(".photo-next");
+    let currentIndex = 0;
+
+    function updateCarousel(index) {
+      photos.forEach((photo, i) => {
+        photo.classList.toggle("active", i === index);
+      });
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle("active", i === index);
+      });
+      currentIndex = index;
+    }
+
+    prevButton.addEventListener("click", function () {
+      let newIndex = (currentIndex - 1 + photos.length) % photos.length;
+      updateCarousel(newIndex);
+    });
+
+    nextButton.addEventListener("click", function () {
+      let newIndex = (currentIndex + 1) % photos.length;
+      updateCarousel(newIndex);
+    });
+
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener("click", function () {
+        updateCarousel(index);
+      });
+    });
+  });
 </script>
 {% endblock %}

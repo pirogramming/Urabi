@@ -298,14 +298,3 @@
         align-items: flex-start; 
     }
 }
-
-@media (max-width: 400px) {
-    .accommodation_list_controls {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .accommodation_list_controls h2{
-        font-size: 1.3rem;
-    }
-}

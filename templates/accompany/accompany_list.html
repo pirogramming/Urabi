@@ -124,10 +124,10 @@
               <button class="now">1</button>
           {% endif %}
         </div>
-        <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
       </section>
 
   <script>
+    const csrfToken = "{{ csrf_token|safe }}";
     document.addEventListener('DOMContentLoaded', function() {
         const filterSection = document.getElementById('filterSection');
         const filterToggleBtn = document.getElementById('filterToggleBtn');

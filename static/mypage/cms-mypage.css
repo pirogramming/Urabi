@@ -46,6 +46,13 @@
   /********************************
     스케쥴 디테일일
   ********************************/
+  .activity-main-cms{
+    display: flex;
+    align-items:start;
+    height: 550px;
+    gap: 16px;
+  }
+
   .photo-sec{
     display: flex;
     flex-direction: column;

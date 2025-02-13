@@ -155,6 +155,7 @@
   border-radius: 12px;
   gap: 15px;
   max-width: 430px;
+  height: 163px;
   border: 1px solid #ccc;
 }
 .card:hover{
