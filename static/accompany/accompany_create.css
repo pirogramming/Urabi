@@ -310,3 +310,63 @@
 .address_delete_btn:hover {
   box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
 }
+
+@media (max-width: 850px) {
+  .map-container, #map {
+    height: 300px !important;
+    width: 100% !important;
+  }
+  .filter-group-first {
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+  }
+  .filter-group-first > div {
+    width: calc(50% - 5px) !important;
+  }
+  .filter-group input, .filter-group select, #max_member, #image-name {
+    width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .filter-group-first > div, .filter-group-second > div {
+    width: 100% !important;
+  }
+  .filter-group-second {
+    flex-direction: column !important;
+  }
+  .filter_location label {
+    display: block;
+  }
+  .filter_location input {
+    width: 100% !important;
+  }
+  .map-container, #map {
+    height: 100vw !important;
+    width: 100% !important;
+    max-height: 400px !important;
+    position: relative !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .banner h2, .title input {
+    font-size: 16px !important;
+  }
+  .filter-group {
+    flex-direction: column;
+  }
+  .filter-group input, .filter-group select {
+    width: 100% !important;
+  }
+  .map-container, #map {
+    height: 100vw !important;
+    width: 100% !important;
+    max-height: 400px !important;
+    position: relative !important;
+  }
+  .filter-form>button {
+    width: 100% !important;
+  }
+}
