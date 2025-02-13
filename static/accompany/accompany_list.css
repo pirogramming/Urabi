@@ -321,6 +321,74 @@
   }
 }
 
+/* 620px 이하에서는 검색하기를 누르면 필터 섹션이 나오도록 설정 */
+@media (max-width: 620px) {
+  .card{
+    width: 390px; 
+    margin: 0 auto;
+    height: 120px;
+  }
+  .card-info{
+    gap: 3px;
+  }
+  .pagination>a{
+      font-size: 12px;
+  }
+  .card-image img{
+      height: 80px;
+  }
+  .banner-filter{
+      display:none;
+      margin-bottom: 20px;
+  }
+
+  .toggle-btn {
+      display: inline-block;
+      background-color: var(--blue);
+      color: #fff;
+      border: none;
+      padding: 8px 16px; 
+      font-size: 14px; 
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      align-self: center; 
+  }
+
+  .banner {
+    padding: 10px;
+    text-align: center; 
+  }
+
+  .info-contnet{
+    display: none;
+  }
+  .tags{
+    display: none;
+  }
+  /* 장기동행쪽 글자 크기 조정할거면 여기서 조정 */
+  .banner-text h1{
+      font-size: 25px;
+  }
+
+  .banner-text p{
+      font-size: 18px;
+  }
+
+  .accompany-list{
+    padding: 10px 10px;
+  }
+      
+  .list-main{
+      padding: 5px 5px;
+      justify-content: center; 
+  }
+
+  .banner-container {
+      text-align: center;
+      padding: 10px;
+  }
+}
 
 /* 500px 이하 */
 @media (max-width: 500px) {
@@ -354,67 +422,15 @@
   .list-main{
     padding: 5px 5px;
   }
-}
-
-/* 620px 이하에서는 검색하기를 누르면 필터 섹션이 나오도록 설정 */
-@media (max-width: 620px) {
   .card{
-    flex-direction: column;
-    width: 90%; 
-    margin: 0 auto; 
+    width: 300px;
   }
-
-  .pagination>a{
-      font-size: 12px;
-  }
-
-  .banner-filter{
-      display:none;
-      margin-bottom: 20px;
-  }
-
-  .toggle-btn {
-      display: inline-block;
-      background-color: var(--blue);
-      color: #fff;
-      border: none;
-      padding: 8px 16px; 
-      font-size: 14px; 
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-      align-self: center; 
-  }
-
-  .banner {
-    padding: 10px;
-    text-align: center; 
-  }
-
-
-  /* 장기동행쪽 글자 크기 조정할거면 여기서 조정 */
-  .banner-text h1{
-      font-size: 25px;
-  }
-
-  .banner-text p{
-      font-size: 18px;
-  }
-
-  .accompany-list{
-    padding: 10px 10px;
-  }
-      
-  .list-main{
-      padding: 5px 5px;
-      justify-content: center; 
-  }
-
-  .banner-container {
-      text-align: center;
-      padding: 10px;
+  .card-image img{
+    width: 100px;
   }
 }
+
+
 
 /* 600px 이하에서는 필터 숨기기 */
 @media (max-width: 600px) {
@@ -432,6 +448,12 @@
 
 /* 390px 이하 */
 @media (max-width: 390px) {
+  .list-header h2{
+    display: none;
+  }
+  .list-header{
+    flex-direction: row-reverse;
+  }
     .banner-text h1 {
         font-size: 23px; 
     }
@@ -442,6 +464,17 @@
     .pagination{
         font-size: 10px;
     }
+    .card{
+      width: 40vh;
+      padding: 10px;
+      height: 100px;
+    }
+    .info-date{
+      font-size: 10px;
+    }
+    .card-image img{
+      width: 80px;
+    }
 }
 
 /* toggle-btn 평소에는 none */
@@ -450,7 +483,7 @@
 }
 
 /* 화면 너비가 600px 미만일 때 toggle-btn을 보이도록 설정 */
-@media (max-width: 600px) {
+@media (max-width: 620px) {
   .toggle-btn {
       display: block; 
   }
