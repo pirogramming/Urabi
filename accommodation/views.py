@@ -135,7 +135,9 @@ def accommodation_review_detail(request, pk):
     all_reviews = AccommodationReview.objects.select_related('user').filter(
         accommodation_name=review.accommodation_name
     )
-    
+    photos_reviews = all_reviews.exclude(photo='')
+    photos = [review.photo.url for review in photos_reviews]  
+
     if sort == 'like':
         all_reviews = all_reviews.annotate(like_count=Count('likes')).order_by('-like_count', '-created_at')
     else:
@@ -159,7 +161,8 @@ def accommodation_review_detail(request, pk):
         "page": page,
         "sort": sort,
         "city_query": request.GET.get('city', ''),
-        "rating_query": request.GET.get('rating', '')
+        "rating_query": request.GET.get('rating', ''),
+        "photos": photos
     }
     return render(request, "accommodation/accommodation_reviewdetail.html", context)
     
