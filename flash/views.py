@@ -26,6 +26,7 @@ def flash_list(request):
         flash.tag_list = flash.tags.split(",") if flash.tags else []
         flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
         flash.is_zzimmed = flash.pk in zzim_items  # 찜 여부 추가
+        flash.current_participants = FlashParticipants.objects.filter(flash=flash).count()
 
     return render(request, "flash/flash_list.html", {"flash_meetings": flash_meetings, 'filterset': filterset})
 
