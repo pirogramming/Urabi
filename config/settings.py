@@ -43,7 +43,7 @@ AWS_S3_ENDPOINT_URL = get_secret("AWS_S3_ENDPOINT_URL")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+secrets_path = os.path.join(BASE_DIR, 'secrets.json')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -51,10 +51,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['211.188.57.18']
 
 # Application definition
 
@@ -106,7 +105,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+		        'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -121,11 +120,12 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'urabi_db',
-        'USER': 'root',
+        'USER': 'urabi_user',
         'PASSWORD': get_secret("DB_PASSWORD"),
         'HOST': 'localhost',
         'PORT': '3306',
@@ -135,6 +135,7 @@ DATABASES = {
         }
     }
 }
+
 
 
 # Password validation
@@ -183,15 +184,9 @@ if not DEBUG:
     AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
     AWS_S3_ENDPOINT_URL = get_secret("AWS_S3_ENDPOINT_URL")
 
-    STATIC_URL = "/static/"
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "static"),  # 로컬에서 사용하는 정적 파일 경로
-    ]
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # 배포 시 collectstatic 대상
-
-    # 미디어 파일도 로컬에서 저장
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    # 정적 파일을 S3에서 서빙
+    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 else:
     # 로컬 개발 환경에서는 기존 방식 유지
@@ -215,7 +210,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # DB 기반 세션
@@ -235,47 +229,3 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000"
 ]
-
-
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-CHANNEL_LAYERS = {
-    "default": {
-        # 'BACKEND': 'chat.redis_layer.CustomRedisChannelLayer',
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
-}
-
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'chat.consumer': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
-
-
-
-
-# 웹소켓 URL 설정
-WEBSOCKET_URL = '/ws/'
-
-# Clickjacking 보호 설정 변경
-X_FRAME_OPTIONS = 'SAMEORIGIN'  # 같은 도메인에서는 iframe 허용
-
-IMAP_USER = secrets["IMAP_USER"]
-IMAP_PASSWORD = secrets["IMAP_PASSWORD"]
