@@ -312,61 +312,50 @@
 }
 
 @media (max-width: 850px) {
-  .map-container, #map {
-    height: 300px !important;
-    width: 100% !important;
-  }
-  .filter-group-first {
-    flex-wrap: wrap !important;
-    gap: 5px !important;
-  }
-  .filter-group-first > div {
-    width: calc(50% - 5px) !important;
-  }
   .filter-group input, .filter-group select, #max_member, #image-name {
-    width: 100% !important;
-    margin-bottom: 10px !important;
+    width: 40%;
+    margin-bottom: 10px;
+    margin-right: 600px;
   }
 }
 
 @media (max-width: 600px) {
-  .filter-group-first > div, .filter-group-second > div {
-    width: 100% !important;
+  .filter-group-first, .filter-group-second {
+    flex-direction: column;
   }
-  .filter-group-second {
-    flex-direction: column !important;
-  }
-  .filter_location label {
-    display: block;
-  }
-  .filter_location input {
-    width: 100% !important;
-  }
+  
   .map-container, #map {
-    height: 100vw !important;
-    width: 100% !important;
-    max-height: 400px !important;
-    position: relative !important;
+    height: 300px;
+  }
+}
+
+@media (max-width: 500px) {
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .filter-form > button[type="submit"] {
+    order: 1;
+    margin-top: 10px;
+    width: 20%;
+    margin-right: 615px;
+  }
+  
+  .tags {
+    order: 0;
   }
 }
 
 @media (max-width: 450px) {
-  .banner h2, .title input {
-    font-size: 16px !important;
-  }
-  .filter-group {
-    flex-direction: column;
-  }
-  .filter-group input, .filter-group select {
+  .title input,
+  .description textarea {
     width: 100% !important;
+    font-size: 14px !important;
+    padding: 8px !important;
   }
-  .map-container, #map {
-    height: 100vw !important;
-    width: 100% !important;
-    max-height: 400px !important;
-    position: relative !important;
-  }
-  .filter-form>button {
-    width: 100% !important;
+  
+  .description textarea {
+    min-height: 100px !important;
   }
 }
