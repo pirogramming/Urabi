@@ -272,6 +272,30 @@
     background-color: var(--red-hover);
 }
 
+/*멤버 리스트*/
+#memberList li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px; /* 이메일과 깃발 사이 간격 */
+}
+
+#memberList li span:first-child {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 이메일과 깃발 사이 간격 조절 */
+}
+
+#memberList li span a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+#memberList li span:last-child {
+    font-size: 14px;
+}
+
 /* 다른 번개 */
 .other_flash {
     margin-top: 30px;
@@ -329,7 +353,7 @@
 }
 
 /* 반응형 */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 700px) {
     .flash_detail {
         width: 90%;
         padding: 15px;
@@ -340,6 +364,51 @@
     }
 
     .flash_image {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .flash_host_buttons {
+        overflow: hidden; 
+    }
+
+    .flash_btn_container {
+        flex-direction: column;  
+        gap: 8px;
+        width: 60%;
+        align-items: flex-end
+    }
+
+    .flash_edit_btn,
+    .flash_delete_btn,
+    .flash_apply_btn,
+    .host_chat_btn {
+        font-size: 14px;      
+        padding: 6px 10px;    
+        border-radius: 5px;
+    }
+    
+
+    .members {
+        justify-content: space-between;
+        font-size: 13px;
+    }
+
+     #request-modal, #memberList {
+        width: 100%;          
+        box-sizing: border-box; 
+        max-height: 300px;   
+        overflow-y: auto;
+        scrollbar-width: none; 
+        -ms-overflow-style: none;  
+    }
+    
+    #request-modal::-webkit-scrollbar, #memberList::-webkit-scrollbar {
+        display: none;
+    }
+
+    #request-modal input, #memberList li {
         width: 100%;
     }
 }

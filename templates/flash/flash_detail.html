@@ -25,7 +25,11 @@
     <hr class="flash_divider">
 
     <div class="flash_info">
-        <img src="{{ place_img_url }}" alt="모임 이미지" class="flash_image">
+        {% if flash_img %}
+            <img id="flash-detail-img" src="{{ flash_img }}" alt="모임 이미지" class="flash_image">
+        {% else %}
+            <img id="flash-detail-img" src="{% static 'img/default_map_image.jpg' %}" alt="모임 이미지" class="flash_image">
+        {% endif %}
         <div class="flash_description">
             <div class="flash_title_star">
                 <h2 class="flash_title">{{ flash.title }}</h2>
@@ -155,7 +159,11 @@
             {% for other_flash in other_flash_meetings %}
             <div class="other_flash_card">
                 <a href="{% url 'flash:flash_detail' other_flash.pk %}">
-                    <img src="{{ other_flash.image_url }}" alt="다른 번개 이미지">
+                    {% if other_flash.image_url %}
+                        <img src="{{ other_flash.image_url }}" alt="다른 번개 이미지">
+                    {% else %}
+                        <img src="{% static 'img/default_map_image.jpg' %}" alt="다른 번개 이미지">
+                    {% endif %}
                     <p>{{ other_flash.title }}</p>
                 </a>
             </div>
