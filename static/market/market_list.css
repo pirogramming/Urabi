@@ -263,7 +263,7 @@
         margin-bottom: 5px;
     }
     .market_search_btn{
-        height: 30%;
+        height: 40px;
         align-self: end;
         margin: 0 18px;
     }
@@ -439,7 +439,7 @@
     }
     .mkt_banner-filter {
         margin-top: 20px;
-        height: 290px;
+        height: 214px;
     }
     th:nth-child(5),  
     td:nth-child(5) { 
@@ -447,9 +447,6 @@
     }
     .mkt_blue{
         padding-bottom: 13px;
-    }
-    .market_search_btn{
-        height: 20%;
     }
 }
 
