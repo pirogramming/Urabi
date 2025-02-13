@@ -249,6 +249,9 @@
     margin-bottom: 20px;
   }
   
+  #aic-title img{
+    margin-bottom: 13px;
+  }
 
 
   @media (max-width: 800px) {
