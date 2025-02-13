@@ -183,13 +183,15 @@ if not DEBUG:
     AWS_STORAGE_BUCKET_NAME = get_secret("AWS_STORAGE_BUCKET_NAME")
     AWS_S3_ENDPOINT_URL = get_secret("AWS_S3_ENDPOINT_URL")
 
-    # 정적 파일을 S3에서 서빙
-    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/"
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    STATIC_URL = "/static/"
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static"),  # 로컬에서 사용하는 정적 파일 경로
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # 배포 시 collectstatic 대상
 
-    # 미디어 파일 설정 
-    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    # 미디어 파일도 로컬에서 저장
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 else:
     # 로컬 개발 환경에서는 기존 방식 유지
