@@ -75,10 +75,11 @@
 
       <h2 class="sub-title">번개 모임</h2>
       <div id="flash-activity-container" class="activity-box">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{ flash_zzim_count }}</span>개의 번개를 찜했어요!
+      </p>
           {% if flash_zzim_count > 0 %}
-              <p class="activity-header">
-                  {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_zzim_count }}</span>개의 번개를 찜했어요!
-              </p>
+            
               {% for flash in flash_zzims %}
                   <div class="activity-card flash-card">
                       <a href="{% url 'flash:flash_detail' flash.pk %}">
@@ -98,7 +99,7 @@
                   </div>
               {% endfor %}
           {% else %}
-              <p class="empty">찜한 번개 모임이 없어요!</p>
+              <p class="empty activity-card">찜한 번개 모임이 없어요!</p>
           {% endif %}
       </div>
       <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
@@ -111,7 +112,6 @@
         </p>
         {% if acc_zzim_count %}
           {% for review in acc_zzims %}
-          <div>{{ review.latitude }},{{ review.longitude }}</div>
             <div class="activity-card" style="display: none;">
               <div class="activity-info">
                 <div class="activity-title">
@@ -119,8 +119,7 @@
                     {{ review.accommodation_name }}
                   </a>
                 </div>
-                <p class="activity-date">{{ review.created_at|date:"Y년 m월 d일" }}</p>
-                <p class="schedule-location">
+                <p class="schedule-location" style="margin-top:10px;">
                   <img src="{% static 'img/location_icon.png' %}" alt="위치">
                   <span class="schedule-location-text">{{ review.city }}</span>
                 </p>
@@ -152,6 +151,7 @@
                 <span class="activity-review-title mypage_mkt_title">
                   {{market.title}}
                 </span>
+                
               </div>
               <p class="activity-date">
                 {%if market.updated_at %}

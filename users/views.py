@@ -710,13 +710,28 @@ def user_list(request):
     user_plans = TravelSchedule.objects.filter(user=user)
     user_plan_count = user_plans.count()
     for plan in user_plans:
-        plan.plans_count = TravelPlan.objects.filter(schedule=plan).count
+        plan.plans_count = TravelPlan.objects.filter(schedule=plan).count()
     
     user_accompanies = TravelParticipants.objects.filter(user=user)
-    user_accompany_count = user_accompanies.count()
-    for accompany in user_accompanies:
-        travel_group = TravelGroup.objects.get(travel_id=accompany.travel_id)
-        accompany.tags = travel_group.tags.split(',') if travel_group.tags else []
+    accompany_items = []
+    for participate in user_accompanies:
+        travel_group = TravelGroup.objects.get(travel_id=participate.travel_id)
+        travel_group.tags = travel_group.tags.split(',') if travel_group.tags else []
+        if travel_group.markers:
+            try:
+                markers = json.loads(travel_group.markers)
+                processed_markers = [marker for marker in markers if marker.get("title")]
+                travel_group.markers = processed_markers[:3]
+            except json.JSONDecodeError:
+                travel_group.markers = []
+        else:
+            travel_group.markers = []
+        # 만약 제목이나 markers가 없으면 승인되지 않은 것
+        if travel_group.title and travel_group.markers:
+            accompany_items.append(travel_group)
+    # 최종 승인된 동행 개수는 accompany_items의 길이로 계산
+    accompany_count = len(accompany_items)
+    
     user_request = AccompanyRequest.objects.filter(user=user)
     user_request_count = user_request.count()
 
@@ -726,12 +741,13 @@ def user_list(request):
     return render(request, 'mypage/planlist.html', {
         'plans': user_plans,
         'plan_count': user_plan_count,
-        'accompanies': user_accompanies,
-        'accompany_count': user_accompany_count+user_request_count,
+        'accompanies': accompany_items,  
+        'accompany_count': accompany_count,
         'ac_requests': user_request,
-        'flash_participants': [fp.flash for fp in flash_participants],  # 참가한 번개 목록
+        'flash_participants': [fp.flash for fp in flash_participants],
         'flash_participant_count': flash_participant_count,
     })
+
 
 def zzim_list(request):
     user = get_object_or_404(User, id=request.user.id)
@@ -751,13 +767,15 @@ def zzim_list(request):
         ac_zzim_items.append(item)
 
             
-        ac_zzim_count = ac_zzims.count()
+    ac_zzim_count = ac_zzims.count()
 
     flash_zzims = FlashZzim.objects.filter(user=user).select_related("flash")
     flash_zzim_items = [zzim.flash for zzim in flash_zzims]
     flash_zzim_count = flash_zzims.count()
 
-    acc_zzims = AccommodationReview.objects.filter(favorites=user)
+    acc_zzims = AccommodationReview.objects.filter(favorites=user) \
+                  .exclude(accommodation_name="") \
+                  .exclude(city="")
     acc_zzim_count = acc_zzims.count()
     
     mkt_zzims = MarketZzim.objects.filter(user=user)
