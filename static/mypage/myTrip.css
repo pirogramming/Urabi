@@ -188,44 +188,7 @@
   border-radius: 5px;
   padding: 20px;
 }
-  /********************************
-    공개 비공개 등록하기
-  ********************************/
-  .radio-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: center;
-  }
 
-  .radio-group input[type="radio"] {
-    display: none;
-  }
-
-  .radio-group label {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    white-space: nowrap;
-  }
-
-  .radio-group svg {
-    margin-right: 5px;
-    width: 16px; 
-    height: 16px;
-  }
-
-  .radio-group input[type="radio"]:checked + label{
-    border-color: var(--red);
-    color: var(--red);
-  }
-
-  .radio-group svg {
-    margin-right: 5px;
-  }
 
   .register-btn {
     display: block;

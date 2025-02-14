@@ -56,12 +56,10 @@
         </div>
   
         <div id="schedule-cards-container">
-          <!-- 예) "민설아 님은 4번의 일정이 있어요!" -->
           <p class="activity-header">
             {{ user.nickname }} 님은 <span class="text-hilight">{{ schedule_count }}</span>번의 일정이 있어요!
           </p>
   
-          <!-- 등록된 TravelSchedule 목록 -->
           {% if schedules %}
             {% for schedule in schedules %}
             <div class="activity-card" style="display: none;">
@@ -109,9 +107,7 @@
     <section class="activity-section">
       <h2 class="sub-title">참여한 동행</h2>
       <div id="accompany-cards-container">
-        <p class="activity-header">
-          {{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행에 참여했어요!
-        </p>
+        <p class="activity-header">{{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행에 참여했어요!</p>
 
         {% if accompany_count %}
           {% for accompany in accompanies %}
@@ -142,18 +138,18 @@
                   <span class="schedule-location-text">{{ marker.title }}</span>
                 </p>
               {% endfor %}
-
+              
             </div>
           </div>
           {% endfor %}
+          <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
         {% else %}
         <div class="activity-card empty">
           동행한 번개 모임이 없어요!
         </div>
         {% endif %}
       </div>
-      <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
- 
+    
     <h2 class="sub-title">참여한 번개</h2>
     <div id="flash-activity-container" class="activity-box">
         {% if flash_participant_count > 0 %}
@@ -178,12 +174,12 @@
                         </p>
                     </div>
                 </div>
-            {% endfor %}
+            {% endfor %}<button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
         {% else %}
             <p class="activity-card empty">참여한 번개 모임이 없어요!</p>
         {% endif %}
     </div>
-    <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
+    
 
   </section>
 </main>

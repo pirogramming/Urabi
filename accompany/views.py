@@ -103,8 +103,6 @@ class AccompanyCreateView(CreateView):
         if plan_id:
             travel_plan = get_object_or_404(TravelPlan, pk=plan_id)
             initial.update({
-                'title': travel_plan.title,
-                'city': travel_plan.city,
                 'explanation': travel_plan.explanation,
                 'start_date': travel_plan.start_date,
                 'end_date': travel_plan.end_date,
