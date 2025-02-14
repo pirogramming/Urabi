@@ -173,6 +173,10 @@
     "등록한 여행 일정" 섹션
   ********************************/
   .load-more-btn{
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border-radius: 5px;
     width: 180px;
     padding: 10px;
     border: 1px solid var(--blue);

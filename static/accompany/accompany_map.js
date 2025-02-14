@@ -101,49 +101,42 @@ function addMarker(position, title, isDraggable) {
 
     return marker;
 }
-
 function createMarkerInputs(marker, address, customName) {
-    const addressContainer = document.getElementById("address_container");
-    const wrapper = document.createElement("div");
-    wrapper.className = "address_wrapper";
-    wrapper.dataset.markerId = marker.id;
-
-    // 사용자 지정 이름 input
-    const nameInput = document.createElement("input");
-    nameInput.type = "text";
-    nameInput.className = "marker_name_input";
-    nameInput.placeholder = "장소 이름을 입력하세요";
-    nameInput.dataset.markerId = marker.id;
-    nameInput.value = customName || '';
-
-    // 주소 표시 input
-    const addressInput = document.createElement("input");
-    addressInput.type = "text";
-    addressInput.className = "address_input";
-    addressInput.value = address;
-    addressInput.readOnly = true;
-    addressInput.style.display = "none";
-    
-    nameInput.addEventListener('change', function() {
-        marker.customName = this.value;
-        marker.setTitle(this.value);
-    });
-
-    // 삭제 버튼 수정
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "-";
-    deleteBtn.className = "address_delete_btn";
-    deleteBtn.onclick = function(e) {
-        e.preventDefault(); // 폼 제출 방지
-        removeMarker(marker, wrapper); // wrapper를 직접 전달
-    };
-
-    wrapper.appendChild(nameInput);
-    wrapper.appendChild(addressInput);
-    wrapper.appendChild(deleteBtn);
-    addressContainer.appendChild(wrapper);
+  const addressContainer = document.getElementById("address_container");
+  if (!addressContainer) return;
+  const wrapper = document.createElement("div");
+  wrapper.className = "address_wrapper";
+  wrapper.dataset.markerId = marker.id;
+  // 절대 주소 표시 (div)
+  const addressDisplay = document.createElement("div");
+  addressDisplay.className = "address_display";
+  addressDisplay.textContent = address || "주소 정보 없음";
+  // 사용자 지정 이름 입력 (아래에 배치)
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "marker_name_input";
+  nameInput.placeholder = "장소 이름을 입력하세요";
+  nameInput.dataset.markerId = marker.id;
+  nameInput.value = customName || "";
+  nameInput.addEventListener("change", function() {
+    marker.customName = this.value;
+    marker.setTitle(this.value);
+    updateMarkersField();
+    updateMarkerTimeline();
+  });
+  // 삭제 버튼
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "-";
+  deleteBtn.className = "address_delete_btn";
+  deleteBtn.onclick = function(e) {
+    e.preventDefault();
+    removeMarker(marker, wrapper);
+  };
+  wrapper.appendChild(addressDisplay);
+  wrapper.appendChild(nameInput);
+  wrapper.appendChild(deleteBtn);
+  addressContainer.appendChild(wrapper);
 }
-
 function removeMarker(marker, wrapper) {
     marker.setMap(null);
     markers = markers.filter((m) => m !== marker);

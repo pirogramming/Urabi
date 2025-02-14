@@ -1,13 +1,16 @@
+{# templates/mypage/schedule_detail.html #}
 {% extends "base/base.html" %}
 {% load static %}
+
 {% block head %}
-  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
   <link rel="stylesheet" href="{% static 'mypage/myPage.css' %}">
   <link rel="stylesheet" href="{% static 'mypage/cms-mypage.css' %}">
 {% endblock %}
 
 {% block content %}
 <main class="mypage-wrap">
+  <!-- 왼쪽 사이드 -->
   <nav class="mypage-nav">
     <ul>
       <li><a href="{% url 'users:my_page' %}">프로필</a></li>
@@ -17,68 +20,82 @@
     </ul>
   </nav>
 
+  <!-- 메인 내용 -->
   <section class="mypage-content">
     <h1 class="main-title">
       여행상세
       <img src="{% static 'img/mypage-plan-icon.png' %}" alt="여행 일정 아이콘" id="title-icon">
     </h1>
+
     <section class="activity-section">
       <div class="activity-header-cms">
         <h2 class="sub-title">{{ schedule.name }}</h2>
-        <button class="new-plan-btn" onclick="window.location.href='{% url 'users:my_trip' schedule.pk %}'">
-          계획 생성
+        <!-- 세부 일정 생성 (my_trip 페이지로) -->
+        <button class="new-plan-btn" onclick="window.location.href='{% url 'users:my_trip' schedule.schedule_id %}'">
+          세부 일정 생성
         </button>
       </div>
+
       <div class="activity-main-cms">
-        
+        <!-- 대표사진 영역 -->
         <div class="photo-sec">
           <form id="photo-form" method="POST" enctype="multipart/form-data" action="{% url 'users:update_schedule_photo' %}">
             {% csrf_token %}
-            <input type="hidden" name="schedule_id" value="{{ schedule.pk }}">
+            <input type="hidden" name="schedule_id" value="{{ schedule.schedule_id }}">
             <img id="photo-preview"
-                 src="{% if schedule.photo %}{{ schedule.photo.url }}{% else %}{% static 'img/schedule_default_img.jpg' %}{% endif %}"
-                 alt="여행 이미지" style="cursor:pointer;">
-                 
+                 src="{% if schedule.photo %}{{ schedule.photo.url }}{% else %}{% static 'img/schedule_plane_img.jpg' %}{% endif %}"
+                 alt="여행 대표 이미지" style="cursor:pointer;">
             <input type="file" id="photo-input" name="photo" accept="image/*" style="display:none"
                    onchange="document.getElementById('photo-form').submit();">
-                   <div class="edit-button-container">
-                    <button type="button" id="photo-button">
-                      {% if schedule.photo %}대표사진 수정{% else %}대표사진 등록{% endif %}
-                    </button>
-                  </div>
+
+            <div class="edit-button-container">
+              <button type="button" id="photo-button">
+                {% if schedule.photo %}대표사진 수정{% else %}대표사진 등록{% endif %}
+              </button>
+            </div>
           </form>
         </div>
-        
-        <div id="schedule-cards-container">
-          {% if plans %}
-            {% for plan in plans %}
-              <div class="activity-card">
-                <a href="{% url 'users:plan_detail' plan.pk %}">
-                  <div class="activity-review">
-                    <div class="activity-review-header">
-                      <span class="activity-review-title mypage_mkt_title">{{ plan.title }}</span>
-                    </div>
-                    <p class="activity-date">{{ plan.start_date }} ~ {{ plan.end_date }}</p>
-                    <p class="schedule-location">
-                      <img src="{% static 'img/location_icon.png' %}" alt="위치">
-                      <span class="schedule-location-text">{{ plan.city }}</span>
-                    </p>
-                  </div>
-                </a>
-              </div>
-            {% endfor %}
+
+        <!-- 전체 일정 정보 -->
+        <p class="activity-date" style="margin-top: 10px;">
+          {{ schedule.start_date|date:"Y-m-d" }} ~ {{ schedule.end_date|date:"Y-m-d" }}
+        </p>
+
+        <!-- 이 TravelSchedule 안에 속한 모든 TravelPlan 나열 -->
+        <div class="plan-list">
+          <h3>세부 일정 목록</h3>
+          {% if travel_plans %}
+            <ul>
+              {% for plan in travel_plans %}
+              <li style="margin-bottom:20px;">
+                <strong>{{ plan.start_date|date:"m/d" }} ~ {{ plan.end_date|date:"m/d" }}</strong>
+                <br>
+                설명: {{ plan.explanation|default:"(설명없음)"|linebreaks }}
+                <br>
+                <!-- 지도/마커 개수 등 표시해도 됨 -->
+                {% if plan.markers %}
+                  {% with plan.markers|safe as markers_json %}
+                    {% if markers_json|length > 2 %} 
+                      <p>마커 개수: {{ markers_json|length }}</p>
+                    {% endif %}
+                  {% endwith %}
+                {% endif %}
+                <!-- 상세보기 or 수정 버튼 -->
+                <button onclick="location.href='{% url 'users:plan_detail' plan.plan_id %}'">
+                  일정 상세
+                </button>
+              </li>
+              {% endfor %}
+            </ul>
           {% else %}
-            <div class="no-plan">
-              <img width="150" src="{% static 'img/logo.png' %}" alt="기본 이미지">
-              <p>아직 등록한 계획이 없으시네요!</p><br>
-              <p>지금 계획을 등록해서 여행을 더 즐겁게 만들어보세요!</p>
-            </div>
+            <p>아직 세부 일정이 없습니다. "세부 일정 생성" 버튼으로 추가해 보세요!</p>
           {% endif %}
         </div>
       </div>
 
       <div class="cms-schedule-footer">
-        <button class="del-schedule-btn" onclick="confirmDelete(event, {{ schedule.pk }})">여행 삭제</button>
+        <!-- 일정(TravelSchedule) 삭제, 목록으로 버튼 -->
+        <button class="del-schedule-btn" onclick="confirmDelete(event, {{ schedule.schedule_id }})">여행 삭제</button>
         <button class="del-schedule-btn" onclick="window.location.href='{% url 'users:user_list' %}'">목록으로</button>
       </div>
     </section>
@@ -88,35 +105,27 @@
 
 {% block js %}
 <script>
+  /* 대표사진 업로드 로직 */
   const photoForm = document.getElementById('photo-form');
   const photoInput = document.getElementById('photo-input');
   const photoPreview = document.getElementById('photo-preview');
   const photoButton = document.getElementById('photo-button');
 
-  // 사진 미리보기 클릭 시 파일 선택창 열기
-  photoPreview.addEventListener('click', () => {
-    photoInput.click();
-  });
-  photoButton.addEventListener('click', () => {
-    photoInput.click();
-  });
-
-  // 파일 선택 시 미리보기 업데이트
+  photoPreview.addEventListener('click', () => { photoInput.click(); });
+  photoButton.addEventListener('click', () => { photoInput.click(); });
   photoInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if(file) {
-      const imageURL = URL.createObjectURL(file);
-      photoPreview.src = imageURL;
+    if (file) {
+      photoPreview.src = URL.createObjectURL(file);
     }
   });
-
-  // 폼 제출 시 한 번만 제출되도록 file input 비활성화
   photoForm.addEventListener('submit', function(e) {
     photoInput.disabled = true;
   });
 
+  /* 삭제 confirm */
   function confirmDelete(event, scheduleId) {
-    if (confirm('삭제하시겠습니까?')) {
+    if (confirm('정말 삭제하시겠습니까?')) {
       window.location.href = "{% url 'users:delete_schedule' %}?schedule_id=" + scheduleId;
     }
   }

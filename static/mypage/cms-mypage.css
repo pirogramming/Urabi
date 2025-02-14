@@ -75,6 +75,14 @@
     /********************************
     플랜 디테일
   ********************************/
+  #trip-plan-photo{
+    width: 170px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
   .trip-detail-dates{
     font-size: 14px;
     font-weight: 200;

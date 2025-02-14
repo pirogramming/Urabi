@@ -45,39 +45,41 @@ class User(AbstractUser):
     
     objects = UserManager()
 
+
 class TravelSchedule(models.Model):
     schedule_id = models.BigAutoField(primary_key=True)
-    name = models.CharField(max_length=100)  # 일정 이름
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='travel_schedules')  # 사용자
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    start_date = models.DateField()  # 시작 날짜
-    end_date = models.DateField()  # 종료 날짜
-    photo = models.ImageField(upload_to='schedule_images', null=True, blank=True)  # 일정 사진
+    name        = models.CharField(max_length=100)            # 일정 이름 (필수)
+    user        = models.ForeignKey(User, on_delete=models.CASCADE,
+                                    related_name='travel_schedules')
+    start_date  = models.DateField()  # 시작 날짜
+    end_date    = models.DateField()  # 종료 날짜
+    photo       = models.ImageField(upload_to='schedule_images',
+                                    null=True, blank=True)
+    is_public   = models.BooleanField(default=False)  # 필요하다면 사용
+
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name} - {self.user.username}"
+        return f"{self.name} - {self.user.nickname}"
 
 class TravelPlan(models.Model):
-    plan_id = models.BigAutoField(primary_key=True)
-    schedule = models.ForeignKey(TravelSchedule, on_delete=models.CASCADE, related_name='plans')  # 일정
-    title = models.CharField(max_length=100)  # 일정 제목
-    city = models.CharField(max_length=50)  # 도시명
-    explanation = models.TextField()  # 일정 설명
-    start_date = models.DateField()  # 시작 날짜
-    end_date = models.DateField()  # 종료 날짜
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='travel_plans')  # 작성자
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    # 마커와 폴리라인 데이터를 저장할 필드
-    markers = models.JSONField(null=True, blank=True)  
-    polyline = models.JSONField(null=True, blank=True)  
-        # 공개 여부를 저장할 필드 (기본값은 비공개)
-    is_public = models.BooleanField(default=False)  
+    plan_id    = models.BigAutoField(primary_key=True)
+    schedule   = models.ForeignKey(TravelSchedule, on_delete=models.CASCADE,
+                                   related_name='plans')
+    explanation = models.TextField()          # 일정 설명 (필수)
+    start_date  = models.DateField()          # 시작 날짜
+    end_date    = models.DateField()          # 종료 날짜
+    markers     = models.JSONField(null=True, blank=True)
+    polyline    = models.JSONField(null=True, blank=True)
+
+    created_by  = models.ForeignKey(User, on_delete=models.CASCADE,
+                                    related_name='travel_plans')
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.title} - {self.created_by.username}"
+        return f"Plan #{self.plan_id} for {self.schedule.name}"
     
 class PhoneVerification(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
