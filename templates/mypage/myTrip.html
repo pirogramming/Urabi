@@ -67,7 +67,7 @@
         </ul>
       </div>
 
-      <form method="POST" action="">
+      <form method="POST" action="" onsubmit="saveMapData(event)">
         {% csrf_token %}
         {% if travel_plan %}
           <input type="hidden" name="plan_id" value="{{ travel_plan.plan_id }}">

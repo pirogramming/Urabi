@@ -11,13 +11,9 @@ class UserUpdateForm(forms.ModelForm):
         }
 
 class TravelPlanForm(forms.ModelForm):
-    """
-    TravelPlan에서 딱 'explanation'만 입력받도록 (start_date/end_date는 뷰에서 처리).
-    markers/polyline은 자바스크립트로 JSON 입력 후 뷰에서 처리.
-    """
     class Meta:
         model = TravelPlan
-        fields = ['explanation']  # title/city 없음
+        fields = ['explanation'] 
         widgets = {
             'explanation': forms.Textarea(attrs={'placeholder':'설명을 입력하세요!'}),
         }

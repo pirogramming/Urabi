@@ -489,9 +489,9 @@ def edit_profile(request):
         birth_day = request.POST.get("birth_day")
 
         if 'profile_image' in request.FILES:
-            print("✅ 파일 업로드 감지됨!")
+            print("파일 업로드 감지됨!")
         else:
-            print("⚠️ 파일 업로드가 안 됨")
+            print("파일 업로드가 안 됨")
         if birth_year and birth_month and birth_day:
             request.user.birth = f"{birth_year}-{birth_month}-{birth_day}" 
 
@@ -513,7 +513,7 @@ def check_phone_duplicate(request):
 
         clean_phone = re.sub(r'\D', '', phone)
 
-        print(f"📢 [DEBUG] 중복 검사 요청 받은 전화번호: {clean_phone}")
+        print(f" [DEBUG] 중복 검사 요청 받은 전화번호: {clean_phone}")
 
         existing_user = User.objects.filter(user_phone__isnull=False).exclude(user_phone="").exclude(id=request.user.id).filter(user_phone=clean_phone).first()
         
@@ -661,7 +661,6 @@ def user_detail(request, pk):
     flash_meetings = Flash.objects.filter(created_by=user).order_by("-date_time")
     flash_count = flash_meetings.count()
 
-    # 동행 태그 처리
     for accompany in user_accompany:
         accompany.tags = accompany.tags.split(',') if accompany.tags else []
     
@@ -673,10 +672,10 @@ def user_detail(request, pk):
         'accompany_count': accompany_count,
         "flash_meetings": flash_meetings,
         "flash_count": flash_count,
-        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
-        'review_count': review_count,  # 리뷰 개수 추가
-        'has_more': review_count > 5,  # 더보기 버튼 표시 여부
-        'mkt_self_items' :mkt_self_items, #마켓 작성자 게시글
+        'accommodation_reviews': accommodation_reviews, 
+        'review_count': review_count,
+        'has_more': review_count > 5, 
+        'mkt_self_items' :mkt_self_items,
         'mkt_self_count' :mkt_self_count
     })
     
@@ -698,12 +697,12 @@ def update_trip(request, pk):
     travel_plan = get_object_or_404(TravelPlan, plan_id=pk)
     this_schedule = travel_plan.schedule
 
+    # 스케줄 기간에 해당하는 date_list 생성
     date_list = []
     current = this_schedule.start_date
     while current <= this_schedule.end_date:
         date_list.append(current)
         current += timedelta(days=1)
-
     plan_date_str = request.GET.get('plan_date')
     if plan_date_str:
         try:
@@ -717,17 +716,28 @@ def update_trip(request, pk):
         form = TravelPlanForm(request.POST, instance=travel_plan)
         if form.is_valid():
             updated_plan = form.save(commit=False)
-            post_date_str = request.POST.get('plan_date','')
+            post_date_str = request.POST.get('plan_date', '')
             if post_date_str:
                 try:
                     new_date = datetime.strptime(post_date_str, "%Y-%m-%d").date()
                 except ValueError:
-                    new_date = travel_plan.start_date  # fallback
+                    new_date = travel_plan.start_date 
             else:
                 new_date = travel_plan.start_date
-            
+
             updated_plan.start_date = new_date
-            updated_plan.end_date   = new_date
+            updated_plan.end_date = new_date
+            markers_str = request.POST.get('markers', '[]')
+            try:
+                updated_plan.markers = json.loads(markers_str)
+            except json.JSONDecodeError:
+                updated_plan.markers = []
+            
+            polyline_str = request.POST.get('polyline', '[]')
+            try:
+                updated_plan.polyline = json.loads(polyline_str)
+            except json.JSONDecodeError:
+                updated_plan.polyline = []
 
             updated_plan.save()
             return redirect('users:plan_detail', pk=updated_plan.plan_id)
@@ -841,17 +851,11 @@ def schedule_create(request):
         end_date = request.POST.get('end_date')
         new_schedule = TravelSchedule.objects.create(name=schedule_name, user=request.user, start_date=start_date, end_date=end_date)
         return redirect('users:schedule_detail', pk=new_schedule.schedule_id)
-
-# users/views.py (계속)
-from datetime import timedelta
-
+    
 @login_required
 def schedule_detail(request, pk):
-    # 특정 TravelSchedule 상세 => 그 아래 속한 모든 TravelPlan 목록
     schedule = get_object_or_404(TravelSchedule, schedule_id=pk)
-    # 모든 TravelPlan(날짜순)
     travel_plans = TravelPlan.objects.filter(schedule=schedule).order_by('start_date')
-
     return render(request, 'mypage/schedule_detail.html', {
         'schedule': schedule,
         'travel_plans': travel_plans,
