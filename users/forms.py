@@ -13,7 +13,10 @@ class UserUpdateForm(forms.ModelForm):
 class TravelPlanForm(forms.ModelForm):
     class Meta:
         model = TravelPlan
-        fields = ['explanation'] 
+        fields = ['explanation']
         widgets = {
-            'explanation': forms.Textarea(attrs={'placeholder':'설명을 입력하세요!'}),
+            'explanation': forms.Textarea(attrs={
+                'placeholder': '설명을 입력하세요!',
+                'class': 'explanation-textarea'
+            }),
         }

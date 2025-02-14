@@ -89,9 +89,9 @@
     margin-bottom: 8px;
   }
   .trip-detail-ex{
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 400;
-    margin-bottom: 8px;
+    margin: 30px 15px 60px 15px;
     line-height: 1.5;
   }
   .btns{
@@ -100,8 +100,18 @@
   .btns button{
     margin-left: 10px;
     padding: 10px 20px;
-    border: 1px solid var(--red);
-    color: var(--red);
+    color: white;
+    border-radius: 5px;
+  }
+  .btns button:first-child{
+    background-color: var(--yellow);
+  }
+  .btns button:last-child{
+    background-color:var(--red);
+  }
+  .btns button:hover{
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
   }
 
   .cms-schedule-footer{

@@ -24,21 +24,19 @@
     <h1 class="main-title">{{ this_schedule.name }}</h1>
     <section class="profile-section">
       <div class="profile-header">
-        <div class="section-title">하루 일정 생성/수정</div>
-        <a href="{% url 'users:schedule_detail' this_schedule.schedule_id %}">목록으로</a>
+        <div class="section-title">일정 생성/수정 &nbsp;
+        <span class="date-dropdown">
+          <select id="plan_date_select" name="plan_date_select" onchange="changeHiddenDate(this.value)">
+            {% for d in date_list %}
+              <option value="{{ d|date:'Y-m-d' }}"
+                      {% if d == selected_date %}selected{% endif %}>
+                {{ d|date:"Y-m-d" }}
+              </option>
+            {% endfor %}
+          </select>
+        </span>
       </div>
-
-      <!-- 날짜 드롭다운 -->
-      <div class="date-dropdown">
-        <label for="plan_date_select">날짜 선택:</label>
-        <select id="plan_date_select" name="plan_date_select" onchange="changeHiddenDate(this.value)">
-          {% for d in date_list %}
-            <option value="{{ d|date:'Y-m-d' }}"
-                    {% if d == selected_date %}selected{% endif %}>
-              {{ d|date:"Y-m-d" }}
-            </option>
-          {% endfor %}
-        </select>
+        <a href="{% url 'users:schedule_detail' this_schedule.schedule_id %}">목록으로</a>
       </div>
 
       {% if form.instance.markers %}
@@ -61,10 +59,7 @@
 
       <div id="address_container"></div>
       <div class="marker-timeline">
-        <h3>추가된 장소</h3>
-        <ul id="marker-list">
-          <li>등록된 장소가 없습니다.</li>
-        </ul>
+        <ul id="marker-list"></ul>
       </div>
 
       <form method="POST" action="" onsubmit="saveMapData(event)">
@@ -74,16 +69,15 @@
         {% endif %}
         <input type="hidden" id="plan_date" name="plan_date" value="{{ selected_date|date:'Y-m-d' }}">
 
-        <!-- markers/polyline -->
         <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'>
         <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
 
-        <label for="explanation">설명</label>
+        <div for="explanation" class="section-title">설명</div>
         {{ form.explanation }}
 
         <button type="submit" class="register-btn">등록하기</button>
       </form>
-      <!-- 폼 끝 -->
+
 
     </section>
   </section>
@@ -98,28 +92,6 @@
 </script>
 
 <script src="{% static 'accompany/accompany_map.js' %}"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    let markersData = [];
-    const markersDataEl = document.getElementById("markers_data");
-    if (markersDataEl) {
-      try {
-        markersData = JSON.parse(markersDataEl.textContent);
-      } catch (e) {
-        markersData = [];
-      }
-    }
-    const markerList = document.getElementById("marker-list");
-    if (markersData && markersData.length > 0) {
-      markerList.innerHTML = "";
-      markersData.forEach(function(marker) {
-        const li = document.createElement("li");
-        li.textContent = marker.customName || marker.title || "장소 없음";
-        markerList.appendChild(li);
-      });
-    }
-  });
-</script>
 {% endblock %}
+
 

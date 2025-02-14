@@ -68,13 +68,9 @@
           {% if travel_plans %}
             <ul>
               {% for plan in travel_plans %}
-              <li class="activity-card" style="margin-bottom:20px;">
-
+              <li class="activity-card travel_plan_card" style="margin-bottom:20px;">
                 <button onclick="location.href='{% url 'users:plan_detail' plan.plan_id %}'" style="cursor:pointer;">
-
-                  <strong>{{ plan.start_date|date:"m/d" }}</strong><br>
-
-                  <!-- 마커 목록 -->
+                  <strong>{{ plan.start_date|date:"m/d" }}</strong><br><br>
                   {% if plan.markers %}
                     {% for marker in plan.markers|slice:":3" %}
                       <div class="marker-info">
@@ -93,7 +89,11 @@
               {% endfor %}
             </ul>
           {% else %}
-            <p>아직 세부 일정이 없습니다. "세부 일정 생성" 버튼으로 추가해 보세요!</p>
+          <div class="no-plan">
+            <img width="150" src="{% static 'img/logo.png' %}" alt="기본 이미지" style="margin-bottom:30px">
+            <p>아직 등록한 계획이 없으시네요!</p><br>
+            <p>지금 계획을 등록해서 여행을 더 즐겁게 만들어보세요!</p>
+          </div>
           {% endif %}
         </div>
       </div>

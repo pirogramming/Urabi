@@ -107,11 +107,11 @@ function createMarkerInputs(marker, address, customName) {
   const wrapper = document.createElement("div");
   wrapper.className = "address_wrapper";
   wrapper.dataset.markerId = marker.id;
-  // 절대 주소 표시 (div)
-  const addressDisplay = document.createElement("div");
+  
+  const addressDisplay = document.createElement("span");
   addressDisplay.className = "address_display";
   addressDisplay.textContent = address || "주소 정보 없음";
-  // 사용자 지정 이름 입력 (아래에 배치)
+  
   const nameInput = document.createElement("input");
   nameInput.type = "text";
   nameInput.className = "marker_name_input";
@@ -124,6 +124,7 @@ function createMarkerInputs(marker, address, customName) {
     updateMarkersField();
     updateMarkerTimeline();
   });
+  
   // 삭제 버튼
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "-";
@@ -132,17 +133,21 @@ function createMarkerInputs(marker, address, customName) {
     e.preventDefault();
     removeMarker(marker, wrapper);
   };
+
+  // 세로로 정렬: 각 요소 사이에 <br> 태그 추가
   wrapper.appendChild(addressDisplay);
+  wrapper.appendChild(document.createElement("br"));
   wrapper.appendChild(nameInput);
   wrapper.appendChild(deleteBtn);
+  
   addressContainer.appendChild(wrapper);
 }
+
+  
 function removeMarker(marker, wrapper) {
     marker.setMap(null);
     markers = markers.filter((m) => m !== marker);
     updatePolyline(); // 선 업데이트
-
-    // wrapper가 직접 전달된 경우 (삭제 버튼 클릭 시)
     if (wrapper) {
         wrapper.remove();
     } else {
@@ -153,7 +158,6 @@ function removeMarker(marker, wrapper) {
         }
     }
 }
-
 
 // 마커 클릭 시 추가 또는 삭제
 function toggleMarker(position, title) {
@@ -206,17 +210,15 @@ function updateLocation(latLng, marker) {
         if (status === "OK" && results[0]) {
             const address = results[0].formatted_address;
             marker.address = address;
-            
-            // 기존 입력 필드가 있는지 확인
+        
             const existingWrapper = document.querySelector(`.address_wrapper[data-marker-id="${marker.id}"]`);
             if (existingWrapper) {
-                // 주소만 업데이트
-                const addressInput = existingWrapper.querySelector('.address_input');
-                if (addressInput) addressInput.value = address;
+            const addressDisplay = existingWrapper.querySelector('.address_display');
+            if (addressDisplay) addressDisplay.textContent = address;
             } else {
-                // 새로운 입력 필드 생성 (customName 포함)
-                createMarkerInputs(marker, address, marker.customName);
+            createMarkerInputs(marker, address, marker.customName);
             }
+
         } else {
             console.error("Geocoder 실패: " + status);
         }
@@ -290,3 +292,23 @@ function saveMapData(event) {
         document.getElementById('polyline').value = JSON.stringify(polylineData);
     }
 }
+
+function updateMarkerTimeline() {
+    const markerListEl = document.getElementById("marker-list");
+    if (!markerListEl) return;
+    
+    markerListEl.innerHTML = "";
+    
+    if (markers.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "등록된 장소가 없습니다.";
+      markerListEl.appendChild(li);
+    } else {
+      markers.forEach((marker) => {
+        const li = document.createElement("li");
+        li.textContent = marker.customName || marker.title || "장소 없음";
+        markerListEl.appendChild(li);
+      });
+    }
+  }
+  
