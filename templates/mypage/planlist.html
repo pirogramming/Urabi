@@ -27,73 +27,87 @@
     <!-- 프로필 섹션 -->
     <section class="profile-section">
 
-    </section>
-    <!-- 등록한 여행 일정 -->
-    
-    <section class="schedule-section" id="upload-schedule">
-      <div class="schedule-header">
-        <h2 class="sub-title">등록한 여행</h2>
-        <button class="btn" id="open-schedule-modal">여행 생성</button>
-        
-        <div id="schedule-modal" class="modal hidden">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>여행 생성</h2>
-            <form id="schedule-form" action="{% url 'users:schedule_create' %}" method="POST">
-              {% csrf_token %}
-              <label for="title">여행 이름:
-              <input type="text" id="title" name="title" required></label>
-              <label for="start_date">시작 날짜:
-              <input type="date" id="start_date" name="start_date" required></label>
-              <label for="end_date">종료 날짜:
-              <input type="date" id="end_date" name="end_date" required></label>
-        
-              <button type="submit" class="btn">저장</button>
-            </form>
-          </div>
-        </div>
-
-      </div>
-      <div id="schedule-cards-container">
-        <p class="activity-header">
-          {{ user.nickname }} 님은 <span class="text-hilight">{{plan_count}}</span>번의 일정이 있어요!
-        </p>
-        {% if plans %}
-        {% for plan in plans %}
-        <div class="activity-card" style="display: none;">
-          <img
-            src="{%if plan.photo%}{{plan.photo.url}}{%else%}{% static 'img/schedule_default_img.jpg' %}{%endif%}"
-            alt="여행 이미지"
-            width="150" height="110"
-            onclick="location.href='{% url 'users:schedule_detail' plan.schedule_id %}'"
-            style="cursor:pointer;"
-          />
-          <div class="schedule-info">
-            <h3 class="schedule-title"><a href="{% url 'users:schedule_detail' plan.schedule_id %}">{%if plan.name|length > 13%}{{ plan.name|slice:":13" }} ... {%else%}{{plan.name}}{%endif%}</a></h3>
-            <div>
-              <p class="activity-date">{{ plan.start_date|date:"Y-m-d" }} ~ {{ plan.end_date|date:"Y-m-d" }}</p>
-              <p> <span class="text-hilight">{{plan.plans_count}}</span>개의 계획이 있어요!</p>
+      <section class="schedule-section" id="upload-schedule">
+        <div class="schedule-header">
+          <h2 class="sub-title">등록한 여행</h2>
+          <!-- "TravelSchedule" 생성 모달 열기 버튼 -->
+          <button class="btn" id="open-schedule-modal">여행 생성</button>
+  
+          <!-- 모달 -->
+          <div id="schedule-modal" class="modal hidden">
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <h2>여행 생성</h2>
+              <form id="schedule-form" action="{% url 'users:schedule_create' %}" method="POST">
+                {% csrf_token %}
+                <label>여행 이름:
+                  <input type="text" name="title" required>
+                </label>
+                <label>시작 날짜:
+                  <input type="date" name="start_date" required>
+                </label>
+                <label>종료 날짜:
+                  <input type="date" name="end_date" required>
+                </label>
+                <button type="submit" class="btn">저장</button>
+              </form>
             </div>
           </div>
         </div>
-        {% endfor %}
-        {% else %}
-        <div class="activity-card empty">
-          등록한 여행 일정이 없어요!
+  
+        <div id="schedule-cards-container">
+          <p class="activity-header">
+            {{ user.nickname }} 님은 <span class="text-hilight">{{ schedule_count }}</span>번의 일정이 있어요!
+          </p>
+  
+          {% if schedules %}
+            {% for schedule in schedules %}
+            <div class="activity-card" style="display: none;">
+              <img
+                src="{% if schedule.photo %}{{ schedule.photo.url }}{% else %}{% static 'img/schedule_plane_img.jpg' %}{% endif %}"
+                alt="여행 대표 이미지"
+                id="trip-plan-photo"
+                onclick="location.href='{% url 'users:schedule_detail' schedule.schedule_id %}'"
+              />
+              <div class="schedule-info">
+                <!-- 일정 이름 -->
+                <h3 class="schedule-title">
+                  <a href="{% url 'users:schedule_detail' schedule.schedule_id %}">
+                    {% if schedule.name|length > 13 %}
+                      {{ schedule.name|slice:":13" }}...
+                    {% else %}
+                      {{ schedule.name }}
+                    {% endif %}
+                  </a>
+                </h3>
+                <!-- 전체 일정 기간 -->
+                <p class="activity-date">
+                  {{ schedule.start_date|date:"Y-m-d" }} ~ {{ schedule.end_date|date:"Y-m-d" }}
+                </p>
+                <!-- 이 일정에 속한 TravelPlan(세부 일정) 개수 -->
+                <p>
+                  <span class="text-hilight">{{ schedule.plans_count }}</span>개의 세부 계획이 있어요!
+                </p>
+              </div>
+            </div>
+            {% endfor %}
+  
+            <!-- "더보기" 버튼 -->
+            {% if schedules|length > 0 %}
+            <button id="load-more-schedule-btn" class="load-more-btn" onclick="loadMoreSchedules()">더보기</button>
+            {% endif %}
+          {% else %}
+          <div class="activity-card empty">
+            등록한 여행 일정이 없어요!
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
-      </div>
-      {% if plans %}
-      <button id="load-more-schedule-btn" class="load-more-btn" onclick="loadMoreSchedules()">더보기</button>
-      {% endif %}
-    </section>
+      </section>
 
     <section class="activity-section">
       <h2 class="sub-title">참여한 동행</h2>
       <div id="accompany-cards-container">
-        <p class="activity-header">
-          {{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행에 참여했어요!
-        </p>
+        <p class="activity-header">{{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행에 참여했어요!</p>
 
         {% if accompany_count %}
           {% for accompany in accompanies %}
@@ -124,18 +138,18 @@
                   <span class="schedule-location-text">{{ marker.title }}</span>
                 </p>
               {% endfor %}
-
+              
             </div>
           </div>
           {% endfor %}
+          <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
         {% else %}
         <div class="activity-card empty">
           동행한 번개 모임이 없어요!
         </div>
         {% endif %}
       </div>
-      <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
- 
+    
     <h2 class="sub-title">참여한 번개</h2>
     <div id="flash-activity-container" class="activity-box">
         {% if flash_participant_count > 0 %}
@@ -160,12 +174,12 @@
                         </p>
                     </div>
                 </div>
-            {% endfor %}
+            {% endfor %}<button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
         {% else %}
             <p class="activity-card empty">참여한 번개 모임이 없어요!</p>
         {% endif %}
     </div>
-    <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
+    
 
   </section>
 </main>

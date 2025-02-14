@@ -19,24 +19,20 @@
     </nav>
   
     <section class="mypage-content">
-        <h1 class="main-title">{{travel_plan.schedule.name}}</h1>
-        
         <section class="profile-section">
+          <div >{{travel_plan.schedule.name}}</div>
           <div class="profile-header">
             <div>
-              <div class="section-title">{{travel_plan.title}} - {{travel_plan.city}}</div>
-              <p class="trip-detail-dates">{{ travel_plan.start_date }} ~ {{ travel_plan.end_date }}</p>
+              <p  class="section-title">{{ travel_plan.start_date }}</p>
             </div>
             <a href="{% url 'users:schedule_detail' travel_plan.schedule.schedule_id%}">목록으로</a>
-          </div>
-          
+          </div><br>
           <div class="map-container">
             <div id="map"></div>
           </div>
           
           <div class="trip-details">
             <p class="trip-detail-ex">{{ travel_plan.explanation|linebreaksbr }}</p>
-            {% comment %} <p><strong>공개 여부:</strong> {{ travel_plan.is_public|yesno:"공개,비공개" }}</p> {% endcomment %}
           </div>
           
           <div class="btns">

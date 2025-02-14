@@ -30,6 +30,7 @@ from .models import PhoneVerification
 import qrcode
 import random, string, io, base64, re, imaplib, email
 from email.header import decode_header
+from datetime import datetime, timedelta
 
 @csrf_exempt
 def get_csrf_token(request):
@@ -398,19 +399,14 @@ def get_decoded_header(header_value):
     return header_text
 
 def phone_verification(request):
-    # 새로 인증 요청 시마다 새로운 랜덤 문자열을 생성
+    # 새로운 랜덤 문자열을 생성
     random_str = generate_random_string(10)
-    
-    # DB에 인증 요청 기록 저장
     PhoneVerification.objects.create(
         user=request.user if request.user.is_authenticated else None,
         random_string=random_str
     )
-    
-    # 세션에도 저장 (추후 인증 검증 시 사용)
+
     request.session['phone_verification_code'] = random_str
-    
-    # SMS 전송 링크 생성  
     sms_link = f"sms:piro.urabi@gmail.com?body={random_str}"
     
     # QR 코드 생성 
@@ -482,8 +478,6 @@ def verify_phone_status(request):
         print("Verification error:", e)
         return JsonResponse({'result': 'error'})
 
-
-
 # 정보 수정
 @login_required
 def edit_profile(request):
@@ -495,26 +489,21 @@ def edit_profile(request):
         birth_day = request.POST.get("birth_day")
 
         if 'profile_image' in request.FILES:
-            print("✅ 파일 업로드 감지됨!")
+            print("파일 업로드 감지됨!")
         else:
-            print("⚠️ 파일 업로드가 안 됨")
-
-
+            print("파일 업로드가 안 됨")
         if birth_year and birth_month and birth_day:
-            request.user.birth = f"{birth_year}-{birth_month}-{birth_day}"  # YYYY-MM-DD 형식으로 변환하여 저장
+            request.user.birth = f"{birth_year}-{birth_month}-{birth_day}" 
 
         if form.is_valid():
             form.save()
             request.user.save() 
             return redirect('users:my_page')
         else:
-            print(form.errors)  # 디버깅용 출력
-
+            print(form.errors) 
     else:
         form = UserUpdateForm(instance=request.user)
-
     return render(request, 'mypage/editProfile.html', {'form': form, 'user': request.user})
-
 
 
 def check_phone_duplicate(request):
@@ -522,10 +511,9 @@ def check_phone_duplicate(request):
         data = json.loads(request.body)
         phone = data.get("phone")
 
-        # 전화번호에서 공백과 특수 문자 제거
         clean_phone = re.sub(r'\D', '', phone)
 
-        print(f"📢 [DEBUG] 중복 검사 요청 받은 전화번호: {clean_phone}")
+        print(f" [DEBUG] 중복 검사 요청 받은 전화번호: {clean_phone}")
 
         existing_user = User.objects.filter(user_phone__isnull=False).exclude(user_phone="").exclude(id=request.user.id).filter(user_phone=clean_phone).first()
         
@@ -554,58 +542,104 @@ def get_token_for_logged_in_user(request):
         "access": str(refresh.access_token)
     })
 
-    
-
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def some_protected_route(request):
     return Response({'message': 'This is a protected route!'}, status=status.HTTP_200_OK)
-
 @login_required
 def my_trip(request, pk):
     this_schedule = get_object_or_404(TravelSchedule, schedule_id=pk)
+    date_list = []
+    current_date = this_schedule.start_date
+    while current_date <= this_schedule.end_date:
+        date_list.append(current_date)
+        current_date += timedelta(days=1)
+    plan_id_str = request.GET.get('plan_id')
+    if plan_id_str:
+        try:
+            travel_plan = TravelPlan.objects.get(plan_id=plan_id_str)
+        except TravelPlan.DoesNotExist:
+            travel_plan = None
+    else:
+        travel_plan = None
+
+    plan_date_str = request.GET.get('plan_date')
+    if plan_date_str:
+        try:
+            selected_date = datetime.strptime(plan_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            selected_date = this_schedule.start_date
+    else:
+        if travel_plan:
+            selected_date = travel_plan.start_date
+        else:
+            selected_date = this_schedule.start_date
 
     if request.method == 'POST':
-        form = TravelPlanForm(request.POST)
+        post_plan_id = request.POST.get('plan_id')
+        if post_plan_id:
+            try:
+                travel_plan = TravelPlan.objects.get(plan_id=post_plan_id)
+            except TravelPlan.DoesNotExist:
+                travel_plan = None
+
+        # 새로 선택된 날짜(드롭다운-hidden)
+        post_date_str = request.POST.get('plan_date','')
+        if post_date_str:
+            try:
+                selected_date = datetime.strptime(post_date_str, "%Y-%m-%d").date()
+            except ValueError:
+                pass
+
+        if travel_plan:
+            form = TravelPlanForm(request.POST, instance=travel_plan)
+        else:
+            form = TravelPlanForm(request.POST)
 
         if form.is_valid():
-            travel_plan = form.save(commit=False)
-            travel_plan.created_by = request.user
-            travel_plan.schedule = this_schedule
+            saved_plan = form.save(commit=False)
+            saved_plan.created_by = request.user
+            saved_plan.schedule   = this_schedule
+            saved_plan.start_date = selected_date
+            saved_plan.end_date   = selected_date
 
-            # markers 데이터 처리
-            markers_json = request.POST.get('markers', '[]')
+            markers_json = request.POST.get('markers','[]')
             try:
-                markers_data = json.loads(markers_json)
-                for marker in markers_data:
-                    marker["customName"] = marker.get("customName", "이름 없음")
-                    marker["address"] = marker.get("address", "알 수 없는 위치")
-                    marker["title"] = marker["customName"]  # title도 customName으로 업데이트
-                
-                travel_plan.markers = json.dumps(markers_data)
+                saved_plan.markers = json.loads(markers_json)
             except json.JSONDecodeError:
-                travel_plan.markers = '[]'
+                saved_plan.markers = []
 
-            travel_plan.polyline = request.POST.get('polyline', '')
-            travel_plan.save()
-
-            return render(request, 'mypage/plan_detail.html', {
-                'travel_plan': travel_plan,
-            })
+            polyline_json = request.POST.get('polyline','[]')
+            try:
+                saved_plan.polyline = json.loads(polyline_json)
+            except json.JSONDecodeError:
+                saved_plan.polyline = []
+            saved_plan.save()
+            return redirect('users:schedule_detail', pk=this_schedule.schedule_id)
+        else:
+            print("폼 에러:", form.errors)
 
     else:
-        form = TravelPlanForm()
+        if travel_plan:
+            form = TravelPlanForm(instance=travel_plan) # 수정
+        else:
+            form = TravelPlanForm() # 새로 생성
 
-    return render(request, 'mypage/myTrip.html', {
-        'form': form,
+    context = {
         'this_schedule': this_schedule,
-    })
+        'date_list': date_list,
+        'selected_date': selected_date,
+        'form': form,
+        'travel_plan': travel_plan, 
+    }
+    return render(request, 'mypage/myTrip.html', context)
+
 
 @login_required
 def user_detail(request, pk):
     user = get_object_or_404(User, id=pk)
-    current_user = request.user  # 현재 로그인한 사용자
+    current_user = request.user  
     
     # 여행 계획 및 동행 관련 쿼리 작성 
     user_plans = TravelPlan.objects.filter(created_by=user)
@@ -619,9 +653,6 @@ def user_detail(request, pk):
     ).order_by('-created_at')
     
     review_count = accommodation_reviews.count()
-    
-    # 처음 5개만 보이도록 슬라이싱 initial_reviews = accommodation_reviews[:5]
-    
     #나눔마켓
     mkt_self_items = Market.objects.filter(user=user)
     mkt_self_count = mkt_self_items.count()
@@ -630,7 +661,6 @@ def user_detail(request, pk):
     flash_meetings = Flash.objects.filter(created_by=user).order_by("-date_time")
     flash_count = flash_meetings.count()
 
-    # 동행 태그 처리
     for accompany in user_accompany:
         accompany.tags = accompany.tags.split(',') if accompany.tags else []
     
@@ -642,10 +672,10 @@ def user_detail(request, pk):
         'accompany_count': accompany_count,
         "flash_meetings": flash_meetings,
         "flash_count": flash_count,
-        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
-        'review_count': review_count,  # 리뷰 개수 추가
-        'has_more': review_count > 5,  # 더보기 버튼 표시 여부
-        'mkt_self_items' :mkt_self_items, #마켓 작성자 게시글
+        'accommodation_reviews': accommodation_reviews, 
+        'review_count': review_count,
+        'has_more': review_count > 5, 
+        'mkt_self_items' :mkt_self_items,
         'mkt_self_count' :mkt_self_count
     })
     
@@ -662,52 +692,75 @@ def delete_trip(request, pk):
     travel_plan.delete()
     return redirect('users:schedule_detail', pk=travel_plan.schedule.schedule_id)
 
+@login_required
 def update_trip(request, pk):
-    travel_plan = TravelPlan.objects.get(plan_id=pk)
+    travel_plan = get_object_or_404(TravelPlan, plan_id=pk)
     this_schedule = travel_plan.schedule
+
+    # 스케줄 기간에 해당하는 date_list 생성
+    date_list = []
+    current = this_schedule.start_date
+    while current <= this_schedule.end_date:
+        date_list.append(current)
+        current += timedelta(days=1)
+    plan_date_str = request.GET.get('plan_date')
+    if plan_date_str:
+        try:
+            selected_date = datetime.strptime(plan_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            selected_date = travel_plan.start_date
+    else:
+        selected_date = travel_plan.start_date
 
     if request.method == 'POST':
         form = TravelPlanForm(request.POST, instance=travel_plan)
         if form.is_valid():
-            travel_plan = form.save(commit=False)
-            travel_plan.created_by = request.user
-            
-            # markers 데이터 처리
-            markers_json = request.POST.get('markers', '[]')
-            try:
-                markers_data = json.loads(markers_json)
-                for marker in markers_data:
-                    marker["customName"] = marker.get("customName", "이름 없음")
-                    marker["address"] = marker.get("address", "알 수 없는 위치")
-                    marker["title"] = marker["customName"] 
-                
-                travel_plan.markers = json.dumps(markers_data)
-            except json.JSONDecodeError:
-                travel_plan.markers = '[]'
+            updated_plan = form.save(commit=False)
+            post_date_str = request.POST.get('plan_date', '')
+            if post_date_str:
+                try:
+                    new_date = datetime.strptime(post_date_str, "%Y-%m-%d").date()
+                except ValueError:
+                    new_date = travel_plan.start_date 
+            else:
+                new_date = travel_plan.start_date
 
-            travel_plan.polyline = request.POST.get('polyline', '')
-            travel_plan.save()
+            updated_plan.start_date = new_date
+            updated_plan.end_date = new_date
+            markers_str = request.POST.get('markers', '[]')
+            try:
+                updated_plan.markers = json.loads(markers_str)
+            except json.JSONDecodeError:
+                updated_plan.markers = []
             
-            return redirect('users:plan_detail', pk=travel_plan.plan_id)
+            polyline_str = request.POST.get('polyline', '[]')
+            try:
+                updated_plan.polyline = json.loads(polyline_str)
+            except json.JSONDecodeError:
+                updated_plan.polyline = []
+
+            updated_plan.save()
+            return redirect('users:plan_detail', pk=updated_plan.plan_id)
+        else:
+            print("폼 에러:", form.errors)
     else:
         form = TravelPlanForm(instance=travel_plan)
-        try:
-            existing_markers = json.loads(travel_plan.markers)
-            travel_plan.markers = json.dumps(existing_markers)
-        except (json.JSONDecodeError, AttributeError):
-            travel_plan.markers = '[]'
 
-    return render(request, 'mypage/myTrip.html', {
-        'form': form,
+    context = {
         'this_schedule': this_schedule,
-    })
+        'form': form,
+        'date_list': date_list,
+        'selected_date': selected_date,
+    }
+    return render(request, 'mypage/myTrip.html', context)
+
 
 def user_list(request):
     user = get_object_or_404(User, id=request.user.id)
-    user_plans = TravelSchedule.objects.filter(user=user)
-    user_plan_count = user_plans.count()
-    for plan in user_plans:
-        plan.plans_count = TravelPlan.objects.filter(schedule=plan).count()
+    user_schedules = TravelSchedule.objects.filter(user=user).order_by('-created_at')
+    schedule_count = user_schedules.count()
+    for schedule in user_schedules:
+        schedule.plans_count = TravelPlan.objects.filter(schedule=schedule).count()
     
     user_accompanies = TravelParticipants.objects.filter(user=user)
     accompany_items = []
@@ -735,8 +788,9 @@ def user_list(request):
     flash_participant_count = flash_participants.count()
 
     return render(request, 'mypage/planlist.html', {
-        'plans': user_plans,
-        'plan_count': user_plan_count,
+        'user' : user,
+        'schedules': user_schedules,
+        'schedule_count': schedule_count,
         'accompanies': accompany_items,  
         'accompany_count': accompany_count,
         'ac_requests': user_request,
@@ -797,21 +851,31 @@ def schedule_create(request):
         end_date = request.POST.get('end_date')
         new_schedule = TravelSchedule.objects.create(name=schedule_name, user=request.user, start_date=start_date, end_date=end_date)
         return redirect('users:schedule_detail', pk=new_schedule.schedule_id)
-
+    
+@login_required
 def schedule_detail(request, pk):
-    schedule = TravelSchedule.objects.get(schedule_id=pk)
-    plans = TravelPlan.objects.filter(schedule=schedule)
-    if request.method == 'POST':
-        photo = request.FILES.get('photo')
-        schedule.photo = photo
-        schedule.save()
+    schedule = get_object_or_404(TravelSchedule, schedule_id=pk)
+    travel_plans = TravelPlan.objects.filter(schedule=schedule).order_by('start_date')
     return render(request, 'mypage/schedule_detail.html', {
         'schedule': schedule,
-        'plans': plans,
+        'travel_plans': travel_plans,
     })
+
 
 def delete_schedule(request):
     schedule_id = request.GET.get('schedule_id')
     schedule = get_object_or_404(TravelSchedule, pk=schedule_id)
     schedule.delete()
     return redirect('users:user_list')
+
+
+def update_schedule_photo(request):
+    if request.method == 'POST':
+        schedule_id = request.POST.get('schedule_id')
+        photo_file  = request.FILES.get('photo')
+        schedule = get_object_or_404(TravelSchedule, pk=schedule_id)
+        if photo_file:
+            schedule.photo = photo_file
+            schedule.save()
+        return redirect('users:schedule_detail', pk=schedule_id)
+    return redirect('users:my_page')

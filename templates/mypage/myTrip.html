@@ -1,115 +1,97 @@
+<!-- templates/mypage/myTrip.html -->
+
 {% extends "base/base.html" %}
 {% load static %}
+
 {% block head %}
-  <link rel="stylesheet" href="{% static 'reset.css' %}">
-  <link rel="stylesheet" href="{%static 'mypage/myTrip.css'%}">
-  <link rel="stylesheet" href="{%static 'accompany/accompany_map.css'%}">
+  <link rel="stylesheet" href="{% static 'mypage/myTrip.css' %}">
+  <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&callback=initMap&loading=async"></script>
-{%endblock%}
+{% endblock %}
 
- {%block content%}
- <main class="mypage-wrap">
-    <!-- 왼쪽 사이드 카테고리 -->
-    <nav class="mypage-nav">
-      <ul>
-        <li><a href="{%url 'users:my_page'%}">프로필</a></li>
-        <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
-        <li class="active"><a href="{%url 'users:user_list'%}">나의 여행 일정</a></li>
-        <li><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
-      </ul>
-    </nav>
-  
-    <!-- 메인 콘텐츠 영역 -->
-    <section class="mypage-content">
-        <section class="mypage-content">
-            <h1 class="main-title">{{this_schedule.name}}</h1>
-            
-            <section class="profile-section">
-              <div class="profile-header">
-                  <div class="section-title">여행 계획 생성</div>
-                  <a href="{%url 'users:schedule_detail' this_schedule.schedule_id%}">목록으로</a>
-              </div>
+{% block content %}
+<main class="mypage-wrap">
+  <nav class="mypage-nav">
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+      <li class="active"><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
+      <li><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+  </nav>
 
-              <div class="map-container">
-                <input id="search-bar" type="text" placeholder="장소를 검색하세요">
-                <div id="map"></div>
-              </div>
-              <form method="POST" {%if form.instance%}{%else%}action="{% url 'users:my_trip' this_schedule.schedule_id%}"{%endif%}>
-                {% csrf_token %}
-    
-                <input type="hidden" id="latitude" name="latitude">
-                <input type="hidden" id="longitude" name="longitude">
-                <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'> 
-                <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
-      
-                <label for="title"></label>
-                {{form.title}}
-    
-                <label for="city"></label>
-                {{form.city}}
-                <div class="timeline">
-                  <div class="timeline-item">
-                    <div class="date">
-                      <label for="start_date">시작일 </label>
-                      {{form.start_date}}
-                    </div>
-                    <div class="location">
-                      <input type="text" id="location" name="location" readonly>
-                      <div id="address_container">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="date">
-                      <label for="end_date">종료일 </label>
-                      {{form.end_date}}
-                    </div>
-                  </div>
-                </div>
-                <div class="filter-group">
-                  <label for="location"></label>
-                  <input type="text" id="location" name="location" readonly>
-                  <div id="address_container">
-                  </div>
-                </div>
-    
+  <section class="mypage-content">
+    <h1 class="main-title">{{ this_schedule.name }}</h1>
+    <section class="profile-section">
+      <div class="profile-header">
+        <div class="section-title">일정 생성/수정 &nbsp;
+        <span class="date-dropdown">
+          <select id="plan_date_select" name="plan_date_select" onchange="changeHiddenDate(this.value)">
+            {% for d in date_list %}
+              <option value="{{ d|date:'Y-m-d' }}"
+                      {% if d == selected_date %}selected{% endif %}>
+                {{ d|date:"Y-m-d" }}
+              </option>
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+        <a href="{% url 'users:schedule_detail' this_schedule.schedule_id %}">목록으로</a>
+      </div>
 
-    
-                <label for="explanation"></label>
-                {{form.explanation}}
-                {% comment %} <div class="radio-group">
-                  <input type="radio" id="public" name="is_public" value="True" {% if form.instance.is_public %}checked{% endif %}>
-                  <label for="public">
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z" fill="#1C274C"></path>
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 13.6394 2.42496 14.1915 3.27489 15.2957C4.97196 17.5004 7.81811 20 12 20C16.1819 20 19.028 17.5004 20.7251 15.2957C21.575 14.1915 22 13.6394 22 12C22 10.3606 21.575 9.80853 20.7251 8.70433C19.028 6.49956 16.1819 4 12 4C7.81811 4 4.97196 6.49956 3.27489 8.70433C2.42496 9.80853 2 10.3606 2 12ZM12 8.25C9.92893 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92893 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25Z" fill="#1C274C"></path>
-                      </svg>
-                      공개
-                  </label>
-                  <input type="radio" id="private" name="is_public" value="False" {% if not form.instance.is_public %}checked{% endif %}>
-                  <label for="private">
-                      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M4 6V4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4V6H14V16H2V6H4ZM6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4V6H6V4ZM7 13V9H9V13H7Z" fill="#858585"></path>
-                      </svg>
-                      비공개
-                  </label>
-                </div> {% endcomment %}
-    
-                <button type="submit" class="register-btn">등록하기</button>
-              </form>
-            </div>
-  
+      {% if form.instance.markers %}
+        {% with form.instance.markers|default:'[]' as markers_json %}
+          {% autoescape off %}
+          <script>
+            window.mapData = {
+              markers: {{ markers_json }},
+              polyline: {{ form.instance.polyline|default:'[]' }}
+            };
+          </script>
+          {% endautoescape %}
+        {% endwith %}
+      {% endif %}
+
+      <div class="map-container">
+        <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+        <div id="map"></div>
+      </div>
+
+      <div id="address_container"></div>
+      <div class="marker-timeline">
+        <ul id="marker-list"></ul>
+      </div>
+
+      <form method="POST" action="" onsubmit="saveMapData(event)">
+        {% csrf_token %}
+        {% if travel_plan %}
+          <input type="hidden" name="plan_id" value="{{ travel_plan.plan_id }}">
+        {% endif %}
+        <input type="hidden" id="plan_date" name="plan_date" value="{{ selected_date|date:'Y-m-d' }}">
+
+        <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'>
+        <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
+
+        <div for="explanation" class="section-title">설명</div>
+        {{ form.explanation }}
+
+        <button type="submit" class="register-btn">등록하기</button>
+      </form>
+
+
     </section>
-  </main>
-  {%endblock%}
+  </section>
+</main>
+{% endblock %}
 
-  {%block js%}
-    <script>
-      window.mapData = {
-        markers: {{ form.instance.markers|safe }},
-        polyline: {{ form.instance.polyline|safe }}
-      };
-    </script>
-    <script src="{%static 'accompany/accompany_map.js'%}"></script>
-  {%endblock js%}
+{% block js %}
+<script>
+  function changeHiddenDate(newDate) {
+    document.getElementById("plan_date").value = newDate;
+  }
+</script>
+
+<script src="{% static 'accompany/accompany_map.js' %}"></script>
+{% endblock %}
+
 
