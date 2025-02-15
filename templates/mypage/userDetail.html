@@ -141,14 +141,14 @@
             {% endfor %}
           </div>
         </div>
-        {% endfor %}
+        {% endfor %}<button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
         {% else %}
         <div class="activity-card empty">
           동행한 번개 모임이 없어요!
         </div>
         {% endif %}
       </div>
-      <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
+      
 
       <!-- 번개 이력 -->
       <h2 class="sub-title">등록한 번개 모임</h2>
@@ -173,15 +173,15 @@
                           </p>
                       </div>
                   </div>
-              {% endfor %}
+              {% endfor %} <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlashes()">더보기</button>
+
           {% else %}
               <div class="activity-card empty">
-                  내가 등록한 번개 모임이 없어요!
+                  등록한 번개 모임이 없어요!
               </div>
           {% endif %}
       </div>
-      <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlashes()">더보기</button>
-
+     
       <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
       <h2 class="sub-title">작성한 숙소 리뷰</h2>
       <div id="review-cards-container" class="activity-box">
@@ -207,15 +207,15 @@
                       </div>
                       </a>
                   </div>
-              {% endfor %}
+              {% endfor %}<button id="load-more-review-btn" class="load-more-btn" onclick="loadMoreReviews()">더보기</button>
           {% else %}
               <div class="activity-card">
-                  <div class="activity-review">
-                      <p class="empty">작성한 숙소 리뷰가 없어요!</p>
+                  <div class="activity-review empty">
+                      <p>작성한 숙소 리뷰가 없어요!</p>
                   </div>
               </div>
           {% endif %}
-          <button id="load-more-review-btn" class="load-more-btn" onclick="loadMoreReviews()">더보기</button>
+          
       </div>
       
       <h2 class="sub-title">작성한 마켓 글</h2>
@@ -247,12 +247,12 @@
                 </p>
               </div>
             </div>
-            {% endfor %}
+            {% endfor %}<button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
         {% else %}
           <div class="activity-card empty">작성한 마켓 게시글이 없습니다. </div>
         {% endif %}
       </div>
-      <button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
+      
     </section>
   </section>
 </main>

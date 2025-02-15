@@ -17,15 +17,16 @@
       </label>
       <select id="plan-selector">
         {% if not this_plan %}
-        <option value="">대표계획 선택</option>
-        {%else%}
-        <option value="">{{ this_plan.schedule.name }} - {{ this_plan.title }}</option>
+          <option value="">대표계획 선택</option>
+        {% else %}
+          <option value="">{{ this_plan.schedule.name }} - {{ this_plan.start_date|date:"Y-m-d" }}</option>
         {% endif %}
         {% for plan in travel_plans %}
-        {%if this_plan.plan_id is not plan.plan_id%}
-        <option value="{{ plan.plan_id }}">{{ plan.schedule.name }} - {{ plan.title }}</option>
-        {%endif%}
+          {% if this_plan.plan_id is not plan.plan_id %}
+            <option value="{{ plan.plan_id }}">{{ plan.schedule.name }} - {{ plan.start_date|date:"Y-m-d" }}</option>
+          {% endif %}
         {% endfor %}
+
       </select>
       <button type="button" onclick="loadSelectedPlan()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
@@ -106,8 +107,7 @@
         <div class="filter-group filter_location">
           <label for="location">주소</label>
           <input type="text" id="location" name="location" readonly>
-          <div id="address_container">
-          </div>
+          <div id="address_container"></div>
         </div>
   
         <div class="description">

@@ -420,8 +420,8 @@
         min-height: 400px; 
         padding: 20px; 
         background-image: none; 
-        background-color: skyblue; 
-        border: 2px solid #007BFF; 
+        background: linear-gradient(to bottom, #4c97e8,#043265); 
+        border:none;
         color: white; 
         text-align: center; 
         position: relative; 
@@ -457,6 +457,10 @@
         text-align: center;
         font-size: 2em;
         margin-bottom: 20px;
+        line-height: 2.0rem;
+    }
+    .main_accommodation_title em{
+        white-space: nowrap;
     }
 }
 
@@ -547,12 +551,16 @@
         font-size: 18px; 
         font-weight: 500;
     }
+    .main_market_title em{
+        white-space: nowrap;
+    }
 }
 
 /* 440px 이하: 제목 및 텍스트 크기 줄이기 */
 @media (max-width: 440px) {
     .main_flash_text h1 {
         font-size: 1.6em; /* 번개 모임 제목 크기 줄이기 */
+        line-height: 2.0rem;
     }
 
     .main_flash_text h3 {
@@ -566,4 +574,12 @@
     .main_market_body_title {
         font-size: 1.0em; /* 나눔 마켓 카테고리 제목 크기 줄이기 */
     }
+    .main_flash_text em {
+        white-space: nowrap;
+    }
+    .main_market_title a{
+        align-self: end;
+        margin-top: 5px;
+    }
+
 }

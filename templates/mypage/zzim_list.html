@@ -63,14 +63,14 @@
 
             </div>
           </div>
-          {% endfor %}
+          {% endfor %}<button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
         {% else %}
         <div class="activity-card">
           <p class="empty">찜한 동행이 없어요!</p>
         </div>
         {% endif %}
       </div>
-      <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
+      
 
 
       <h2 class="sub-title">번개 모임</h2>
@@ -126,13 +126,14 @@
               </div>
             </div>
           {% endfor %}
+          <button id="load-more-accommodation-btn" class="load-more-btn" onclick="loadMoreAccommodations()">더보기</button>
         {% else %}
           <div class="activity-card">
             <p class="empty">찜한 숙소 후기가 없어요!</p>
           </div>
         {% endif %}
       </div>
-      <button id="load-more-accommodation-btn" class="load-more-btn" onclick="loadMoreAccommodations()">더보기</button>
+      
 
       <!--나눔 마켓-->
       <h2 class="sub-title">나눔 마켓</h2>
@@ -166,14 +167,14 @@
               </p>
             </div>
           </div>
-          {% endfor %}
+          {% endfor %}<button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
         {% else %}
         <div class="activity-card">
           <p class="empty">찜한 마켓 게시글이 없어요!</p> 
         </div>
         {% endif %}
       </div>
-      <button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
+      
     </section>
   </section>
 </main>

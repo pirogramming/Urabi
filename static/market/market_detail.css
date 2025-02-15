@@ -247,3 +247,17 @@
     }
 }
 
+@media (max-width: 500px) {
+    .detail_set{
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        gap: 19px;
+    }
+    .market_detail_profile, .market_detail_tradeWay, .market_deatil_date {
+        border:none;
+    }
+    .market_detail_tradeWay{
+        margin:0;
+    }
+}
