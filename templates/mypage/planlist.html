@@ -160,7 +160,7 @@
             
                 <div class="activity-card flash-card">
                     <a href="{% url 'flash:flash_detail' flash.pk %}">
-                        <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+                        <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key={{ google_maps_api_key }}"
                             alt="번개 이미지" class="flash-img">
                     </a>
                     <div class="activity-info">

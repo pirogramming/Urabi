@@ -672,11 +672,12 @@ def user_detail(request, pk):
         'accompany_count': accompany_count,
         "flash_meetings": flash_meetings,
         "flash_count": flash_count,
-        'accommodation_reviews': accommodation_reviews, 
-        'review_count': review_count,
-        'has_more': review_count > 5, 
-        'mkt_self_items' :mkt_self_items,
-        'mkt_self_count' :mkt_self_count
+        'accommodation_reviews': accommodation_reviews,  # 숙소 리뷰 데이터 추가 
+        'review_count': review_count,  # 리뷰 개수 추가
+        'has_more': review_count > 5,  # 더보기 버튼 표시 여부
+        'mkt_self_items' :mkt_self_items, #마켓 작성자 게시글
+        'mkt_self_count' :mkt_self_count,
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
     })
     
 
@@ -685,6 +686,7 @@ def plan_detail(request, pk):
     travel_plan = TravelPlan.objects.get(plan_id=pk)
     return render(request, 'mypage/plan_detail.html', {
         'travel_plan': travel_plan,
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
     })
 
 def delete_trip(request, pk):
@@ -796,6 +798,7 @@ def user_list(request):
         'ac_requests': user_request,
         'flash_participants': [fp.flash for fp in flash_participants],
         'flash_participant_count': flash_participant_count,
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
     })
 
 
@@ -841,6 +844,7 @@ def zzim_list(request):
         'mkt_zzim_count' : mkt_zzim_count,
         'acc_zzims': acc_zzims,
         'acc_zzim_count': acc_zzim_count,
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
     })
 
 

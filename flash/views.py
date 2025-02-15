@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Flash, FlashZzim, FlashParticipants, FlashRequest
 from django.http import JsonResponse
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -24,11 +25,11 @@ def flash_list(request):
 
     for flash in flash_meetings:
         flash.tag_list = flash.tags.split(",") if flash.tags else []
-        flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+        flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={flash.latitude},{flash.longitude}&key={settings.GOOGLE_MAPS_API_KEY}"
         flash.is_zzimmed = flash.pk in zzim_items  # 찜 여부 추가
         flash.current_participants = FlashParticipants.objects.filter(flash=flash).count()
 
-    return render(request, "flash/flash_list.html", {"flash_meetings": flash_meetings, 'filterset': filterset})
+    return render(request, "flash/flash_list.html", {"flash_meetings": flash_meetings, 'filterset': filterset, "google_maps_api_key": settings.GOOGLE_MAPS_API_KEY})
 
 
 @login_required
@@ -58,8 +59,12 @@ def flash_register(request):
             updated_at=now(),
         )
         return redirect("flash:flash_list")  # 리스트 페이지로 이동
+    
+    context = {
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY  # API 키 전달
+    }
 
-    return render(request, "flash/flash_register.html")
+    return render(request, "flash/flash_register.html", context)
 
 @login_required
 def flash_update(request, pk):
@@ -132,7 +137,7 @@ def flash_detail(request, pk):
         if session_img_key in request.session:
             other_flash.image_url = request.session[session_img_key]  # 세션에서 이미지 가져오기
         elif other_flash.latitude and other_flash.longitude:
-            other_flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={other_flash.latitude},{other_flash.longitude}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k"
+            other_flash.image_url = f"https://maps.googleapis.com/maps/api/streetview?size=500x500&location={other_flash.latitude},{other_flash.longitude}&key={settings.GOOGLE_MAPS_API_KEY}"
         else:
             other_flash.image_url = "/static/img/default_map_image.jpg"
 

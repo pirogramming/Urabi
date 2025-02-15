@@ -9,7 +9,7 @@ window.initMap = function () {
         console.error("🚨 Google Maps API가 아직 로드되지 않음!");
         return;
     }
-    window.actualInitMap?.();
+    window.actualInitMap();
 };
 
 window.actualInitMap = async function () {
@@ -82,7 +82,7 @@ async function loadPlaceImage(placesService, streetViewService, placeAddress, im
 
 async function loadStreetViewImage(streetViewService, placeAddress, imgElement, infoWindow, infoImageId, title, url, date, flashid) {
     try {
-        const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${placeAddress}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k`;
+        const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${placeAddress}&key=${GOOGLE_MAPS_API_KEY}`;
         setImage(imgElement, streetViewUrl, infoWindow, infoImageId, title, url, date);
         updateImageAndSession(flashid, streetViewUrl);
     } catch (error) {

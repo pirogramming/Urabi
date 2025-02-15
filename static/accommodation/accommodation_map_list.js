@@ -182,10 +182,10 @@ async function getStreetViewImage(city, streetViewService, infoWindow, imgElemen
             // Street View 이미지 URL 생성
             const panoLocation = panoramaData.location.latLng;
             const heading = panoramaData.tiles.centerHeading;
-            imageUrl = `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${panoLocation.lat()},${panoLocation.lng()}&heading=${heading}&pitch=0&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k`;
+            imageUrl = `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${panoLocation.lat()},${panoLocation.lng()}&heading=${heading}&pitch=0&key=${GOOGLE_MAPS_API_KEY}`;
         } else {
             // Street View가 없는 경우 정적 지도 이미지 사용
-            imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat()},${location.lng()}&zoom=16&size=600x400&markers=color:red%7C${location.lat()},${location.lng()}&key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k`;
+            imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat()},${location.lng()}&zoom=16&size=600x400&markers=color:red%7C${location.lat()},${location.lng()}&key=${GOOGLE_MAPS_API_KEY}`;
         }
 
         // 이미지 업데이트
