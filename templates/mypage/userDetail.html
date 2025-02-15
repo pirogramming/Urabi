@@ -46,7 +46,7 @@
         <div class="passport-card-body">
           <div>
             <img id="profile-picture-preview" class="profile-photo"
-            src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+            src="{% if user.profile_image and user.profile_image.url %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
             alt="프로필 사진" />
             <div class="travel-score">
               <span>여행지수</span>
