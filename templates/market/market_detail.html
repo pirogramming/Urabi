@@ -1,0 +1,203 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head%} 
+<link rel="stylesheet" href="{% static 'market/market_detail.css' %}">
+{% endblock %}
+
+{% block content%}
+<section class="market_detail">
+    <div class="market_detail_head">
+        <p class="header_comment">나눔 마켓 > &gt; 상세 정보</p>
+    </div>
+
+    <hr class="flash_divider">
+
+    <div class="market_detail_head">
+        <div class="market_detail_title">
+            <h1 class="market_detail_title_info">{{market.title}}</h1>
+            {% if request.user != market.user %}
+                <button class="market_like" data-market-id="{{market.item_id}}">
+                    {% if is_zzim %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                        </svg>
+                    {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                        </svg>
+                    {% endif %}
+                </button>
+            {% else %}
+            {% endif %}
+        </div>
+        <div class="market_detail_mid_title">
+            <div class="detail_set">
+                <a href="{% url 'users:user_detail' market.user.id %}">
+                    <div class="market_detail_profile">
+                        <p>{{market.user.nickname}} </p>
+                        <p class="market_detail_temp">{{trust_score}}</p>
+                    </div>
+                </a>
+                <div class="market_detail_tradeWay">
+                    <p>{{market.get_trade_type_display}}</p>
+                </div>
+                <p class="market_deatil_date">
+                    {% if market.updated_at and market.updated_at != market.created_at %}
+                        {{market.updated_at|date:"Y-m-d"}}
+                    {% else %}
+                        {{market.created_at|date:"Y-m-d"}}
+                    {%endif%}
+                </p>
+            </div>
+            <div class="market_detail_tag">
+                <p id="market_detail_cate">{{market.category}}</p>
+                <p id="market_detail_loca">{{market.city}}</p>
+                <p id="market_detail_status">{{market.status}}</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="flash_divider">
+
+    <div class="market_detail_body">
+        {% if market.photo %}
+            <img src="{{ market.photo.url }}" alt="거래 이미지">
+        {% else %}
+            <img src="{% static 'img/schedule_default_img.jpg'%}">
+        {% endif %}
+        <div class="market_detail_body_right">
+            <div class="market_detail_trade_location">
+                <h3>거래 장소</h3>
+                <p>{{market.city}}</p>
+            </div>
+            <div class="market_detail_price">
+                <h3>가격</h3>
+                <p>{{market.price}}</p>
+                <p>{{market.currency_unit}}</p>
+            </div>
+            <div class="market_detail_description">
+                <h3>본문</h3>
+                <p>{{market.explanation}}</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="flash_divider">
+
+        {% if request.user == market.user %}
+            <div class="market_detail_bottom">
+                <a href="{% url 'market:market_update' market.item_id %}" class="market_detail_edit_btn">
+                    <p>수정하기</p>
+                </a>
+                <a href="{% url 'market:market_delete' market.item_id %}" class="market_detail_del_btn">
+                    <p>삭제하기</p>
+                </a>
+            </div>
+        {% else %}
+            <div class="market_detail_bottom">
+                <a href="#" class="market_detail_chat_btn" data-other-user-id="{{ market.user.id }}">
+                    <p>💬  문의하기</p>
+                </a>
+                <a href="{% url 'market:market_list' %}" class="market_backToList">
+                    <p>목록으로</p>
+                </a>
+            </div>
+        {%endif%}
+</section>
+    {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> {% endcomment %}
+{% endblock %}
+
+
+    {%block js%}
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const csrfToken = "{{ csrf_token }}";  
+
+        document.querySelectorAll(".market_like").forEach(button => {
+            button.addEventListener("click",function(){
+                let marketId = this.getAttribute("data-market-id");
+
+                fetch(`/market/zzim/${marketId}`,{
+                    method : "POST",
+                    headers: {
+                        "X-CSRFToken" : csrfToken,
+                        "Content-Type":"application/json"
+                    },
+                    credentials : "same-origin"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let is_zzim = data.zzim;
+                    document.querySelectorAll(`.market_like[data-market-id="${marketId}"]`).forEach(btn=>{
+                        if(is_zzim){
+                            btn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg>`;
+                            localStorage.setItem(`zzim_${marketId}`,"true");
+                        }else{
+                            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                            </svg>`;
+                            localStorage.setItem(`zzim_${marketId}`, "false");
+                        }
+                    });
+                })
+                .catch(error => console.error("Error: ",error));
+            })
+        })
+
+        
+        document.querySelectorAll(".market_like").forEach(button => {
+            let marketId = button.getAttribute("data-market-id");
+            let is_zzim = localStorage.getItem(`zzim_${marketId}`);
+
+            if(is_zzim === "true"){
+                button.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                    </svg>`;
+            }else if(is_zzim === "false"){
+                button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                    </svg>`;
+            }
+        });
+    });
+
+    const marketChatBtn = document.querySelector(".market_detail_chat_btn");
+    if(marketChatBtn) {
+        marketChatBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            // data-other-user-id에 담긴 판매자(문의 대상) ID를 가져옴
+            const otherUserId = marketChatBtn.dataset.otherUserId;
+            // create_chat_room 뷰 URL 생성: 0을 otherUserId로 대체
+            const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+            
+            fetch(createRoomUrl, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.chat_room_url) {
+                    // 채팅 모달에 채팅방 URL을 설정
+                    const chatFrame = document.getElementById("chatFrame");
+                    chatFrame.src = data.chat_room_url;
+                    const chatModal = document.getElementById("chatModal");
+                    chatModal.style.display = "block";
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error creating chat room:", error);
+            });
+        });
+    }
+    
+    </script>
+    {%endblock js%}

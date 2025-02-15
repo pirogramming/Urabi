@@ -1,0 +1,222 @@
+/* 번개 등록 페이지 전체 컨테이너 */
+.flash_register {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 페이지 타이틀 */
+.flash_register .flash_title {
+    text-align: left;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#highlight {
+    color: var(--red);
+    cursor: pointer;
+}
+#highlight:hover{
+    border-bottom: 2.5px solid var(--red);
+}
+.sub{
+    font-size: 18px;
+    display: inline;
+}
+/* 지도 스타일 */
+.flash_map {
+    position: relative;
+    width: 100%;
+    height: 400px; /* 지도 높이 조절 */
+}
+
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px; /* 지도 모서리 둥글게 */
+}
+
+#search-bar {
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    padding: 10px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    z-index: 1;
+}
+
+/* 번개 등록 폼 스타일 */
+.flash_register_form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+/* 입력 필드 공통 스타일 */
+.input_group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input_group label,
+.input_group span {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.input_group input,
+.input_group textarea {
+    font-family: 'Paperlogy', sans-serif;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.input_group input {
+    width: 80%;
+}
+
+.input_group input:placeholder-shown {
+    font-family: 'Paperlogy', sans-serif;
+
+}
+
+.input_group textarea {
+    resize: none;
+    height: 100px;
+}
+
+/* 인원 선택 필드*/
+.capacity_select_container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+.capacity_select_container select {
+    width: 10%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* 태그 입력 필드 */
+.input_group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.tag_input_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px; 
+}
+
+.tag_input_container input {
+    width: 150px;  
+    max-width: 50%; 
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.tag_input_container button {
+    background: var(--yellow);
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 40px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+.tag_input_container button:hover {
+    filter: brightness(0.85);
+}
+
+/* 태그 리스트 스타일 */
+.tag_list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag_item {
+    align-items: center;
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 16px;
+    gap: 5px;
+}
+
+.tag_remove_btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.tag_remove_btn:hover {
+    color: #ff4d4d;
+}
+
+/* 등록 버튼 스타일 */
+.flash_submit_btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 500;
+    align-self: flex-end;
+    width: 120px;
+    transition: background-color 0.3s;
+    background-color: var(--red);
+}
+
+.flash_submit_btn:hover{
+    background-color: var(--red-hover);
+}
+
+/* 반응형 */
+@media screen and (max-width: 768px) {
+    .flash_register {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .flash_map {
+        height: 200px;
+    }
+}

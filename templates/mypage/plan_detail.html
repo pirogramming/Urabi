@@ -1,0 +1,69 @@
+
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'mypage/myTrip.css' %}">
+  <link rel="stylesheet" href="{% static 'accompany/accompany_map.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/cms-mypage.css' %}">
+  <script defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap&loading=async"></script>
+{% endblock %}
+
+{% block content %}
+<main class="mypage-wrap">
+    <nav class="mypage-nav">
+      <ul>
+        <li><a href="{%url 'users:my_page'%}">프로필</a></li>
+        <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+        <li class="active"><a href="{%url 'users:user_list'%}">나의 여행 일정</a></li>
+        <li><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
+      </ul>
+    </nav>
+  
+    <section class="mypage-content">
+        <section class="profile-section">
+          <div >{{travel_plan.schedule.name}}</div>
+          <div class="profile-header">
+            <div>
+              <p  class="section-title">{{ travel_plan.start_date }}</p>
+            </div>
+            <a href="{% url 'users:schedule_detail' travel_plan.schedule.schedule_id%}">목록으로</a>
+          </div><br>
+          <div class="map-container">
+            <div id="map"></div>
+          </div>
+          
+          <div class="trip-details">
+            <p class="trip-detail-ex">{{ travel_plan.explanation|linebreaksbr }}</p>
+          </div>
+          
+          <div class="btns">
+            <button class="btn" onclick="window.location.href='{% url 'users:update_trip' travel_plan.plan_id %}'">수정</button>
+            <button class="btn" onclick="confirmDelete({{ travel_plan.plan_id }})">삭제</button>
+          </div>
+
+          <div class="trip-map-data">
+            <input type="hidden" id="latitude" value="{{ travel_plan.latitude }}">
+            <input type="hidden" id="longitude" value="{{ travel_plan.longitude }}">
+            <input type="hidden" id="markers" value="{{ travel_plan.markers }}">
+            <input type="hidden" id="polyline" value="{{ travel_plan.polyline }}">
+          </div>
+        </section>
+    </section>
+</main>
+{% endblock %}
+
+{% block js %}
+    <script>
+      function confirmDelete(planId) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          window.location.href = "{% url 'users:delete_trip' 0 %}".replace("0", planId);
+        }
+      }
+      const travelId = "{{ travel_plan.plan_id }}";
+      window.mapData = {
+        markers: {{ travel_plan.markers|safe }},
+        polyline: {{ travel_plan.polyline|safe }}
+      };
+    </script>
+    <script src="{%static 'accompany/show_map.js' %}"></script>
+{% endblock js %}

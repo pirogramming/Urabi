@@ -1,0 +1,274 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'accommodation/accommodation_reviewdetail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="accommodation-detail-container">
+  <div class="detail-header">
+    <p class="header_comment">숙소 후기 &gt; 상세 정보</p>
+  </div>
+  <hr class="flash_divider">
+  <div class="detail-info">
+    <div class="detail-info-header">
+      <div class="detail-info-title">
+        <p>{{ review.accommodation_name }}</p>
+        <p>{{ review.city }}</p>
+      </div>
+      <div class="rateAndzzim">
+        <span class="rating">⭐ {{ average_rating }}</span>
+        <button id="favorite-toggle-btn" data-review-id="{{ review.review_id }}">
+          {% if request.user in review.favorites.all %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+            </svg>
+          {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+            </svg>
+          {% endif %}
+        </button>
+      </div>
+    </div>
+    {%if photos%}
+    <div class="photos">
+      <button class="photo-next">❯</button>
+      <button class="photo-prev">❮</button>
+      <div class="photo-container">
+        {% for photo in photos %}
+          <img src="{{ photo }}" class="photo {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+        {% endfor %}
+      </div>
+      <div class="photo-thumbnails">
+        {% for photo in photos %}
+        <img src="{{ photo }}" class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    <hr class="flash_divider">
+    <div class="search-container">
+      <p class="review-count"><span class="strong">{{ review_count }}</span>개의 리뷰</p>
+      <div class="sort-options">
+        <a href="?sort=latest{% if city_query %}&city={{ city_query }}{% endif %}{% if rating_query %}&rating={{ rating_query }}{% endif %}" {% if sort == "latest" %}class="active"{% endif %}>최신순</a> | 
+        <a href="?sort=like{% if city_query %}&city={{ city_query }}{% endif %}{% if rating_query %}&rating={{ rating_query }}{% endif %}" {% if sort == "like" %}class="active"{% endif %}>공감순</a>
+      </div>      
+    </div>
+    <div class="reviews">
+      {% for review_item in page.object_list %}
+      <div class="review">
+        <div class="review-header">
+          <a href="{% url 'users:user_detail' review_item.user.id %}">
+            <span class="review-profileimg">
+              <img src="{% if review_item.user.profile_image %}{{ review_item.user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}" alt="프로필">
+            </span>
+            <span class="review-author">{{ review_item.user.nickname }}</span>
+          </a>
+          <span class="review-rating">⭐ {{ review_item.rating }}</span>
+          <button class="review-heart" data-review-item-id="{{ review_item.review_id }}">
+            {% if request.user in review_item.likes.all %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                </svg>
+            {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                </svg>
+            {% endif %}
+          </button>
+          <span class="like-count">{{ review_item.likes.count }}</span>
+        </div>
+        <div class="review-content">
+          <p class="review-text">{{ review_item.content }}</p>
+          {% if review_item.photo %}
+          <div class="review-image">
+            <img style="max-height: 300px;" src="{{ review_item.photo.url }}" alt="Review Image">
+          </div>
+          {% endif %}
+        </div>
+        {% if request.user == review_item.user %}
+        <div class="review-button-container">
+            <button class="edit-review-button" onclick="location.href='{% url 'accommodation:accommodation_review_update' review_item.review_id %}'">수정하기</button>
+            <button class="delete-review-button" data-review-id="{{ review_item.review_id }}">삭제하기</button>
+        </div>
+            {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <hr class="flash_divider accommodation_bar">
+    <div class="pagination">
+      {% if page.object_list %}
+        <a href="?page=1">&laquo; 처음으로</a>
+        {% for num in page.paginator.page_range %}
+          {% if num >= page.number|add:'-2' and num <= page.number|add:'2' %}
+            {% if page.number == num %}
+              <button class="now">{{ num }}</button>
+            {% else %}
+              <button onclick="window.location.href='?page={{ num }}'">{{ num }}</button>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        <a href="?page={{ page.paginator.num_pages }}">마지막으로 &raquo;</a>
+      {% else %}
+        <button class="now">1</button>
+      {% endif %}
+    </div>
+    <div class="action-buttons">
+      <button class="write-review-button" onclick="location.href='{% url 'accommodation:accommodation_review_create' review.review_id %}'">후기 작성하기</button>
+      <button class="navigate-button" onclick="location.href='{% url 'accommodation:filter' %}'">목록으로</button>
+    </div>
+  </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal-content">
+    <h3>후기 삭제 확인</h3>
+    <p>정말 이 후기를 삭제하시겠습니까?</p>
+    <div class="modal-buttons">
+      <button class="confirm-btn" id="confirm-delete-btn">삭제하기</button>
+      <button class="cancel-btn" id="cancel-delete-btn">취소</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+// 숙소 찜 토글 (부모 review)
+document.getElementById('favorite-toggle-btn').addEventListener('click', function() {
+  const btn = this;
+  const reviewId = btn.getAttribute('data-review-id');
+  fetch("{% url 'accommodation:toggle_favorite' 0 %}".replace('0', reviewId), {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({})
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.favorited) {
+      btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+        </svg>
+      `;
+    } else {
+      btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+        </svg>
+      `;
+    }
+    // 업데이트: 공감 개수 업데이트
+    const likeCountSpan = btn.parentElement.querySelector('.like-count');
+    if (likeCountSpan) {
+      likeCountSpan.textContent = data.like_count;
+    }
+  })
+  .catch(error => console.error('Error toggling favorite:', error));
+});
+
+// 개별 리뷰 공감(like) 토글
+document.querySelectorAll('.review-heart').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    const reviewItemId = btn.getAttribute('data-review-item-id');
+    fetch("{% url 'accommodation:toggle_like' 0 %}".replace('0', reviewItemId), {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.liked) {
+        btn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+          </svg>
+        `;
+      } else {
+        btn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+          </svg>
+        `;
+      }
+      // 업데이트: 공감 개수 업데이트
+      const likeCountSpan = btn.parentElement.querySelector('.like-count');
+      if (likeCountSpan) {
+        likeCountSpan.textContent = data.like_count;
+      }
+    })
+    .catch(error => console.error('Error toggling like:', error));
+  });
+});
+
+// 삭제 모달 처리
+let currentDeleteReviewId = null;
+document.querySelectorAll('.delete-review-button').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    currentDeleteReviewId = btn.getAttribute('data-review-id');
+    document.getElementById('delete-modal').style.display = 'flex';
+  });
+});
+document.getElementById('cancel-delete-btn').addEventListener('click', function() {
+  document.getElementById('delete-modal').style.display = 'none';
+});
+document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+  const deleteUrl = "{% url 'accommodation:accommodation_review_delete' 0 %}".replace('0', currentDeleteReviewId);
+  const form = document.createElement('form');
+  form.method = "POST";
+  form.action = deleteUrl;
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'csrfmiddlewaretoken';
+  csrfInput.value = '{{ csrf_token }}';
+  form.appendChild(csrfInput);
+  document.body.appendChild(form);
+  form.submit();
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let photos = document.querySelectorAll(".photo");
+    let thumbnails = document.querySelectorAll(".thumbnail");
+    let prevButton = document.querySelector(".photo-prev");
+    let nextButton = document.querySelector(".photo-next");
+    let currentIndex = 0;
+
+    function updateCarousel(index) {
+      photos.forEach((photo, i) => {
+        photo.classList.toggle("active", i === index);
+      });
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle("active", i === index);
+      });
+      currentIndex = index;
+    }
+
+    prevButton.addEventListener("click", function () {
+      let newIndex = (currentIndex - 1 + photos.length) % photos.length;
+      updateCarousel(newIndex);
+    });
+
+    nextButton.addEventListener("click", function () {
+      let newIndex = (currentIndex + 1) % photos.length;
+      updateCarousel(newIndex);
+    });
+
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener("click", function () {
+        updateCarousel(index);
+      });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %} 
+<link rel="stylesheet" href="{% static 'flash/flash_list.css' %}">
+<script defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap&loading=async"></script>
+<script defer src="{% static 'flash/flash_map_list.js' %}"></script>
+<script defer src="{% static 'flash/flash_zzim.js' %}"></script>
+<script> const GOOGLE_MAPS_API_KEY = "{{ google_maps_api_key }}"; </script>
+{% endblock %}
+
+{% block header_content %}
+<a id="myPage" href="#">My Page</a>
+{% endblock %}
+
+{% block content %}
+<!-- 지도 위 문구 -->
+
+<section class="flash_list">
+    <section class="flash_title">
+        <h2>여행 속 반짝이는 만남, <a href="{% url 'flash:flash_list' %}" class="highlight">번개 모임</a></h2>
+    </section>
+    <div class="banner-filter">
+        <p class="filter_sub">함께할 번개 모임을 찾아보세요</p>
+        <form method='GET' class="flash_filter">
+            {% csrf_token %}
+            <div class="flash_filter_content">
+                <div class="filter-group">
+                    {{filterset.form.title}}
+                </div>
+                <div class="filter-group">
+                    {{filterset.form.tags}}
+                </div>
+                <div class="filter-group">
+                    {{filterset.form.date_time}}
+                </div>
+            </div>
+            <button type="submit">검색</button>
+        </form>
+    </div>
+    <div class="flash_container">
+        <!-- 지도 -->
+        <div class="flash_left">
+            <section class="flash_list_header">
+                <h2 class="flash_list_title"><span class="strong">{{ flash_meetings.count }}</span>개의 모집중인 번개</h2>
+    
+                <div class="flash_list_controls">
+                    <h2>나만의 번개</h2>
+                    <a href="{% url 'flash:flash_register' %}" class="flash_register_btn">모집하기</a>
+                </div>
+            </section>
+            
+            <!-- 구분선 -->
+            <hr class="flash_list_divider">
+            
+            <!-- 모집 중인 번개 리스트 -->        
+            <section class="flash_list">
+                <section class="flash_list_body">
+                    {% for flash in flash_meetings %}
+                    <div class="flash_card"
+                        data-lat="{{ flash.latitude }}"
+                        data-lng="{{ flash.longitude }}"
+                        data-date="{{ flash.date_time|date:'Y-m-d H:i' }}"
+                        data-place-address="{{ flash.city }}"
+                        data-flash-id="{{ flash.pk }}">
+                        <a href="{% url 'flash:flash_detail' flash.meeting_id %}">
+                            <img id="place-img-{{ flash.meeting_id }}" src="/static/img/default_map_image.jpg" alt="모임 이미지">
+                        </a>
+                        <div class ="flash_card_content">
+                            <div class="flash_card_info">
+                                <div class="flash_title_zzim">
+                                    <h3><a href="{% url 'flash:flash_detail' flash.meeting_id %}">{{flash.title}}</a></h3>
+                                    <button class="zzim-btn" data-flash-id="{{ flash.pk }}">
+                                        {% if flash.is_zzimmed %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                            </svg>
+                                        {% endif %}
+                                    </button>
+                                </div>
+                                <p class="flash_date">{{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                                <p class="flash_place">{{ flash.city }}</p>
+                            </div>
+                            <div class="flash_card_tags">
+                                    {% for tag in flash.tag_list %}
+                                        <span class="flash_tag">#{{ tag }}</span>
+                                    {% empty %}
+                                        <span class="flash_tag">태그 없음</span>
+                                    {% endfor %}
+                                    <span class="flash_capacity">{{ flash.current_participants }} / {{ flash.max_people }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>등록된 번개 모임이 없습니다.</p>
+                    {% endfor %}
+                </section>
+                
+            </section>
+        </div>
+    
+        <section class="flash_map">
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+            <div id="map"></div>
+        </section>
+        
+    </div>
+</section>
+
+<script>
+    window.initMap = function () {
+        console.log("⚡ Google Maps API 로드됨: initMap 실행");
+        if (typeof window.actualInitMap === "function") {
+            window.actualInitMap();
+        } else {
+            console.error("🚨 actualInitMap 함수가 정의되지 않음!");
+        }
+    };
+    
+</script>
+
+<input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+{% endblock %}

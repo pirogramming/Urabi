@@ -1,0 +1,334 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/myPage.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="mypage-wrap">
+  <!-- 왼쪽 사이드 카테고리 -->
+  <nav class="mypage-nav">
+    {% if current_user.id == user.id %}
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+      <li><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
+      <li class="active"><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+    {% endif %}
+  </nav>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <section class="mypage-content">
+    {% if current_user.id != user.id %}
+    <div class="nickname-wrap">
+      <div class="nickname-wrap-left">
+        <div class="nickname">{{ user.nickname }}</div>
+        <span class="score">36.5°C</span>
+      </div>
+      <button id="chatWithUserBtn" class="chatting-btn" data-other-user-id="{{ user.id }}">채팅하기</button>
+
+    </div>
+    {% endif %}
+    <!-- 프로필 섹션 -->
+    <section class="profile-section">
+      {% if current_user.id != user.id %}
+      <h2 class="sub-title">프로필</h2>
+      <div class="passport-card">
+        <div class="passport-card-top">
+          <span class="passport-label">여권 PASSPORT</span>
+          <div class="passport-country">
+            대한민국 REPUBLIC OF KOREA
+          </div>
+        </div>
+        <div class="passport-card-body">
+          <div>
+            <img id="profile-picture-preview" class="profile-photo"
+            src="{% if user.profile_image and user.profile_image.url %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+            alt="프로필 사진" />
+            <div class="travel-score">
+              <span>여행지수</span>
+              <span class="score">36.5 °C</span>
+            </div>
+          </div>
+
+          <!-- 오른쪽: 정보영역 -->
+          <div class="info-area">
+            <div class="info-row row-1">
+              <div class="info-item">
+                <span class="label">국가 코드 / Country code</span>
+                <span class="value">KOR</span>
+              </div>
+              <div class="info-item">
+                <span class="label">국적 / Nationality</span>
+                <span class="value">REPUBLIC OF KOREA</span>
+              </div>
+            </div>
+            <div class="info-row row-2">
+              <div class="info-item">
+                <span class="label">한글성명</span>
+                <span class="value">{{ user.username }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">선호하는 이름 / Nickname</span>
+                <span class="value">{{ user.nickname }}</span>
+              </div>
+            </div>
+            <div class="info-row row-3">
+              <div class="info-item">
+                <span class="label">생년월일 / Date of Birth</span>
+                <span class="value">{{ user.birth }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">성별 / Sex</span>
+                <span class="value">{{ user.user_gender }}</span>
+              </div>
+            </div>
+            <div class="info-row row-4">
+              <div class="info-item">
+                <span class="label">이메일 / Email</span>
+                <span class="value">{{ user.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <h2 class="main-title">내 활동 관리
+        <img src="{% static 'img/mypage-manage-icon.png' %}" alt="관리 아이콘" id="title-icon">
+      </h2>
+      {% endif %}
+    </section>
+
+    <!-- 활동 이력 -->
+    <section class="activity-section">
+      <h2 class="sub-title">동행 모집 이력</h2>
+      <div id="accompany-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행을 모집했어요!
+        </p>
+
+        {% if accompany_count %}
+        {% for accompany in accompanies %}
+        <div class="activity-card" style="display: none;">
+          {% if accompany.photo %}
+          <img
+            src="{{ accompany.photo.url }}"
+            alt="프랑스 파리 이미지"
+            class="activity-img"
+            onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+            style="cursor:pointer;"
+          />
+          {% else %}
+          <img
+            src="{% static 'img/banner.png' %}"
+            alt="프랑스 파리 이미지"
+            class="activity-img"
+            onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+            style="cursor:pointer;"
+          />
+          {% endif %}
+          <div class="activity-info">
+            <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
+            <p class="activity-date">{{ accompany.start_date }} ~ {{ accompany.end_date }}</p>
+            {% for tag in accompany.tags %}
+            <p class="schedule-location">
+              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+              <span class="schedule-location-text">{{ tag }}</span>
+            </p>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}<button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
+        {% else %}
+        <div class="activity-card empty">
+          동행한 번개 모임이 없어요!
+        </div>
+        {% endif %}
+      </div>
+      
+
+      <!-- 번개 이력 -->
+      <h2 class="sub-title">등록한 번개 모임</h2>
+      <div id="flash-cards-container" class="activity-box activity-none">
+          <p class="activity-header">
+              {{ user.nickname }} 님은 <span class="text-hilight">{{ flash_count }}</span>개의 번개 모임을 등록했어요!
+          </p>
+
+          {% if flash_meetings %}
+              {% for flash in flash_meetings %}
+                  <div class="activity-card" style="display: none; ">
+                      <a href="{% url 'flash:flash_detail' flash.pk %}">
+                        <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key={{ google_maps_api_key }}"
+                            alt="번개 이미지" class="flash-img">
+                      </a>
+                      <div class="activity-info">
+                          <div class="activity-title"><a href="{% url 'flash:flash_detail' flash.pk %}">{{ flash.title }}</a></div>
+                          <p class="activity-date">{{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                          <p class="schedule-location">
+                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                              <span class="schedule-location-text">{{ flash.city }}</span>
+                          </p>
+                      </div>
+                  </div>
+              {% endfor %} <button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlashes()">더보기</button>
+
+          {% else %}
+              <div class="activity-card empty">
+                  등록한 번개 모임이 없어요!
+              </div>
+          {% endif %}
+      </div>
+     
+      <!-- 숙소 리뷰 이력 동적 렌더링 구현 완료 -->
+      <h2 class="sub-title">작성한 숙소 리뷰</h2>
+      <div id="review-cards-container" class="activity-box">
+        <p class="activity-header">
+            {{ user.nickname }} 님은 <span class="text-hilight">{{ review_count }}</span>개의 숙소 리뷰를 남겼어요!
+        </p>
+    
+        {% if accommodation_reviews %}
+              {% for review in accommodation_reviews %}
+                  <div class="activity-card" style="display: none;">
+                    <a href="{% url 'accommodation:accommodation_review_detail' review.pk %}">
+                      <div class="activity-review">
+                          <p class="activity-review-title">
+                              {{ review.accommodation_name }}
+                              <span class="review-rating" >⭐ {{ review.rating }}</span>
+                          </p>
+                          <p class="schedule-location">
+                              <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                              <span class="schedule-location-text">{{ review.city }}</span>
+                          </p>
+                          <p class="review-content">{{ review.content }}</p>
+                          <p class="activity-date">{{ review.created_at|date:"Y/m/d" }}</p>
+                      </div>
+                      </a>
+                  </div>
+              {% endfor %}<button id="load-more-review-btn" class="load-more-btn" onclick="loadMoreReviews()">더보기</button>
+          {% else %}
+              <div class="activity-card">
+                  <div class="activity-review empty">
+                      <p>작성한 숙소 리뷰가 없어요!</p>
+                  </div>
+              </div>
+          {% endif %}
+          
+      </div>
+      
+      <h2 class="sub-title">작성한 마켓 글</h2>
+      <div id="market-cards-container">
+        <p class="activity-header">
+          {{ user.nickname }} 님은 <span class="text-hilight">{{mkt_self_count}}</span>개의 글을 올렸어요!
+        </p>
+        {%if mkt_self_count%}
+          {%for market in mkt_self_items%}
+            <div class="activity-card" style="display: none;">
+              <a href="{% url 'market:market_detail'  market.pk %}">
+              <div class="activity-review">
+                <div class="activity-review-header">
+                  <span class="activity-review-type">{{market.get_trade_type_display}}</span>
+                  <span class="activity-review-title mypage_mkt_title">
+                    {{market.title}}
+                  </span>
+                </div>
+                <p class="activity-date">
+                  {%if market.updated_at %}
+                    {{market.updated_at}}
+                  {% else %}
+                    {{market.created_at}}
+                  {% endif %}
+                </p>
+                <p class="schedule-location">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                  <span class="schedule-location-text">{{market.city}}</span>
+                </p>
+              </div>
+            </div>
+            {% endfor %}<button id="load-more-market-btn" class="load-more-btn" onclick="loadMoreMarkets()">더보기</button>
+        {% else %}
+          <div class="activity-card empty">작성한 마켓 게시글이 없습니다. </div>
+        {% endif %}
+      </div>
+      
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block js %}
+<script>
+  const plansPerPage = 2;
+
+  function loadMoreItems(containerId, buttonId) {
+    let currentIndex = 0;
+    const items = document.querySelectorAll(`#${containerId} .activity-card`);
+
+    return function() {
+      const nextIndex = currentIndex + plansPerPage;
+      for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
+        items[i].style.display = 'flex';
+      }
+      currentIndex = nextIndex;
+
+      if (currentIndex >= items.length) {
+        if (document.getElementById(buttonId))
+          document.getElementById(buttonId).style.display = 'none';
+      }
+    };
+  }
+
+
+  const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
+  const loadMoreReviews = loadMoreItems('review-cards-container', 'load-more-review-btn');
+  const loadMoreMarkets = loadMoreItems('market-cards-container', 'load-more-market-btn');
+  const loadMoreFlashes = loadMoreItems('flash-cards-container', 'load-more-flash-btn');
+  // 초기 로딩 시 처음 2개의 일정만 보이도록 설정
+  loadMoreAccompanies();
+  loadMoreReviews();
+  loadMoreMarkets();
+  loadMoreFlashes();
+
+  // 채팅하기 버튼을 눌렀을 때 채팅 모달에 해당 채팅방을 로드하는 함수
+  document.addEventListener("DOMContentLoaded", function() {
+    const chattingBtn = document.getElementById("chatWithUserBtn");
+    const chatModal = document.getElementById("chatModal");
+    const chatFrame = document.getElementById("chatFrame");
+
+    if(chattingBtn) {
+      chattingBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        const otherUserId = chattingBtn.dataset.otherUserId;
+
+        const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+        
+        fetch(createRoomUrl, {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"  // AJAX 요청
+          },
+          credentials: "include"
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.chat_room_url) {
+            // base.html에 있는 모달의 iframe(src)를 해당 채팅방 URL로 변경
+            const chatFrame = document.getElementById("chatFrame");
+            chatFrame.src = data.chat_room_url;
+            // 모달 열기 
+            const chatModal = document.getElementById("chatModal");
+            chatModal.style.display = "block";
+          } else if (data.error) {
+            alert(data.error);
+          }
+        })
+        .catch(error => {
+          console.error("Error creating chat room:", error);
+        });
+      });
+    }
+  });
+</script>
+{% endblock %}

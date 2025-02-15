@@ -1,0 +1,110 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+
+* {
+  font-family: 'Paperlogy', sans-serif !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chat-page {
+  min-height: 100vh; 
+  width: 100%;
+}
+
+/* 제목 스타일 */
+.chat-title {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: var(--blue);
+}
+
+/* 채팅 영역 (overflow-y: auto) */
+.chat-content {
+  flex-grow: 1; 
+  overflow-y: auto; 
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  width: 100%;      
+  min-height: 0;
+}
+
+.chat-input {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+
+
+/* 기본 안내 문구 */
+.default-message {
+  font-size: 1.4em;
+  color: darkgray;
+  text-align: center;
+  padding: 80px 50px;
+}
+
+/* ===== 메시지 스타일링 ===== */
+
+.message {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.user-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.ai-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* 말풍선 */
+.message-text {
+  background-color: var(--gray); 
+  border-radius: 15px;
+  padding: 15px;
+  max-width: 90%; 
+  word-wrap: break-word; 
+  margin: 5px;
+}
+
+/* 시간 표시 */
+.message-time {
+  font-size: 0.8em;
+  color: darkgray;
+  white-space: nowrap;
+  margin: 5px;
+}
+
+.user-msg .message-text {
+  background-color: lightskyblue;
+}
+
+.ai-msg .message-text {
+  background-color: #f1f1f1;
+}
+
+.btn-primary{
+    margin-left: 90%;
+}

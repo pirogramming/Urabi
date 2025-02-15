@@ -1,0 +1,98 @@
+<!-- templates/mypage/myTrip.html -->
+
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{%static 'mypage/myTrip.css'%}">
+  <link rel="stylesheet" href="{%static 'accompany/accompany_map.css'%}">
+  <script defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap&loading=async"></script>
+{%endblock%}
+
+{% block content %}
+<main class="mypage-wrap">
+  <nav class="mypage-nav">
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+      <li class="active"><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
+      <li><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+  </nav>
+
+  <section class="mypage-content">
+    <h1 class="main-title">{{ this_schedule.name }}</h1>
+    <section class="profile-section">
+      <div class="profile-header">
+        <div class="section-title">일정 생성/수정 &nbsp;
+        <span class="date-dropdown">
+          <select id="plan_date_select" name="plan_date_select" onchange="changeHiddenDate(this.value)">
+            {% for d in date_list %}
+              <option value="{{ d|date:'Y-m-d' }}"
+                      {% if d == selected_date %}selected{% endif %}>
+                {{ d|date:"Y-m-d" }}
+              </option>
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+        <a href="{% url 'users:schedule_detail' this_schedule.schedule_id %}">목록으로</a>
+      </div>
+
+      {% if form.instance.markers %}
+        {% with form.instance.markers|default:'[]' as markers_json %}
+          {% autoescape off %}
+          <script>
+            window.mapData = {
+              markers: {{ markers_json }},
+              polyline: {{ form.instance.polyline|default:'[]' }}
+            };
+          </script>
+          {% endautoescape %}
+        {% endwith %}
+      {% endif %}
+
+      <div class="map-container">
+        <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+        <div id="map"></div>
+      </div>
+
+      <div id="address_container"></div>
+      <div class="marker-timeline">
+        <ul id="marker-list"></ul>
+      </div>
+
+      <form method="POST" action="" onsubmit="saveMapData(event)">
+        {% csrf_token %}
+        {% if travel_plan %}
+          <input type="hidden" name="plan_id" value="{{ travel_plan.plan_id }}">
+        {% endif %}
+        <input type="hidden" id="plan_date" name="plan_date" value="{{ selected_date|date:'Y-m-d' }}">
+
+        <input type="hidden" id="markers" name="markers" value='{{ form.instance.markers|default:"[]"|escapejs }}'>
+        <input type="hidden" id="polyline" name="polyline" value='{{ form.instance.polyline|default:"[]"|escapejs }}'>
+
+        <div for="explanation" class="section-title">설명</div>
+        {{ form.explanation }}
+
+        <button type="submit" class="register-btn">등록하기</button>
+      </form>
+
+
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block js %}
+<script>
+  function changeHiddenDate(newDate) {
+    document.getElementById("plan_date").value = newDate;
+  }
+</script>
+
+<script src="{% static 'accompany/accompany_map.js' %}"></script>
+{% endblock %}
+
+

@@ -1,0 +1,371 @@
+.main {
+  margin: 0 auto;
+  max-width: 860px;  
+  width: 100%;       
+  box-sizing: border-box; 
+}
+.blue{
+  color: var(--blue);
+}
+.red{
+  color: var(--red);
+}
+.address_display,
+.marker_name_input {
+  display: block;
+  margin-bottom: 5px; 
+}
+
+
+/*배경*/
+#accompany_form_page{
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/*헤더*/
+.banner{
+  text-align: left;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+}
+.banner h2{
+  margin-bottom: 20px;
+}
+.call-schedule-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+#plan-selector{
+  font-family: 'paperlogy';
+  padding: 5px;
+}
+.plan-selection{
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap:15px;
+}
+.accompany_header_link:hover{
+  border-bottom: 2.5px solid var(--red);
+}
+
+.sub{
+  font-size: 18px;
+  display: inline;
+}
+
+/*지도*/
+.map-container{
+  width: 100%;
+  height: 400px;
+  /* background-color: aqua; */
+  position: relative;
+}
+.call-schedule-text{
+  font-size: 13px;
+  font-weight: 300;
+}
+#call_schedule{
+  border: 1px solid #ccc;
+  width: 16px;
+  height: 16px;
+  appearance: auto;
+}
+#map {
+  width: 100%;
+  height: 400px; /* 적절한 높이 지정 */
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.banner-filter{
+  font-weight: 500;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 20px;
+}
+
+.filter-form {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.title input{
+  font-size: 24px;
+  font-weight: 500;
+  padding: 10px 0;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--blue);
+  padding-left: 5px;
+  font-family: 'Paperlogy', sans-serif;
+}
+.info{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.filter-group-first{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+.filter-group-second{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--blue);
+}
+.filter_age input{
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.filter-group input, .filter-group select{
+  background-color: var(--gray);
+  padding: 15px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.update-image{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#profile-picture-preview{
+  height: 40px;
+  width: auto;
+}
+
+#profile-picture-preview{
+  cursor: pointer;
+}
+.file-upload svg{
+  right: 0;
+}
+.file-upload svg:hover{
+  cursor: pointer;
+}
+#max_member{
+  width: 85px;
+}
+#image-name{
+  right: 55px;
+  width: 292px;
+}
+#image-upload{
+  display: none;
+}
+#image-upload#file-upload-button{
+  display: none;
+}
+.filter_location{
+  padding-bottom: 10px;
+  padding-left:2px;
+  border-bottom: 1px solid var(--blue);
+}
+.filter_location label{
+  padding: 0 2px;
+  margin-right: 5px;
+}
+.filter-form>button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Paperlogy', sans-serif;
+  font-weight: 500;
+  align-self: flex-end;
+  width: 120px;
+  transition: background-color 0.3s;
+  background-color: var(--red);
+}
+.filter-form>button:hover{
+  background-color: var(--red-hover);
+}
+.description{
+  border-bottom: solid 1px var(--blue);
+}
+#description{
+  min-height: 300px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  font-size: 18px;
+  font-family: 'Paperlogy';
+}
+#description:focus{
+  outline: none;
+}
+.tags>span{
+  min-width: 80px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.update-image>a, #photo-clear_id, .update-image #text{
+  display: none;
+}
+.imgs {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px; 
+}
+.imgs img {
+  width: 100%;
+  height: auto;
+}
+
+.tags {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.tags .input_group {
+  margin-top: 10px;
+}
+
+.tags .tag_input_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#tag_input {
+  padding: 5px;
+  width: 150px;
+  background-color: var(--gray);
+  font-family: 'Paperlogy';
+  font-size: 14px;
+  border: none;
+}
+
+#add_tag_btn {
+  background-color: #FFD700;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tags .tag_list {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tags .tag_item {
+  background-color: #FFE8AD;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tags .tag_remove_btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: red;
+  padding: 5px;
+}
+
+
+/*주소 입력창 추가*/
+.address_wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.address_input {
+  width: 80%;
+  padding: 5px;
+  margin-right: 5px;
+  background-color: var(--strong-gray);
+  border-radius: 5px;
+}
+
+.address_delete_btn {
+  background-color: var(--red);
+  color: white;
+  cursor: pointer;
+  padding: 13px 10px;
+  border-radius: 5px;
+}
+
+.address_delete_btn:hover {
+  filter: brightness(0.85);
+}
+
+@media (max-width: 850px) {
+  .filter-group input, .filter-group select, #max_member, #image-name {
+    width: 100%;
+    margin-bottom: 8px;       
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 600px) {
+  .filter-group-first, .filter-group-second {
+    flex-direction: column;
+  }
+  
+  .map-container, #map {
+    height: 300px;
+  }
+}
+
+@media (max-width: 500px) {
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .filter-form > button[type="submit"] {
+    order: 1;
+    margin-top: 10px;
+    width: 20%;
+    margin-right: 615px;
+  }
+  
+  .tags {
+    order: 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .title input,
+  .description textarea {
+    width: 100% !important;
+    font-size: 14px !important;
+    padding: 8px !important;
+  }
+  
+  .description textarea {
+    min-height: 100px !important;
+  }
+}

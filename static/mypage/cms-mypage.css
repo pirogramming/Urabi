@@ -1,0 +1,138 @@
+#schedule-cards-container{
+  background-color: var(--darkgray);
+  border-radius: 12px;
+  padding: 30px 16px;
+  margin-bottom: 20px;
+}
+
+.schedule-header{
+  margin-bottom: 15px;
+}
+
+#open-schedule-modal{
+  padding: 10px;
+}
+
+#open-schedule-modal:hover{
+  transition: all  0.3s ease;
+}
+
+.schedule-card {
+  border-radius: 12px;
+  padding: 16px;
+  gap: 30px;
+  width: 500px;
+  background-color:white;
+  margin: 16px; 
+}
+
+.schedule-info{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: left;
+}
+.schedule-card img{
+  border-radius: 16px;
+}
+.schedule-title{
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.edit-button-container {
+  text-align: center;
+  margin-top: 10px; 
+}
+
+#photo-button {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  /********************************
+    스케쥴 디테일일
+  ********************************/
+  .market-cards-container-cms{
+    width: 400px;
+    max-height: 550px;
+    overflow-y: auto;
+  }
+  .no-plan{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 30px;
+    margin: 20px;
+    font-size: 18px;
+  }
+  .no-plan img{
+    margin: 10px auto;
+  }
+
+    /********************************
+    플랜 디테일
+  ********************************/
+  #trip-plan-photo{
+    width: 170px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .trip-detail-dates{
+    font-size: 14px;
+    font-weight: 200;
+    margin-bottom: 8px;
+  }
+  .trip-detail-ex{
+    font-size: 14px;
+    font-weight: 400;
+    margin: 30px 15px 60px 15px;
+    line-height: 1.5;
+  }
+  .btns{
+    text-align: right;
+  }
+  .btns button{
+    margin-left: 10px;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 5px;
+  }
+  .btns button:first-child{
+    background-color: var(--yellow);
+  }
+  .btns button:last-child{
+    background-color:var(--red);
+  }
+  .btns button:hover{
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
+  }
+
+  .cms-schedule-footer{
+    text-align: center;
+  }
+
+  .del-schedule-btn{
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  .del-schedule-btn:first-child{
+    background-color: var(--red);
+  }
+  .del-schedule-btn:last-child{
+    background-color: var(--blue);
+  }
+  .del-schedule-btn:hover{
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
+  }

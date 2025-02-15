@@ -1,0 +1,189 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{%static 'mypage/editProfile.css'%}">
+{%endblock%}
+
+ {%block content%}
+ <main class="mypage-wrap">
+    <!-- 왼쪽 사이드 카테고리 -->
+    <nav class="mypage-nav">
+      <ul>
+        <li class="active"><a href="{%url 'users:my_page'%}">프로필</a></li>
+        <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+        <li><a href="{%url 'users:user_list'%}">나의 여행 일정</a></li>
+        <li><a href="{%url 'users:user_detail' user.id%}">내 활동 관리</a></li>
+      </ul>
+    </nav>
+  
+    <!-- 메인 영역 -->
+    <section class="mypage-content">
+      <h1 class="main-title">마이 페이지</h1>
+      
+      <!-- 프로필 수정 헤더 -->
+      <div class="profile-edit-header">
+        <h2 class="edit-title">
+          프로필 수정
+          <img src="{% static 'img/account_icon.png' %}" alt="수정 아이콘">
+        </h2>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="error-messages">
+            {% for field, errors in form.errors.items %}
+                <p><strong>{{ field }}:</strong> {{ errors.0 }}</p>
+            {% endfor %}
+        </div>
+      {% endif %}
+
+     
+      <section class="profile-edit-section">
+        <div class="profile-photo-area">
+          <div class="photo-wrapper">
+            <img id="profile-picture-preview" class="profile-photo"
+            src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+            alt="프로필 사진" />
+        
+        <label for="profilePhotoInput" class="camera-icon">
+            <img src="{% static 'img/camera.png' %}" alt="카메라 아이콘" />
+        </label>
+        <input type="file" id="profilePhotoInput" name="profile_image" accept="image/*" style="display: none;">
+        
+          </div>
+      </div>
+      
+  
+        <!-- 텍스트 입력 영역 -->
+        <div class="profile-form">
+          <!-- 한글 이름 -->
+          <div class="form-group">
+            <label for="username" class="form-label">한글 이름</label>
+            <input type="text" id="username" name="username" class="form-input" value="{{ user.username }}" />
+        </div>
+  
+          <!-- 선호하는 이름 -->
+          <div class="form-group">
+            <label for="nickname" class="form-label">선호하는 이름</label>
+            <input type="text" id="nickname" name="nickname" class="form-input" value="{{ user.nickname }}" />
+        </div>
+  
+  
+          <!-- 생일 (년/월/일 나눠서) -->
+          <div class="form-group birth-group">
+            <label class="form-label">생일</label>
+            <div class="birth-inputs">
+              <input type="text" name="birth_year" class="birth-year" value="{{ user.birth|date:'Y' }}" placeholder="YYYY" /> 년
+              <input type="text" name="birth_month" class="birth-month" value="{{ user.birth|date:'m' }}" placeholder="MM"/> 월
+              <input type="text" name="birth_day" class="birth-day" value="{{ user.birth|date:'d' }}" placeholder="DD"/> 일
+            </div>
+          </div>
+
+          <div class="form-group" id="phone-group">
+            <label for="userPhone" class="form-label">휴대폰 번호</label>
+            <input type="text" id="userPhone" name="user_phone" class="form-input" value="{{ user.user_phone }}" readonly />
+            <button type="button" onclick="openPhoneVerification()" id="start-verification-Button" class="phone-verification-button">
+                인증
+            </button>
+        </div>
+        <div id="phoneError" style="display:none; color:red;"></div>
+        
+        <div class="form-group gender">
+          <label for="userGender" class="form-label">성별</label>
+          <select id="userGender" name="user_gender" class="form-input">
+              <option value="F" {% if user.user_gender == "F" %} selected {% endif %}>여성</option>
+              <option value="M" {% if user.user_gender == "M" %} selected {% endif %}>남성</option>
+          </select>
+      </div>
+      
+            
+      </section>
+  
+      <div class="edit-save-area">
+        <button class="save-btn">수정 완료</button>
+      </div>
+    </form>
+    </section>
+  </main>
+
+  <script>
+document.getElementById("profilePhotoInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("profile-picture-preview").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function openPhoneVerification() {
+    const verificationWindow = window.open(
+        "{% url 'users:phone_verification' %}",
+        "phoneVerificationWindow",
+        "width=400,height=600"
+    );
+
+    verificationWindow.addEventListener('beforeunload', checkPhoneVerification);
+}
+
+function checkPhoneVerification() {
+    fetch("{% url 'users:verify_phone_status' %}")
+        .then(res => res.json())
+        .then(data => data.result === "verified" && onPhoneVerificationSuccess(data.phone_number))
+        .catch(console.error);
+}
+
+async function checkPhoneDuplicate() {
+    const phoneInput = document.getElementById('userPhone');
+    const cleanNumber = phoneInput.value.replace(/\D/g, ''); // 숫자만 남기기
+
+    try {
+        const response = await fetch("{% url 'users:check_phone_duplicate' %}", {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{ csrf_token }}", "Content-Type": "application/json" },
+            body: JSON.stringify({ phone: cleanNumber })
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || '서버 응답 오류');
+
+        if (!result.success) {
+            phoneInput.value = '';  
+            phoneInput.setAttribute('disabled', true); 
+            updatePhoneError(result.error, 'red');
+        } else {
+            phoneInput.removeAttribute('disabled');
+            updatePhoneError("사용 가능한 번호입니다.", 'green');
+        }
+
+    } catch (error) {
+        phoneInput.value = ''; 
+        showError(error.message || '서버 연결 실패');
+    }
+}
+
+function onPhoneVerificationSuccess(verifiedNumber) {
+    document.getElementById('userPhone').value = verifiedNumber;
+    checkPhoneDuplicate();
+}
+document.getElementById('userPhone').addEventListener('blur', function(event) {
+    if (!event.target.readOnly && event.target.value) checkPhoneDuplicate();
+});
+
+function updatePhoneError(message = '', color = 'red') {
+    const errorElement = document.getElementById('phoneError');
+    errorElement.textContent = message;
+    errorElement.style.color = color;
+    errorElement.style.display = message ? 'block' : 'none'; 
+}
+
+  </script>
+  
+  
+  {%endblock%}
+

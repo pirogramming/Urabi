@@ -1,0 +1,321 @@
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+}
+
+.gm-style-mtc-bbw{
+  display: none;
+}
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root{
+  --blue: #1E88E5;
+  --red: #EF4141;
+  --red-hover:#b71c1c;
+  --light-red: #f69f9f;
+  --yellow : #ffaf38;
+  --darkgray:#F3F3F3;
+  --gray: #F5F5F5;
+  --strong-gray: #EBEBEB;
+}
+
+body {
+  font-family: 'Paperlogy', sans-serif;
+}
+
+body {
+  background-color: #f9f9f9;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.header-container{
+  margin: 0 auto;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav a {
+  margin-left: 30px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--blue);
+}
+
+#myPage {
+  background-color: var(--red);
+  border-radius: 16px;
+  color: white;
+}
+
+#myPage:hover {
+  background-color: white;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+}
+
+.main {
+  padding: 20px;
+  min-height: 80vh;
+}
+
+.footer {
+  background-color: var(--gray);
+  padding: 30px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+}
+
+.footer-menu {
+  padding: 10px 0;
+}
+
+.footer-menu a {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0 5px;
+  text-decoration: none;
+}
+
+.footer-menu a:hover {
+  color: #007BFF;
+}
+
+.copyright {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.develop-by {
+  display: none;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.chat-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 100;
+}
+
+.chatbot {
+  left: 20px;
+  right: auto;
+  background-color: #dc3545;
+}
+
+.chat-btn:hover {
+  background-color: #0056b3;
+  transition: all 0.3s ease;
+}
+
+.chatbot:hover {
+  background-color: var(--red-hover);
+  transition: all 0.3s ease;
+}
+
+/* 모달 */
+.chat-modal {
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  right: 20px;
+  width: 400px;
+  height: 500px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.chat-modal-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-modal iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.close-btn {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  padding: 5px 10px;
+  text-align: right;
+  cursor: pointer;
+  background: #eee;
+}
+
+/* 반응형 추가 */
+@media (max-width: 870px) {
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative; 
+  }
+
+  .hamburger-btn {
+    display: block !important;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    order: 1;
+    z-index: 20;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    right: 0; 
+    width: auto; 
+    background-color: #fff;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: flex-start;
+    white-space: nowrap; 
+  }
+
+  .nav-links.active {
+      display: flex; 
+  }
+
+  .nav-links a {
+    padding: 10px 20px;
+    margin-left: 0;
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    text-decoration: none; 
+  }
+
+
+  /* 기존 네비게이션 메뉴 숨김 */
+  .nav > *:not(.nav-container) {
+      display: none; /* nav-container 외의 요소 숨김 */
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-menu {
+      display: none; /* 푸터 메뉴 숨김 */
+  }
+
+  .develop-by {
+      display: block; /* "Developed by" 문구 표시 */
+      text-align: center;
+  }
+
+  .copyright {
+      text-align: center; 
+  }
+}
+
+.hamburger-btn {
+    display: none; /* 기본적으로 햄버거 버튼 숨김 */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}

@@ -1,0 +1,209 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+*{
+    font-family: 'Paperlogy' !important; 
+  }
+
+  .mypage-wrap {
+    display: flex; 
+    max-width: 1200px;
+    justify-content: center;
+    margin: 50px auto
+  }
+  
+  .mypage-nav {
+    width: 180px;
+    margin: 50px 40px 0 0;
+  }
+  
+  .mypage-nav ul {
+    list-style: none;
+  }
+  
+  .mypage-nav li {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .mypage-nav li.active {
+    color: var(--red);
+    font-weight: bold;
+  }
+  .mypage-nav li a {
+    text-decoration: none;
+  }
+  
+  /********************************
+    본문 시작 & 제목
+  ********************************/
+  .mypage-content {
+    flex: 1;
+    max-width: 800px; 
+    margin: 0 auto;
+    padding: 0 20px; 
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-weight: 500;
+    font-size: 1.5rem;
+  }
+
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .profile-header a{
+    color: var(--red);
+  }
+  
+
+  .hilight{
+    margin-bottom: 10px;
+  }
+  
+/********************************
+    지도
+  ********************************/
+  .map-container {
+    margin-bottom: 20px;
+    
+  }
+
+  /* 지도 이미지라고 했을때 - 나중에 수정해주기*/
+  .mypage-content img{
+    width: 90%;
+    height: 30%;
+    margin-bottom: 20px;
+    max-height: 400px;
+    object-fit: cover;
+  }
+
+  /********************************
+    타임라인
+  ********************************/
+  /* 타임라인 UL 기본 스타일 */
+.marker-timeline ul {
+  list-style: none;
+  position: relative;
+  padding-left: 20px;
+  margin: 0;
+}
+
+  .timeline-item{
+    display: flex;
+  }
+
+  .date {
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-right: 15px;
+  }
+  .date-dropdown select{
+    padding: 6px;
+  }
+  .date-dropdown{
+    margin: 5px;
+  }
+  .location-item{
+    margin: 0 0 10px 30px;
+  }
+  .address-wrapper{
+    margin: 0 0 30px 30px;
+  }
+  #location{
+    display: none;
+  }
+ 
+#address_container {
+  position: relative;
+  margin-left: 20%;
+  padding-left: 40px; 
+}
+
+
+#address_container::before {
+  content: "";
+  position: absolute;
+  left: 20px; 
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--blue);
+}
+
+.address_wrapper {
+  position: relative;
+  margin-bottom: 10px; 
+  padding: 10px 10px 10px 20px; 
+  border-radius: 4px;
+}
+
+.address_wrapper::before {
+  content: "";
+  position: absolute;
+  left: -24px; 
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  background-color:var(--blue);
+  border-radius: 50%;
+}
+
+  .marker_name_input{
+    font-size: 14px;
+    border: none;
+    padding: 6px;
+    border: 1px solid #ccc;
+    margin: 7px 5px 20px 20px;
+  }
+.address_delete_btn{
+  padding: 2px 4px;
+  background-color: var(--red);
+  margin-left: 5px;
+  font-size: 1rem;
+  color: #ffffff;
+  border-radius: 3px;
+}
+#explanation{
+  width: 100%;
+  padding: 16px;
+  font-size:18px;
+  font-weight: 400;
+}
+#title, #city{
+  font-size: 16px;
+  font-weight: 500;
+  padding: 5px;
+  margin-bottom: 16px;
+}
+.explanation-textarea{
+  width: 100%;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+
+  .register-btn {
+    display: block;
+    margin: 20px auto;
+    background-color: var(--red);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Paperlogy';
+  }
+
+  .register-btn:hover {
+    background-color: var(--red-hover);
+    transition: all 0.3s ease;
+  }

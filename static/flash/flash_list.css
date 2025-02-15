@@ -1,0 +1,420 @@
+.red {
+    fill: red
+}
+
+/* 지도 위 문구 */
+.flash_title {
+    text-align: left;
+    font-size: 28px;
+    font-weight: 550;
+    color: #333;
+    margin: 15px 0 25px 0;
+}
+
+.flash_title .highlight {
+    color: var(--red);
+    font-weight: bold;
+}
+.flash_title .highlight:hover{
+    border-bottom: 3px solid var(--red);
+}
+.flash_searchBar{
+    height: 80px;
+    border: 1.5px solid black;
+    border-radius: 10px;
+}
+/*검색 필터*/
+.banner-filter{
+    font-weight: 500;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 16px;
+}
+.filter_sub{
+    color: var(--blue);
+    padding-bottom: 5px;
+}
+.flash_filter{
+    margin: 10px 0;
+    display: grid;
+    flex-wrap: wrap;
+    gap: 10px;
+    grid-template-columns: 9fr 1fr;
+}
+.flash_filter_content{
+    display: grid;
+    grid-template-columns: 5fr 3fr 2fr;
+    align-items: center;
+    gap:10px;
+}
+
+.filter-group input,
+.filter-group select {
+    background-color: var(--gray);
+    padding: 15px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-family: 'Paperlogy', sans-serif;
+}
+
+.flash_filter button{
+    font-family: 'Paperlogy', sans-serif;
+    background-color: var(--blue);
+    width: 60px;
+    height: 50px;
+    margin: auto;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.flash_filter button:hover {
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
+}
+
+/* 제목 아래 영역 */
+.flash_container {
+    width: 100%;
+    min-height: 1200px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    margin: auto;
+    align-items: stretch;
+}
+
+.flash-left {
+    display: flex;
+    flex-direction: column;
+}
+/* 지도 스타일 */
+.flash_map {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+#search-bar{
+    height: 48px;
+    border-radius: 9px;
+    margin-bottom: 5px;
+    border: 1px solid #bbb;
+    padding: 5px;
+}
+
+#search-bar:placeholder-shown{
+    font-family: 'Paperlogy', sans-serif;
+}
+
+
+
+/* 모집 중인 번개 및 버튼 */
+.flash_list_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px 0;
+    font-size: 18px;
+}
+
+.flash_list_title {
+    font-weight: 500;
+    margin-left: 20px;
+}
+
+.strong{
+    color: var(--red);
+    margin-right: 5px;
+}
+/* 나만의 번개 + 등록하기 버튼 */
+.flash_list_controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.flash_list_controls h2 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.flash_register_btn {
+    padding: 8px 16px;
+    background-color: var(--blue);
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+.flash_register_btn:visited{
+    color: white
+}
+.flash_register_btn:hover {
+    filter: brightness(0.85);
+    transition: all 0.3s ease;
+}
+
+/* 구분선 */
+.flash_list_divider {
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+    margin:0 0 20px 0;
+}
+
+/* 번개 리스트 */
+.flash_list {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: auto;
+
+    /* 최대 높이 지정 (원하는 높이 값 조정 가능) */
+    max-height: 800px;
+
+    /* 내용이 넘칠 경우 스크롤 */
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE & Edge */
+}
+
+/* Webkit (Chrome, Safari) */
+.flash_list::-webkit-scrollbar {
+    display: none;
+}
+
+/* 번개 카드 */
+.flash_list_body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 1200px;
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+.flash_card {
+    display: flex;
+    height: 140px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.flash_card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.flash_card_link {
+    display: flex;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.flash_card img {
+    padding: 10px;
+    width: 150px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.flash_card_content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.flash_card_info {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.flash_card_info h3 {
+    padding-top: 12px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.flash_title_zzim {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flash_place {
+    font-size: 12px;
+    color: #858585;
+}
+
+.flash_date {
+    font-size: 14px;
+    color: #000000;        
+}
+
+
+
+/* 태그 스타일 */
+.flash_card_tags {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.flash_tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    background: var(--yellow);
+}
+
+.flash_capacity {
+    font-weight: bold;
+    color: var(--red);
+    margin-left: auto;
+    padding-right: 25px;
+}
+
+
+
+
+/* main */
+.main {
+    width: 100%;
+    padding: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+@media screen and (max-width: 850px) {
+    .flash_container {
+        grid-template-columns: 1fr; 
+    }
+
+    .flash_map {
+        order: -1; 
+    }
+
+    .flash_left, .flash_map {
+        width: 100%; 
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .flash_title {
+        text-align: center;
+        font-size: 22px;
+    }
+
+    .flash_title h2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .flash_title .highlight {
+        margin-top: 5px;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .banner-filter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .flash_filter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .flash_filter_content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .flash_filter button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #id-date_time {
+        order: 3;
+    }
+
+    /* flash_card를 세로로 길게 조정하여 정보가 잘리더라도 모두 표시되도록 수정 */
+    .flash_card {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+
+    .flash_card img {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+    }
+
+    .flash_card_content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .flash_card_info {
+        width: 100%;
+        text-align: center;
+    }
+
+    .flash_card_tags {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .flash_place {
+        display: block;
+        text-align: center;
+        font-size: 14px;
+    }
+}

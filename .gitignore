@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,django
 
 ### Django ###
+staticfiles/
+secrets.json
 *.log
 *.pot
 *.pyc

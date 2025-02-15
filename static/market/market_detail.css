@@ -1,0 +1,263 @@
+/*배경*/
+.market_detail{
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+/*헤더*/
+.market_detail_head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 15px;
+}
+.header_comment {
+    font-size: 14px;
+    color: #666;
+}
+
+.flash_title {
+    font-size: 24px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+/* 구분선 */
+.flash_divider {
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+    margin: 15px 0;
+}
+.market_detail_head{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+
+
+/*본문*/
+.market_detail_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.market_detail_title_info{
+    display: flex;
+}
+
+.market_detail_title h1{
+    font-size: 35px;
+    word-break: keep-all;
+    font-weight: 500;
+    line-height: 50px;
+}
+
+.bi-heart{
+    width: 72px;
+    height: 32px;
+    cursor: pointer;
+}
+.bi-heart-fill {
+    width: 72px;
+    height: 32px;
+    cursor: pointer;
+    fill:var(--red);
+}
+/*중간 title*/
+.market_detail_mid_title{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    font-size: 17px;
+}
+.detail_set{
+    display: flex;
+    gap:25px;
+    align-items: center;
+}
+.market_detail_temp{
+    border: 1.5px solid black;
+    border-radius: 18px;
+    background-color: #FFD685;
+    padding: 6px 13px;
+}
+.market_detail_profile{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.market_detail_profile, .market_detail_tradeWay, .market_deatil_date {
+    border-right: 1.5px solid var(--blue);
+    padding-right: 20px;
+    text-wrap: nowrap;
+}
+.market_detail_tradeWay{
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+.market_detail_tradeWay img{
+    width: 30px;
+}
+.market_deatil_date{
+    color:#808080;
+}
+.market_detail_tag{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    text-align: center;
+}
+.market_detail_tag p{
+    border: 1.5px solid black;
+    border-radius: 18px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    text-wrap: nowrap;
+    color:white;
+}
+#market_detail_cate{
+    background-color: var(--yellow);
+}
+#market_detail_loca{
+    background-color: var(--red);
+}
+#market_detail_status{
+    background-color: var(--blue);
+}
+/*body*/
+.market_detail_body{
+    display: grid;
+    grid-template-columns: 0.6fr 1fr;
+}
+
+.market_detail_body img{
+    width: 90%;
+    height: 85%;
+    margin: auto 0;
+    border-radius: 20px;
+    border: 1.5px solid black;
+}
+
+.market_detail_body_right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:15px;
+}
+
+.market_detail_trade_location, .market_detail_price{
+    display: flex;
+    align-items: center;
+    border-bottom: 1.5px solid #ddd;
+    padding-bottom: 10px;
+}
+.market_detail_trade_location h3, .market_detail_price h3{
+    font-size: 15px;
+    color: #9d9c9c;
+    font-weight: 450;
+}
+
+.market_detail_trade_location p, .market_detail_price p{
+    margin-left: 8px;
+    font-size: 18px;
+    font-weight: 400;
+}
+.market_detail_description{
+    display: flex;
+    align-items: start;
+}
+.market_detail_description h3{
+    font-size: 15px;
+    color: #9d9c9c;
+    font-weight: 450;
+    white-space: nowrap;
+}
+.market_detail_description p{
+    margin-left: 8px;
+    font-size: 18px;
+    font-weight: 400;
+    padding-bottom: 15px;
+}
+
+/*문의하기*/
+.market_detail_bottom{
+    display: flex;
+    justify-content: flex-end;
+}
+.market_detail_chat_btn, .market_detail_edit_btn{
+    background-color: var(--red);
+    padding: 10px 25px;
+    display: flex;
+    gap: 5px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.market_detail_chat_btn p, .market_detail_edit_btn p, .market_detail_del_btn p, .market_backToList p{ 
+    color: white;
+    font-weight: 500;
+
+}
+.market_detail_chat_btn:hover, .market_detail_edit_btn:hover{
+    background-color: var(--red-hover);
+}
+
+.market_detail_del_btn, .market_backToList{
+    background-color: var(--blue);
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.market_detail_del_btn:hover, .market_backToList:hover{
+    filter:brightness(0.85);
+}
+
+.market_detail_bottom{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/*반응형*/
+@media screen and (max-width: 880px) {
+    .market_detail_mid_title{
+        flex-direction: column;
+        align-items: start;
+    }
+    .market_detail_body{
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+    }
+    .market_detail_body img{
+        width: 65%;
+    }
+}
+
+@media (max-width: 500px) {
+    .detail_set{
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        gap: 19px;
+    }
+    .market_detail_profile, .market_detail_tradeWay, .market_deatil_date {
+        border:none;
+    }
+    .market_detail_tradeWay{
+        margin:0;
+    }
+}

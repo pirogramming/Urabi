@@ -1,0 +1,264 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'flash/flash_detail.css' %}">
+<script defer src="{% static 'flash/flash_zzim.js' %}"></script>
+<script defer src="{% static 'flash/flash_participants.js' %}"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+{% endblock %}
+
+{% block header_content %}
+<a id="myPage" href="#">My Page</a>
+{% endblock %}
+
+{% block content %}
+<section class="flash_detail">
+    <div class="flash_header">
+        <p class="header_comment">번개 모임 > 번개 상세</p>
+    </div>
+
+    <!-- 구분선 -->
+    <hr class="flash_divider">
+
+    <div class="flash_info">
+        {% if flash_img %}
+            <img id="flash-detail-img" src="{{ flash_img }}" alt="모임 이미지" class="flash_image">
+        {% else %}
+            <img id="flash-detail-img" src="{% static 'img/default_map_image.jpg' %}" alt="모임 이미지" class="flash_image">
+        {% endif %}
+        <div class="flash_description">
+            <div class="flash_title_star">
+                <h2 class="flash_title">{{ flash.title }}</h2>
+                <div class="flash_star">
+                    <button class="zzim-btn" data-flash-id="{{ flash.pk }}">
+                        {% if is_zzimmed %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill red" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                            </svg>
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                            </svg>
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+            <div class="flash_details">
+                <p class="flash_location">📍 {{ flash.city }}</p>
+                <p class="flash_date">📅 {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+            </div>
+            <p class="flash_content">
+                {{ flash.explanation }}
+            </p>
+            <div class="flash_tags_capacity">
+                <div class="flash_tags">
+                    {% for tag in tag_list %}
+                        <span class="flash_tag">#{{ tag }}</span>
+                    {% empty %}
+                        <span class="flash_tag">태그 없음</span>
+                    {% endfor %}
+                </div>
+                <span class="flash_capacity"><strong>{{ flash.max_people }}</strong></span>
+            </div>
+            <div class="flash_host_buttons">
+                
+                <a href="{% url 'users:user_detail' flash.created_by.id %}">
+                    <div class="flash_host">
+                        <img src="{{ flash.created_by.profile_image.url }}" alt="호스트 이미지" class="host_image">
+                        <div class="host_info">
+                            <p class="host_name">주최자: {{ flash.created_by.nickname|default:flash.created_by.username }}</p>
+                            <p class="host_rating">{{ flash.created_by.trust_score }}°C</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <div class="flash_btn_container">
+                    <div class="flash_buttons">
+                        {% if request.user == flash.created_by %}
+                            <button class="flash_edit_btn">
+                                <a href="{% url 'flash:flash_update' flash.pk %}">수정하기</a>
+                            </button>
+                            <button class="flash_delete_btn" data-flash-id="{{ flash.pk }}">삭제하기</button>
+                        {% else %}
+                            <button class="host_chat_btn" data-other-user-id="{{ flash.created_by.id }}">💬 문의하기</button>
+                        {% endif %}
+                    </div>
+                    
+                    
+                    {% if request.user != flash.created_by %}
+                        {% if request.user.id in participant_ids %}
+                            <span class="ing">참여중</span>
+                        {% else %}
+                            {% if request.user.id in pending_requests %}
+                                <button class="request-cancel-btn flash_apply_btn" data-flash-id="{{ flash.meeting_id }}">요청 취소</button>
+                            {% else %}
+                                <button class="request-btn flash_apply_btn" data-flash-id="{{ flash.meeting_id }}">참여 요청</button>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        
+                        <span id="add-participant" href=""> + </span>
+                        <div id="request-modal" style="display: none;">
+                            <input type="text" id="search-email" placeholder="이메일 검색">
+                            <ul id="userList">
+                                {% for user_id in pending_requests %}
+                                    <li data-user-id="{{ user_id }}" class="user-item">
+                                        <span>사용자 ID: {{ user_id }}</span>
+                                        <button class="add-btn">+</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                    {% endif %}
+                
+                    <div class="members">
+                        <span>{{ flash.now_member }}/{{ flash.max_people }}</span>
+                        <button id="toggleMembers">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                            </svg>
+                        </button>
+                    </div>
+                
+                    <ul id="memberList" style="display: none;">
+                        <li>
+                            <span><a href="{% url 'users:user_detail' flash.created_by.id %}">{{ flash.created_by.email }}</a></span>
+                            <span>🚩</span>
+                        </li>
+                        {% for participant in participant_data %}
+                            <li data-user-id="{{ participant.id }}">
+                                <span><a href="{% url 'users:user_detail' participant.id %}">{{ participant.email }}</a></span>
+                                {% if request.user.id == flash.created_by.id or participant.id == request.user.id %}
+                                    <button class="red part-del-btn">x</button>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                </div>      
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    <hr class="flash_divider">
+
+    <section class="other_flash">
+        <div class="other_flash_header">
+            <h3>다른 번개 보기</h3>
+            <a href="{% url 'flash:flash_list' %}" class="flash_list_btn">목록으로</a>
+        </div>
+        <div class="other_flash_list">
+            {% for other_flash in other_flash_meetings %}
+            <div class="other_flash_card">
+                <a href="{% url 'flash:flash_detail' other_flash.pk %}">
+                    {% if other_flash.image_url %}
+                        <img src="{{ other_flash.image_url }}" alt="다른 번개 이미지">
+                    {% else %}
+                        <img src="{% static 'img/default_map_image.jpg' %}" alt="다른 번개 이미지">
+                    {% endif %}
+                    <p>{{ other_flash.title }}</p>
+                </a>
+            </div>
+            {% empty %}
+            <p>다른 번개 모임이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </section>
+</section>
+
+<!-- meeting_id를 저장하는 숨겨진 요소 -->
+<span id="flash-data" data-flash-id="{{ flash.meeting_id }}" style="display: none;"></span>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteBtn = document.querySelector(".flash_delete_btn");
+
+        if (deleteBtn) {
+            deleteBtn.addEventListener("click", function() {
+                const flashId = this.dataset.flashId;
+                deleteFlash(flashId);  // HTML의 `onclick` 대신 이벤트 리스너 사용 가능
+            });
+        }
+
+        // 삭제 기능
+        function deleteFlash(flashId) {
+            if (confirm("정말로 이 번개 모임을 삭제하시겠습니까?")) {
+                fetch(`/flash/${flashId}/delete/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("번개 모임이 삭제되었습니다.");
+                        window.location.href = "{% url 'flash:flash_list' %}"; // 삭제 후 리스트로 이동
+                    } else {
+                        alert("삭제 권한이 없습니다.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        }
+    });
+
+    const modal = `
+    <div id="add-participant-modal">
+        <input type="text" id="search-email" placeholder="이메일 검색" />
+        <ul id="userList">
+            {% for user in pending_requests %}
+                <li data-user-email="{{ user.email }}" class="user-item">
+                    {{ user.email }}
+                    <button class="add-btn">+</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+`;
+
+    const hostChatBtn = document.querySelector(".host_chat_btn");
+    if (hostChatBtn) {
+        hostChatBtn.addEventListener("click", function(e) {
+            // 부모 <a> 태그의 링크로 이동하지 않도록 처리
+            e.preventDefault();
+            e.stopPropagation();
+            const otherUserId = hostChatBtn.dataset.otherUserId;
+            // create_chat_room 뷰 URL 생성: '0'을 실제 id로 교체
+            const createRoomUrl = "{% url 'chat:create_chat_room' 0 %}".replace('0', otherUserId);
+
+            fetch(createRoomUrl, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.chat_room_url) {
+                    // base.html에 정의된 채팅 모달을 사용함 (iframe에 채팅방 URL 설정)
+                    const chatFrame = document.getElementById("chatFrame");
+                    chatFrame.src = data.chat_room_url;
+                    const chatModal = document.getElementById("chatModal");
+                    chatModal.style.display = "block";
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error creating chat room:", error);
+            });
+        });
+    }
+</script>
+
+<input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+{% endblock %}

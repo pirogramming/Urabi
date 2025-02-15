@@ -1,0 +1,234 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/myPage.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/cms-mypage.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="mypage-wrap">
+  <!-- 왼쪽 사이드 카테고리 -->
+  <nav class="mypage-nav">
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+      <li class="active"><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
+      <li><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+  </nav>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <section class="mypage-content">
+    <h1 class="main-title" id="aic-title">나의 여행 일정
+      <img src="{% static 'img/mypage-icon-suitcase.png' %}" alt="여행 일정 아이콘" id="title-icon">
+    </h1>
+    <!-- 프로필 섹션 -->
+    <section class="profile-section">
+
+      <section class="schedule-section" id="upload-schedule">
+        <div class="schedule-header">
+          <h2 class="sub-title">등록한 여행</h2>
+          <!-- "TravelSchedule" 생성 모달 열기 버튼 -->
+          <button class="btn" id="open-schedule-modal">여행 생성</button>
+  
+          <!-- 모달 -->
+          <div id="schedule-modal" class="modal hidden">
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <h2>여행 생성</h2>
+              <form id="schedule-form" action="{% url 'users:schedule_create' %}" method="POST">
+                {% csrf_token %}
+                <label>여행 이름:
+                  <input type="text" name="title" required>
+                </label>
+                <label>시작 날짜:
+                  <input type="date" name="start_date" required>
+                </label>
+                <label>종료 날짜:
+                  <input type="date" name="end_date" required>
+                </label>
+                <button type="submit" class="btn">저장</button>
+              </form>
+            </div>
+          </div>
+        </div>
+  
+        <div id="schedule-cards-container">
+          <p class="activity-header">
+            {{ user.nickname }} 님은 <span class="text-hilight">{{ schedule_count }}</span>번의 일정이 있어요!
+          </p>
+  
+          {% if schedules %}
+            {% for schedule in schedules %}
+            <div class="activity-card" style="display: none;">
+              <img
+                src="{% if schedule.photo %}{{ schedule.photo.url }}{% else %}{% static 'img/schedule_plane_img.jpg' %}{% endif %}"
+                alt="여행 대표 이미지"
+                id="trip-plan-photo"
+                onclick="location.href='{% url 'users:schedule_detail' schedule.schedule_id %}'"
+              />
+              <div class="schedule-info">
+                <!-- 일정 이름 -->
+                <h3 class="schedule-title">
+                  <a href="{% url 'users:schedule_detail' schedule.schedule_id %}">
+                    {% if schedule.name|length > 13 %}
+                      {{ schedule.name|slice:":13" }}...
+                    {% else %}
+                      {{ schedule.name }}
+                    {% endif %}
+                  </a>
+                </h3>
+                <!-- 전체 일정 기간 -->
+                <p class="activity-date">
+                  {{ schedule.start_date|date:"Y-m-d" }} ~ {{ schedule.end_date|date:"Y-m-d" }}
+                </p>
+                <!-- 이 일정에 속한 TravelPlan(세부 일정) 개수 -->
+                <p>
+                  <span class="text-hilight">{{ schedule.plans_count }}</span>개의 세부 계획이 있어요!
+                </p>
+              </div>
+            </div>
+            {% endfor %}
+  
+            <!-- "더보기" 버튼 -->
+            {% if schedules|length > 0 %}
+            <button id="load-more-schedule-btn" class="load-more-btn" onclick="loadMoreSchedules()">더보기</button>
+            {% endif %}
+          {% else %}
+          <div class="activity-card empty">
+            등록한 여행 일정이 없어요!
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+    <section class="activity-section">
+      <h2 class="sub-title">참여한 동행</h2>
+      <div id="accompany-cards-container">
+        <p class="activity-header">{{ user.nickname }} 님은 <span class="text-hilight">{{ accompany_count }}</span>번의 동행에 참여했어요!</p>
+
+        {% if accompany_count %}
+          {% for accompany in accompanies %}
+          <div class="activity-card" style="display: none;">
+            {% if accompany.photo %}
+            <img
+              src="{{ accompany.photo.url }}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+              onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+              style="cursor:pointer;"
+            />
+            {% else %}
+            <img
+              src="{% static 'img/banner.png' %}"
+              alt="프랑스 파리 이미지"
+              class="activity-img"
+              onclick="location.href='{% url 'accompany:accompany_detail' accompany.travel_id %}'"
+              style="cursor:pointer;"
+            />
+            {% endif %}
+            <div class="activity-info">
+              <div class="activity-title"><a href="{% url 'accompany:accompany_detail' accompany.travel_id %}">{{ accompany.title }}</a></div>
+              <p class="activity-date">{{ accompany.start_date }} ~ {{ accompany.end_date }}</p>
+              {% for marker in accompany.markers %}
+                <p class="schedule-location">
+                  <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                  <span class="schedule-location-text">{{ marker.title }}</span>
+                </p>
+              {% endfor %}
+              
+            </div>
+          </div>
+          {% endfor %}
+          <button id="load-more-accompany-btn" class="load-more-btn" onclick="loadMoreAccompanies()">더보기</button>
+        {% else %}
+        <div class="activity-card empty">
+          동행한 번개 모임이 없어요!
+        </div>
+        {% endif %}
+      </div>
+    
+    <h2 class="sub-title">참여한 번개</h2>
+    <div id="flash-activity-container" class="activity-box">
+        {% if flash_participant_count > 0 %}
+            <p class="activity-header">
+                {{ user.nickname }} 님이 <span class="text-hilight">{{ flash_participant_count }}</span>개의 번개에 참여했어요!
+            </p>
+            {% for flash in flash_participants %}
+            
+                <div class="activity-card flash-card">
+                    <a href="{% url 'flash:flash_detail' flash.pk %}">
+                        <img src="https://maps.googleapis.com/maps/api/streetview?size=500x500&location={{ flash.latitude }},{{ flash.longitude }}&key={{ google_maps_api_key }}"
+                            alt="번개 이미지" class="flash-img">
+                    </a>
+                    <div class="activity-info">
+                        <div class="activity-title">
+                            <a href="{% url 'flash:flash_detail' flash.pk %}">{{ flash.title }}</a>
+                        </div>
+                        <p class="activity-date"> {{ flash.date_time|date:"Y년 m월 d일 H:i" }}</p>
+                        <p class="schedule-location">
+                            <img src="{% static 'img/location_icon.png' %}" alt="위치">
+                            <span class="schedule-location-text">{{ flash.city }}</span>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}<button id="load-more-flash-btn" class="load-more-btn" onclick="loadMoreFlash()">더 보기</button>
+        {% else %}
+            <p class="activity-card empty">참여한 번개 모임이 없어요!</p>
+        {% endif %}
+    </div>
+    
+
+  </section>
+</main>
+{% endblock %}
+
+{% block js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const openModalBtn = document.getElementById("open-schedule-modal");
+    const modal = document.getElementById("schedule-modal");
+    const closeModalBtn = document.querySelector(".close");
+
+    // 모달 열기
+    openModalBtn.addEventListener("click", function () {
+      modal.style.display = "block";
+    });
+
+    // 모달 닫기 (X 버튼 클릭 시)
+    closeModalBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  });
+</script>
+
+<script>
+  const plansPerPage = 2;
+
+  function loadMoreItems(containerId, buttonId) {
+    let currentIndex = 0;
+    const items = document.querySelectorAll(`#${containerId} .activity-card, #${containerId} .schedule-card`);
+
+    return function() {
+      const nextIndex = currentIndex + plansPerPage;
+      for (let i = currentIndex; i < nextIndex && i < items.length; i++) {
+        items[i].style.display = 'flex';
+      }
+      currentIndex = nextIndex;
+
+      if (currentIndex >= items.length) {
+        if (document.getElementById(buttonId))
+          document.getElementById(buttonId).style.display = 'none';
+      }
+    };
+  }
+  const loadMoreSchedules = loadMoreItems('schedule-cards-container', 'load-more-schedule-btn');
+  const loadMoreAccompanies = loadMoreItems('accompany-cards-container', 'load-more-accompany-btn');
+  const loadMoreFlash = loadMoreItems('flash-activity-container', 'load-more-flash-btn');
+  loadMoreSchedules();
+  loadMoreAccompanies();
+  loadMoreFlash();
+</script>
+{% endblock %}

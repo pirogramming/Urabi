@@ -1,0 +1,143 @@
+{# templates/mypage/schedule_detail.html #}
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/myPage.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/userDetail.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/cms-mypage.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="mypage-wrap">
+  <!-- 왼쪽 사이드 -->
+  <nav class="mypage-nav">
+    <ul>
+      <li><a href="{% url 'users:my_page' %}">프로필</a></li>
+      <li><a href="{% url 'users:zzim_list' %}">찜 목록</a></li>
+      <li class="active"><a href="{% url 'users:user_list' %}">나의 여행 일정</a></li>
+      <li><a href="{% url 'users:user_detail' user.id %}">내 활동 관리</a></li>
+    </ul>
+  </nav>
+
+  <!-- 메인 내용 -->
+  <section class="mypage-content">
+    <h1 class="main-title">
+      여행상세
+      <img src="{% static 'img/mypage-plan-icon.png' %}" alt="여행 일정 아이콘" id="title-icon">
+    </h1>
+
+    <section class="activity-section">
+      <!-- 헤더 : 제목/버튼 -->
+      <div class="activity-header-cms">
+        <h2 class="sub-title">{{ schedule.name }}</h2>
+        <button class="new-plan-btn" onclick="window.location.href='{% url 'users:my_trip' schedule.schedule_id %}'">
+          세부 일정 생성
+        </button>
+      </div>
+      <!-- 기간 표시 -->
+      <p>{{ schedule.start_date|date:"Y-m-d" }} ~ {{ schedule.end_date|date:"Y-m-d" }}</p>
+
+      <!-- 본문 -->
+      <div class="activity-main-cms">
+        <!-- 대표사진 -->
+        <div class="photo-sec">
+          <form id="photo-form" method="POST" enctype="multipart/form-data" action="{% url 'users:update_schedule_photo' %}">
+            {% csrf_token %}
+            <input type="hidden" name="schedule_id" value="{{ schedule.schedule_id }}">
+
+            <img id="photo-preview"
+                 src="{% if schedule.photo %}{{ schedule.photo.url }}{% else %}{% static 'img/schedule_plane_img.jpg' %}{% endif %}"
+                 alt="여행 대표 이미지" style="cursor:pointer;">
+
+            <input type="file" id="photo-input" name="photo" accept="image/*" style="display:none"
+                   onchange="document.getElementById('photo-form').submit();">
+
+            <div class="edit-button-container">
+              <button type="button" id="photo-button">
+                {% if schedule.photo %}대표사진 수정{% else %}대표사진 등록{% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <h3 class="schedule-title">세부 일정 목록</h3>
+        <div class="plan-list" id="schedule-cards-container">
+
+          {% if travel_plans %}
+            <ul>
+              {% for plan in travel_plans %}
+              <li class="activity-card travel_plan_card" style="margin-bottom:20px;">
+                <button onclick="location.href='{% url 'users:plan_detail' plan.plan_id %}'" style="cursor:pointer;">
+                  <strong>{{ plan.start_date|date:"m/d" }}</strong><br><br>
+                  {% if plan.markers %}
+                    {% for marker in plan.markers|slice:":3" %}
+                      <div class="marker-info">
+                        <img src="{% static 'img/location_icon.png' %}" alt="위치 아이콘" class="location-icon">
+                        <span class="schedule-location-text">
+                          {{ marker.customName|default:marker.address|default:"지정한 장소가 없습니다!" }}
+                        </span>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <p>지정한 장소가 없습니다!</p>
+                  {% endif %}
+
+                </button>
+              </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+          <div class="no-plan">
+            <img width="150" src="{% static 'img/logo.png' %}" alt="기본 이미지" style="margin-bottom:30px">
+            <p>아직 등록한 계획이 없으시네요!</p><br>
+            <p>지금 계획을 등록해서 여행을 더 즐겁게 만들어보세요!</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="cms-schedule-footer">
+        <button class="del-schedule-btn" onclick="confirmDelete(event, {{ schedule.schedule_id }})">
+          여행 삭제
+        </button>
+        <button class="del-schedule-btn" onclick="window.location.href='{% url 'users:user_list' %}'">
+          목록으로
+        </button>
+      </div>
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block js %}
+<script>
+  /* 대표사진 업로드 로직 */
+  const photoForm = document.getElementById('photo-form');
+  const photoInput = document.getElementById('photo-input');
+  const photoPreview = document.getElementById('photo-preview');
+  const photoButton = document.getElementById('photo-button');
+
+  photoPreview.addEventListener('click', () => { photoInput.click(); });
+  photoButton.addEventListener('click', () => { photoInput.click(); });
+
+  photoInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      photoPreview.src = URL.createObjectURL(file);
+    }
+  });
+
+  photoForm.addEventListener('submit', function(e) {
+    photoInput.disabled = true;
+  });
+
+  /* 삭제 confirm */
+  function confirmDelete(event, scheduleId) {
+    if (confirm('정말 삭제하시겠습니까?')) {
+      window.location.href = "{% url 'users:delete_schedule' %}?schedule_id=" + scheduleId;
+    }
+  }
+</script>
+{% endblock %}

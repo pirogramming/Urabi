@@ -1,0 +1,120 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'accommodation/accommodation_filter.css' %}">
+    <link rel="stylesheet" href="{% static 'accommodation/accommodation_location.css' %}">
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&loading=async">
+    </script>
+    <script>
+        window.addEventListener('load', function() {
+            if (google && google.maps) {
+                initMap();
+            } else {
+                console.error('Google Maps API not loaded');
+            }
+        });
+        const GOOGLE_MAPS_API_KEY = "{{ google_maps_api_key }}";
+    </script>
+    <script defer src="{% static 'accommodation/accommodation_map_list.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="accommodation-container">
+    <h1 class="title">다음 여행자를 위한 작은 안내서, <a href="{% url 'accommodation:filter' %}"class="highlight">숙소 후기</a></h1>
+    
+    <div class="search-section">
+        <p class="blue">찾고 싶은 숙소를 검색해보세요</p>
+        <form class="search-box" method="GET" action="{% url 'accommodation:filter' %}">
+            <div class="filter_contents">
+                <input type="text" name="city" placeholder="여행 도시" class="location-input" value="{{ city_query }}">
+                <input type="text" name="accommodation_name" placeholder="숙소 이름" class="name-input" value="{{ accommodation_name_query }}">
+                <input type="number" name="rating" placeholder="이용자 평점" class="facility-input"
+                        min="0" max="5" step="0.5" value="{{ rating_query }}">
+            </div>
+            <button type="submit" class="search-btn">검색</button>
+        </form>
+    </div>
+    
+
+    <div class="location-container">
+        <div class="accom_left_container">
+            <div class="accommodation_list_header">
+                <h2 class="accommodation_list_title"><span class="strong">{{ reviews|length }}</span>개의 숙소</h2>
+                <div class="accommodation_list_controls">
+                    <h2>나만의 숙소</h2>
+                    <button onclick="window.location.href='{% url 'accommodation:accommodation_create' %}'">등록하기</button>
+                </div>
+            </div>
+            <!-- 구분선 -->
+            <hr class="accommodation_list_divider">
+            <!-- 숙소 후기 리스트 -->
+            <div class="accommodation-list">
+                <div class="main_accommodation" style="display: none;">
+                    <p>검색 결과가 없습니다.</p>
+                </div>                
+                {% for review in reviews %}
+                <div class="accommodation-card"
+                        data-title="{{ review.accommodation_name }}"
+                        data-city="{{ review.city }}"
+                        data-review-id="{{ review.review_id }}">
+                    <div class="card-left">
+                        <div class="hotel-image">
+                            <img id="place-img-{{ review.review_id }}"
+                                src="{% static 'img/room_ex1.png' %}"
+                                alt="숙소 이미지">
+                            <div class="rating">
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <img src="{% static 'img/fill_star.png' %}" alt="별점">
+                                    {% else %}
+                                        <img src="{% static 'img/empty_star.png' %}" alt="별점">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="hotel-content">
+                            <div class="hotel-info">
+                                <div class="hotel-title">{{ review.accommodation_name }}</div>
+                                <div class="hotel-address">{{ review.city }}</div>
+                                <p class="review-content">{{ review.content }}</p>
+                            </div>
+                            <button class="view-review-btn">
+                                <a href="{% url 'accommodation:accommodation_review_detail' review.review_id %}">
+                                    후기 보기
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="map-section">
+            <input id="search-bar" type="text" placeholder="장소를 검색하세요">
+            <div id="map">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{%block js%}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accommodationList = document.querySelector('.accommodation-list');
+        const mainAccommodation = document.querySelector('.main_accommodation');
+        const mapSection = document.querySelector('.map-section');
+    
+        const accommodationCards = accommodationList.querySelectorAll('.accommodation-card');
+    
+        if (accommodationCards.length === 0) {
+            mainAccommodation.style.display = 'block';
+        } else {
+            mainAccommodation.style.display = 'none';
+        }
+    });
+    
+</script>
+{%endblock js%}
