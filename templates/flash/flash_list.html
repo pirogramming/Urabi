@@ -3,7 +3,7 @@
 
 {% block head %} 
 <link rel="stylesheet" href="{% static 'flash/flash_list.css' %}">
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap&loading=async"></script>
+<script defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap&loading=async"></script>
 <script defer src="{% static 'flash/flash_map_list.js' %}"></script>
 <script defer src="{% static 'flash/flash_zzim.js' %}"></script>
 <script> const GOOGLE_MAPS_API_KEY = "{{ google_maps_api_key }}"; </script>

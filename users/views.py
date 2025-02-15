@@ -632,6 +632,8 @@ def my_trip(request, pk):
         'selected_date': selected_date,
         'form': form,
         'travel_plan': travel_plan, 
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
+        
     }
     return render(request, 'mypage/myTrip.html', context)
 
