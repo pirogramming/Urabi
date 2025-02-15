@@ -51,6 +51,7 @@ def accommodation_filter(request):
         'accommodation_name_query': accommodation_name_query,
         'total_reviews_count': total_reviews_count,
         'sort': sort,
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY
     }
     return render(request, "accommodation/accommodation_filter.html", context)
 

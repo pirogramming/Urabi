@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{% static 'accommodation/accommodation_filter.css' %}">
     <link rel="stylesheet" href="{% static 'accommodation/accommodation_location.css' %}">
     <script async defer 
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZLQne-DOUQDfifh3ZP_79TmL2OmBOI7k&libraries=places&loading=async">
+        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&loading=async">
     </script>
     <script>
         window.addEventListener('load', function() {
@@ -15,6 +15,7 @@
                 console.error('Google Maps API not loaded');
             }
         });
+        const GOOGLE_MAPS_API_KEY = "{{ google_maps_api_key }}";
     </script>
     <script defer src="{% static 'accommodation/accommodation_map_list.js' %}"></script>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, reverse, redirect
 from . import views
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -78,6 +79,8 @@ class AccompanyDetailView(DetailView):
         context['markers'] = group.markers
         context['polyline'] = group.polyline
 
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
+
         return context
     
 def load_plan_data(request):
@@ -120,6 +123,8 @@ class AccompanyCreateView(CreateView):
             context['this_plan'] = travel_plan
         context['travel_schedules'] = TravelSchedule.objects.filter(user=self.request.user)
         context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
+
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
         return context
 
     def form_valid(self, form):
