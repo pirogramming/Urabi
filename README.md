@@ -24,7 +24,7 @@
 - [🔎 개발 과정](#-개발-과정)
 
 ## 🛠️ 기술 스택
-<img src="https://github.com/user-attachments/assets/73fd65fb-87b6-43c7-95fd-2937ab0a5d0e" alt="이미지 설명" width="700" height="700">
+<img src="https://github.com/user-attachments/assets/8d73f49c-4f53-4d83-b43c-1a5baa10d082" alt="이미지 설명" width="700" height="700">
 
 
 ## 🌍 서비스 기획 배경
