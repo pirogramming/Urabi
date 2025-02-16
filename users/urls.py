@@ -40,7 +40,8 @@ urlpatterns = [
     path('verify-phone-status/', views.verify_phone_status, name='verify_phone_status'),
     path('check-phone/', views.check_phone_duplicate, name='check_phone_duplicate'),
     path('update_schedule_photo/', views.update_schedule_photo, name='update_schedule_photo'),
-    
+    path('report/<int:user_id>/', views.report_user, name='report_user'),
+    path('account_suspended/', views.account_suspended, name='account_suspended'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

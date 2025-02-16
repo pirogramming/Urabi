@@ -1,0 +1,44 @@
+@import '../base_css/base.css';
+@import '../reset.css';
+*{
+    font-family: 'Paperlogy' !important; 
+  }
+.suspended-container {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    background-color: var(--dark-gray);
+    border-radius: 8px;
+  }
+  
+  .suspended-container h1 {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--red);
+  }
+  
+  .suspended-container p {
+    margin-top: 10px;
+    font-size: 1.2em;
+    line-height: 1.5;
+  }
+  
+  .login-link {
+    display: block;
+    margin-top: 20px;
+    padding: 20px 10px;
+    background-color: var(--red);
+    color: white !important;
+    border-radius: 10px;
+  }
+  
+  .login-link:hover {
+    background-color: var(--red-hover);
+    transition: all 0.3s ease;
+  }
+  
+  .text-blue{
+    color: var(--blue);
+  }

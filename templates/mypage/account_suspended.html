@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'reset.css' %}">
+  <link rel="stylesheet" href="{% static 'mypage/account_suspended.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="suspended-container">
+  <h1>계정 이용이 정지되었습니다.</h1><br>
+  <p>
+    누적된 신고로 인해 계정 이용이 제한되었습니다.<br>
+    자세한 사항은 <span class="text-blue">urabi@gmail.com</span>으로 문의해 주세요.
+  </p>
+  <a href="{% url 'users:login' %}" class="login-link">로그인 페이지로 돌아가기</a>
+</div>
+{% endblock %}

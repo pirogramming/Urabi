@@ -28,7 +28,21 @@
         <div class="nickname">{{ user.nickname }}</div>
         <span class="score">36.5°C</span>
       </div>
-      <button id="chatWithUserBtn" class="chatting-btn" data-other-user-id="{{ user.id }}">채팅하기</button>
+      <div button-wrap>
+        <button id="chatWithUserBtn" class="chatting-btn" data-other-user-id="{{ user.id }}">채팅하기</button>
+      <button id="reportUserBtn" class="report-btn" data-user-id="{{ user.id }}" data-user-nickname="{{ user.nickname }}">신고하기</button>
+      </div>
+
+      <div id="reportModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span id="closeReportModal" class="close">&times;</span>
+          <p id="reportModalText">신고하시겠습니까?</p>
+          <div class="modal-buttons">
+            <button id="confirmReportBtn">신고하기</button>
+            <button id="cancelReportBtn">취소</button>
+          </div>
+        </div>
+      </div>
 
     </div>
     {% endif %}
@@ -54,7 +68,6 @@
             </div>
           </div>
 
-          <!-- 오른쪽: 정보영역 -->
           <div class="info-area">
             <div class="info-row row-1">
               <div class="info-item">
@@ -328,6 +341,57 @@
           console.error("Error creating chat room:", error);
         });
       });
+    }
+  });
+
+  const reportBtn = document.getElementById('reportUserBtn');
+  const reportModal = document.getElementById('reportModal');
+  const closeModalBtn = document.getElementById('closeReportModal');
+  const confirmReportBtn = document.getElementById('confirmReportBtn');
+  const cancelReportBtn = document.getElementById('cancelReportBtn');
+  let reportUserId = null; 
+
+  reportBtn.addEventListener('click', function() {
+    reportUserId = this.dataset.userId;
+    const userNickname = this.dataset.userNickname;
+    document.getElementById('reportModalText').innerText = `${userNickname} 님을 신고하시겠습니까?`;
+    reportModal.style.display = 'block';
+  });
+
+  // 모달 닫기 버튼 및 취소 버튼 클릭 시 모달 닫기
+  closeModalBtn.addEventListener('click', () => { reportModal.style.display = 'none'; });
+  cancelReportBtn.addEventListener('click', () => { reportModal.style.display = 'none'; });
+
+  // 신고 확인 버튼 클릭 시 AJAX 요청 보내기
+  confirmReportBtn.addEventListener('click', function() {
+    if (!reportUserId) return;
+    fetch(`/users/report/${reportUserId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      credentials: 'same-origin'  // 세션 쿠키 전달
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.error) {
+        alert(data.error);
+      } else {
+        alert(data.message);
+      }
+      reportModal.style.display = 'none';
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      reportModal.style.display = 'none';
+    });
+  });
+
+  // 모달 외부 클릭 시 모달 닫기
+  window.addEventListener('click', function(event) {
+    if (event.target === reportModal) {
+      reportModal.style.display = 'none';
     }
   });
 </script>
