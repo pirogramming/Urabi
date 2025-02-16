@@ -34,33 +34,7 @@
 - [🔎 개발 과정](#-개발-과정)
 
 ## 🛠️ 기술 스택
-
-### 🛠 프론트엔드 (FrontEnd)
-
-- **HTML5** - 마크업 언어
-- **CSS3** - 스타일링
-- **JavaScript** - 동적 기능
-
-### 🛠 백엔드 (BackEnd)
-
-- **Django** - 웹 프레임워크
-- **Django REST Framework** - API 개발
-
-### 🛠 데이터베이스 관리 (Database Management)
-
-- **MySQL** - 관계형 데이터베이스
-
-### 🛠 서버 및 배포 (Server & Deployment)
-
-- **Nginx** - 리버스 프록시
-- **Daphne** - ASGI 서버 (Channels 기반 웹소켓 지원)
-
-### 🛠 협업 툴 (Collaboration Tools)
-
-- **Notion** - 프로젝트 관리
-- **Git** - 버전 관리
-- **GitHub** - 코드 저장소
-- **Figma** - UI/UX 디자인
+<img src="https://github.com/user-attachments/assets/6dc4c660-938d-4023-9ecd-6badbf4eb447" alt="이미지 설명" width="700" height="700">
 
 ## 🌍 서비스 기획 배경
 
