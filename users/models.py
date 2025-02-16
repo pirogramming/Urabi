@@ -86,3 +86,22 @@ class PhoneVerification(models.Model):
 
     def __str__(self):
         return self.random_string
+    
+class UserReport(models.Model):
+    reporter = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reports_made"
+    )
+    reported = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reports_received"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('reporter', 'reported') 
+
+    def __str__(self):
+        return f"{self.reporter.nickname} -> {self.reported.nickname}"

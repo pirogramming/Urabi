@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.conf import settings
-from .models import User
+from .models import User, UserReport
 import requests
 from django.core.files.storage import FileSystemStorage
 import json
@@ -117,6 +117,8 @@ def kakao_login_callback(request):
                 image_name = f"profile_images/{user.email.replace('@', '_')}.jpg"
                 user.profile_image.save(image_name, ContentFile(response.content))
         user.save()
+    if not user.is_active:
+        return render(request, 'mypage/account_suspended.html', {'error': '계정 이용이 정지되었습니다.'})
     login(request, user)
     return redirect('main:home')  
 
@@ -198,6 +200,8 @@ def naver_login_callback(request):
                 user.profile_image.save(image_name, ContentFile(response.content))
         
         user.save()
+    if not user.is_active:
+        return render(request, 'mypage/account_suspended.html', {'error': '계정 이용이 정지되었습니다.'})
     
     login(request, user)
     return redirect('main:home')
@@ -358,14 +362,18 @@ def login_view(request):
 
         user = authenticate(request, email=email, password=password)
         if user is not None:
-            # 세션에 로그인 처리 (Django의 세션 인증)
-            login(request, user)
+            if not user.is_active:
+                # 계정이 정지된 경우
+                return render(request, 'account_suspended.html', {'error': '계정 이용이 정지되었습니다.'})
+            else:
+                # 세션에 로그인 처리 (Django의 세션 인증)
+                login(request, user)
 
-            # JWT 토큰 발급 (API용)
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
+                # JWT 토큰 발급 (API용)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
 
-            return redirect('main:home')
+                return redirect('main:home')
         else:
             return render(request, 'login/login.html', {'error': '로그인 실패'})
     return render(request, 'login/login.html')
@@ -885,3 +893,25 @@ def update_schedule_photo(request):
             schedule.save()
         return redirect('users:schedule_detail', pk=schedule_id)
     return redirect('users:my_page')
+
+
+@login_required
+def report_user(request, user_id):
+    if request.method == 'POST':
+        reported_user = get_object_or_404(User, pk=user_id)
+        
+        if UserReport.objects.filter(reporter=request.user, reported=reported_user).exists():
+            return JsonResponse({'error': '이미 신고하셨습니다.'}, status=400)
+        
+        UserReport.objects.create(reporter=request.user, reported=reported_user)
+        
+        if reported_user.reports_received.count() >= 3:
+            reported_user.is_active = False
+            reported_user.save()
+        
+        return JsonResponse({'message': '신고되었습니다.'})
+    
+    return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
+
+def account_suspended(request):
+    return render(request, 'account_suspended.html', {'error': '계정 이용이 정지되었습니다.'})
