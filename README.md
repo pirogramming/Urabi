@@ -29,9 +29,8 @@
   <br><br>
 
 ## 🛠️ 기술 스택
-<img src="https://github.com/user-attachments/assets/8d73f49c-4f53-4d83-b43c-1a5baa10d082" alt="이미지 설명" width="750" height="550">
+<img src="https://github.com/user-attachments/assets/864897e9-366e-4e2c-b358-52769403e2b9" alt="이미지 설명" width="750" height="550">
 <br><br><br><br>
-
 ## 🌍 서비스 기획 배경   
 
 여행은 함께할 때 더 즐겁습니다. 
