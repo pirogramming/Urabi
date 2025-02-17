@@ -31,6 +31,7 @@
 ## 🛠️ 기술 스택
 <img src="https://github.com/user-attachments/assets/864897e9-366e-4e2c-b358-52769403e2b9" alt="이미지 설명" width="900" height="550">
 <br><br><br><br>
+
 ## 🌍 서비스 기획 배경   
 
 여행은 함께할 때 더 즐겁습니다. 
@@ -161,6 +162,7 @@
 사진
 
 <br><br>
+
 ## 📡 API 명세
 
 🔗 [유라비 API명세 노션](https://longing-cover-b08.notion.site/18973a6fb5e4801ab2bfdceb50d92b78?v=18973a6fb5e4806cafed000cb20545c3)
