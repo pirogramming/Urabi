@@ -177,7 +177,7 @@
 
 <br><br>
 ## 📊 데이터베이스 구조
-🔗 [유라비 DB 노션](https://longing-cover-b08.notion.site/18973a6fb5e4801ab2bfdceb50d92b78?v=18973a6fb5e4806cafed000cb20545c3)
+🔗 [유라비 DB 노션](https://longing-cover-b08.notion.site/Urabi-19c73a6fb5e4801780fde7e0cc143699?p=19c73a6fb5e4800fb93de7e2e9e43671&pm=s)
 
 <br><br>
 
