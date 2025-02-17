@@ -12,7 +12,7 @@
  
 | 민설아 (팀장)                                  | 유승인                               | 최민석                                 | 김재원                                           | 이시은                                  |
 | ---------------------------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------------------ | -------------------------------------- |
-| ![profile](https://avatars.githubusercontent.com/u/192125242?v=4) | ![profile](https://avatars.githubusercontent.com/u/144124353?v=4) |![profile](https://avatars.githubusercontent.com/u/56901114?v=4)|![Image](https://github.com/user-attachments/assets/01cd240e-32ba-4779-a002-f202bfbf7563) | ![Image](https://github.com/user-attachments/assets/e33afd3a-7562-41ee-a6d3-d3c9c4868157) |
+| ![profile](https://avatars.githubusercontent.com/u/192125242?v=4) | ![profile](https://avatars.githubusercontent.com/u/144124353?v=4) |![Image](https://github.com/user-attachments/assets/02b5c91e-89ac-4a84-9460-7a85b68b8ef2)|![Image](https://github.com/user-attachments/assets/01cd240e-32ba-4779-a002-f202bfbf7563) | ![Image](https://github.com/user-attachments/assets/e33afd3a-7562-41ee-a6d3-d3c9c4868157) |
 | FE, BE                                       |  FE, BE                                    |  FE, BE                                     |  FE, BE                                              |  FE, BE                                 |
 |  [@axoesnxm](https://github.com/axoesnxm) | [@seung-in-Yoo](https://github.com/seung-in-Yoo) | [@03minseok](https://github.com/03minseok) | [@dhrkawk](https://github.com/dhrkawk) | [@iseun15](https://github.com/iseun15) |
 
@@ -75,6 +75,7 @@
 
 ## 🔗 서비스 매커니즘 & 사용 가이드
 ## 🗺️ 여행 동행 찾기
+<img width="1233" alt="Image" src="https://github.com/user-attachments/assets/f0790804-7ea2-4fd8-bc64-999030adda96" />
 
 | **장기동행 찾기** | **장기동행 모집하기** | **장기동행 상세 페이지** |
 |:---:|:---:|:---:|
@@ -92,6 +93,9 @@
    3. 모집자가 요청을 승인하면, 동행자로 추가되어 채팅으로 소통하며 여행을 준비합니다.<br><br>
 
 ## ⚡ 여행 번개 (즉흥 여행 모임)
+<img width="1246" alt="Image" src="https://github.com/user-attachments/assets/c783faad-b763-4e29-8f63-b2df588f57d7" /> 
+
+
 | **번개모임 찾기** | **번개모임 모집하기** | **번개모임 상세 페이지** |
 |:---:|:---:|:---:|
 |<img width="581" alt="Image" src="https://github.com/user-attachments/assets/2a00ea8e-c9ab-4e3a-a8fe-4d39d60a3391" /> | <img width="468" alt="Image" src="https://github.com/user-attachments/assets/e0261edd-df1e-4591-a2c8-732fb2a2201b" /> | <img width="461" alt="Image" src="https://github.com/user-attachments/assets/408ae43c-cee0-47b8-bba8-31ad3bbf795a" /> |
@@ -106,6 +110,7 @@
 3. 모임장의 승인을 받으면 참여자로 추가되어, 채팅으로 모임 세부사항을 공유하고 모임 당일 함께할 준비를 합니다.<br><br>
 
 ## 🏡 숙소 후기 공유
+
 | **숙소 후기 목록** | **숙소 후기 등록하기** | **숙소 후기 리뷰 상세 페이지** |
 |:---:|:---:|:---:|
 |<img width="614" alt="Image" src="https://github.com/user-attachments/assets/8822b1f0-4a0d-4063-8b33-e911adce3349" />|<img width="410" alt="Image" src="https://github.com/user-attachments/assets/ac66f432-794e-4316-a33d-ed051fbcef26" />| <img width="463" alt="Image" src="https://github.com/user-attachments/assets/6765a8b0-fd05-456b-b8d2-e4e05c3de8e5" />|
@@ -119,6 +124,7 @@
 3. 열람자도 댓글 기능을 통해 세부 후기를 추가할 수 있고, 도움이 된 후기에 좋아요를 달아줄 수 있습니다.<br><br>
 
 ## 🎁 나눔 마켓
+
 | **나눔 마켓 물품 찾기** | **나눔 마켓 물품 등록하기** | **나눔 마켓 상세 페이지** |
 |:---:|:---:|:---:|
 |<img width="615" alt="Image" src="https://github.com/user-attachments/assets/a934cdf4-b234-4d5c-ad00-e814027c4582" /> | <img width="461" alt="Image" src="https://github.com/user-attachments/assets/384e3032-7702-4a46-aa06-cb8b5be1130e" />| <img width="465" alt="Image" src="https://github.com/user-attachments/assets/e92a0bf2-9393-49c7-8d55-a101cb3bbab9" /> |
@@ -136,6 +142,7 @@
 ## 💡페이지별 개요
 
 #### 🏝 장기 동행
+<img width="1233" alt="Image" src="https://github.com/user-attachments/assets/f0790804-7ea2-4fd8-bc64-999030adda96" />
 
 - **지도**를 활용해 **생성한 여행 일정을 기반**으로 동행을 찾을 수 있음
 - 필터를 적용하여 비슷한 여행 스타일을 가진 동행 검색 가능
@@ -143,6 +150,7 @@
 - 참여하기 및 실시간 채팅 기능 제공
 
 #### 🔥 번개 모임
+<img width="1246" alt="Image" src="https://github.com/user-attachments/assets/c783faad-b763-4e29-8f63-b2df588f57d7" /> 
 
 - 즉흥적인 여행을 위한 사용자 위치 기반 번개 모집 기능
 - 필터를 적용하여 원하는 스타일의 번개 모임 검색 가능
@@ -150,18 +158,21 @@
 - 참여하기 및 실시간 채팅 기능 제공
 
 #### 🏡 숙소 후기
+<img width="1262" alt="Image" src="https://github.com/user-attachments/assets/a2568068-6e4d-4dfa-96b6-43b1963d8d5a" />
 
 - 여행자들이 머문 숙소의 정보를 공유
 - 위치, 별점 등의 정보를 포함한 리뷰 작성 가능
 - 검색 및 필터링 기능을 통해 원하는 숙소 정보 검색 가능
 
 #### 🎁 나눔 마켓
+<img width="1262" alt="Image" src="https://github.com/user-attachments/assets/0f84e8ad-ab68-497d-99dd-f73a333fe9b4" />
 
 - 여행 중 필요한 물품 혹은 불필요한 물품을 여행자들끼리 거래 가능
 - 사용자가 올린 물품에 대해 실시간 문의 및 채팅 가능
 - 두 명이서 합의하여 장소를 정하는 경우가 많기에 지도를 도입하기보다는 **도시 기반 검색**으로 설계
 
 #### 🧑‍💼 마이페이지
+<img width="1256" alt="Image" src="https://github.com/user-attachments/assets/0da978e3-dbde-4bf8-a83b-b541d351ef7c" />
 
 - 회원 정보 수정 기능 제공
 - 나의 여행 일정 관리 페이지에서 여행 일정 등록
