@@ -110,6 +110,7 @@
 3. 모임장의 승인을 받으면 참여자로 추가되어, 채팅으로 모임 세부사항을 공유하고 모임 당일 함께할 준비를 합니다.<br><br>
 
 ## 🏡 숙소 후기 공유
+<img width="1262" alt="Image" src="https://github.com/user-attachments/assets/a2568068-6e4d-4dfa-96b6-43b1963d8d5a" />
 
 | **숙소 후기 목록** | **숙소 후기 등록하기** | **숙소 후기 리뷰 상세 페이지** |
 |:---:|:---:|:---:|
@@ -124,6 +125,7 @@
 3. 열람자도 댓글 기능을 통해 세부 후기를 추가할 수 있고, 도움이 된 후기에 좋아요를 달아줄 수 있습니다.<br><br>
 
 ## 🎁 나눔 마켓
+<img width="1262" alt="Image" src="https://github.com/user-attachments/assets/0f84e8ad-ab68-497d-99dd-f73a333fe9b4" />
 
 | **나눔 마켓 물품 찾기** | **나눔 마켓 물품 등록하기** | **나눔 마켓 상세 페이지** |
 |:---:|:---:|:---:|
@@ -142,7 +144,6 @@
 ## 💡페이지별 개요
 
 #### 🏝 장기 동행
-<img width="1233" alt="Image" src="https://github.com/user-attachments/assets/f0790804-7ea2-4fd8-bc64-999030adda96" />
 
 - **지도**를 활용해 **생성한 여행 일정을 기반**으로 동행을 찾을 수 있음
 - 필터를 적용하여 비슷한 여행 스타일을 가진 동행 검색 가능
@@ -150,7 +151,6 @@
 - 참여하기 및 실시간 채팅 기능 제공
 
 #### 🔥 번개 모임
-<img width="1246" alt="Image" src="https://github.com/user-attachments/assets/c783faad-b763-4e29-8f63-b2df588f57d7" /> 
 
 - 즉흥적인 여행을 위한 사용자 위치 기반 번개 모집 기능
 - 필터를 적용하여 원하는 스타일의 번개 모임 검색 가능
@@ -158,14 +158,12 @@
 - 참여하기 및 실시간 채팅 기능 제공
 
 #### 🏡 숙소 후기
-<img width="1262" alt="Image" src="https://github.com/user-attachments/assets/a2568068-6e4d-4dfa-96b6-43b1963d8d5a" />
 
 - 여행자들이 머문 숙소의 정보를 공유
 - 위치, 별점 등의 정보를 포함한 리뷰 작성 가능
 - 검색 및 필터링 기능을 통해 원하는 숙소 정보 검색 가능
 
 #### 🎁 나눔 마켓
-<img width="1262" alt="Image" src="https://github.com/user-attachments/assets/0f84e8ad-ab68-497d-99dd-f73a333fe9b4" />
 
 - 여행 중 필요한 물품 혹은 불필요한 물품을 여행자들끼리 거래 가능
 - 사용자가 올린 물품에 대해 실시간 문의 및 채팅 가능
