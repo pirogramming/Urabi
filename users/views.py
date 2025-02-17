@@ -763,6 +763,7 @@ def update_trip(request, pk):
         'form': form,
         'date_list': date_list,
         'selected_date': selected_date,
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
     }
     return render(request, 'mypage/myTrip.html', context)
 
