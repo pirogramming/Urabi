@@ -5,13 +5,15 @@
 > 
 | 민설아 (팀장)                                  | 유승인                               | 최민석                                 | 김재원                                           | 이시은                                  |
 | ---------------------------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------------------ | -------------------------------------- |
+| ![profile](https://avatars.githubusercontent.com/u/192125242?v=4) | ![profile](https://avatars.githubusercontent.com/u/144124353?v=4) |![profile](https://avatars.githubusercontent.com/u/56901114?v=4)| ![profile](https://avatars.githubusercontent.com/u/90277529?v=4) | ![profile](https://avatars.githubusercontent.com/u/192393318?v=4) |
 | FE, BE                                       |  FE, BE                                    |  FE, BE                                     |  FE, BE                                              |  FE, BE                                 |
 |  [@axoesnxm](https://github.com/axoesnxm) | [@seung-in-Yoo](https://github.com/seung-in-Yoo) | [@03minseok](https://github.com/03minseok) | [@dhrkawk](https://github.com/dhrkawk) | [@iseun15](https://github.com/iseun15) |
 
-#### Urabi 노션 페이지 바로가기: [Urabi_notion](https://longing-cover-b08.notion.site/Urabi-19c73a6fb5e4801780fde7e0cc143699?pvs=4)
-#### Urabi 피그마 페이지 바로가기: [Urabi_figma](https://www.figma.com/files/team/1465277384609902795/all-projects?fuid=1387363449201856791)
+### 🔗 Urabi 배포 URL: https://urabi.co.kr 
+### 🙌 Urabi 노션 페이지 바로가기: [Urabi_notion](https://longing-cover-b08.notion.site/Urabi-19c73a6fb5e4801780fde7e0cc143699?pvs=4)
+### 🖼️ Urabi 피그마 페이지 바로가기: [Urabi_figma](https://www.figma.com/files/team/1465277384609902795/all-projects?fuid=1387363449201856791)
 
-#### 🔗 배포 URL: https://urabi.co.kr 
+<br>
 
 
 ## 📂 Content
