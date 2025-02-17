@@ -12,7 +12,7 @@
  
 | 민설아 (팀장)                                  | 유승인                               | 최민석                                 | 김재원                                           | 이시은                                  |
 | ---------------------------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------------------ | -------------------------------------- |
-| ![profile](https://avatars.githubusercontent.com/u/192125242?v=4) | ![profile](https://avatars.githubusercontent.com/u/144124353?v=4) |![profile](https://avatars.githubusercontent.com/u/56901114?v=4)| ![profile](https://avatars.githubusercontent.com/u/90277529?v=4) | ![profile](https://avatars.githubusercontent.com/u/192393318?v=4) |
+| ![profile](https://avatars.githubusercontent.com/u/192125242?v=4) | ![profile](https://avatars.githubusercontent.com/u/144124353?v=4) |![profile](https://avatars.githubusercontent.com/u/56901114?v=4)|![Image](https://github.com/user-attachments/assets/01cd240e-32ba-4779-a002-f202bfbf7563) | ![Image](https://github.com/user-attachments/assets/e33afd3a-7562-41ee-a6d3-d3c9c4868157) |
 | FE, BE                                       |  FE, BE                                    |  FE, BE                                     |  FE, BE                                              |  FE, BE                                 |
 |  [@axoesnxm](https://github.com/axoesnxm) | [@seung-in-Yoo](https://github.com/seung-in-Yoo) | [@03minseok](https://github.com/03minseok) | [@dhrkawk](https://github.com/dhrkawk) | [@iseun15](https://github.com/iseun15) |
 
@@ -172,7 +172,7 @@
 #### 🤖 챗봇 페이지 & 💬 채팅 페이지
 | **챗봇 ** | **채팅** |
 |:---|:---|
-|<img width="945" alt="Image" src="https://github.com/user-attachments/assets/9ff8c684-7967-476f-a5b1-80e31f40d142" />| 채팅 사진 추가하기 | 
+|<img width="945" alt="Image" src="https://github.com/user-attachments/assets/9ff8c684-7967-476f-a5b1-80e31f40d142" />| ![Image](https://github.com/user-attachments/assets/fb69deb0-d337-4727-96f1-1102e39e7592) | 
 |- 여행 설계에 도움을 줄 수 있는 간단한 챗봇<br>- **GPT 3.5** 사용 |- 1:1 **실시간** 채팅 기능 제공<br>- 모든 장기 동행, 번개, 나눔 마켓은 채팅을 통해 연결<br>- 이름 기반 검색은 충돌의 문제가 있어 고유한 이메일로 사용자를 검색하여 사용자끼리 소통할 수 있게 함<br>- 새로운 메시지 도착 시 **알림 기능** 제공<br>- **웹소켓**을 이용하여 구현 | 
 
 <br><br>
@@ -183,7 +183,7 @@
 
 ## 📡 API 명세
 
-🔗 [유라비 API명세 노션](https://longing-cover-b08.notion.site/18973a6fb5e4801ab2bfdceb50d92b78?v=18973a6fb5e4806cafed000cb20545c3)
+🔗 [유라비 API명세 노션](https://longing-cover-b08.notion.site/Urabi-19c73a6fb5e4801780fde7e0cc143699?p=19c73a6fb5e480f38eeef351a4bd12a7&pm=s)
 
 <br><br>
 ## 📅 개발 과정
