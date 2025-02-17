@@ -139,6 +139,30 @@
 1. 장소나 카테고리 검색을 통해 필요한 물품을 찾고, 게시글을 열람합니다.  
 2. 실시간 채팅으로 거래 요청을 보내고, 거래 등록자와 협의하여 거래를 진행합니다.<br><br>
 
+## 👤 마이 페이지
+<img width="1128" alt="Image" src="https://github.com/user-attachments/assets/1df9eae7-dbc0-4adc-847e-0dd0a214a31e" />
+
+| **찜 목록** | **나의 여행 일정** | **내 활동 관리** |
+|:---:|:---:|:---:|
+|<img width="423" alt="Image" src="https://github.com/user-attachments/assets/87a65143-b4cf-4b26-8de2-3fb6a8f283df" /> |<img width="323" alt="Image" src="https://github.com/user-attachments/assets/51867e70-a20a-4453-ae0f-0453b54c2b13" /> | <img width="326" alt="Image" src="https://github.com/user-attachments/assets/ab8fe8a2-e45a-41a0-9434-d577d2985d1a" /> |
+### 🙍‍♂️ 프로필 페이지
+1. 유라비에 등록된 정보를 볼 수 있습니다. 
+2. 본인 인증을 통해 신뢰도를 높입니다.
+
+### ❤️ 찜 목록
+1. 마음에 들어 찜한 게시글을 한번에 열람할 수 있습니다.
+2. 찜 목록을 통해 바로 상세 페이지로 들어가 신청할 수 있습니다.
+
+### 📅 나의 여행 일정
+1. 마이 페이지에서 직접 여행을 생성할 수 있습니다.
+2. 직접 생성한 여행 일정을 장기 동행 페이지에서 불러와 동행을 구할 수도 있습니다.
+3. 참여한 동행과 참여한 번개 게시글을 볼 수 있습니다.
+
+### 📝 내 활동 관리
+모든 게시판 내에서 직접 작성한 글을 모아둔 페이지입니다. 사이트 내 사용자의 활동을 모두 확인할 수 있습니다.<br><br>
+
+<br>
+
 <br>
 
 ## 💡 페이지별 개요
@@ -170,7 +194,6 @@
 - 두 명이서 합의하여 장소를 정하는 경우가 많기에 지도를 도입하기보다는 **도시 기반 검색**으로 설계
 
 #### 🧑‍💼 마이페이지
-<img width="1256" alt="Image" src="https://github.com/user-attachments/assets/0da978e3-dbde-4bf8-a83b-b541d351ef7c" />
 
 - 회원 정보 수정 기능 제공
 - 나의 여행 일정 관리 페이지에서 여행 일정 등록
