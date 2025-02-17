@@ -163,6 +163,7 @@ class AccompanyUpdateView(UpdateView):
             context['this_plan'] = travel_plan
         context['travel_schedules'] = TravelSchedule.objects.filter(user=self.request.user)
         context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
         return context
 
     def form_valid(self, form):

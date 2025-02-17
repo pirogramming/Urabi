@@ -16,6 +16,7 @@ import json
 def flash_list(request):
     flash_meetings = Flash.objects.all().order_by("-created_at")
     filterset = FlashFilter(request.GET, queryset=flash_meetings)
+    flash_meetings = filterset.qs
 
     # 현재 로그인한 유저의 찜 목록 가져오기
     zzim_items = set()
@@ -86,8 +87,9 @@ def flash_update(request, pk):
         flash.updated_at = now()
         flash.save()
         return redirect("flash:flash_detail", pk=flash.pk)
+        
 
-    return render(request, "flash/flash_register.html", {"flash": flash, "edit_mode": True})
+    return render(request, "flash/flash_register.html", {"flash": flash, "edit_mode": True, 'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})
 
 
 @login_required

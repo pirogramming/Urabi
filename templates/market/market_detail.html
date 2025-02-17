@@ -33,10 +33,12 @@
         </div>
         <div class="market_detail_mid_title">
             <div class="detail_set">
-                <div class="market_detail_profile">
-                    <p>{{market.user.nickname}} </p>
-                    <p class="market_detail_temp">{{trust_score}}</p>
-                </div>
+                <a href="{% url 'users:user_detail' market.user.id %}">
+                    <div class="market_detail_profile">
+                        <p>{{market.user.nickname}} </p>
+                        <p class="market_detail_temp">{{trust_score}}</p>
+                    </div>
+                </a>
                 <div class="market_detail_tradeWay">
                     <p>{{market.get_trade_type_display}}</p>
                 </div>
