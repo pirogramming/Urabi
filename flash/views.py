@@ -87,8 +87,9 @@ def flash_update(request, pk):
         flash.updated_at = now()
         flash.save()
         return redirect("flash:flash_detail", pk=flash.pk)
+        
 
-    return render(request, "flash/flash_register.html", {"flash": flash, "edit_mode": True})
+    return render(request, "flash/flash_register.html", {"flash": flash, "edit_mode": True, 'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})
 
 
 @login_required
