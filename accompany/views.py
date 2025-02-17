@@ -90,7 +90,7 @@ def load_plan_data(request):
         data = {
             'markers': travel_plan.markers,
             'polyline': travel_plan.polyline,
-            'title': travel_plan.explanation,
+            'title': travel_plan.start_date,
         }
         return JsonResponse(data)
     return JsonResponse({'error': 'Invalid plan_id'}, status=400)
@@ -164,6 +164,7 @@ class AccompanyUpdateView(UpdateView):
             context['this_plan'] = travel_plan
         context['travel_schedules'] = TravelSchedule.objects.filter(user=self.request.user)
         context['travel_plans'] = TravelPlan.objects.filter(created_by=self.request.user)
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
         return context
 
     def form_valid(self, form):
