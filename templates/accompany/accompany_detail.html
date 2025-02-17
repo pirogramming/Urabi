@@ -44,10 +44,10 @@
               <p>다른 일정 조회</p>
               <div class="plan-list-selector">
                 <select id="plan-selector">
-                <option value="{{object.this_plan_id}}">{{this_plan.start_date}}</option>
+                <option value="{{object.this_plan_id}}">{{this_plan.start_date|date:'Y-m-d'}}</option>
                 {% for plan in travel_plans %}
                   {% if plan.plan_id != this_plan.plan_id %}
-                    <option value="{{ plan.plan_id }}">{{ plan.start_date }}</option>
+                    <option value="{{ plan.plan_id }}">{{ plan.start_date|date:'Y-m-d' }}</option>
                   {% endif %}
                 {% endfor %}
 
@@ -61,17 +61,32 @@
             </div>
           </div>
           <div class="this-plan-name">
-            <h3 id="this-plan-title">{{this_plan.start_date}}</h3>
+            <h3 id="this-plan-title">{{this_plan.start_date|date:'Y-m-d'}}</h3>
           </div>
         </div>
+      {%else%}
+      <div class="this-plan-info">
+        <div class="detail-header">
+        </div>
+        <div class="this-plan-name">
+          <h3 id="this-plan-title">{{ object.start_date|date:'Y-m-d' }} ~ {{ object.end_date|date:'Y-m-d' }}
+          </h3>
+        </div>
+      </div>
       {%endif%}
     </div>
   </section>
 {%endif%}
 
   <section class="detail">
+    {%if not object.markers%}
+    <div>
+      <span style="font-size: 14px; font-weight:400; color:#ccc; text-align:right;">{{ object.start_date|date:'Y-m-d' }} ~ {{ object.end_date|date:'Y-m-d' }}</span>
+    </div>
+    {%endif%}
     <div class="detail-header">
       <h2>{{ object.title }}</h2>
+      
       <div class="header-btns">
         {% if user != object.created_by %}
         <button class="btn ask host_chat_btn" data-other-user-id="{{ object.created_by.id }}">
@@ -289,6 +304,8 @@ if (hostChatBtn) {
         });
     });
 }
+
+const csrfToken = "{{ csrf_token|safe }}";
 </script>
 <script src="{% static 'accompany/add_member_toggle.js' %}"></script>
 <script src="{% static 'accompany/add_participants.js' %}"></script>
