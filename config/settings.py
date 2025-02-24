@@ -51,9 +51,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True 
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["urabi.co.kr", "www.urabi.co.kr", "110.165.18.247"]
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -121,6 +123,20 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'urabi_db',
+        'USER': 'urabi_user',
+        'PASSWORD': get_secret("DB_PASSWORD"),
+        'HOST': '110.165.18.247',
+        'PORT': '3306',
+    }
+}
+
+
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -135,7 +151,7 @@ DATABASES = {
         }
     }
 }
-
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -233,6 +249,8 @@ CORS_ALLOW_ALL_ORIGINS = False  # 보안상 특정 Origin만 허용하는 것이
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000"
+    "https://urabi.co.kr",
+    "https://www.urabi.co.kr"
 ]
 
 
@@ -254,6 +272,60 @@ CHANNEL_LAYERS = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {  # 포맷 추가
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {  # 기존 파일 로깅 유지
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django/debug.log',
+            'formatter': 'verbose',
+        },
+    'console': {  # 콘솔 핸들러 추가 (Gunicorn & Daphne에서 필요)
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],  # 파일 + 콘솔 로깅
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'channels': {  # Channels 관련 로깅
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'gunicorn.error': {  # Gunicorn 관련 로깅 추가
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'gunicorn.access': {  # Gunicorn 액세스 로그
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
+
+
+
+"""
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
@@ -266,9 +338,12 @@ LOGGING = {
         },
     },
 }
+"""
 
-
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://urabi.co.kr",
+    "https://www.urabi.co.kr"
+]
 
 # 웹소켓 URL 설정
 WEBSOCKET_URL = '/ws/'
@@ -278,3 +353,15 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'  # 같은 도메인에서는 iframe 허용
 
 IMAP_USER = secrets["IMAP_USER"]
 IMAP_PASSWORD = secrets["IMAP_PASSWORD"]
+
+
+# ACG 설정 (TCP 허용 포트) => 22 포트를 제외한 모든건 0.0.0.0/0 으로 설정
+# 22 (SSH) => 22번 포트는 보안상 특정 IP만 허용 
+# 80 (HTTP)
+# 443 (HTTPS)
+# 8000 (Django 개발 서버)
+# 8001 (Daphne)
+# 6379 (Redis)
+# 3306 (MySQL)
+# 587 (SMTP)
+# 993 (IMAP)
