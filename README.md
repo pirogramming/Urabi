@@ -14,7 +14,7 @@
 | ---------------------------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------------------ | -------------------------------------- |
 | ![profile](https://avatars.githubusercontent.com/u/192125242?v=4) | ![profile](https://avatars.githubusercontent.com/u/144124353?v=4) |![Image](https://github.com/user-attachments/assets/02b5c91e-89ac-4a84-9460-7a85b68b8ef2)|![Image](https://github.com/user-attachments/assets/01cd240e-32ba-4779-a002-f202bfbf7563) | ![Image](https://github.com/user-attachments/assets/e33afd3a-7562-41ee-a6d3-d3c9c4868157) |
 | FE, BE                                       |  FE, BE                                    |  FE, BE                                     |  FE, BE                                              |  FE, BE                                 |
-|  [@axoesnxm](https://github.com/axoesnxm) | [@seung-in-Yoo](https://github.com/seung-in-Yoo) | [@03minseok](https://github.com/03minseok) | [@dhrkawk](https://github.com/dhrkawk) | [@iseun15](https://github.com/iseun15) |
+|  [@mymy1023](https://github.com/mymy1023) | [@seung-in-Yoo](https://github.com/seung-in-Yoo) | [@03minseok](https://github.com/03minseok) | [@dhrkawk](https://github.com/dhrkawk) | [@iseun15](https://github.com/iseun15) |
 
 ### 🔗 Urabi 배포 URL: https://urabi.co.kr 
 ### 🙌 Urabi 노션 페이지 바로가기: [Urabi_notion](https://longing-cover-b08.notion.site/Urabi-19c73a6fb5e4801780fde7e0cc143699?pvs=4)
